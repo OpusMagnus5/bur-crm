@@ -1,0 +1,40 @@
+/*
+    PARAMETERS
+    - branch default: master
+*/
+pipeline {
+    agent {
+        label 'ubuntu-jenkins'
+    }
+
+    tools {
+        git "Git"
+        dockerTool "Docker"
+    }
+
+    stages {
+        stage("Download repository") {
+            steps {
+                ws('/home/bur-crm/jenkins/workspace') {
+                    git branch: '${branch}', url: 'https://github.com/OpusMagnus5/bur-crm.git'
+                }
+            }
+        }
+
+        stage('Stop docker containers') {
+            steps {
+                ws('/home/bur-crm/jenkins/workspace/docker') {
+                    sh "docker compose stop"
+                }
+            }
+        }
+
+        stage('Docker compose') {
+            steps {
+                ws('/home/bur-crm/jenkins/workspace/docker') {
+                    sh "docker compose up --detach"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,16 @@
+services:
+  crm-postgres-write:
+    container_name: 'crm-postgres-write'
+    image: postgres:16
+    restart: no
+    env_file:
+      - 'env-db-write.env'
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d $POSTGRES_DB_WRITE" ]
+    volumes:
+      - crm-postgres-write:/var/lib/postgresql/data
+    network_mode: host
+
+volumes:
+  crm-postgres-write:
+    name: crm-postgres-write
