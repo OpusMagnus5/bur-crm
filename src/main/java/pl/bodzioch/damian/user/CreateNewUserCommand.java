@@ -1,6 +1,6 @@
 package pl.bodzioch.damian.user;
 
-import pl.bodzioch.damian.configuration.command.Command;
+import pl.bodzioch.damian.infrastructure.command.Command;
 
 public record CreateNewUserCommand(
 

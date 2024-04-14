@@ -4,8 +4,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import pl.bodzioch.damian.configuration.command.CommandHandler;
 import pl.bodzioch.damian.exception.AppException;
+import pl.bodzioch.damian.infrastructure.command.CommandHandler;
 import pl.bodzioch.damian.valueobject.ErrorData;
 
 import java.util.List;

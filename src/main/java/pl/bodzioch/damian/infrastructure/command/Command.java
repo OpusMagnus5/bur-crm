@@ -1,4 +1,4 @@
-package pl.bodzioch.damian.configuration.command;
+package pl.bodzioch.damian.infrastructure.command;
 
 public interface Command<R extends CommandResult> {
 

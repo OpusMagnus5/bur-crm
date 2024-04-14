@@ -1,4 +1,4 @@
-package pl.bodzioch.damian.configuration.query;
+package pl.bodzioch.damian.infrastructure.query;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package pl.bodzioch.damian.configuration.command;
+package pl.bodzioch.damian.infrastructure.command;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

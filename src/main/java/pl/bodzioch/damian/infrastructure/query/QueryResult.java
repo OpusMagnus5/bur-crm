@@ -1,4 +1,4 @@
-package pl.bodzioch.damian.configuration.query;
+package pl.bodzioch.damian.infrastructure.query;
 
 public interface QueryResult {
 
