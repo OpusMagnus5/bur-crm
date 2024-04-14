@@ -1,0 +1,6 @@
+/.idea/
+/target
+
+/angular-app.iml
+/angular-app/node_modules
+/angular-app/.angular
