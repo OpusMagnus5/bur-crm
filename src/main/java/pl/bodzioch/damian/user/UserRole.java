@@ -1,6 +1,6 @@
 package pl.bodzioch.damian.user;
 
-enum UserRole {
+public enum UserRole {
 
     NOT_ACTIVE,
     USER,

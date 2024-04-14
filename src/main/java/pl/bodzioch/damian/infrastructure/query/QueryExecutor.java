@@ -23,9 +23,9 @@ public class QueryExecutor {
             this.handlerMap = new HashMap<>();
             return;
         }
-        handlers.forEach(handler -> log.info("Adding support for query with class {}", handler.commandClass()));
+        handlers.forEach(handler -> log.info("Adding support for query with class {}", handler.queryClass()));
         this.handlerMap = handlers.stream()
-                .collect(Collectors.toMap(QueryHandler::commandClass, Function.identity()));
+                .collect(Collectors.toMap(QueryHandler::queryClass, Function.identity()));
     }
 
 

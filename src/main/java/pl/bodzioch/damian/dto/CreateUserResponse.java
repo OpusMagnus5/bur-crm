@@ -1,4 +1,12 @@
 package pl.bodzioch.damian.dto;
 
-public record CreateUserResponse() {
+import java.io.Serializable;
+
+public record CreateUserResponse(
+
+        String login,
+        String password,
+        String message
+
+) implements Serializable {
 }
