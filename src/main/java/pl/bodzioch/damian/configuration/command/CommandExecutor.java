@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-class CommandExecutor {
+public class CommandExecutor {
 
     private final Map<Class<? extends Command<?>>, CommandHandler<? extends Command<?>, ? extends CommandResult>> handlerMap;
 

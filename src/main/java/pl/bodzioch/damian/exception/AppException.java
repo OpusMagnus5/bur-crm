@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import pl.bodzioch.damian.valueobject.ErrorData;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,6 +18,7 @@ public class AppException extends RuntimeException {
 
     private final UUID errorId = Generators.timeBasedEpochGenerator().generate();
     private final HttpStatus httpStatus;
+    private final LocalDateTime occurredAt = LocalDateTime.now();
     private final List<ErrorData> errors;
 
     public AppException(String message) {

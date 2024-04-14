@@ -40,7 +40,6 @@ class CreateNewUserCommandHandler implements CommandHandler<CreateNewUserCommand
                 HttpStatus.BAD_REQUEST,
                 List.of(new ErrorData(
                         "error.client.userByEmailAlreadyExists",
-                        "email",
                         List.of(email)
                 ))
         );

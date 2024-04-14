@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-class QueryExecutor {
+public class QueryExecutor {
 
     private final Map<Class<? extends Query<?>>, QueryHandler<? extends Query<?>, ? extends QueryResult>> handlerMap;
 
