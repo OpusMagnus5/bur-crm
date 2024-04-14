@@ -1,8 +1,5 @@
 package pl.bodzioch.damian.user;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
 import pl.bodzioch.damian.valueobject.AuditData;
 
 import java.security.SecureRandom;
@@ -10,34 +7,37 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-@ToString
-@Builder
-@Getter
-class User {
+record User (
+         Long id,
+         UUID uuid,
+         Integer version,
+         String email,
+         String password,
+         String firstName,
+         String lastName,
+         List<UserRole> roles,
+         LocalDateTime lastLogin,
+         AuditData auditData
+) {
 
-    private Long id;
-    private UUID uuid;
-    private Integer version;
-    private String email;
-    private String password;
-    private String firstName;
-    private String lastName;
-    private List<UserRole> roles;
-    private LocalDateTime lastLogin;
-    private AuditData auditData;
+
 
     User(CreateNewUserCommand command) {
-        this.email = command.email();
-        this.firstName = command.firstName();
-        this.lastName = command.lastName();
-        this.password = generateFirstPassword();
-        this.auditData = AuditData.builder()
-                .createdBy(command.creatorId())
-                .build();
-        this.roles = List.of(UserRole.NOT_ACTIVE);
+        this (
+                null,
+                null,
+                null,
+                command.email(),
+                generateFirstPassword(),
+                command.firstName(),
+                command.lastName(),
+                List.of(UserRole.NOT_ACTIVE),
+                null,
+                new AuditData(null, null, command.creatorId(), null)
+        );
     }
 
-    private String generateFirstPassword() {
+    private static String generateFirstPassword() {
         String passwordCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
         int passwordLength = 12;
         SecureRandom secureRandom = new SecureRandom();

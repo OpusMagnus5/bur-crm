@@ -11,6 +11,7 @@ import org.hibernate.generator.EventType;
 import pl.bodzioch.damian.utils.Encoder;
 import pl.bodzioch.damian.utils.GeneratedUuidValue;
 import pl.bodzioch.damian.valueobject.AuditData;
+import pl.bodzioch.damian.valueobject.AuditDataEntity;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -52,36 +53,38 @@ class UserEntity {
     private LocalDateTime lastLogin;
 
     @Embedded
-    private AuditData auditData;
+    private AuditDataEntity auditData;
 
     UserEntity(User user) {
-        this.id = user.getId();
-        this.uuid = user.getUuid();
-        this.version = user.getVersion();
-        this.email = user.getEmail();
-        this.firstName = user.getFirstName();
-        this.lastName = user.getLastName();
-        this.password = Encoder.encodePassword(user.getPassword());
-        this.auditData = user.getAuditData();
-        this.roles = user.getRoles().stream()
+        AuditData auditData = user.auditData();
+        this.id = user.id();
+        this.uuid = user.uuid();
+        this.version = user.version();
+        this.email = user.email();
+        this.firstName = user.firstName();
+        this.lastName = user.lastName();
+        this.password = Encoder.encodePassword(user.password());
+        this.auditData = new AuditDataEntity(auditData.createdAt(), auditData.modifiedAt(), auditData.createdBy(), auditData.modifiedBy());
+        this.roles = user.roles().stream()
                 .map(UserRole::name)
                 .collect(Collectors.joining(";"));
-        this.lastLogin = user.getLastLogin();
+        this.lastLogin = user.lastLogin();
     }
 
     User toUser() {
-        return User.builder()
-                .id(this.id)
-                .uuid(this.uuid)
-                .version(this.version)
-                .email(this.email)
-                .password(this.password)
-                .firstName(this.firstName)
-                .lastName(this.lastName)
-                .roles(Arrays.stream(roles.split(";"))
+        return new User(
+                id,
+                uuid,
+                version,
+                email,
+                password,
+                firstName,
+                lastName,
+                Arrays.stream(roles.split(";"))
                         .map(UserRole::valueOf)
-                        .toList())
-                .auditData(auditData)
-                .build();
+                        .toList(),
+                lastLogin,
+                new AuditData(auditData.getCreatedAt(), auditData.getModifiedAt(), auditData.getCreatedBy(), auditData.getModifiedBy())
+                );
     }
 }

@@ -30,7 +30,7 @@ class CreateNewUserCommandHandler implements CommandHandler<CreateNewUserCommand
             throw buildUserByEmailAlreadyExistsException(command.email());
         }
         User user = new User(command);
-        CreateNewUserCommandResult result = new CreateNewUserCommandResult(user.getEmail(), user.getPassword());
+        CreateNewUserCommandResult result = new CreateNewUserCommandResult(user.email(), user.password());
         writeRepository.createNew(new UserEntity(user));
         return result;
     }

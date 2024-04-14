@@ -21,15 +21,3 @@ spring:
     username: ${POSTGRES_USER_WRITE}
     password: ${POSTGRES_PASSWORD_WRITE}
     driver-class-name: org.postgresql.Driver
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: burcrm@gmail.com
-    password: ${JAVA_MAIL_PASSWORD}
-    protocol: smtp
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true

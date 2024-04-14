@@ -20,19 +20,19 @@ public record UserDto(
 
     UserDto(User user) {
         this(
-                user.getId(),
-                user.getUuid(),
-                user.getEmail(),
-                user.getPassword(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getRoles().stream().map(UserRole::name).toList(),
-                user.getLastLogin(),
+                user.id(),
+                user.uuid(),
+                user.email(),
+                user.password(),
+                user.firstName(),
+                user.lastName(),
+                user.roles().stream().map(UserRole::name).toList(),
+                user.lastLogin(),
                 new AuditDataDto(
-                        user.getAuditData().getCreatedAt(),
-                        user.getAuditData().getModifiedAt(),
-                        user.getAuditData().getCreatedBy(),
-                        user.getAuditData().getModifiedBy()
+                        user.auditData().createdAt(),
+                        user.auditData().modifiedAt(),
+                        user.auditData().createdBy(),
+                        user.auditData().modifiedBy()
                 )
         );
     }
