@@ -1,13 +1,14 @@
 import {Component} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 
-@Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+@Component({ //mozna stworzyc za pomoca CLI
+  selector: 'app-root', //selektor ktory uzywamy w html, mozemy rowniez uzywac atrybutu lub klasy
+  standalone: true, //jesli chcemy standalone
+  imports: [RouterOutlet], //tu dodajemy inne Componenty zamiast @NgModule
+  templateUrl: './app.component.html', //tu html
+  styleUrl: './app.component.css' //tu css
 })
 export class AppComponent {
   title = 'web-app';
+  isAllowed = true;
 }
