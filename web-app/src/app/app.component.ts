@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {HeaderComponent} from "./header/header.component";
 import { AdministrationSideMenuComponent } from './administration/side-menu/administration-side-menu.component';
@@ -13,8 +13,9 @@ import { AdministrationSideMenuComponent } from './administration/side-menu/admi
 export class AppComponent {
   title = 'web-app';
   isAllowed = true;
-  serverNames = ['Testservet', 'Testservet2']
-
+  serverNames = ['Testservet', 'Testservet2'];
+  @Input() bindBesideComponent = 'bindBesideComponent'; //domyślnie zmienne w komponencie nie są dostępne w innych componentach nawet jesli są publiczne
+                                                        //Aby upublicznić taką zmienną w górę do rodziców używamy @Input()
   onCreateClick() {
     this.isAllowed = false;
   }
