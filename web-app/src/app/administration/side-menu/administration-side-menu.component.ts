@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-administration-side-menu',
+  selector: 'administration-side-menu',
   standalone: true,
   imports: [],
   templateUrl: './administration-side-menu.component.html',
