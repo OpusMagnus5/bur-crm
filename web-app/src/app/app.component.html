@@ -33,3 +33,11 @@
  <!-- COMPONENT PROPERTY BINDING -->
 
 <p [bindBesideComponent]="zmiennaWTymKomponencie"></p> <!-- tutaj przypisujemy zmiennej z innego komponentu wartośc zmiennej z tego komponentu z pomocą @Input() -->
+
+  <!--COMPONENT CUSTOM EVENT BINDING-->
+
+<button (nameOfEvent)="onCreateClick()"></button> <!--wykorzystanie emitera i customowego eventu, podajemy nazwe eventu/zmienna emitera oraz nazwe metody reagujacej na event-->
+
+    <!--LOCAL REFERENCE-->
+<p #referenceToP></p> <!--lokalna referencje tworzymy poprzez #nazwa zmiennej-->
+<button (click)="setDataFromReference(referenceToP)"></button> <!--możemy ją używać tylko w htmlu, tak naprawde przekazujemy caly element p-->
