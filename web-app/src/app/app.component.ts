@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, Output, ViewChild, ViewEncapsulation} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {HeaderComponent} from "./header/header.component";
 import {AdministrationSideMenuComponent} from './administration/side-menu/administration-side-menu.component';
@@ -21,6 +21,10 @@ export class AppComponent {
   @Output() nameOfEvent = new EventEmitter<{name: String, count: Number}>(); //Służy do emitowania eventów z okreslonymi danymi
   //musimy dodać równiez @Output dlatego że wysyłamy coś na zewnatrz, możemy również podać alias w nawiasie
 
+  @ViewChild('referenceToP', {static: true}) viewReference: ElementRef; //tutaj tez mamy dostęp do refencji ale obiekt jest zwracany w innym typie
+  //nie nalezy zmieniac wartosci referencji w skrypcie, lepiej uzywac tylko do pobierania wartosci
+  //static używamy gdy chcemy uzyc tej wartosci w metodzie ngOnInit(), jeśli nie nie musimy ustawiac false
+
   onCreateClick() {
     this.isAllowed = false;
   }
@@ -39,5 +43,9 @@ export class AppComponent {
 
   setDataFromReference(reference: HTMLParagraphElement) { //LOCAL REFERENCE
     console.log(reference.innerText)
+  }
+
+  showViewReference() {
+    console.log(this.viewReference.nativeElement.innerText)
   }
 }
