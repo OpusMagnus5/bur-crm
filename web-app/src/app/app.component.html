@@ -46,3 +46,11 @@
 <div>
   <ng-content></ng-content> <!-- to sprawia że umieszczenie czegoś pomiędzy tagami componentu jest wrzucane w to miejsce ponieważ domyślnie tak nie jest -->
 </div>
+
+      <!--CUSTOM DIRECTIVES-->
+
+<p appTestDirective>CUSTOM DIR</p> <!--stosujemy dyrektywe-->
+
+<p appTestDirective [defaultColor]="'yellow'"></p>
+
+<p appTestDirective [appTestDirective]="'yellow'"></p> <!--jeśli nadam nazwe moge ustawiac bezposrednio z nazwy dyrektywy ale tylko wtedy jedli ma jedna propertke-->
