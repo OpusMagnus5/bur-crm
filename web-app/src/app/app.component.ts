@@ -48,4 +48,14 @@ export class AppComponent {
   showViewReference() {
     console.log(this.viewReference.nativeElement.innerText)
   }
+
+  //HOOKS LIFECYCLE
+  //ngOnChanges jest wołany na starcie i za każdym razem gdy zmienia się property oznaczona @Input
+  //ngOnInit kiedy komponent jest inicjalizowany, po konstrukotrze
+  //ngDoCheck za każdym razem kiedy coś się zmieni w komponencie, oraz kliknięciu gdzieś na komponencie itp
+  //ngAfterContentInit za po inicjalzacji ng-content jeśli został dodany
+  //ngAfterContentChecked po każdej zmienie / reakcji w ng-content
+  //ngAfterViewInit kiedy vidok komponentu i jego zależności został zainijalizowany
+  //ngAfterViewChecked za każdym razem gdy coś sie zmieni w widoku komponentu lub dzieci
+  //ngOnDestroy kiedy komponent jest usuwany z DOM np za pomocą ifa
 }

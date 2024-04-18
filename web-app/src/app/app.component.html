@@ -43,3 +43,6 @@
 <button (click)="setDataFromReference(referenceToP)"></button> <!--możemy ją używać tylko w htmlu, tak naprawde przekazujemy caly element p-->
 <!--możemy ją przkeazywac do skryptu albo tez uzyc w innym miejsciu w html-->
 
+<div>
+  <ng-content></ng-content> <!-- to sprawia że umieszczenie czegoś pomiędzy tagami componentu jest wrzucane w to miejsce ponieważ domyślnie tak nie jest -->
+</div>
