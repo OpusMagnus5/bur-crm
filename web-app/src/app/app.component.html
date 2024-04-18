@@ -56,3 +56,9 @@
 <p appTestDirective [appTestDirective]="'yellow'"></p> <!--jeśli nadam nazwe moge ustawiac bezposrednio z nazwy dyrektywy ale tylko wtedy jedli ma jedna propertke-->
 
 <div *unless="true"></div>
+
+<!--ngSwitch jest pryzdatne i działa jak switch w java, przelacza sie pomiedzy wartosciami-->
+<div [ngSwitch]="value">
+  <p *ngSwitchCase="10"></p>
+  <p *ngSwitchDefault></p>
+</div>
