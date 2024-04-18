@@ -1,4 +1,14 @@
-import {Component, ElementRef, EventEmitter, Input, Output, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  Component,
+  ContentChild,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  SimpleChanges,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {HeaderComponent} from "./header/header.component";
 import {AdministrationSideMenuComponent} from './administration/side-menu/administration-side-menu.component';
@@ -24,6 +34,9 @@ export class AppComponent {
   @ViewChild('referenceToP', {static: true}) viewReference: ElementRef; //tutaj tez mamy dostęp do refencji ale obiekt jest zwracany w innym typie
   //nie nalezy zmieniac wartosci referencji w skrypcie, lepiej uzywac tylko do pobierania wartosci
   //static używamy gdy chcemy uzyc tej wartosci w metodzie ngOnInit(), jeśli nie nie musimy ustawiac false
+
+  @ContentChild('referenceToP', {static: true}) contentReference: ElementRef;
+  //tutaj podobnie jak @ViewChild, tylko ze sluzy do pobrania contentu w ng-content
 
   onCreateClick() {
     this.isAllowed = false;
@@ -58,4 +71,8 @@ export class AppComponent {
   //ngAfterViewInit kiedy vidok komponentu i jego zależności został zainijalizowany
   //ngAfterViewChecked za każdym razem gdy coś sie zmieni w widoku komponentu lub dzieci
   //ngOnDestroy kiedy komponent jest usuwany z DOM np za pomocą ifa
+
+  ngOnChanges(changes: SimpleChanges) {
+    console.log(changes);
+  }
 }
