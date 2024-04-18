@@ -13,11 +13,12 @@ import {RouterOutlet} from '@angular/router';
 import {HeaderComponent} from "./header/header.component";
 import {AdministrationSideMenuComponent} from './administration/side-menu/administration-side-menu.component';
 import {TestDirectiveDirective} from "./test-directive.directive";
+import {UnlessDirective} from "./unless.directive";
 
 @Component({ //mozna stworzyc za pomoca CLI 'ng generate component nazwa'
   selector: 'app-root', //selektor ktory uzywamy w html, mozemy rowniez uzywac atrybutu lub klasy
   standalone: true, //jesli chcemy standalone
-  imports: [RouterOutlet, HeaderComponent, AdministrationSideMenuComponent, TestDirectiveDirective], //tu dodajemy inne Componenty zamiast @NgModule || FormModule jest potrzebny do two-way binding
+  imports: [RouterOutlet, HeaderComponent, AdministrationSideMenuComponent, TestDirectiveDirective, UnlessDirective], //tu dodajemy inne Componenty zamiast @NgModule || FormModule jest potrzebny do two-way binding
   templateUrl: './app.component.html', //tu html
   styleUrl: './app.component.css', //tu css
   encapsulation: ViewEncapsulation.None //wyłącza enkapsulacje css, stają sie globalne, ShadowDom robi to co none ale za pomocą przeglądarki, nie wszystkie to obslugują
