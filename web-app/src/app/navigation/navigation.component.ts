@@ -9,7 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-import { DashboardComponent } from '../dashboard/dashboard.component';
+import { UserDashboardComponent } from '../administration/users/dashboard/user.dashboard.component';
 
 @Component({
   selector: 'app-navigation',
@@ -24,7 +24,7 @@ import { DashboardComponent } from '../dashboard/dashboard.component';
     MatIconModule,
     AsyncPipe,
     MatMenuModule,
-    DashboardComponent
+    UserDashboardComponent
   ]
 })
 export class NavigationComponent {
