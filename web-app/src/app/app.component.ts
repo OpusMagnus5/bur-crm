@@ -4,19 +4,22 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnDestroy,
+  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
   inject,
 } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
 import { AdministrationSideMenuComponent } from './administration/side-menu/administration-side-menu.component';
 import { TestDirectiveDirective } from './test-directive.directive';
 import { UnlessDirective } from './unless.directive';
 import { NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
 import { AppService } from './app.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   //mozna stworzyc za pomoca CLI 'ng generate component nazwa'
@@ -37,7 +40,7 @@ import { AppService } from './app.service';
   encapsulation: ViewEncapsulation.None, //wyłącza enkapsulacje css, stają sie globalne, ShadowDom robi to co none ale za pomocą przeglądarki, nie wszystkie to obslugują
   providers: [AppService], //musimy rownież dodac tutaj wstrzykiwany serwis
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy, OnInit {
   value: number = 10;
   title = 'web-app';
   isAllowed = true;
@@ -57,7 +60,13 @@ export class AppComponent {
 
   private appService2?: AppService; //drugi sposób na wstrzykiwanie serviców
 
-  constructor(private appService: AppService) {
+  constructor(
+    private appService: AppService,
+    private router: Router,
+    private rout: ActivatedRoute
+  ) {
+    //dodajemy ActivatedRoute aby wskazac na jakiesj sciezce sie znajdujemy relatywnie
+    //dodajmey router gdy chcemy w kodzie wyzwolic przjescie do innego komponentu
     //dodajemy serwis do kontruktora, te same instacje dostaną dzieci tego komponentu jeśli bedziemy wstrzykiwac
     //jeśli u dzieci podamy w providers otrzymają osobną instancje serwisu
     this.appService2 = inject(AppService); //drugi sposób na wstrzykiwanie serviców
@@ -101,5 +110,39 @@ export class AppComponent {
   ngOnChanges(changes: SimpleChanges) {
     console.log(changes);
     this.appService; //tak wołamy metode na serwisie
+  }
+
+  subscription: Subscription;
+
+  onLoad() {
+    this.router.navigate(['/users'], {
+      relativeTo: this.rout,
+      queryParams: { name: 'Damian' },
+      fragment: 'loading',
+    }); //wskazujemy pojedyczne czesci naszej sciezki ale zawsze relatywnie, i do jakiej relatywnie
+    // mozemy tez dodac query params oraz fragment
+
+    this.rout.snapshot.params['id']; //wyciagamy id ze sciezki
+    this.rout.snapshot.queryParams; //wyciagamy parametry
+    this.rout.snapshot.fragment; //fragmenty
+  }
+
+  ngOnInit(): void {
+    this.subscription = this.rout.params.subscribe((params: Params) => {
+      //obserwator zmian parametrów, jesli znajdujemy się na komponencie na ktory chcemy przłeadowac z nowymi danymi musimu uzyc tego spososbu
+      params['id'];
+    });
+    this.subscription = this.rout.queryParams.subscribe((params: Params) => {
+      //obserwator zmian parametrów, jesli znajdujemy się na komponencie na ktory chcemy przłeadowac z nowymi danymi musimu uzyc tego spososbu
+      params['id'];
+    });
+    this.subscription = this.rout.fragment.subscribe((fragment: string) => {
+      //obserwator zmian parametrów, jesli znajdujemy się na komponencie na ktory chcemy przłeadowac z nowymi danymi musimu uzyc tego spososbu
+      params['id'];
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe(); //usuwamy subskrypcje przy usuwaniu kompoenentu
   }
 }

@@ -3,16 +3,23 @@
 
 <!--COMPONENTY-->
 
-{{title}} <!--string interpolation one way binding from js to html, możemy tez wywoływac metody-->
-<button [disabled]="isAllowed"></button> <!-- property binding w html one way js to html -->
-<button (click)="onCreateClick()"></button> <!--event binding w nawiasie podajemy event a dalej reakcje na event-->
-<input type="text" (input)="onPassLetter($event)"> <!--user cos wpisuje i jednoczesnie zmienia sie zmienna i napis zmienna $event-->
-<input type="text" [(ngModel)]="title"> <!--two way binding, aktualizuje zmienna jak treś na ekranie-->
+{{ title }}
+<!--string interpolation one way binding from js to html, możemy tez wywoływac metody-->
+<button [disabled]="isAllowed"></button>
+<!-- property binding w html one way js to html -->
+<button (click)="onCreateClick()"></button>
+<!--event binding w nawiasie podajemy event a dalej reakcje na event-->
+<input type="text" (input)="onPassLetter($event)" />
+<!--user cos wpisuje i jednoczesnie zmienia sie zmienna i napis zmienna $event-->
+<input type="text" [(ngModel)]="title" />
+<!--two way binding, aktualizuje zmienna jak treś na ekranie-->
 
 <!--DYREKTYWY-->
 
-<p *ngIf="isAllowed; else noServer">tekst</p> <!--instrukcja warunkowa if czy wysiwetlac dany elelement, dodajemy gwiazdke bo dyrektywa wplyw na DOM (structural directive) może dodawać i usuwac elementy-->
-<ng-template #noServer> <!--możemy dodac else a tutaj dodatkowo osnosimy po local refernce, ng-template jest komponentem który pozwala nadawac referencje elementom-->
+<p *ngIf="isAllowed; else noServer">tekst</p>
+<!--instrukcja warunkowa if czy wysiwetlac dany elelement, dodajemy gwiazdke bo dyrektywa wplyw na DOM (structural directive) może dodawać i usuwac elementy-->
+<ng-template #noServer>
+  <!--możemy dodac else a tutaj dodatkowo osnosimy po local refernce, ng-template jest komponentem który pozwala nadawac referencje elementom-->
   <p>No tekst</p>
 </ng-template>
 
@@ -20,40 +27,50 @@
 <p>No tekst</p>
 }-->
 
-<p [ngStyle]="{color: getColor()}"></p> <!--dyrektywa dodaje style css, piszemy ja w [] bo bindujemy jej propertkę, będzie o tym poźniej-->
-<p [ngClass]="{online: isAllowed}"></p> <!--stosuje klasę o podanej nazwie z lewej strony jesli warunek jest spełniony po :-->
+<p [ngStyle]="{ color: getColor() }"></p>
+<!--dyrektywa dodaje style css, piszemy ja w [] bo bindujemy jej propertkę, będzie o tym poźniej-->
+<p [ngClass]="{ online: isAllowed }"></p>
+<!--stosuje klasę o podanej nazwie z lewej strony jesli warunek jest spełniony po :-->
 
-<p *ngFor="let server of serverNames">{{server}}; let i = index</p> <!--tworzy zmienne server iterujacej po tablicy serverNames,
+<p *ngFor="let server of serverNames">{{ server }}; let i = index</p>
+<!--tworzy zmienne server iterujacej po tablicy serverNames,
                         oraz index który możemy wykorzystac ale nie musimy go przypisywać i tworzy tyle ile jest elementów w tablicy-->
 
 <!--@for (server of serverNames; track server.id) { to jest nowy sposób na instrukcje for ale narazie dostępny tylko jako perview w wersji angulara 17
 <p></p>
 }-->
 
- <!-- COMPONENT PROPERTY BINDING -->
+<!-- COMPONENT PROPERTY BINDING -->
 
-<p [bindBesideComponent]="zmiennaWTymKomponencie"></p> <!-- tutaj przypisujemy zmiennej z innego komponentu wartośc zmiennej z tego komponentu z pomocą @Input() -->
+<p [bindBesideComponent]="zmiennaWTymKomponencie"></p>
+<!-- tutaj przypisujemy zmiennej z innego komponentu wartośc zmiennej z tego komponentu z pomocą @Input() -->
 
-  <!--COMPONENT CUSTOM EVENT BINDING-->
+<!--COMPONENT CUSTOM EVENT BINDING-->
 
-<button (nameOfEvent)="onCreateClick()"></button> <!--wykorzystanie emitera i customowego eventu, podajemy nazwe eventu/zmienna emitera oraz nazwe metody reagujacej na event-->
+<button (nameOfEvent)="onCreateClick()"></button>
+<!--wykorzystanie emitera i customowego eventu, podajemy nazwe eventu/zmienna emitera oraz nazwe metody reagujacej na event-->
 
-    <!--LOCAL REFERENCE-->
-<p #referenceToP></p> <!--lokalna referencje tworzymy poprzez #nazwa zmiennej-->
-<button (click)="setDataFromReference(referenceToP)"></button> <!--możemy ją używać tylko w htmlu, tak naprawde przekazujemy caly element p-->
+<!--LOCAL REFERENCE-->
+<p #referenceToP></p>
+<!--lokalna referencje tworzymy poprzez #nazwa zmiennej-->
+<button (click)="setDataFromReference(referenceToP)"></button>
+<!--możemy ją używać tylko w htmlu, tak naprawde przekazujemy caly element p-->
 <!--możemy ją przkeazywac do skryptu albo tez uzyc w innym miejsciu w html-->
 
 <div>
-  <ng-content></ng-content> <!-- to sprawia że umieszczenie czegoś pomiędzy tagami componentu jest wrzucane w to miejsce ponieważ domyślnie tak nie jest -->
+  <ng-content></ng-content>
+  <!-- to sprawia że umieszczenie czegoś pomiędzy tagami componentu jest wrzucane w to miejsce ponieważ domyślnie tak nie jest -->
 </div>
 
-      <!--CUSTOM DIRECTIVES-->
+<!--CUSTOM DIRECTIVES-->
 
-<p appTestDirective>CUSTOM DIR</p> <!--stosujemy dyrektywe-->
+<p appTestDirective>CUSTOM DIR</p>
+<!--stosujemy dyrektywe-->
 
 <p appTestDirective [defaultColor]="'yellow'"></p>
 
-<p appTestDirective [appTestDirective]="'yellow'"></p> <!--jeśli nadam nazwe moge ustawiac bezposrednio z nazwy dyrektywy ale tylko wtedy jedli ma jedna propertke-->
+<p appTestDirective [appTestDirective]="'yellow'"></p>
+<!--jeśli nadam nazwe moge ustawiac bezposrednio z nazwy dyrektywy ale tylko wtedy jedli ma jedna propertke-->
 
 <div *unless="true"></div>
 
@@ -62,3 +79,26 @@
   <p *ngSwitchCase="10"></p>
   <p *ngSwitchDefault></p>
 </div>
+
+<!-- ROUTER -->
+
+<router-outlet></router-outlet>
+<!-- do wskazania gdzie ma się ładować component z routingu -->
+
+<i
+  routerLink="/users"
+  routerLinkActive="active"
+  [routerLinkActiveOptions]="{ exact: true }"
+></i>
+<!-- zamiast href uzywamy routerLink, jesli nie podamy / na poczatku to bedzie dodawało sciezke do obecnej na jakiej sie znajdujemy 
+      routerLinkActive słuzy do nadawania danej klasy css gdy dana sciezk jest aktywna
+      routerLinkActiveOptions jeśli jest dokładnie na tej stronie-->
+
+<i
+  [routerLink]="['/users']"
+  [queryParams]="{ name: 'Damian' }"
+  fragment="loading"
+></i>
+<!-- to samo co wyzej tylko inny zapis plus przekazywanie parametrów, fragment doda na koncu #loading -->
+
+<button (click)="onLoad()"></button>
