@@ -115,4 +115,6 @@
   email to też dyrektywa która sprawdza czy ok email-->
   <button type="submit" [disabled]="!formElement.valid"></button> <!--wyłączamy button jesli form jest invalid-->
   <!--angular dodaje klasy ng-valid lub invalid, ng-touched, możemy dzięki temu stylowac lub pokazywac komunikaty-->
+  <p [(ngModel)]="asnwer"></p> <!--pobieranie i jednoczene wyswietlanie kazdego wpisania-->
+  <p>{{ asnwer }}</p>
 </form>
