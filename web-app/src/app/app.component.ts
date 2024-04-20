@@ -19,7 +19,7 @@ import {TestDirectiveDirective} from './test-directive.directive';
 import {UnlessDirective} from './unless.directive';
 import {NgSwitch, NgSwitchCase, NgSwitchDefault} from '@angular/common';
 import {AppService} from './app.service';
-import {interval, map, Observable, Subscription} from 'rxjs';
+import {interval, map, Observable, Subject, Subscription} from 'rxjs';
 
 @Component({
   //mozna stworzyc za pomoca CLI 'ng generate component nazwa'
@@ -173,4 +173,12 @@ export class AppComponent implements OnDestroy, OnInit {
   ngOnDestroy(): void {
     this.subscription.unsubscribe(); //usuwamy subskrypcje przy usuwaniu kompoenentu
   }
+
+  newSubject = new Subject<boolean>();
+
+  testSubject() {
+    this.newSubject.next(true); //na subjectach mozemy recznie wypychac dane i go zasubskrybowac, nie nalezy stosować z @Output, słuzy do komunikacji miedzy componentami
+    this.newSubject.subscribe()
+  }
+
 }
