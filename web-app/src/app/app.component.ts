@@ -20,6 +20,7 @@ import {UnlessDirective} from './unless.directive';
 import {NgSwitch, NgSwitchCase, NgSwitchDefault} from '@angular/common';
 import {AppService} from './app.service';
 import {interval, map, Observable, Subject, Subscription} from 'rxjs';
+import {FormsModule} from "@angular/forms";
 
 @Component({
   //mozna stworzyc za pomoca CLI 'ng generate component nazwa'
@@ -34,6 +35,7 @@ import {interval, map, Observable, Subject, Subscription} from 'rxjs';
     NgSwitch,
     NgSwitchCase,
     NgSwitchDefault,
+    FormsModule,
   ], //tu dodajemy inne Componenty zamiast @NgModule || FormModule jest potrzebny do two-way binding
   templateUrl: './app.component.html', //tu html
   styleUrl: './app.component.css', //tu css

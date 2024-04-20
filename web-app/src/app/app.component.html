@@ -90,7 +90,7 @@
   routerLinkActive="active"
   [routerLinkActiveOptions]="{ exact: true }"
 ></i>
-<!-- zamiast href uzywamy routerLink, jesli nie podamy / na poczatku to bedzie dodawało sciezke do obecnej na jakiej sie znajdujemy 
+<!-- zamiast href uzywamy routerLink, jesli nie podamy / na poczatku to bedzie dodawało sciezke do obecnej na jakiej sie znajdujemy
       routerLinkActive słuzy do nadawania danej klasy css gdy dana sciezk jest aktywna
       routerLinkActiveOptions jeśli jest dokładnie na tej stronie-->
 
@@ -102,3 +102,9 @@
 <!-- to samo co wyzej tylko inny zapis plus przekazywanie parametrów, fragment doda na koncu #loading -->
 
 <button (click)="onLoad()"></button>
+
+  <!--TEMPLATE DRIVEN FORM-->
+
+<form> <!--angular stworzy dla nas object na podstawie formularza-->
+  <input ngModel name="email"> <!--musimy poinformowac angulara ze to jest input formularza oraz nadac mu name-->
+</form>
