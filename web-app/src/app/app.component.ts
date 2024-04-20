@@ -20,7 +20,7 @@ import {UnlessDirective} from './unless.directive';
 import {NgSwitch, NgSwitchCase, NgSwitchDefault} from '@angular/common';
 import {AppService} from './app.service';
 import {interval, map, Observable, Subject, Subscription} from 'rxjs';
-import {FormsModule} from "@angular/forms";
+import {FormsModule, NgForm} from "@angular/forms";
 
 @Component({
   //mozna stworzyc za pomoca CLI 'ng generate component nazwa'
@@ -183,4 +183,15 @@ export class AppComponent implements OnDestroy, OnInit {
     this.newSubject.subscribe()
   }
 
+  onSubmit(form: NgForm) {
+    console.log(form);
+    /*propertki:
+      dirty - okresla czy cos bylo zmienione w formie
+      disabled gdy jest wylaczone
+      valid jesli mamy walidatory zwraca czy jest ok
+      touch - czy były klikane pola*/
+  }
+
+
+  
 }

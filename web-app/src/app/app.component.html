@@ -105,6 +105,7 @@
 
   <!--TEMPLATE DRIVEN FORM-->
 
-<form> <!--angular stworzy dla nas object na podstawie formularza-->
+<!--tak submitujemy form-->
+<form (ngSubmit)="onSubmit(formElement)" #formElement="ngForm"> <!--angular stworzy dla nas object na podstawie formularza-->
   <input ngModel name="email"> <!--musimy poinformowac angulara ze to jest input formularza oraz nadac mu name-->
 </form>
