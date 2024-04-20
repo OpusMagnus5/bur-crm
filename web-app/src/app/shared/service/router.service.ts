@@ -15,7 +15,7 @@ export class RouterService {
       if (event instanceof NavigationEnd) {
         this.activeUrl = event.url;
       }
-      if (this.activeUrl == '/') {
+      if (this.activeUrl === '/') {
         this.activeUrl = '';
       }
     });
