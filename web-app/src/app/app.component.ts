@@ -12,15 +12,25 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {ActivatedRoute, Params, Router, RouterOutlet} from '@angular/router';
+import {ActivatedRoute, Event, Params, Router, RouterOutlet} from '@angular/router';
 import {HeaderComponent} from './header/header.component';
 import {AdministrationSideMenuComponent} from './administration/side-menu/administration-side-menu.component';
 import {TestDirectiveDirective} from './test-directive.directive';
 import {UnlessDirective} from './unless.directive';
-import {NgSwitch, NgSwitchCase, NgSwitchDefault} from '@angular/common';
+import {NgForOf, NgSwitch, NgSwitchCase, NgSwitchDefault} from '@angular/common';
 import {AppService} from './app.service';
 import {interval, map, Observable, Subject, Subscription} from 'rxjs';
-import {FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators} from "@angular/forms";
+import {
+  AbstractControl,
+  FormArray,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  NgForm,
+  ReactiveFormsModule,
+  Validators
+} from "@angular/forms";
+import * as console from "console";
 
 @Component({
   //mozna stworzyc za pomoca CLI 'ng generate component nazwa'
@@ -36,7 +46,8 @@ import {FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Valida
     NgSwitchCase,
     NgSwitchDefault,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgForOf
   ], //tu dodajemy inne Componenty zamiast @NgModule || FormModule jest potrzebny do two-way binding
   templateUrl: './app.component.html', //tu html
   styleUrl: './app.component.css', //tu css
@@ -214,11 +225,22 @@ export class AppComponent implements OnDestroy, OnInit {
       'userData': new FormGroup({ //zagnieżdzony formularz
         'username': new FormControl(null),
         'email': new FormControl('adam@emial.com', Validators.required),
-      })
+      }),
+      'hobbies': new FormArray([])
     })
   }
 
   onSubmitReactive() {
     //dostep mamy poprzez signupForm;
+  }
+
+  onAddHobby() {
+    const hobby = new FormControl(null, Validators.required); //dodawanie nowego hobby, raktywnie dodajemy nowy element formularza
+    (<FormArray>this.signupForm.get('hobbies')).push(hobby);
+  }
+
+
+  getHobbies(): AbstractControl[] {
+    return (<FormArray>this.signupForm.get('hobbies')).controls;
   }
 }

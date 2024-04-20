@@ -135,4 +135,10 @@
     input type="text" formControlName="username">
     <span *ngIf="signupForm.get('userData.username')?.valid">ERROR</span> <!--musimy podawac sciezki-->
   </div>
+  <div formArrayName="hobbies"> <!--wiazemy tablice kontroler-->
+    <button (click)="onAddHobby()">Add Hobby</button>
+    <div *ngFor="let hobbyCtrl of getHobbies(); let i = index">
+      <input [formControlName]="i">
+    </div>
+  </div>
 </form>
