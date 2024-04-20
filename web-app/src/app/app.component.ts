@@ -183,6 +183,8 @@ export class AppComponent implements OnDestroy, OnInit {
     this.newSubject.subscribe()
   }
 
+  @ViewChild('formElement') formData: NgForm | undefined;
+
   onSubmit(form: NgForm) {
     console.log(form);
     /*propertki:
@@ -190,9 +192,10 @@ export class AppComponent implements OnDestroy, OnInit {
       disabled gdy jest wylaczone
       valid jesli mamy walidatory zwraca czy jest ok
       touch - czy były klikane pola*/
-  }
 
-  @ViewChild('formElement') formData: NgForm | undefined;
+    this.formData?.setValue({userData: { email: 'suggested'}}) //pozawala na zmiane całego formularza setValue
+    this.formData?.form.patchValue({userData: {email: 'def'}}) //to zmienia tylko podaną scieżkę
+  }
 
   asnwer = '';
 
