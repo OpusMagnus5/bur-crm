@@ -119,4 +119,10 @@
     <p [(ngModel)]="asnwer"></p> <!--pobieranie i jednoczene wyswietlanie kazdego wpisania-->
     <p>{{ asnwer }}</p>
   </div>
+  <div *ngFor="let gender of genders">
+    <label>
+      <input type="radio" name="gender" ngModel [value]="gender"> <!--radio buttons-->
+      {{ gender }}
+    </label>
+  </div>
 </form>

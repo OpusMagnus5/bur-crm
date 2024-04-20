@@ -195,4 +195,6 @@ export class AppComponent implements OnDestroy, OnInit {
   @ViewChild('formElement') formData: NgForm | undefined;
 
   asnwer = '';
+
+  genders = ['male', 'female'];
 }
