@@ -196,6 +196,7 @@ export class AppComponent implements OnDestroy, OnInit {
     this.formData?.setValue({userData: { email: 'suggested'}}) //pozawala na zmiane całego formularza setValue
     this.formData?.form.patchValue({userData: {email: 'def'}}) //to zmienia tylko podaną scieżkę
     this.formData?.value.genders; // odczytywanie danych
+    this.formData?.reset() //reset form, jesli przekazemy tam obiekt - sciezke to zresetujemy tylko podane pola
   }
 
   asnwer = '';
