@@ -20,7 +20,7 @@ import {UnlessDirective} from './unless.directive';
 import {NgSwitch, NgSwitchCase, NgSwitchDefault} from '@angular/common';
 import {AppService} from './app.service';
 import {interval, map, Observable, Subject, Subscription} from 'rxjs';
-import {FormsModule, NgForm} from "@angular/forms";
+import {FormControl, FormGroup, FormsModule, NgForm} from "@angular/forms";
 
 @Component({
   //mozna stworzyc za pomoca CLI 'ng generate component nazwa'
@@ -202,4 +202,14 @@ export class AppComponent implements OnDestroy, OnInit {
   asnwer = '';
 
   genders = ['male', 'female'];
+
+  signupForm: FormGroup;
+
+  ngOnInini() { //najlepiej inicjalizować w ngOnInit bo musi byc dostępny przed wyswietleniem componentu
+    this.signupForm = new FormGroup({ //tworzymy formularz
+      'username': new FormControl(null), /*wpisujemu co chcemy wyswietlic na starcie*/
+      'email': new FormControl('adam@emial.com')
+    })
+  }
+
 }
