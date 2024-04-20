@@ -192,6 +192,6 @@ export class AppComponent implements OnDestroy, OnInit {
       touch - czy były klikane pola*/
   }
 
-  
+  @ViewChild('formElement') formData: NgForm | undefined;
 
 }
