@@ -140,5 +140,8 @@
     <div *ngFor="let hobbyCtrl of getHobbies(); let i = index">
       <input [formControlName]="i">
     </div>
+    <span *ngIf="signupForm.get('userData.username')?.errors?.['nameIsForbidden']"> <!--tak mozemy wykorzystan kody błędów-->
+      This is field invalid
+    </span>
   </div>
 </form>

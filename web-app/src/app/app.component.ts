@@ -17,7 +17,7 @@ import {HeaderComponent} from './header/header.component';
 import {AdministrationSideMenuComponent} from './administration/side-menu/administration-side-menu.component';
 import {TestDirectiveDirective} from './test-directive.directive';
 import {UnlessDirective} from './unless.directive';
-import {NgForOf, NgSwitch, NgSwitchCase, NgSwitchDefault} from '@angular/common';
+import {NgForOf, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault} from '@angular/common';
 import {AppService} from './app.service';
 import {interval, map, Observable, Subject, Subscription} from 'rxjs';
 import {
@@ -47,7 +47,8 @@ import * as console from "console";
     NgSwitchDefault,
     FormsModule,
     ReactiveFormsModule,
-    NgForOf
+    NgForOf,
+    NgIf
   ], //tu dodajemy inne Componenty zamiast @NgModule || FormModule jest potrzebny do two-way binding
   templateUrl: './app.component.html', //tu html
   styleUrl: './app.component.css', //tu css
