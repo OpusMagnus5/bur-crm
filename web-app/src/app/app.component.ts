@@ -236,6 +236,10 @@ export class AppComponent implements OnDestroy, OnInit {
     this.signupForm.statusChanges.subscribe((status) => {  //to loguje status np INVALID, PENDING, VALID dla każdej zmiany, nie dla całego formularz
       console.log(status);
     })
+
+    this.signupForm.setValue({}); // możemy wpływac na wartosci
+    this.signupForm.patchValue({}) //możemy tez na pojedyncze
+    this.signupForm.reset(); //reset
   }
 
   onSubmitReactive() {
