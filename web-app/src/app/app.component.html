@@ -126,3 +126,8 @@
     </label>
   </div>
 </form>
+
+  <!--REACTIVE WAY-->
+<form [formGroup]="signupForm"> <!--wiązemy formularz stworzony na backendzie, przkezujac go tutaj-->
+  <input type="text" formControlName="username"> <!--wiązemy inputy z tymi zadeklarowanym w typescript-->
+</form>
