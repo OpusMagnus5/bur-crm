@@ -229,6 +229,13 @@ export class AppComponent implements OnDestroy, OnInit {
       }),
       'hobbies': new FormArray([])
     })
+    this.signupForm.valueChanges.subscribe((value) => { /*to sprawdza cały formularz i nie możemy tak sprawdzać pojedynczej kontrolki*/
+      console.log(value);
+    })
+
+    this.signupForm.statusChanges.subscribe((status) => {  //to loguje status np INVALID, PENDING, VALID dla każdej zmiany, nie dla całego formularz
+      console.log(status);
+    })
   }
 
   onSubmitReactive() {
