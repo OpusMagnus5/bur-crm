@@ -5,7 +5,7 @@ import {Observable} from "rxjs";
 @Injectable({providedIn: "root"})
 export class RouterService {
 
-  activeUrl: string = '';
+  private activeUrl: string = '';
   private routerEventObserver: Observable<any>;
 
   constructor(private router: Router) {
@@ -19,5 +19,13 @@ export class RouterService {
         this.activeUrl = '';
       }
     });
+  }
+
+  isActivePath(path: string): boolean {
+    return this.activeUrl === path;
+  }
+
+  isPartOfActivePath(path: string): boolean {
+    return this.activeUrl.includes(path);
   }
 }

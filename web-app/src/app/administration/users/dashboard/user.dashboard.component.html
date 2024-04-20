@@ -1,9 +1,9 @@
-<div class="grid-container">
+<div class="user-container">
   <nav mat-tab-nav-bar [tabPanel]="tabPanel" mat-stretch-tabs="false" mat-align-tabs="end" animationDuration="0ms">
     @for (link of links; track link) {
       <a mat-tab-link
          [routerLink]="[link.path]"
-         [active]="routerService.activeUrl === getFullRoutePath(link.path)">
+         [active]="routerService.isActivePath(getFullRoutePath(link.path))">
         {{ link.name }}
       </a>
     }
