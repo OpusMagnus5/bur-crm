@@ -19,7 +19,7 @@ import {TestDirectiveDirective} from './test-directive.directive';
 import {UnlessDirective} from './unless.directive';
 import {NgSwitch, NgSwitchCase, NgSwitchDefault} from '@angular/common';
 import {AppService} from './app.service';
-import {interval, Observable, Subscription} from 'rxjs';
+import {interval, map, Observable, Subscription} from 'rxjs';
 
 @Component({
   //mozna stworzyc za pomoca CLI 'ng generate component nazwa'
@@ -160,6 +160,14 @@ export class AppComponent implements OnDestroy, OnInit {
         count++;
       }, 1000)
     })
+
+    customIntervalObservable.pipe(map((data) => {
+      return 'Round: ' + (data + 1); //operators, ten zmienia przed odebraniem go przez obserwatora
+    }));
+
+    customIntervalObservable.pipe(map((data) => {
+      return 'Round: ' + (data + 1); //operators, ten zmienia przed odebraniem go przez obserwatora
+    })).subscribe(); //i wtedy możemy subskrybowac dostosowane wiadomosci a kod oryginalny nie zostaje zmieniony
   }
 
   ngOnDestroy(): void {
