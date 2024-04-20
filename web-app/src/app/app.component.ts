@@ -225,7 +225,7 @@ export class AppComponent implements OnDestroy, OnInit {
       'email2': new FormControl('adam@emial.com', [Validators.required, Validators.email]),
       'userData': new FormGroup({ //zagnieżdzony formularz
         'username': new FormControl(null),
-        'email': new FormControl('adam@emial.com', [Validators.required, this.forbiddenChecker.bind(this)]), //tacki trick musimy zastosowac z bind
+        'email': new FormControl('adam@emial.com', [Validators.required, this.forbiddenChecker.bind(this)], [this.forbiddenEmails]), //tacki trick musimy zastosowac z bind
       }),
       'hobbies': new FormArray([])
     })
@@ -252,5 +252,18 @@ export class AppComponent implements OnDestroy, OnInit {
       return {'nameIsForbidden': true}; //kod błedu jest dowolny
     }
     return null;  //jesli jest ok zawsze zwracamy null
+  }
+
+  forbiddenEmails(control: FormControl): Promise<any> | Observable<any> {
+    const promise = new Promise<any>((resolve, reject) => {
+      setTimeout(() => {
+        if (control.value === 'gmail') {
+          resolve({'emailIsForbidden': true});
+        } else {
+          resolve(null);
+        }
+      }, 1500)
+    });
+    return promise;
   }
 }
