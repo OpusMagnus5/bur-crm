@@ -3,6 +3,7 @@ import {
   ContentChild,
   ElementRef,
   EventEmitter,
+  inject,
   Input,
   OnDestroy,
   OnInit,
@@ -10,16 +11,15 @@ import {
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
-  inject,
 } from '@angular/core';
-import { ActivatedRoute, Params, Router, RouterOutlet } from '@angular/router';
-import { HeaderComponent } from './header/header.component';
-import { AdministrationSideMenuComponent } from './administration/side-menu/administration-side-menu.component';
-import { TestDirectiveDirective } from './test-directive.directive';
-import { UnlessDirective } from './unless.directive';
-import { NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
-import { AppService } from './app.service';
-import { Subscription } from 'rxjs';
+import {ActivatedRoute, Params, Router, RouterOutlet} from '@angular/router';
+import {HeaderComponent} from './header/header.component';
+import {AdministrationSideMenuComponent} from './administration/side-menu/administration-side-menu.component';
+import {TestDirectiveDirective} from './test-directive.directive';
+import {UnlessDirective} from './unless.directive';
+import {NgSwitch, NgSwitchCase, NgSwitchDefault} from '@angular/common';
+import {AppService} from './app.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   //mozna stworzyc za pomoca CLI 'ng generate component nazwa'
@@ -118,6 +118,7 @@ export class AppComponent implements OnDestroy, OnInit {
     this.router.navigate(['/users'], {
       relativeTo: this.rout,
       queryParams: { name: 'Damian' },
+      queryParamsHandling: 'preserve', // zachowuje parametry przy przejsciu, sa tej inne opcje do wyboru
       fragment: 'loading',
     }); //wskazujemy pojedyczne czesci naszej sciezki ale zawsze relatywnie, i do jakiej relatywnie
     // mozemy tez dodac query params oraz fragment
