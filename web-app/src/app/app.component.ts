@@ -19,7 +19,7 @@ import {TestDirectiveDirective} from './test-directive.directive';
 import {UnlessDirective} from './unless.directive';
 import {NgSwitch, NgSwitchCase, NgSwitchDefault} from '@angular/common';
 import {AppService} from './app.service';
-import {Subscription} from 'rxjs';
+import {interval, Subscription} from 'rxjs';
 
 @Component({
   //mozna stworzyc za pomoca CLI 'ng generate component nazwa'
@@ -141,6 +141,11 @@ export class AppComponent implements OnDestroy, OnInit {
       //obserwator zmian parametrów, jesli znajdujemy się na komponencie na ktory chcemy przłeadowac z nowymi danymi musimu uzyc tego spososbu
       params['id'];
     });
+
+    interval(1000).subscribe(count => { //observalble który emituje co 1s kolejną wartośc 1,2,3 itd,
+      // one pozostają nawet po zniszczeniu komponentu więc trzeba pamiętać o ich zamykaniu metodą unsubscribe
+      console.log(count);
+    })
   }
 
   ngOnDestroy(): void {
