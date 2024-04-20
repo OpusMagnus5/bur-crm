@@ -5,9 +5,9 @@
   "projects": {
     "web-app": {
       "i18n": {
-        "sourceLocale": "pl",
+        "sourceLocale": "en",
         "locales": {
-          "en": "src/locale/messages.pl.json"
+          "pl": "src/locale/messages.pl.json"
         }
       },
       "projectType": "application",
