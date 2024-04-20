@@ -147,12 +147,15 @@ export class AppComponent implements OnDestroy, OnInit {
       console.log(count);
     }, error => {
       console.log(error); //obsługa erroru
+    }, () => {
+      console.log('Complete'); //reakcja na zakończenie
     })
 
     const customIntervalObservable: Observable<any> = new Observable(observer => { //tworzymy observal to samo co wyżej tylko custom
       let count = 0;
       setInterval(() => {
         observer.next(count)
+        observer.complete(); //konczenie observabla
         observer.error(new Error('count !!!')) //kiedy rzucimi błąd subscriber umiera, nie musimy niszczyć
         count++;
       }, 1000)
