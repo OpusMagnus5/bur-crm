@@ -12,7 +12,7 @@ import {map, shareReplay} from 'rxjs/operators';
 import {UserDashboardComponent} from '../administration/users/dashboard/user.dashboard.component';
 import {RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
 import {ADMINISTRATION_PATH, ADMINISTRATION_USERS_PATH, BASE_PATH} from "../app.routes";
-import {RouterService} from "./service/router.service";
+import {RouterService} from "../shared/service/router.service";
 
 @Component({
   selector: 'app-navigation',
@@ -31,10 +31,6 @@ import {RouterService} from "./service/router.service";
     RouterOutlet,
     RouterLink,
     RouterLinkActive
-  ],
-  providers: [
-    BreakpointObserver,
-    RouterService
   ]
 })
 export class NavigationComponent {
@@ -46,7 +42,7 @@ export class NavigationComponent {
   protected isHandset$: Observable<boolean>;
 
   constructor(private breakpointObserver: BreakpointObserver, protected routerService: RouterService) {
-    this.isHandset$ = breakpointObserver.observe(Breakpoints.Handset)
+    this.isHandset$ = breakpointObserver.observe(Breakpoints.XSmall)
       .pipe(
         map(result => result.matches),
         shareReplay()

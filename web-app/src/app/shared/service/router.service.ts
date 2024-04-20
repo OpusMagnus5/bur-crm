@@ -1,7 +1,7 @@
 import {NavigationEnd, Router} from "@angular/router";
 import {Injectable} from "@angular/core";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class RouterService {
 
   activeUrl: string = '';
