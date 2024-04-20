@@ -1,5 +1,5 @@
-import { Routes } from '@angular/router';
-import { HeaderComponent } from './header/header.component';
+import {Routes} from '@angular/router';
+import {HeaderComponent} from './header/header.component';
 
 export const routes: Routes = [
   //wpisujemy obiekty z propertką path i który component chcemy załadować
@@ -11,4 +11,8 @@ export const routes: Routes = [
     component: HeaderComponent,
     children: [{ path: ':id', component: HeaderComponent }], // tutaj zagniezdzone sciezki w stosunku
   }, //dynamicznie mozemy przekazywac dowolną cześć patha dalej
+  {
+    path: '**', redirectTo: '/user', pathMatch: "full" //przekierowanie w routingu, ** wildcart przechwytuje jeśli nie znaleziono routingu dla niej,
+    // i powinniśmy ją umieszczać na końcu, patchMatch okresla ze musi pasować cała ścieżka do przekierownia, domyślnie sprawdza tylko czy zaczyna się podanym fragmenentem
+  },
 ];
