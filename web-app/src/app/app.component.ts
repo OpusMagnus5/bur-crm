@@ -19,7 +19,7 @@ import {TestDirectiveDirective} from './test-directive.directive';
 import {UnlessDirective} from './unless.directive';
 import {NgSwitch, NgSwitchCase, NgSwitchDefault} from '@angular/common';
 import {AppService} from './app.service';
-import {interval, Subscription} from 'rxjs';
+import {interval, Observable, Subscription} from 'rxjs';
 
 @Component({
   //mozna stworzyc za pomoca CLI 'ng generate component nazwa'
@@ -145,6 +145,14 @@ export class AppComponent implements OnDestroy, OnInit {
     interval(1000).subscribe(count => { //observalble który emituje co 1s kolejną wartośc 1,2,3 itd,
       // one pozostają nawet po zniszczeniu komponentu więc trzeba pamiętać o ich zamykaniu metodą unsubscribe
       console.log(count);
+    })
+
+    const customIntervalObservable: Observable<any> = new Observable(observer => { //tworzymy observal to samo co wyżej tylko custom
+      let count = 0;
+      setInterval(() => {
+        observer.next(count)
+        count++;
+      }, 1000)
     })
   }
 
