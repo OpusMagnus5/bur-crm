@@ -213,4 +213,7 @@ export class AppComponent implements OnDestroy, OnInit {
     })
   }
 
+  onSubmitReactive() {
+    //dostep mamy poprzez signupForm;
+  }
 }
