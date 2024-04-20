@@ -211,6 +211,10 @@ export class AppComponent implements OnDestroy, OnInit {
       'username': new FormControl(null), /*wpisujemu co chcemy wyswietlic na starcie*/
       'email': new FormControl('adam@emial.com', Validators.required),
       'email2': new FormControl('adam@emial.com', [Validators.required, Validators.email]),
+      'userData': new FormGroup({ //zagnieżdzony formularz
+        'username': new FormControl(null),
+        'email': new FormControl('adam@emial.com', Validators.required),
+      })
     })
   }
 

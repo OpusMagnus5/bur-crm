@@ -130,5 +130,9 @@
   <!--REACTIVE WAY-->         <!--submitujemy formularz-->
 <form [formGroup]="signupForm" (ngSubmit)="onSubmitReactive()"> <!--wiązemy formularz stworzony na backendzie, przkezujac go tutaj-->
   <input type="text" formControlName="username"> <!--wiązemy inputy z tymi zadeklarowanym w typescript-->
-  <span *ngIf="signupForm.get('username')?.valid && signupForm.get('username')?.touched">ERROR</span> <!--dodajemy walidacje-->
+  <span *ngIf="signupForm.get('username')?.valid && signupForm.get('username')?.touched">ERROR</span> <!--dodajemy walidacje, podajac nazwe albo sciezke jesli jest to zagniezdzone pole-->
+  <div formGroupName="userData"> <!--wiazemy grupe z tą z typescript-->
+    input type="text" formControlName="username">
+    <span *ngIf="signupForm.get('userData.username')?.valid">ERROR</span> <!--musimy podawac sciezki-->
+  </div>
 </form>
