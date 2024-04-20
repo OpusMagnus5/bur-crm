@@ -2,8 +2,9 @@ import {Component} from '@angular/core';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatTabsModule} from '@angular/material/tabs';
 import {NewUserComponent} from '../new-user/new-user.component';
-import {Route, RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
-import {ADMINISTRATION_USERS_PATH, routes} from "../../../app.routes";
+import {RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
+import {ADMINISTRATION_USERS_PATH, NEW_USER_PATH, USER_LIST_PATH} from "../../../app.routes";
+import {RouterService} from "../../../navigation/service/router.service";
 
 @Component({
   selector: 'user-dashboard',
@@ -20,11 +21,24 @@ import {ADMINISTRATION_USERS_PATH, routes} from "../../../app.routes";
   ]
 })
 export class UserDashboardComponent {
-  links: (string | undefined)[] = routes
-    .filter((route: Route) => route.path === ADMINISTRATION_USERS_PATH)
-    .flatMap((route: Route) => route.children)
-    .filter((routes: Route | undefined) => routes !== undefined)
-    .map((route: Route | undefined) => route?.path);
 
-  activeLink: string | undefined = '';
+  protected readonly ADMINISTRATION_USERS_PATH = ADMINISTRATION_USERS_PATH;
+
+  protected links: {path: string, name: string}[] = [
+    {
+      path: USER_LIST_PATH,
+      name: 'Users List'
+    },
+    {
+      path: NEW_USER_PATH,
+      name: 'Add New'
+    }
+  ]
+
+  constructor(protected routerService: RouterService) {
+  }
+
+  protected getFullRoutePath(path: string) {
+    return '/' + ADMINISTRATION_USERS_PATH + '/' + path;
+  }
 }

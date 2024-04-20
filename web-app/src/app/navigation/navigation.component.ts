@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component} from '@angular/core';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {AsyncPipe} from '@angular/common';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -11,7 +11,8 @@ import {Observable} from 'rxjs';
 import {map, shareReplay} from 'rxjs/operators';
 import {UserDashboardComponent} from '../administration/users/dashboard/user.dashboard.component';
 import {RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
-import {ADMINISTRATION_USERS_PATH, BASE_PATH} from "../app.routes";
+import {ADMINISTRATION_PATH, ADMINISTRATION_USERS_PATH, BASE_PATH} from "../app.routes";
+import {RouterService} from "./service/router.service";
 
 @Component({
   selector: 'app-navigation',
@@ -30,16 +31,25 @@ import {ADMINISTRATION_USERS_PATH, BASE_PATH} from "../app.routes";
     RouterOutlet,
     RouterLink,
     RouterLinkActive
+  ],
+  providers: [
+    BreakpointObserver,
+    RouterService
   ]
 })
 export class NavigationComponent {
-  private breakpointObserver = inject(BreakpointObserver);
 
-  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
-    .pipe(
-      map(result => result.matches),
-      shareReplay()
-    );
   protected readonly BASE_PATH = BASE_PATH;
+  protected readonly ADMINISTRATION_PATH = ADMINISTRATION_PATH;
   protected readonly ADMINISTRATION_USERS_PATH = ADMINISTRATION_USERS_PATH;
+
+  protected isHandset$: Observable<boolean>;
+
+  constructor(private breakpointObserver: BreakpointObserver, protected routerService: RouterService) {
+    this.isHandset$ = breakpointObserver.observe(Breakpoints.Handset)
+      .pipe(
+        map(result => result.matches),
+        shareReplay()
+      );
+  }
 }

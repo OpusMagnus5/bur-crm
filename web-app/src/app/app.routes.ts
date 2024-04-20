@@ -3,8 +3,9 @@ import {UserDashboardComponent} from "./administration/users/dashboard/user.dash
 import {NewUserComponent} from "./administration/users/new-user/new-user.component";
 import {UsersListComponent} from "./administration/users/users-list/users-list.component";
 
+export const ADMINISTRATION_PATH: string = 'administration';
 export const BASE_PATH: string = '/';
-export const ADMINISTRATION_USERS_PATH: string = 'administration/users';
+export const ADMINISTRATION_USERS_PATH: string = ADMINISTRATION_PATH + '/users';
 export const NEW_USER_PATH: string = 'new';
 export const USER_LIST_PATH: string = 'list';
 
