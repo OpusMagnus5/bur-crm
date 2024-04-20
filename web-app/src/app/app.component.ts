@@ -224,7 +224,7 @@ export class AppComponent implements OnDestroy, OnInit {
       'email2': new FormControl('adam@emial.com', [Validators.required, Validators.email]),
       'userData': new FormGroup({ //zagnieżdzony formularz
         'username': new FormControl(null),
-        'email': new FormControl('adam@emial.com', Validators.required),
+        'email': new FormControl('adam@emial.com', [Validators.required, this.forbiddenChecker.bind(this)]), //tacki trick musimy zastosowac z bind
       }),
       'hobbies': new FormArray([])
     })
@@ -242,5 +242,14 @@ export class AppComponent implements OnDestroy, OnInit {
 
   getHobbies(): AbstractControl[] {
     return (<FormArray>this.signupForm.get('hobbies')).controls;
+  }
+
+  forbiddenUsername = ['Anna'];
+
+  forbiddenChecker(control: FormControl): { [p: string]: boolean } | null { //custom validator
+    if (this.forbiddenUsername.indexOf(control.value) !== -1) {
+      return {'nameIsForbidden': true}; //kod błedu jest dowolny
+    }
+    return null;  //jesli jest ok zawsze zwracamy null
   }
 }
