@@ -107,8 +107,10 @@
 
 <!--tak submitujemy form-->
 <form (ngSubmit)="onSubmit(formElement)" #formElement="ngForm"> <!--angular stworzy dla nas object na podstawie formularza-->
-  <input ngModel name="email"
-  required email> <!--musimy poinformowac angulara ze to jest input formularza oraz nadac mu name-->
+  <input [ngModel]="'defaultValue'" name="email"
+  required email #email="ngModel"><!-- nadawanie deafultowej wartości-->
+  <span *ngIf="!email.valid && email.touched"></span> <!--pokazywanie wiadomosci z validacja-->
+  <!--musimy poinformowac angulara ze to jest input formularza oraz nadac mu name-->
   <!--required informuje angualra ze ma byc obowiazko i bedzie invalid jesli bedzie empty
   email to też dyrektywa która sprawdza czy ok email-->
   <button type="submit" [disabled]="!formElement.valid"></button> <!--wyłączamy button jesli form jest invalid-->
