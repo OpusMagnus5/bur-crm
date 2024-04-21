@@ -1,5 +1,6 @@
 package pl.bodzioch.damian.user;
 
+import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.valueobject.AuditData;
 
 import java.security.SecureRandom;
@@ -22,7 +23,7 @@ record User (
 
 
 
-    User(CreateNewUserCommand command) {
+    User(CreateNewUserCommand command, List<UserRole> roles) {
         this (
                 null,
                 null,
@@ -31,7 +32,7 @@ record User (
                 generateFirstPassword(),
                 command.firstName(),
                 command.lastName(),
-                List.of(UserRole.NOT_ACTIVE),
+                roles,
                 null,
                 new AuditData(null, null, command.creatorId(), null)
         );
@@ -46,6 +47,22 @@ record User (
             password.append(secureRandom.nextInt(passwordCharacters.length()));
         }
         return password.toString();
+    }
+
+    static List<UserRole> resolveRoles(String role) {
+        UserRole userRole = UserRole.valueOf(role);
+        switch (userRole) {
+            case USER -> {
+                return List.of(UserRole.USER);
+            }
+            case MANAGER -> {
+                return List.of(UserRole.USER, UserRole.MANAGER);
+            }
+            case ADMIN -> {
+                return List.of(UserRole.USER, UserRole.MANAGER, UserRole.ADMIN);
+            }
+        }
+        throw AppException.getGeneralError();
     }
 }
 

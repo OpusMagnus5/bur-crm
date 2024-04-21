@@ -25,13 +25,14 @@ class CreateNewUserCommandHandler implements CommandHandler<CreateNewUserCommand
     }
 
     @Override
-    @Transactional
+    @Transactional //TODO dopisać walidacje roli zakładającego konto
     public CreateNewUserCommandResult handle(CreateNewUserCommand command) {
         boolean isUserExists = readRepository.getByEmail(command.email()).isPresent();
         if (isUserExists) {
             throw buildUserByEmailAlreadyExistsException(command.email());
         }
-        User user = new User(command);
+        List<UserRole> userRoles = User.resolveRoles(command.role());
+        User user = new User(command, userRoles);
         String message = messageResolver.getMessage("user.registerNewUserSuccessful", List.of(command.email()));
         CreateNewUserCommandResult result = new CreateNewUserCommandResult(user.email(), user.password(), message);
         writeRepository.createNew(new UserEntity(user));

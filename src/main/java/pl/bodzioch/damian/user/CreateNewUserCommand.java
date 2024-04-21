@@ -7,7 +7,8 @@ public record CreateNewUserCommand(
         String email,
         String firstName,
         String lastName,
-        Long creatorId
+        Long creatorId,
+        String role
 
 ) implements Command<CreateNewUserCommandResult>{
 }

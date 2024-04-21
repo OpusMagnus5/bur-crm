@@ -3,6 +3,7 @@ package pl.bodzioch.damian.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
+import pl.bodzioch.damian.utils.validator.UserRole;
 
 public record CreateNewUserRequest(
 
@@ -15,6 +16,10 @@ public record CreateNewUserRequest(
 
         @NotEmpty(message = "error.client.lastNameEmpty")
         @Pattern(regexp = "[a-zA-ZążęćłóńĄŻĘĆŁÓŃ -]{1,60}", message = "error.client.incorrectLastName")
-        String lastName
+        String lastName,
+
+        @NotEmpty(message = "error.client.roleEmpty")
+        @UserRole(message = "error.client.incorrectRole")
+        String role
 ) {
 }
