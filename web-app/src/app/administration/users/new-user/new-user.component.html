@@ -5,7 +5,7 @@
       <input matInput
              [formControl]="emailControl">
       @if (emailControl.invalid){
-        <mat-error>{{ getValidationMessage(EMAIL_FIELD, emailControl) }}</mat-error>
+        <mat-error>{{ getValidationMessage('email', emailControl) }}</mat-error>
       }
     </mat-form-field>
     <mat-form-field>
@@ -13,7 +13,7 @@
       <input matInput
              [formControl]="firstNameControl">
       @if (firstNameControl.invalid){
-        <mat-error>{{ getValidationMessage(FIRST_NAME_FIELD, firstNameControl) }}</mat-error>
+        <mat-error>{{ getValidationMessage('firstName', firstNameControl) }}</mat-error>
       }
     </mat-form-field>
     <mat-form-field>
@@ -21,7 +21,7 @@
       <input matInput
              [formControl]="lastNameControl">
       @if (lastNameControl.invalid){
-        <mat-error>{{ getValidationMessage(LAST_NAME_FIELD, lastNameControl) }}</mat-error>
+        <mat-error>{{ getValidationMessage('lastName', lastNameControl) }}</mat-error>
       }
     </mat-form-field>
     <mat-form-field>
@@ -32,7 +32,7 @@
         }
       </mat-select>
       @if (roleControl.invalid){
-        <mat-error>{{ getValidationMessage(ROLE_FIELD, roleControl) }}</mat-error>
+        <mat-error>{{ getValidationMessage('role', roleControl) }}</mat-error>
       }
     </mat-form-field>
     <button mat-flat-button

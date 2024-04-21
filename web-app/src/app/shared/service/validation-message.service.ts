@@ -1,14 +1,14 @@
 import {Injectable} from '@angular/core';
 import {FormControl} from "@angular/forms";
 import * as messages from '../../../assets/validation-messages.json'
-import {ValidationMessages} from "../../../assets/validation-messages.interface";
+import {ValidationMessages} from "../model/validation-messages.interface";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ValidationMessageService {
 
-  private validationMessages: ValidationMessages = messages as unknown as ValidationMessages;
+  private validationMessages: ValidationMessages = messages as ValidationMessages;
 
   getMessage(key: string, control: FormControl): string {
     return this.validationMessages.validationMessages.find((message) => {

@@ -6,6 +6,7 @@ import {MatButton} from "@angular/material/button";
 import {MatOption} from "@angular/material/autocomplete";
 import {MatSelect} from "@angular/material/select";
 import {ValidationMessageService} from "../../../shared/service/validation-message.service";
+import {HttpService} from "../../../shared/service/http.service";
 
 @Component({
   selector: 'new-user',
@@ -33,23 +34,22 @@ export class NewUserComponent {
     { name: 'Admin', value: 'ADMIN'}
   ];
 
-  constructor(protected validationMessageService: ValidationMessageService) {
+  constructor(protected validationMessageService: ValidationMessageService, private httpService: HttpService) {
     this.emailControl = new FormControl(null, [Validators.required, Validators.email]); //TODO async validator for email exists
     this.firstNameControl = new FormControl(null, [Validators.required, Validators.pattern('[a-zA-ZążęćłóńĄŻĘĆŁÓŃ]{1,15}')]);
     this.lastNameControl = new FormControl(null, [Validators.required, Validators.pattern('[a-zA-ZążęćłóńĄŻĘĆŁÓŃ -]{1,60}')]);
     this.roleControl = new FormControl(null, Validators.required);
 
     this.form = new FormGroup({
-      EMAIL_FIELD: this.emailControl,
-      FIRST_NAME_FIELD: this.firstNameControl,
-      LAST_NAME_FIELD: this.lastNameControl,
-      ROLE_FIELD: this.roleControl
+      'email': this.emailControl,
+      'firstName': this.firstNameControl,
+      'lastName': this.lastNameControl,
+      'role': this.roleControl
     });
   }
 
   protected onSubmit() {
-    //TODO handle submit
-    console.log(this.form);
+    this.httpService.post(this.form.value);
   }
 
   protected getValidationMessage(fieldName: string, control: FormControl): string {
