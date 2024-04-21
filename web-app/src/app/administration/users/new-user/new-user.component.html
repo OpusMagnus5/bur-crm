@@ -12,7 +12,7 @@
       <mat-label>Enter first name</mat-label>
       <input matInput
              [formControl]="firstNameControl">
-      @if (emailControl.invalid){
+      @if (firstNameControl.invalid){
         <mat-error>{{ getValidationMessage(FIRST_NAME_FIELD, firstNameControl) }}</mat-error>
       }
     </mat-form-field>
@@ -20,7 +20,7 @@
       <mat-label>Enter last name</mat-label>
       <input matInput
              [formControl]="lastNameControl">
-      @if (emailControl.invalid){
+      @if (lastNameControl.invalid){
         <mat-error>{{ getValidationMessage(LAST_NAME_FIELD, lastNameControl) }}</mat-error>
       }
     </mat-form-field>
@@ -31,7 +31,7 @@
           <mat-option [value]="role.value">{{ role.name }}</mat-option>
         }
       </mat-select>
-      @if (emailControl.invalid){
+      @if (roleControl.invalid){
         <mat-error>{{ getValidationMessage(ROLE_FIELD, roleControl) }}</mat-error>
       }
     </mat-form-field>
