@@ -6,22 +6,21 @@ import {MatButton} from "@angular/material/button";
 import {MatOption} from "@angular/material/autocomplete";
 import {MatSelect} from "@angular/material/select";
 import {ValidationMessageService} from "../../../shared/service/validation-message.service";
-import {FormComponentSelector} from "../../../shared/form-component-selector.class";
 
 @Component({
-  selector: FormComponentSelector.NEW_USER,
+  selector: 'new-user',
   standalone: true,
   imports: [MatFormFieldModule, ReactiveFormsModule, MatInput, MatButton, MatOption, MatSelect],
   templateUrl: './new-user.component.html',
   styleUrl: './new-user.component.css'
 })
 export class NewUserComponent {
-  protected readonly selector: string = FormComponentSelector.NEW_USER;
+  private readonly COMPONENT_SELECTOR: string = 'new-user';
 
-  static readonly EMAIL_FIELD: string = 'email';
-  static readonly FIRST_NAME_FIELD: string = 'firstName';
-  static readonly LAST_NAME_FIELD: string = 'lastName';
-  static readonly ROLE_FIELD: string = 'role';
+  protected readonly EMAIL_FIELD: string = 'email';
+  protected readonly FIRST_NAME_FIELD: string = 'firstName';
+  protected readonly LAST_NAME_FIELD: string = 'lastName';
+  protected readonly ROLE_FIELD: string = 'role';
 
   protected readonly form: FormGroup;
   protected readonly emailControl: FormControl;
@@ -48,8 +47,16 @@ export class NewUserComponent {
     });
   }
 
-  onSubmit() {
+  protected onSubmit() {
     //TODO handle submit
     console.log(this.form);
+  }
+
+  protected getValidationMessage(fieldName: string, control: FormControl): string {
+    return this.validationMessageService.getMessage(this.getValidationMessageKey(fieldName), control);
+  }
+
+  private getValidationMessageKey(fieldName: string): string {
+    return this.COMPONENT_SELECTOR + '.' + fieldName;
   }
 }

@@ -4,19 +4,25 @@
       <mat-label>Enter email</mat-label>
       <input matInput
              [formControl]="emailControl">
-      @if (!emailControl.valid) {
-        <mat-error>{{ validationMessageService.getMessage(selector, form) }}</mat-error>
+      @if (emailControl.invalid){
+        <mat-error>{{ getValidationMessage(EMAIL_FIELD, emailControl) }}</mat-error>
       }
     </mat-form-field>
     <mat-form-field>
       <mat-label>Enter first name</mat-label>
       <input matInput
              [formControl]="firstNameControl">
+      @if (emailControl.invalid){
+        <mat-error>{{ getValidationMessage(FIRST_NAME_FIELD, firstNameControl) }}</mat-error>
+      }
     </mat-form-field>
     <mat-form-field>
       <mat-label>Enter last name</mat-label>
       <input matInput
              [formControl]="lastNameControl">
+      @if (emailControl.invalid){
+        <mat-error>{{ getValidationMessage(LAST_NAME_FIELD, lastNameControl) }}</mat-error>
+      }
     </mat-form-field>
     <mat-form-field>
       <mat-label>Select user role</mat-label>
@@ -25,6 +31,9 @@
           <mat-option [value]="role.value">{{ role.name }}</mat-option>
         }
       </mat-select>
+      @if (emailControl.invalid){
+        <mat-error>{{ getValidationMessage(ROLE_FIELD, roleControl) }}</mat-error>
+      }
     </mat-form-field>
     <button mat-flat-button
             color="primary"

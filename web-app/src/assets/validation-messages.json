@@ -1,0 +1,26 @@
+{
+  "validationMessages": [
+    {
+      "key": "new-user.email.required",
+      "message": "The email field cannot be blank"
+    }, {
+      "key": "new-user.email.email",
+      "message": "The provided email address is incorrect"
+    }, {
+      "key": "new-user.firstName.required",
+      "message": "The first name field cannot be blank"
+    }, {
+      "key": "new-user.firstName.pattern",
+      "message": "The first name is incorrect"
+    }, {
+      "key": "new-user.lastName.required",
+      "message": "The last name field cannot be blank"
+    }, {
+      "key": "new-user.lastName.pattern",
+      "message": "The last name is incorrect"
+    }, {
+      "key": "new-user.role.required",
+      "message": "The role field cannot be blank"
+    }
+  ]
+}
