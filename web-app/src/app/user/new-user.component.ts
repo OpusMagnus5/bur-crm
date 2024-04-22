@@ -6,7 +6,7 @@ import {MatButton} from "@angular/material/button";
 import {MatOption} from "@angular/material/autocomplete";
 import {MatSelect} from "@angular/material/select";
 import {ValidationMessageService} from "../shared/service/validation-message.service";
-import {HttpService} from "../shared/service/http.service";
+import {UserHttpService} from "./service/user-http.service";
 
 @Component({
   selector: 'new-user',
@@ -17,11 +17,6 @@ import {HttpService} from "../shared/service/http.service";
 })
 export class NewUserComponent {
   private readonly COMPONENT_SELECTOR: string = 'new-user';
-
-  protected readonly EMAIL_FIELD: string = 'email';
-  protected readonly FIRST_NAME_FIELD: string = 'firstName';
-  protected readonly LAST_NAME_FIELD: string = 'lastName';
-  protected readonly ROLE_FIELD: string = 'role';
 
   protected readonly form: FormGroup;
   protected readonly emailControl: FormControl;
@@ -34,7 +29,7 @@ export class NewUserComponent {
     { name: 'Admin', value: 'ADMIN'}
   ];
 
-  constructor(protected validationMessageService: ValidationMessageService, private httpService: HttpService) {
+  constructor(protected validationMessageService: ValidationMessageService, private httpService: UserHttpService) {
     this.emailControl = new FormControl(null, [Validators.required, Validators.email]); //TODO async validator for email exists
     this.firstNameControl = new FormControl(null, [Validators.required, Validators.pattern('[a-zA-ZążęćłóńĄŻĘĆŁÓŃ]{1,15}')]);
     this.lastNameControl = new FormControl(null, [Validators.required, Validators.pattern('[a-zA-ZążęćłóńĄŻĘĆŁÓŃ -]{1,60}')]);
@@ -49,7 +44,7 @@ export class NewUserComponent {
   }
 
   protected onSubmit() {
-    this.httpService.post(this.form.value);
+
   }
 
   protected getValidationMessage(fieldName: string, control: FormControl): string {
@@ -57,6 +52,7 @@ export class NewUserComponent {
   }
 
   private getValidationMessageKey(fieldName: string): string {
+    $localize `string_to_translate ${fieldName}:placeholder_name:`;
     return this.COMPONENT_SELECTOR + '.' + fieldName;
   }
 }

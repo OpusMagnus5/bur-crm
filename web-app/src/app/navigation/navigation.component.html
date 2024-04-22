@@ -11,9 +11,9 @@
          i18n>
         Home
       </a>
-      <a mat-list-item [matMenuTriggerFor]="menu" [activated]="routerService.isPartOfActivePath(ADMINISTRATION_PATH)" i18n>Administration</a>
+      <a mat-list-item [matMenuTriggerFor]="menu" [activated]="routerService.isPartOfActivePath(ADMINISTRATION_PATH)" i18n="12121"></a>
       <mat-menu #menu="matMenu">
-        <button mat-menu-item routerLink="{{ADMINISTRATION_USERS_PATH}}">Users</button>
+        <button mat-menu-item routerLink="{{ADMINISTRATION_USERS_PATH}}" i18n>Users</button>
       </mat-menu>
     </mat-nav-list>
   </mat-sidenav>

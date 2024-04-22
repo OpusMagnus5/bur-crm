@@ -4,12 +4,12 @@ import {HttpClient} from "@angular/common/http";
 @Injectable({
   providedIn: 'root'
 })
-export class HttpService {
+export class UserHttpService {
 
   constructor(private http: HttpClient) {
   }
 
-  post(body: any) {
+  createNew(body: any) {
     let responseBody;
     this.http.post(
       'http://localhost:8080/api/user',

@@ -1,5 +1,5 @@
 import {Routes} from '@angular/router';
-import {UserDashboardComponent} from "./user/user.dashboard.component";
+import {UserDashboardComponent} from "./user/user-dashboard.component";
 import {NewUserComponent} from "./user/new-user.component";
 import {UsersListComponent} from "./user/users-list.component";
 import {NotFoundComponent} from "./not-found/not-found.component";

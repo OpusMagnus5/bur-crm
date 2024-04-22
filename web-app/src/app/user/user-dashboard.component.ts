@@ -8,8 +8,8 @@ import {RouterService} from "../shared/service/router.service";
 
 @Component({
   selector: 'user-dashboard',
-  templateUrl: './user.dashboard.component.html',
-  styleUrl: './user.dashboard.component.css',
+  templateUrl: './user-dashboard.component.html',
+  styleUrl: './user-dashboard.component.css',
   standalone: true,
   imports: [
     MatGridListModule,
@@ -21,8 +21,6 @@ import {RouterService} from "../shared/service/router.service";
   ]
 })
 export class UserDashboardComponent {
-
-  protected readonly ADMINISTRATION_USERS_PATH = ADMINISTRATION_USERS_PATH;
 
   protected links: {path: string, name: string}[] = [
     {
