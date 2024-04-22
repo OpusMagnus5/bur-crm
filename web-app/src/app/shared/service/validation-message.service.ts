@@ -1,24 +1,23 @@
 import {Injectable} from '@angular/core';
 import {FormControl} from "@angular/forms";
-import * as messages from '../../../assets/validation-messages.json'
-import {ValidationMessages} from "../model/validation-messages.interface";
+import {TranslateService} from "@ngx-translate/core";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ValidationMessageService {
 
-  private validationMessages: ValidationMessages = messages as ValidationMessages;
+  constructor(private translate: TranslateService) {
+  }
 
-  getMessage(key: string, control: FormControl): string {
-    return this.validationMessages.validationMessages.find((message) => {
-      let path: string = '';
-      if(message.key.includes(key)){
-        path = message.key.replace(key + ".", '');
-      } else {
-        return false;
-      }
-      return control.errors?.[path];
-    })?.message || key;
+  getMessage(control: FormControl,
+             messageKey: (fieldName: string, validation: string) => string,
+             fieldName: string): string {
+    if (control.errors) {
+      const error: string = Object.getOwnPropertyNames(control.errors)[0];
+      const key: string = messageKey(fieldName, error);
+      return this.translate.instant(key);
+    }
+    return 'Translation error';
   }
 }

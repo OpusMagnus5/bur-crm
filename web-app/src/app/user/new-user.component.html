@@ -1,7 +1,7 @@
 <div class="form-container mat-elevation-z3">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <mat-form-field>
-      <mat-label i18n>Enter email</mat-label>
+      <mat-label>{{ 'new-user.email-input-label' | translate }}</mat-label>
       <input matInput
              [formControl]="emailControl">
       @if (emailControl.invalid){
@@ -9,34 +9,34 @@
       }
     </mat-form-field>
     <mat-form-field>
-      <mat-label i18n>Enter first name</mat-label>
+      <mat-label>{{ 'new-user.first-name-input-label' | translate }}</mat-label>
       <input matInput
              [formControl]="firstNameControl">
       @if (firstNameControl.invalid){
-        <mat-error i18n>{{ getValidationMessage('firstName', firstNameControl) }}</mat-error>
+        <mat-error>{{ getValidationMessage('firstName', firstNameControl) }}</mat-error>
       }
     </mat-form-field>
     <mat-form-field>
-      <mat-label i18n>Enter last name</mat-label>
+      <mat-label>{{ 'new-user.last-name-input-label' | translate }}</mat-label>
       <input matInput
              [formControl]="lastNameControl">
       @if (lastNameControl.invalid){
-        <mat-error i18n>{{ getValidationMessage('lastName', lastNameControl) }}</mat-error>
+        <mat-error>{{ getValidationMessage('lastName', lastNameControl) }}</mat-error>
       }
     </mat-form-field>
     <mat-form-field>
-      <mat-label i18n>Select user role</mat-label>
+      <mat-label>{{ 'new-user.role-input-label' | translate }}</mat-label>
       <mat-select [formControl]="roleControl">
         @for (role of roles; track role) {
           <mat-option [value]="role.value">{{ role.name }}</mat-option>
         }
       </mat-select>
       @if (roleControl.invalid){
-        <mat-error i18n>{{ getValidationMessage('role', roleControl) }}</mat-error>
+        <mat-error>{{ getValidationMessage('role', roleControl) }}</mat-error>
       }
     </mat-form-field>
     <button mat-flat-button
             color="primary"
-            [disabled]="!form.valid" i18n>Send</button>
+            [disabled]="!form.valid">{{ 'new-user.send-button-label' | translate }}</button>
   </form>
 </div>

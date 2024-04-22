@@ -1,0 +1,38 @@
+{
+  "navigation": {
+    "home-path": "Strona Główna",
+    "administration-path": "Administracja",
+    "users-path": "Użytkownicy"
+  },
+  "not-found": {
+    "message": "Przepraszamy, szukana strona nie została znaleziona."
+  },
+  "new-user": {
+    "email-input-label": "Wprowadź adres e-mail",
+    "first-name-input-label": "Wprowadź imię",
+    "last-name-input-label": "Wprowadź nazwisko",
+    "role-input-label": "Wybierz rolę",
+    "send-button-label": "Wyślij",
+    "validation": {
+      "email": {
+        "required": "Pole e-mail nie może być puste",
+        "email": "Podany adres e-mail jest nieprawidłowy"
+      },
+      "firstName": {
+        "required": "Pole imię nie może być puste",
+        "pattern": "Podane imię jest nieprawidłowe"
+      },
+      "lastName": {
+        "required": "Pole nazwisko nie może być puste",
+        "pattern": "Podane nazwisko jest nieprawidłowe"
+      },
+      "role": {
+        "required": "Pole rola nie może być pusta"
+      }
+    }
+  },
+  "user-dashboard": {
+    "new-user-tab": "Dodaj użytkownika",
+    "users-list-tab": "Lista użytkowników"
+  }
+}

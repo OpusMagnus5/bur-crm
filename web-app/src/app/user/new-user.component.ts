@@ -5,18 +5,18 @@ import {MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
 import {MatOption} from "@angular/material/autocomplete";
 import {MatSelect} from "@angular/material/select";
-import {ValidationMessageService} from "../shared/service/validation-message.service";
 import {UserHttpService} from "./service/user-http.service";
+import {TranslateModule} from "@ngx-translate/core";
+import {ValidationMessageService} from "../shared/service/validation-message.service";
 
 @Component({
   selector: 'new-user',
   standalone: true,
-  imports: [MatFormFieldModule, ReactiveFormsModule, MatInput, MatButton, MatOption, MatSelect],
+  imports: [MatFormFieldModule, ReactiveFormsModule, MatInput, MatButton, MatOption, MatSelect, TranslateModule],
   templateUrl: './new-user.component.html',
   styleUrl: './new-user.component.css'
 })
 export class NewUserComponent {
-  private readonly COMPONENT_SELECTOR: string = 'new-user';
 
   protected readonly form: FormGroup;
   protected readonly emailControl: FormControl;
@@ -29,7 +29,10 @@ export class NewUserComponent {
     { name: 'Admin', value: 'ADMIN'}
   ];
 
-  constructor(protected validationMessageService: ValidationMessageService, private httpService: UserHttpService) {
+  constructor(
+    private httpService: UserHttpService,
+    private validationMessage: ValidationMessageService
+  ) {
     this.emailControl = new FormControl(null, [Validators.required, Validators.email]); //TODO async validator for email exists
     this.firstNameControl = new FormControl(null, [Validators.required, Validators.pattern('[a-zA-ZążęćłóńĄŻĘĆŁÓŃ]{1,15}')]);
     this.lastNameControl = new FormControl(null, [Validators.required, Validators.pattern('[a-zA-ZążęćłóńĄŻĘĆŁÓŃ -]{1,60}')]);
@@ -48,11 +51,10 @@ export class NewUserComponent {
   }
 
   protected getValidationMessage(fieldName: string, control: FormControl): string {
-    return this.validationMessageService.getMessage(this.getValidationMessageKey(fieldName), control);
+      return this.validationMessage.getMessage(control, this.getValidationMessageKey, fieldName);
   }
 
-  private getValidationMessageKey(fieldName: string): string {
-    $localize `string_to_translate ${fieldName}:placeholder_name:`;
-    return this.COMPONENT_SELECTOR + '.' + fieldName;
+  private getValidationMessageKey(fieldName: string, validation: string): string {
+    return 'new-user.validation.' + fieldName + '.' + validation;
   }
 }

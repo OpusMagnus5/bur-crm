@@ -4,12 +4,6 @@
   "newProjectRoot": "projects",
   "projects": {
     "web-app": {
-      "i18n": {
-        "sourceLocale": "en-US",
-        "locales": {
-          "pl": "src/locale/messages-pl.json"
-        }
-      },
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -35,9 +29,6 @@
               "src/styles.css"
             ],
             "scripts": [
-            ],
-            "localize": [
-              "pl"
             ]
           },
           "configurations": {
