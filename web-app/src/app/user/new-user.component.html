@@ -1,7 +1,7 @@
 <div class="form-container mat-elevation-z3">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <mat-form-field>
-      <mat-label>Enter email</mat-label>
+      <mat-label i18n>Enter email</mat-label>
       <input matInput
              [formControl]="emailControl">
       @if (emailControl.invalid){
@@ -9,7 +9,7 @@
       }
     </mat-form-field>
     <mat-form-field>
-      <mat-label>Enter first name</mat-label>
+      <mat-label i18n>Enter first name</mat-label>
       <input matInput
              [formControl]="firstNameControl">
       @if (firstNameControl.invalid){
@@ -17,7 +17,7 @@
       }
     </mat-form-field>
     <mat-form-field>
-      <mat-label>Enter last name</mat-label>
+      <mat-label i18n>Enter last name</mat-label>
       <input matInput
              [formControl]="lastNameControl">
       @if (lastNameControl.invalid){
@@ -25,7 +25,7 @@
       }
     </mat-form-field>
     <mat-form-field>
-      <mat-label>Select user role</mat-label>
+      <mat-label i18n>Select user role</mat-label>
       <mat-select [formControl]="roleControl">
         @for (role of roles; track role) {
           <mat-option [value]="role.value">{{ role.name }}</mat-option>
@@ -37,6 +37,6 @@
     </mat-form-field>
     <button mat-flat-button
             color="primary"
-            [disabled]="!form.valid">Send</button>
+            [disabled]="!form.valid" i18n>Send</button>
   </form>
 </div>

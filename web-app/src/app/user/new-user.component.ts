@@ -5,8 +5,8 @@ import {MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
 import {MatOption} from "@angular/material/autocomplete";
 import {MatSelect} from "@angular/material/select";
-import {ValidationMessageService} from "../../../shared/service/validation-message.service";
-import {HttpService} from "../../../shared/service/http.service";
+import {ValidationMessageService} from "../shared/service/validation-message.service";
+import {HttpService} from "../shared/service/http.service";
 
 @Component({
   selector: 'new-user',

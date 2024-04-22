@@ -1,7 +1,7 @@
 import {Routes} from '@angular/router';
-import {UserDashboardComponent} from "./administration/users/dashboard/user.dashboard.component";
-import {NewUserComponent} from "./administration/users/new-user/new-user.component";
-import {UsersListComponent} from "./administration/users/users-list/users-list.component";
+import {UserDashboardComponent} from "./user/user.dashboard.component";
+import {NewUserComponent} from "./user/new-user.component";
+import {UsersListComponent} from "./user/users-list.component";
 import {NotFoundComponent} from "./not-found/not-found.component";
 import {HomeComponent} from "./home/home.component";
 

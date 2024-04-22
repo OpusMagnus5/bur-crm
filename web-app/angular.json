@@ -5,7 +5,7 @@
   "projects": {
     "web-app": {
       "i18n": {
-        "sourceLocale": "en",
+        "sourceLocale": "en-US",
         "locales": {
           "pl": "src/locale/messages.pl.json"
         }
@@ -36,7 +36,9 @@
             ],
             "scripts": [
             ],
-            "localize": true
+            "localize": [
+              "pl"
+            ]
           },
           "configurations": {
             "production": {
@@ -101,5 +103,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

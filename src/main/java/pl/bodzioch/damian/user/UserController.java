@@ -8,7 +8,6 @@ import pl.bodzioch.damian.dto.CreateNewUserRequest;
 import pl.bodzioch.damian.dto.CreateUserResponse;
 import pl.bodzioch.damian.infrastructure.command.CommandExecutor;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor

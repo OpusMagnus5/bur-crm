@@ -43,7 +43,6 @@ class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/user", "/api/user/login").permitAll()
                         .anyRequest().authenticated())
-                .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .oauth2ResourceServer(oAuth2 -> oAuth2.jwt(Customizer.withDefaults()))
                 .httpBasic(Customizer.withDefaults());
 

@@ -23,7 +23,7 @@ record User (
 
 
 
-    User(CreateNewUserCommand command, List<UserRole> roles) {
+    User(CreateNewUserCommand command) {
         this (
                 null,
                 null,
@@ -32,7 +32,7 @@ record User (
                 generateFirstPassword(),
                 command.firstName(),
                 command.lastName(),
-                roles,
+                resolveRoles(command.role()),
                 null,
                 new AuditData(null, null, command.creatorId(), null)
         );
@@ -44,12 +44,13 @@ record User (
         SecureRandom secureRandom = new SecureRandom();
         StringBuilder password = new StringBuilder();
         for (int i = 0; i < passwordLength; i++) {
-            password.append(secureRandom.nextInt(passwordCharacters.length()));
+            int index = secureRandom.nextInt(passwordCharacters.length());
+            password.append(passwordCharacters.charAt(index));
         }
         return password.toString();
     }
 
-    static List<UserRole> resolveRoles(String role) {
+    private static List<UserRole> resolveRoles(String role) {
         UserRole userRole = UserRole.valueOf(role);
         switch (userRole) {
             case USER -> {

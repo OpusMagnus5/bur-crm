@@ -31,8 +31,7 @@ class CreateNewUserCommandHandler implements CommandHandler<CreateNewUserCommand
         if (isUserExists) {
             throw buildUserByEmailAlreadyExistsException(command.email());
         }
-        List<UserRole> userRoles = User.resolveRoles(command.role());
-        User user = new User(command, userRoles);
+        User user = new User(command);
         String message = messageResolver.getMessage("user.registerNewUserSuccessful", List.of(command.email()));
         CreateNewUserCommandResult result = new CreateNewUserCommandResult(user.email(), user.password(), message);
         writeRepository.createNew(new UserEntity(user));

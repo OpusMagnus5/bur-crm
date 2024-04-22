@@ -1,10 +1,10 @@
 import {Component} from '@angular/core';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatTabsModule} from '@angular/material/tabs';
-import {NewUserComponent} from '../new-user/new-user.component';
+import {NewUserComponent} from './new-user.component';
 import {RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
-import {ADMINISTRATION_USERS_PATH, NEW_USER_PATH, USER_LIST_PATH} from "../../../app.routes";
-import {RouterService} from "../../../shared/service/router.service";
+import {ADMINISTRATION_USERS_PATH, NEW_USER_PATH, USER_LIST_PATH} from "../app.routes";
+import {RouterService} from "../shared/service/router.service";
 
 @Component({
   selector: 'user-dashboard',

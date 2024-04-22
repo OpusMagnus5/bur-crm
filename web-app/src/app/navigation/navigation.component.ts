@@ -9,7 +9,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {Observable} from 'rxjs';
 import {map, shareReplay} from 'rxjs/operators';
-import {UserDashboardComponent} from '../administration/users/dashboard/user.dashboard.component';
+import {UserDashboardComponent} from '../user/user.dashboard.component';
 import {RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
 import {ADMINISTRATION_PATH, ADMINISTRATION_USERS_PATH, BASE_PATH} from "../app.routes";
 import {RouterService} from "../shared/service/router.service";
