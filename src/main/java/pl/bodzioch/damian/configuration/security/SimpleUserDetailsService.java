@@ -6,8 +6,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
-import pl.bodzioch.damian.user.GetUserByEmailQuery;
 import pl.bodzioch.damian.user.UserDto;
+import pl.bodzioch.damian.user.queryDto.GetUserByEmailQuery;
 
 @Component
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package pl.bodzioch.damian.user;
+package pl.bodzioch.damian.user.queryDto;
 
 import pl.bodzioch.damian.infrastructure.query.Query;
 

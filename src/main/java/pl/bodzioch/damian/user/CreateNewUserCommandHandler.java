@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.infrastructure.command.CommandHandler;
+import pl.bodzioch.damian.user.commandDto.CreateNewUserCommand;
+import pl.bodzioch.damian.user.commandDto.CreateNewUserCommandResult;
 import pl.bodzioch.damian.utils.MessageResolver;
 import pl.bodzioch.damian.valueobject.ErrorData;
 

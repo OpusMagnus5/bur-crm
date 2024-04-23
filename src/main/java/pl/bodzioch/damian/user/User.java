@@ -1,6 +1,7 @@
 package pl.bodzioch.damian.user;
 
 import pl.bodzioch.damian.exception.AppException;
+import pl.bodzioch.damian.user.commandDto.CreateNewUserCommand;
 import pl.bodzioch.damian.valueobject.AuditData;
 
 import java.security.SecureRandom;

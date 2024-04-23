@@ -3,7 +3,7 @@ package pl.bodzioch.damian.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
-import pl.bodzioch.damian.utils.validator.UserRole;
+import pl.bodzioch.damian.utils.validator.UserRoleV;
 
 public record CreateNewUserRequest(
 
@@ -19,7 +19,7 @@ public record CreateNewUserRequest(
         String lastName,
 
         @NotEmpty(message = "error.client.roleEmpty")
-        @UserRole(message = "error.client.incorrectRole")
+        @UserRoleV(message = "error.client.incorrectRole")
         String role
 ) {
 }

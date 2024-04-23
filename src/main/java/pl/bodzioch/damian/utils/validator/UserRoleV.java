@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = UserRoleValidator.class)
-public @interface UserRole {
+public @interface UserRoleV {
 
     String message() default "Invalid value";
     Class<?>[] groups() default { };

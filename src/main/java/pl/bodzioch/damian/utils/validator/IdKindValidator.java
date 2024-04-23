@@ -2,12 +2,13 @@ package pl.bodzioch.damian.utils.validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import pl.bodzioch.damian.user.IdKind;
 
 import java.util.Arrays;
 
-public class UserRoleValidator implements ConstraintValidator<UserRoleV, String> {
+public class IdKindValidator implements ConstraintValidator<IdKindV, String> {
 
-    private final String[] allowedValues = Arrays.stream(pl.bodzioch.damian.user.UserRole.values())
+    private final String[] allowedValues = Arrays.stream(IdKind.values())
             .map(Enum::name)
             .toArray(String[]::new);
 
