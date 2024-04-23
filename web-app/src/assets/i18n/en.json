@@ -1,0 +1,38 @@
+{
+  "navigation": {
+    "home-path": "Home",
+    "administration-path": "Administration",
+    "users-path": "Users"
+  },
+  "not-found": {
+    "message": "Sorry, the requested page was not found."
+  },
+  "new-user": {
+    "email-input-label": "Enter email address",
+    "first-name-input-label": "Enter first name",
+    "last-name-input-label": "Enter last name",
+    "role-input-label": "Select role",
+    "send-button-label": "Send",
+    "validation": {
+      "email": {
+        "required": "Email field cannot be empty",
+        "email": "The provided email address is invalid"
+      },
+      "firstName": {
+        "required": "First name field cannot be empty",
+        "pattern": "The provided first name is invalid"
+      },
+      "lastName": {
+        "required": "Last name field cannot be empty",
+        "pattern": "The provided last name is invalid"
+      },
+      "role": {
+        "required": "Role field cannot be empty"
+      }
+    }
+  },
+  "user-dashboard": {
+    "new-user-tab": "Add user",
+    "users-list-tab": "Users list"
+  }
+}

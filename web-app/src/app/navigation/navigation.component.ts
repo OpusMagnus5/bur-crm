@@ -14,6 +14,9 @@ import {RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
 import {ADMINISTRATION_PATH, ADMINISTRATION_USERS_PATH, BASE_PATH} from "../app.routes";
 import {RouterService} from "../shared/service/router.service";
 import {TranslateModule} from "@ngx-translate/core";
+import {MatFormField, MatLabel} from "@angular/material/form-field";
+import {MatOption, MatSelect} from "@angular/material/select";
+import {ChangeLangauageComponent} from "../change-langauage/change-langauage.component";
 
 @Component({
   selector: 'app-navigation',
@@ -32,7 +35,12 @@ import {TranslateModule} from "@ngx-translate/core";
     RouterOutlet,
     RouterLink,
     RouterLinkActive,
-    TranslateModule
+    TranslateModule,
+    MatFormField,
+    MatSelect,
+    MatOption,
+    MatLabel,
+    ChangeLangauageComponent
   ]
 })
 export class NavigationComponent {
