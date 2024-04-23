@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = UserRoleValidator.class)
+@Constraint(validatedBy = IdKindValidator.class)
 public @interface IdKindV {
 
     String message() default "Invalid value";
