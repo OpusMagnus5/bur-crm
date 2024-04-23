@@ -1,31 +1,33 @@
 import {Component} from '@angular/core';
-import {FormControl, FormGroup} from "@angular/forms";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatSelect} from "@angular/material/select";
+import {MatButton, MatMiniFabButton} from "@angular/material/button";
+import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'change-langauage',
   standalone: true,
   imports: [
-    MatFormField,
-    MatSelect,
-    MatLabel
+    MatButton,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem,
+    MatMiniFabButton
   ],
   templateUrl: './change-langauage.component.html',
   styleUrl: './change-langauage.component.css'
 })
 export class ChangeLangauageComponent {
 
-  private availableLanguages: string[] = ['pl', 'en'];
+  protected availableLanguages: string[] = ['pl', 'en'];
+  protected activeLanguage: string = this.availableLanguages[0];
 
-  private readonly form: FormGroup;
-  private readonly languageControl: FormControl
-
-  constructor() {
-    this.languageControl = new FormControl(this.availableLanguages[0])
-    this.form = new FormGroup({
-      'language': this.languageControl
-    })
+  constructor(private trasnlate: TranslateService) {
   }
 
+  onLanguageChange(event: string) {
+    console.log(event);
+    this.activeLanguage = event;
+    this.trasnlate.use(this.activeLanguage);
+    //window.location.reload(); TODO zapisywać język w cookiesach
+  }
 }

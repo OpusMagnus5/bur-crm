@@ -16,6 +16,6 @@
   z-index: 1;
 }
 
-.language-selector {
-
+change-langauage {
+  flex-grow: 2;
 }

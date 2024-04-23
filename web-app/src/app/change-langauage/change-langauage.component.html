@@ -1,8 +1,8 @@
-<mat-form-field>
-  <mat-label>Favorite food</mat-label>
-  <mat-select>
-    @for (food of foods; track food) {
-    <mat-option [value]="food.value">{{food.viewValue}}</mat-option>
+<div class="language-container">
+  <button mat-mini-fab [matMenuTriggerFor]="menu">{{ activeLanguage.toUpperCase() }}</button>
+  <mat-menu #menu="matMenu">
+    @for(lang of availableLanguages; track lang) {
+      <button mat-menu-item (click)="onLanguageChange(lang)">{{ lang.toUpperCase() }}</button>
     }
-  </mat-select>
-</mat-form-field>
+  </mat-menu>
+</div>
