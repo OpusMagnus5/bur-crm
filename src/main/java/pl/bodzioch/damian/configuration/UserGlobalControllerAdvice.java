@@ -2,7 +2,6 @@ package pl.bodzioch.damian.configuration;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -42,7 +41,7 @@ class UserGlobalControllerAdvice {
             String errorCode = e.errorCode();
             List<String> messageParams = e.parameters();
             String errorDetail = messageResolver.getMessage(errorCode, messageParams);
-            errorsDto.add(new ErrorDto(errorDetail, MDC.get(AppException.REQUEST_ID_MDC_PARAM)));
+            errorsDto.add(new ErrorDto(errorCode, errorDetail));
         });
 
         return ResponseEntity.status(exception.getHttpStatus())

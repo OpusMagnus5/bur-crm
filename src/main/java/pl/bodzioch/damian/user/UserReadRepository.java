@@ -2,6 +2,7 @@ package pl.bodzioch.damian.user;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
@@ -16,16 +17,21 @@ class UserReadRepository implements IUserReadRepository {
     EntityManager entityManager;
 
     @Override
+    @Transactional(Transactional.TxType.NOT_SUPPORTED)
     public Optional<User> getByEmail(String email) {
         log.info("Search user by email: {}", email);
         Session session = entityManager.unwrap(Session.class);
-        Optional<UserEntity> user = session.byNaturalId(UserEntity.class).using("email", email).loadOptional();
-        session.clear();
-        if (user.isPresent()) {
-            log.info("User with the email: {} found: {}", email, user.get());
-        } else {
-            log.info("User with the email: {} NOT found", email);
+        try {
+            Optional<UserEntity> user = session.byNaturalId(UserEntity.class).using("email", email).loadOptional();
+            if (user.isPresent()) {
+                log.info("User with the email: {} found: {}", email, user.get());
+            } else {
+                log.info("User with the email: {} NOT found", email);
+            }
+            return user.map(UserEntity::toUser);
+        } finally {
+            session.clear();
         }
-        return user.map(UserEntity::toUser);
+
     }
 }

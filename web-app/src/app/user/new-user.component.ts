@@ -1,6 +1,13 @@
 import {Component} from '@angular/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators
+} from "@angular/forms";
 import {MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
 import {MatOption} from "@angular/material/autocomplete";
@@ -8,6 +15,8 @@ import {MatSelect} from "@angular/material/select";
 import {UserHttpService} from "./service/user-http.service";
 import {TranslateModule} from "@ngx-translate/core";
 import {ValidationMessageService} from "../shared/service/validation-message.service";
+import {catchError, Observable, of} from "rxjs";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'new-user',
@@ -24,26 +33,47 @@ export class NewUserComponent {
   protected readonly lastNameControl: FormControl;
   protected readonly roleControl: FormControl;
 
-  protected roles: {name: string, value: string}[] = [ //TODO get roles from server
-    { name: 'User', value: 'USER'},
-    { name: 'Admin', value: 'ADMIN'}
-  ];
+  protected roles: {name: string, value: string}[] = [];
 
   constructor(
     private httpService: UserHttpService,
     private validationMessage: ValidationMessageService
   ) {
-    this.emailControl = new FormControl(null, [Validators.required, Validators.email]); //TODO async validator for email exists
+    this.emailControl = new FormControl(null, {
+      validators: [Validators.required, Validators.email],
+      asyncValidators: [this.validateEmailOccupation.bind(this)],
+      updateOn: 'blur'
+    });
     this.firstNameControl = new FormControl(null, [Validators.required, Validators.pattern('[a-zA-ZążęćłóńĄŻĘĆŁÓŃ]{1,15}')]);
     this.lastNameControl = new FormControl(null, [Validators.required, Validators.pattern('[a-zA-ZążęćłóńĄŻĘĆŁÓŃ -]{1,60}')]);
     this.roleControl = new FormControl(null, Validators.required);
+    this.form = this.buildFormGroup();
 
-    this.form = new FormGroup({
+    this.getRolesFromServer();
+  }
+
+  private buildFormGroup(): FormGroup {
+    return new FormGroup({
       'email': this.emailControl,
       'firstName': this.firstNameControl,
       'lastName': this.lastNameControl,
       'role': this.roleControl
     });
+  }
+
+  private getRolesFromServer() {
+    this.httpService.getAllRoles().subscribe((response) =>
+      response.roles.forEach(role => {
+        this.roles.push({name: role.name, value: role.role})
+      })
+    );
+  }
+
+  validateEmailOccupation(control: AbstractControl): Observable<ValidationErrors | null> {
+    return this.httpService.getIsUserExists('EMAIL', control.value).pipe(
+      map(response => (response.exists ? { 'exists': true } : null)),
+      catchError(() => of(null))
+    );
   }
 
   protected onSubmit() {

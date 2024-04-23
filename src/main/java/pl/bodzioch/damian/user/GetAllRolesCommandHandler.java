@@ -1,6 +1,7 @@
 package pl.bodzioch.damian.user;
 
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.dto.RoleDto;
 import pl.bodzioch.damian.infrastructure.command.CommandHandler;
 import pl.bodzioch.damian.user.commandDto.GetAllRolesCommand;
@@ -10,8 +11,9 @@ import pl.bodzioch.damian.utils.MessageResolver;
 import java.util.Arrays;
 import java.util.List;
 
+@Component
 @AllArgsConstructor
-public class GetAllRolesCommandHandler implements CommandHandler<GetAllRolesCommand, GetAllRolesCommandResult> {
+class GetAllRolesCommandHandler implements CommandHandler<GetAllRolesCommand, GetAllRolesCommandResult> {
 
 	private final MessageResolver messageResolver;
 

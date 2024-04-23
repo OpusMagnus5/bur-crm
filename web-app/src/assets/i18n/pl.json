@@ -16,7 +16,8 @@
     "validation": {
       "email": {
         "required": "Pole e-mail nie może być puste",
-        "email": "Podany adres e-mail jest nieprawidłowy"
+        "email": "Podany adres e-mail jest nieprawidłowy",
+        "exists": "Podany adres e-mail jest już zajęty"
       },
       "firstName": {
         "required": "Pole imię nie może być puste",

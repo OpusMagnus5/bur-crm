@@ -16,7 +16,8 @@
     "validation": {
       "email": {
         "required": "Email field cannot be empty",
-        "email": "The provided email address is invalid"
+        "email": "The provided email address is invalid",
+        "exists": "The e-mail address provided is already taken"
       },
       "firstName": {
         "required": "First name field cannot be empty",

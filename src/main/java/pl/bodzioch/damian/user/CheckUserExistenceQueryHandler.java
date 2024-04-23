@@ -1,12 +1,14 @@
 package pl.bodzioch.damian.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.infrastructure.query.QueryHandler;
 import pl.bodzioch.damian.user.queryDto.CheckUserExistenceQuerResult;
 import pl.bodzioch.damian.user.queryDto.CheckUserExistenceQuery;
 
+@Component
 @RequiredArgsConstructor
-public class CheckUserExistenceQueryHandler implements QueryHandler<CheckUserExistenceQuery, CheckUserExistenceQuerResult> {
+class CheckUserExistenceQueryHandler implements QueryHandler<CheckUserExistenceQuery, CheckUserExistenceQuerResult> {
 
 	private final IUserReadRepository readRepository;
 
