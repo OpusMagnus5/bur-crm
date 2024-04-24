@@ -3,7 +3,7 @@ import {Overlay, OverlayRef} from "@angular/cdk/overlay";
 import {ComponentPortal} from "@angular/cdk/portal";
 import {scan, Subject} from "rxjs";
 import {map} from "rxjs/operators";
-import {SpinnerComponent} from "../component/spinner/spinner.component";
+import {SpinnerComponent} from "../component/spinner.component";
 
 @Injectable({providedIn: "root"})
 export class SpinnerService {
