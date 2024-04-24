@@ -17,11 +17,24 @@ import {TranslateModule} from "@ngx-translate/core";
 import {ValidationMessageService} from "../shared/service/validation-message.service";
 import {catchError, Observable, of} from "rxjs";
 import {map} from "rxjs/operators";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {NewUserDetailsComponent} from "./new-user-details.component";
+import {CreateNewUserResponseInterface} from "./model/create-new-user-response.interface";
+import {CreateNewUserRequestInterface} from "./model/create-new-user-request.interface";
+import {ActivatedRoute, Router} from "@angular/router";
+import {USER_LIST_PATH} from "../app.routes";
 
 @Component({
   selector: 'new-user',
   standalone: true,
-  imports: [MatFormFieldModule, ReactiveFormsModule, MatInput, MatButton, MatOption, MatSelect, TranslateModule],
+  imports: [
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatInput,
+    MatButton,
+    MatOption,
+    MatSelect,
+    TranslateModule],
   templateUrl: './new-user.component.html',
   styleUrl: './new-user.component.css'
 })
@@ -37,7 +50,10 @@ export class NewUserComponent {
 
   constructor(
     private httpService: UserHttpService,
-    private validationMessage: ValidationMessageService
+    private validationMessage: ValidationMessageService,
+    private dialog: MatDialog,
+    private router: Router,
+    private activeRoute: ActivatedRoute
   ) {
     this.emailControl = new FormControl(null, {
       validators: [Validators.required, Validators.email],
@@ -77,7 +93,26 @@ export class NewUserComponent {
   }
 
   protected onSubmit() {
+    this.httpService.createNew(this.form.value as CreateNewUserRequestInterface).subscribe({
+      next: response => this.openDialog(response)
+    });
+  }
 
+  private openDialog(response: CreateNewUserResponseInterface) {
+    const dialogRef: MatDialogRef<NewUserDetailsComponent> = this.dialog.open(NewUserDetailsComponent, {
+      data: {
+        login: response.login,
+        password: response.password
+      },
+      maxWidth: '50em',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(() =>
+      this.router.navigate(['../' + USER_LIST_PATH], {
+        relativeTo: this.activeRoute
+      })
+    )
   }
 
   protected getValidationMessage(fieldName: string, control: FormControl): string {

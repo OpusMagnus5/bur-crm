@@ -36,7 +36,6 @@ export class SpinnerService {
   }
 
   private showSpinner() {
-      /*this.overlayRef.attach(new ComponentPortal(MatProgressSpinner)).instance.mode = 'indeterminate';*/
     this.overlayRef.attach(new ComponentPortal(SpinnerComponent));
   }
 

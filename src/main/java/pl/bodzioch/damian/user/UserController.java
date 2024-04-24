@@ -35,7 +35,7 @@ class UserController {
                 request.email(), request.firstName(), request.lastName(), 1L, request.role()
         );
         CreateNewUserCommandResult result = commandExecutor.execute(command);
-        return new CreateUserResponse(result.login(), result.password(), result.message());
+        return new CreateUserResponse(result.login(), result.password());
     }
 
     @ResponseStatus(HttpStatus.OK)

@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>{{ 'new-user-details.title' | translate }}</h2>
+<mat-dialog-content class="mat-typography">
+
+  <p>{{ 'new-user-details.content1' | translate }}</p>
+
+  <p class="pass-data">{{ 'new-user-details.login' | translate }}: {{data.login}} </p>
+  <p class="pass-data">{{ 'new-user-details.password' | translate }}: {{data.password}}</p>
+
+  <p>{{ 'new-user-details.content2' | translate }}</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button
+          [mat-dialog-close]="true"
+          color="primary"
+          [tabIndex]="-1">{{ 'new-user-details.close' | translate }}</button>
+</mat-dialog-actions>

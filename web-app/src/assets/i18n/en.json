@@ -32,6 +32,14 @@
       }
     }
   },
+  "new-user-details": {
+    "title" : "Login Information for New Employee",
+    "content1" : "Below are the login details for the new employee. Please securely pass this information to the intended employee.",
+    "login": "Login",
+    "password" : "Password",
+    "content2": "We recommend exercising caution when sharing this information and ensuring that the intended person is appropriately secured.",
+    "close": "Close"
+  },
   "user-dashboard": {
     "new-user-tab": "Add user",
     "users-list-tab": "Users list"

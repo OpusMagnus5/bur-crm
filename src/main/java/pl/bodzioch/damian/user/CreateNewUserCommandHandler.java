@@ -8,7 +8,6 @@ import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.infrastructure.command.CommandHandler;
 import pl.bodzioch.damian.user.commandDto.CreateNewUserCommand;
 import pl.bodzioch.damian.user.commandDto.CreateNewUserCommandResult;
-import pl.bodzioch.damian.utils.MessageResolver;
 import pl.bodzioch.damian.valueobject.ErrorData;
 
 import java.util.List;
@@ -19,7 +18,6 @@ class CreateNewUserCommandHandler implements CommandHandler<CreateNewUserCommand
 
     private final IUserReadRepository readRepository;
     private final IUserWriteRepository writeRepository;
-    private final MessageResolver messageResolver;
 
     @Override
     public Class<CreateNewUserCommand> commandClass() {
@@ -34,8 +32,7 @@ class CreateNewUserCommandHandler implements CommandHandler<CreateNewUserCommand
             throw buildUserByEmailAlreadyExistsException(command.email());
         }
         User user = new User(command);
-        String message = messageResolver.getMessage("user.registerNewUserSuccessful", List.of(command.email()));
-        CreateNewUserCommandResult result = new CreateNewUserCommandResult(user.email(), user.password(), message);
+        CreateNewUserCommandResult result = new CreateNewUserCommandResult(user.email(), user.password());
         writeRepository.createNew(new UserEntity(user));
         return result;
     }

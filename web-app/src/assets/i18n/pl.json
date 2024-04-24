@@ -32,6 +32,14 @@
       }
     }
   },
+  "new-user-details": {
+    "title" : "Informacje logowania dla nowego pracownika",
+    "content1" : "Poniżej znajdują się dane logowania do systemu dla nowego pracownika. Proszę przekazać te informacje pracownikowi docelowemu w bezpieczny sposób .",
+    "login": "Login",
+    "password" : "Hasło",
+    "content2": "Zalecamy zachowanie ostrożności przy przekazywaniu tych informacji i upewnienie się, że docelowa osoba jest odpowiednio zabezpieczona.",
+    "close": "Zamknij"
+  },
   "user-dashboard": {
     "new-user-tab": "Dodaj użytkownika",
     "users-list-tab": "Lista użytkowników"
