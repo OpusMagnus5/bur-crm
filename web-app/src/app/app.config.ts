@@ -6,6 +6,7 @@ import {provideAnimationsAsync} from '@angular/platform-browser/animations/async
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
 import {TranslateHttpLoader} from "@ngx-translate/http-loader";
+import {httpInterceptors} from "./shared/interceptor/http-interceptors";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -25,6 +26,7 @@ export const appConfig: ApplicationConfig = {
         },
         defaultLanguage: 'pl'
       })
-    )
+    ),
+    httpInterceptors
   ]
 };
