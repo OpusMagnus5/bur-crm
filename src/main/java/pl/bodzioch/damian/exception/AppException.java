@@ -33,4 +33,14 @@ public class AppException extends RuntimeException {
                 List.of(ErrorData.getGeneralErrorData())
         );
     }
+
+    public static AppException getGeneralError(Throwable cause) {
+        return new AppException(cause);
+    }
+
+    private AppException(Throwable cause) {
+        super(cause);
+        httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        errors = List.of(ErrorData.getGeneralErrorData());
+    }
 }

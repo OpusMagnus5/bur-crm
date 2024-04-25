@@ -15,6 +15,7 @@ import pl.bodzioch.damian.valueobject.AuditDataEntity;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -82,6 +83,7 @@ class UserEntity {
                 lastName,
                 Arrays.stream(roles.split(";"))
                         .map(UserRole::valueOf)
+                        .sorted(Comparator.comparing(UserRole::getHierarchy))
                         .toList(),
                 lastLogin,
                 new AuditData(auditData.getCreatedAt(), auditData.getModifiedAt(), auditData.getCreatedBy(), auditData.getModifiedBy())
