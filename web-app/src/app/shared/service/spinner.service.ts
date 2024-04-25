@@ -1,18 +1,19 @@
-import {Injectable} from "@angular/core";
+import {Injectable, OnDestroy} from "@angular/core";
 import {Overlay, OverlayRef} from "@angular/cdk/overlay";
 import {ComponentPortal} from "@angular/cdk/portal";
-import {scan, Subject} from "rxjs";
+import {scan, Subject, Subscription} from "rxjs";
 import {map} from "rxjs/operators";
 import {SpinnerComponent} from "../component/spinner.component";
 
 @Injectable({providedIn: "root"})
-export class SpinnerService {
+export class SpinnerService implements OnDestroy {
 
   private overlayRef: OverlayRef = this.createOverlayForSpinner();
   spin: Subject<boolean> = new Subject();
+  private spinSubscription: Subscription;
 
   constructor(private overlay: Overlay) {
-    this.spin.asObservable()
+    this.spinSubscription = this.spin.asObservable()
       .pipe(
         map(val => val ? 1 : -1),
         scan((acc, val) => acc + val >= 0 ? acc + val : 0, 0)
@@ -24,6 +25,10 @@ export class SpinnerService {
         }
     })
   }
+
+  ngOnDestroy(): void {
+        this.spinSubscription.unsubscribe();
+    }
 
   private createOverlayForSpinner(): OverlayRef {
     return this.overlay.create({

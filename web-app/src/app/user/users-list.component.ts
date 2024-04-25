@@ -11,10 +11,11 @@ import {
   MatRowDef,
   MatTable
 } from "@angular/material/table";
-import {MatPaginator} from "@angular/material/paginator";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatSort, MatSortHeader} from "@angular/material/sort";
 import {TranslateModule} from "@ngx-translate/core";
-import {UserListDataInterface} from "./model/user-list-data.interface";
+import {UserListDataSource} from "./model/user-list.data-source";
+import {UsersListService} from "./users-list.service";
 import {UserHttpService} from "./service/user-http.service";
 
 @Component({
@@ -37,19 +38,20 @@ import {UserHttpService} from "./service/user-http.service";
     TranslateModule,
   ],
   templateUrl: './users-list.component.html',
-  styleUrl: './users-list.component.css'
+  styleUrl: './users-list.component.css',
+  providers: [UsersListService]
 })
 export class UsersListComponent {
 
+  protected dataSource: UserListDataSource = new UserListDataSource(this.userListService);
+  protected readonly displayedColumns: String[] = ['email', 'firstName', 'lastName', 'role']
 
-  protected users: UserListDataInterface[];
+  constructor(private userListService: UsersListService, private http: UserHttpService) {
+  } //TODO tłumaczenia, sortowanie, szukajka
 
-  constructor(private http: UserHttpService) {
-  }
-
-  private getDataPage(): UserListDataInterface[] {
-    this.http.getUserPage().subscribe(data =>
-      this.users = data.users
+  onPageChange(event: PageEvent) {
+    this.http.getUserPage(event.pageIndex + 1, event.pageSize).subscribe(response =>
+      this.userListService.data.next(response)
     )
   }
 }

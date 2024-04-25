@@ -39,7 +39,7 @@ export class UserHttpService {
     );
   }
 
-  getUserPage(pageNumber: string, pageSize: string): Observable<UserListResponseInterface> {
+  getUserPage(pageNumber: number, pageSize: number): Observable<UserListResponseInterface> {
     return this.http.get<UserListResponseInterface>(
       'http://localhost:8080/api/user',
       {
