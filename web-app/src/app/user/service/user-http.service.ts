@@ -5,6 +5,7 @@ import {CreateNewUserResponseInterface} from "../model/create-new-user-response.
 import {Observable} from "rxjs";
 import {GetAllRolesResponseInterface} from "../model/get-all-roles-response.interface";
 import {UserExistsResponseInterface} from "../model/user-exists-response.interface";
+import {UserListResponseInterface} from "../model/user-list-response.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,17 @@ export class UserHttpService {
         params: new HttpParams()
           .append('kindOfId', idKind)
           .append('id', id)
+      }
+    );
+  }
+
+  getUserPage(pageNumber: string, pageSize: string): Observable<UserListResponseInterface> {
+    return this.http.get<UserListResponseInterface>(
+      'http://localhost:8080/api/user',
+      {
+        params: new HttpParams()
+          .append('pageNumber', pageNumber)
+          .append('pageSize', pageSize)
       }
     );
   }

@@ -40,6 +40,9 @@
     "content2": "Zalecamy zachowanie ostrożności przy przekazywaniu tych informacji i upewnienie się, że docelowa osoba jest odpowiednio zabezpieczona.",
     "close": "Zamknij"
   },
+  "users-list": {
+    "email-header": "Email"
+  },
   "user-dashboard": {
     "new-user-tab": "Dodaj użytkownika",
     "users-list-tab": "Lista użytkowników"

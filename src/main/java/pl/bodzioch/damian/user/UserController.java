@@ -69,11 +69,11 @@ class UserController {
     @ResponseStatus(HttpStatus.OK)
     UserPageResponse getUsers(
             @RequestParam
-            @Min(value = 1, message = "")
-            @Max(value = Integer.MAX_VALUE, message = "")
+            @Min(value = 1, message = "error.client.minPageNumber")
+            @Max(value = Integer.MAX_VALUE, message = "error.client.maxPageNumber")
             int pageNumber,
-            @Min(value = 10, message = "")
-            @Max(value = 50, message = "")
+            @Min(value = 10, message = "error.client.minPageSize")
+            @Max(value = 50, message = "error.client.maxPageSize")
             @RequestParam int pageSize) {
         GetUsersPageQuery query = new GetUsersPageQuery(pageNumber, pageSize);
         GetUsersPageQueryResult result = queryExecutor.execute(query);
