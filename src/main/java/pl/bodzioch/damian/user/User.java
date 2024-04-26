@@ -2,7 +2,6 @@ package pl.bodzioch.damian.user;
 
 import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.user.commandDto.CreateNewUserCommand;
-import pl.bodzioch.damian.valueobject.AuditData;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -19,7 +18,10 @@ record User (
          String lastName,
          List<UserRole> roles,
          LocalDateTime lastLogin,
-         AuditData auditData
+         LocalDateTime createdAt,
+         LocalDateTime modifiedAt,
+         User creator,
+         User modifier
 ) {
 
 
@@ -35,7 +37,10 @@ record User (
                 command.lastName(),
                 resolveRoles(command.role()),
                 null,
-                new AuditData(null, null, command.creatorId(), null)
+                null,
+                null,
+                new User(command.creatorId(), null, null, null, null, null, null, null, null, null, null, null, null),
+                null
         );
     }
 

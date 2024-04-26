@@ -33,7 +33,7 @@ class CreateNewUserCommandHandler implements CommandHandler<CreateNewUserCommand
         }
         User user = new User(command);
         CreateNewUserCommandResult result = new CreateNewUserCommandResult(user.email(), user.password());
-        writeRepository.createNew(new UserEntity(user));
+        writeRepository.createNew(new UserEntityWrite(user));
         return result;
     }
 

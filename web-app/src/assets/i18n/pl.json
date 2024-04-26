@@ -41,7 +41,13 @@
     "close": "Zamknij"
   },
   "users-list": {
-    "email-header": "Email"
+    "email-header": "Email",
+    "firstName-header": "Imię",
+    "lastName-header": "Nazwisko",
+    "role-header": "Rola",
+    "option-details": "Szczegóły",
+    "option-edit": "Edytuj",
+    "option-delete": "Usuń"
   },
   "user-dashboard": {
     "new-user-tab": "Dodaj użytkownika",

@@ -1,9 +1,8 @@
 package pl.bodzioch.damian.user;
 
-import pl.bodzioch.damian.valueobject.AuditDataDto;
-
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public record UserDto(
@@ -15,7 +14,10 @@ public record UserDto(
         String lastName,
         List<String> roles,
         LocalDateTime lastLogin,
-        AuditDataDto auditData
+        LocalDateTime createdAt,
+        LocalDateTime modifiedAt,
+        UserDto creator,
+        UserDto modifier
 ) {
 
     UserDto(User user) {
@@ -28,12 +30,29 @@ public record UserDto(
                 user.lastName(),
                 user.roles().stream().map(UserRole::name).toList(),
                 user.lastLogin(),
-                new AuditDataDto(
-                        user.auditData().createdAt(),
-                        user.auditData().modifiedAt(),
-                        user.auditData().createdBy(),
-                        user.auditData().modifiedBy()
-                )
+                user.createdAt(),
+                user.modifiedAt(),
+                UserDto.toUserDto(user.creator()),
+                UserDto.toUserDto(user.modifier())
         );
+    }
+
+    private static UserDto toUserDto(User user) {
+        return Optional.ofNullable(user)
+                .map(userDto -> new UserDto(
+                        user.id(),
+                        user.uuid(),
+                        user.email(),
+                        user.password(),
+                        user.firstName(),
+                        user.lastName(),
+                        user.roles().stream().map(UserRole::name).toList(),
+                        user.lastLogin(),
+                        user.createdAt(),
+                        user.modifiedAt(),
+                        null,
+                        null
+                ))
+                .orElse(null);
     }
 }

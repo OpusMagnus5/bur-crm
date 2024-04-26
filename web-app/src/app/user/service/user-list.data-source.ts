@@ -1,6 +1,6 @@
 import {DataSource} from "@angular/cdk/collections";
 import {Observable, tap} from "rxjs";
-import {UserListDataInterface} from "./user-list-data.interface";
+import {UserListDataInterface} from "../model/user-list-data.interface";
 import {UsersListService} from "../users-list.service";
 import {map} from "rxjs/operators";
 

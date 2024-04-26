@@ -1,6 +1,9 @@
 package pl.bodzioch.damian.user;
 
+import jakarta.transaction.Transactional;
+
 interface IUserWriteRepository {
 
-    User createNew(UserEntity userEntity);
+    @Transactional(Transactional.TxType.REQUIRED)
+    User createNew(UserEntityWrite userEntityWrite);
 }

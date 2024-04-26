@@ -5,26 +5,28 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.CurrentTimestamp;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.OptimisticLocking;
+import org.hibernate.annotations.SourceType;
 import org.hibernate.generator.EventType;
 import pl.bodzioch.damian.utils.Encoder;
 import pl.bodzioch.damian.utils.GeneratedUuidValue;
-import pl.bodzioch.damian.valueobject.AuditData;
-import pl.bodzioch.damian.valueobject.AuditDataEntity;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Entity(name = "users")
+@Entity(name = "users_write")
+@Table(name = "users")
 @OptimisticLocking
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-class UserEntity {
+class UserEntityWrite {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_id_gen")
@@ -53,11 +55,21 @@ class UserEntity {
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
 
-    @Embedded
-    private AuditDataEntity auditData;
+    @CurrentTimestamp(event = EventType.INSERT, source = SourceType.VM)
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
-    UserEntity(User user) {
-        AuditData auditData = user.auditData();
+    @CurrentTimestamp(event = EventType.UPDATE, source = SourceType.VM)
+    @Column(name = "modified_at")
+    private LocalDateTime modifiedAt;
+
+    @Column(name = "created_by")
+    private Long createdBy;
+
+    @Column(name = "modified_by")
+    private Long modifiedBy;
+
+    UserEntityWrite(User user) {
         this.id = user.id();
         this.uuid = user.uuid();
         this.version = user.version();
@@ -65,7 +77,10 @@ class UserEntity {
         this.firstName = user.firstName();
         this.lastName = user.lastName();
         this.password = Encoder.encodePassword(user.password());
-        this.auditData = new AuditDataEntity(auditData.createdAt(), auditData.modifiedAt(), auditData.createdBy(), auditData.modifiedBy());
+        this.createdAt = user.createdAt();
+        this.modifiedAt = user.modifiedAt();
+        this.createdBy = Optional.ofNullable(user.creator()).map(User::id).orElse(null);
+        this.modifiedBy = Optional.ofNullable(user.modifier()).map(User::id).orElse(null);
         this.roles = user.roles().stream()
                 .map(UserRole::name)
                 .collect(Collectors.joining(";"));
@@ -86,7 +101,10 @@ class UserEntity {
                         .sorted(Comparator.comparing(UserRole::getHierarchy))
                         .toList(),
                 lastLogin,
-                new AuditData(auditData.getCreatedAt(), auditData.getModifiedAt(), auditData.getCreatedBy(), auditData.getModifiedBy())
-                );
+                createdAt,
+                modifiedAt,
+                new User(createdBy, null, null, null, null, null, null, null, null, null, null, null, null),
+                new User(createdBy, null, null, null, null, null, null, null, null, null, null, null, null)
+        );
     }
 }

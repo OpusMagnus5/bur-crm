@@ -14,10 +14,7 @@ import pl.bodzioch.damian.user.commandDto.CreateNewUserCommand;
 import pl.bodzioch.damian.user.commandDto.CreateNewUserCommandResult;
 import pl.bodzioch.damian.user.commandDto.GetAllRolesCommand;
 import pl.bodzioch.damian.user.commandDto.GetAllRolesCommandResult;
-import pl.bodzioch.damian.user.queryDto.CheckUserExistenceQuerResult;
-import pl.bodzioch.damian.user.queryDto.CheckUserExistenceQuery;
-import pl.bodzioch.damian.user.queryDto.GetUsersPageQuery;
-import pl.bodzioch.damian.user.queryDto.GetUsersPageQueryResult;
+import pl.bodzioch.damian.user.queryDto.*;
 import pl.bodzioch.damian.utils.CipherComponent;
 import pl.bodzioch.damian.utils.validator.IdKindV;
 
@@ -81,5 +78,14 @@ class UserController {
                 .map(userDto -> new UserListData(userDto, cipher))
                 .toList();
         return new UserPageResponse(users, result.totalUsers());
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    GetUserByIdResponse getUserById(@PathVariable String id) {
+        long userId = Long.parseLong(cipher.decryptMessage(id));
+        GetUserByIdQuery query = new GetUserByIdQuery(userId);
+        GetUserByIdQueryResult result = queryExecutor.execute(query);
+        return new GetUserByIdResponse(result.userDto(), cipher);
     }
 }

@@ -11,7 +11,7 @@ import {Observable} from 'rxjs';
 import {map, shareReplay} from 'rxjs/operators';
 import {UserDashboardComponent} from '../user/user-dashboard.component';
 import {RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
-import {ADMINISTRATION_PATH, ADMINISTRATION_USERS_PATH, BASE_PATH} from "../app.routes";
+import {ADMINISTRATION_PATH, ADMINISTRATION_USERS_PATH, BASE_PATH, USER_LIST_PATH} from "../app.routes";
 import {RouterService} from "../shared/service/router.service";
 import {TranslateModule} from "@ngx-translate/core";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
@@ -47,7 +47,7 @@ export class NavigationComponent {
 
   protected readonly BASE_PATH = BASE_PATH;
   protected readonly ADMINISTRATION_PATH = ADMINISTRATION_PATH;
-  protected readonly ADMINISTRATION_USERS_PATH = ADMINISTRATION_USERS_PATH;
+  protected readonly ADMINISTRATION_USERS_PATH = ADMINISTRATION_USERS_PATH + '/' + USER_LIST_PATH;
 
   protected isHandset$: Observable<boolean>;
 
