@@ -21,7 +21,7 @@ public record UserListData(
                 userDto.email(),
                 userDto.firstName(),
                 userDto.lastName(),
-                userDto.roles().getLast()
+                userDto.roles().getLast().name()
         );
     }
 }

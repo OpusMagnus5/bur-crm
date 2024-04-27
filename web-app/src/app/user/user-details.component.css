@@ -1,0 +1,23 @@
+.content-container {
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.name-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  column-gap: 30px;
+}
+
+.label-title {
+  margin-bottom: 0;
+  font-size: small;
+  font-weight: bold;
+}
+
+.roles-container {
+  margin: 5px 0;
+}
+
+.audit-container {
+  margin: 5px 0;
+}

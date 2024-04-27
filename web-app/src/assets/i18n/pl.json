@@ -46,11 +46,26 @@
     "lastName-header": "Nazwisko",
     "role-header": "Rola",
     "option-details": "Szczegóły",
-    "option-edit": "Edytuj",
     "option-delete": "Usuń"
   },
   "user-dashboard": {
     "new-user-tab": "Dodaj użytkownika",
     "users-list-tab": "Lista użytkowników"
+  },
+  "user-details": {
+    "title": "Szczegóły użytkowika",
+    "email": "Email",
+    "first-name": "Imię",
+    "last-name": "Nazwisko",
+    "roles": "Role",
+    "created-at": "Data utworzenia",
+    "modified-at": "Data modyfikacji",
+    "creator": "Utworzony przez",
+    "modifier": "Zmodyfikowany przez:",
+    "last-login": "Ostatnio zalogowany",
+    "close": "Zamknij"
+  },
+  "common": {
+    "no-data": "Brak danych"
   }
 }

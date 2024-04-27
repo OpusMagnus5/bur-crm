@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.infrastructure.query.QueryHandler;
 import pl.bodzioch.damian.user.queryDto.GetUsersPageQuery;
 import pl.bodzioch.damian.user.queryDto.GetUsersPageQueryResult;
+import pl.bodzioch.damian.utils.MessageResolver;
 import pl.bodzioch.damian.valueobject.PageQuery;
 import pl.bodzioch.damian.valueobject.PageQueryResult;
 
@@ -16,6 +17,7 @@ import java.util.List;
 class GetUsersPageQueryHandler implements QueryHandler<GetUsersPageQuery, GetUsersPageQueryResult> {
 
     private final IUserReadRepository readRepository;
+    private final MessageResolver messageResolver;
 
     @Override
     public Class<GetUsersPageQuery> queryClass() {
@@ -28,7 +30,7 @@ class GetUsersPageQueryHandler implements QueryHandler<GetUsersPageQuery, GetUse
         PageQueryResult<User> result = readRepository.getUsers(pageQuery);
         List<UserDto> users = result.elements().stream()
                 .sorted(Comparator.comparing(User::firstName).thenComparing(User::lastName))
-                .map(UserDto::new)
+                .map(element -> new UserDto(element, messageResolver))
                 .toList();
         return new GetUsersPageQueryResult(users, result.totalElements());
     }

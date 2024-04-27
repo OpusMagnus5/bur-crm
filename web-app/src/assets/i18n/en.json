@@ -40,8 +40,31 @@
     "content2": "We recommend exercising caution when sharing this information and ensuring that the intended person is appropriately secured.",
     "close": "Close"
   },
+  "users-list": {
+    "email-header": "Email",
+    "firstName-header": "First name",
+    "lastName-header": "Last name",
+    "role-header": "Role",
+    "option-details": "Details",
+    "option-delete": "Delete"
+  },
   "user-dashboard": {
     "new-user-tab": "Add user",
     "users-list-tab": "Users list"
+  },
+  "user-details": {
+    "title": "User Details",
+    "email": "Email",
+    "first-name": "First Name",
+    "last-name": "Last Name",
+    "roles": "Roles",
+    "created-at": "Created At",
+    "modified-at": "Modified At",
+    "creator": "Created By",
+    "modifier": "Modified By",
+    "last-login": "Last Logged In"
+  },
+  "common": {
+    "no-data": "No data"
   }
 }

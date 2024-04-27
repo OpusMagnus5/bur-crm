@@ -14,7 +14,7 @@ public record GetUserByIdResponse(
 		String email,
 		String firstName,
 		String lastName,
-		List<String> roles,
+		List<RoleDto> roles,
 		LocalDateTime lastLogin,
 		LocalDateTime createdAt,
 		LocalDateTime modifiedAt,

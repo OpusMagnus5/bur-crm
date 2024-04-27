@@ -16,7 +16,7 @@ import {RouterService} from "../shared/service/router.service";
 import {TranslateModule} from "@ngx-translate/core";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
-import {ChangeLangauageComponent} from "../change-langauage/change-langauage.component";
+import {ChangeLanguageComponent} from "../change-langauage/change-language.component";
 
 @Component({
   selector: 'app-navigation',
@@ -40,7 +40,7 @@ import {ChangeLangauageComponent} from "../change-langauage/change-langauage.com
     MatSelect,
     MatOption,
     MatLabel,
-    ChangeLangauageComponent
+    ChangeLanguageComponent
   ]
 })
 export class NavigationComponent {

@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import pl.bodzioch.damian.dto.RoleDto;
 import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
 import pl.bodzioch.damian.user.UserDto;
 import pl.bodzioch.damian.user.queryDto.GetUserByEmailQuery;
@@ -23,7 +24,7 @@ class SimpleUserDetailsService implements UserDetailsService {
                 .id(result.id())
                 .email(result.email())
                 .password(result.password())
-                .roles(result.roles())
+                .roles(result.roles().stream().map(RoleDto::role).toList())
                 .build();
     }
 }

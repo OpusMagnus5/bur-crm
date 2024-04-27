@@ -1,5 +1,8 @@
 package pl.bodzioch.damian.user;
 
+import pl.bodzioch.damian.dto.RoleDto;
+import pl.bodzioch.damian.utils.MessageResolver;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +15,7 @@ public record UserDto(
         String password,
         String firstName,
         String lastName,
-        List<String> roles,
+        List<RoleDto> roles,
         LocalDateTime lastLogin,
         LocalDateTime createdAt,
         LocalDateTime modifiedAt,
@@ -20,7 +23,7 @@ public record UserDto(
         UserDto modifier
 ) {
 
-    UserDto(User user) {
+    UserDto(User user, MessageResolver messageResolver) {
         this(
                 user.id(),
                 user.uuid(),
@@ -28,16 +31,19 @@ public record UserDto(
                 user.password(),
                 user.firstName(),
                 user.lastName(),
-                user.roles().stream().map(UserRole::name).toList(),
+                user.roles().stream()
+                        .map(UserRole::name)
+                        .map(role -> new RoleDto(role, messageResolver.getMessage("user.role." + role)))
+                        .toList(),
                 user.lastLogin(),
                 user.createdAt(),
                 user.modifiedAt(),
-                UserDto.toUserDto(user.creator()),
-                UserDto.toUserDto(user.modifier())
+                UserDto.toUserDto(user.creator(), messageResolver),
+                UserDto.toUserDto(user.modifier(), messageResolver)
         );
     }
 
-    private static UserDto toUserDto(User user) {
+    private static UserDto toUserDto(User user, MessageResolver messageResolver) {
         return Optional.ofNullable(user)
                 .map(userDto -> new UserDto(
                         user.id(),
@@ -46,7 +52,10 @@ public record UserDto(
                         user.password(),
                         user.firstName(),
                         user.lastName(),
-                        user.roles().stream().map(UserRole::name).toList(),
+                        user.roles().stream()
+                                .map(UserRole::name)
+                                .map(role -> new RoleDto(role, messageResolver.getMessage("user.role." + role)))
+                                .toList(),
                         user.lastLogin(),
                         user.createdAt(),
                         user.modifiedAt(),

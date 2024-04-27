@@ -4,7 +4,7 @@ import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {TranslateService} from "@ngx-translate/core";
 
 @Component({
-  selector: 'change-langauage',
+  selector: 'change-language',
   standalone: true,
   imports: [
     MatButton,
@@ -13,21 +13,22 @@ import {TranslateService} from "@ngx-translate/core";
     MatMenuItem,
     MatMiniFabButton
   ],
-  templateUrl: './change-langauage.component.html',
-  styleUrl: './change-langauage.component.css'
+  templateUrl: './change-language.component.html',
+  styleUrl: './change-language.component.css'
 })
-export class ChangeLangauageComponent {
+export class ChangeLanguageComponent {
 
   protected availableLanguages: string[] = ['pl', 'en'];
   protected activeLanguage: string = this.availableLanguages[0];
 
-  constructor(private trasnlate: TranslateService) {
+  constructor(private translate: TranslateService) {
+    this.translate.use(this.activeLanguage);
   }
 
   onLanguageChange(event: string) {
     console.log(event);
     this.activeLanguage = event;
-    this.trasnlate.use(this.activeLanguage);
+    this.translate.use(this.activeLanguage);
     //window.location.reload(); TODO zapisywać język w cookiesach
   }
 }

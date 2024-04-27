@@ -7,6 +7,7 @@ import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.infrastructure.query.QueryHandler;
 import pl.bodzioch.damian.user.queryDto.GetUserByEmailQuery;
 import pl.bodzioch.damian.user.queryDto.GetUserByEmailQueryResult;
+import pl.bodzioch.damian.utils.MessageResolver;
 import pl.bodzioch.damian.valueobject.ErrorData;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 class GetUserByEmailQueryHandler implements QueryHandler<GetUserByEmailQuery, GetUserByEmailQueryResult> {
 
     private final IUserReadRepository readRepository;
+    private final MessageResolver messageResolver;
 
     public Class<GetUserByEmailQuery> queryClass() {
         return GetUserByEmailQuery.class;
@@ -24,7 +26,7 @@ class GetUserByEmailQueryHandler implements QueryHandler<GetUserByEmailQuery, Ge
     @Override
     public GetUserByEmailQueryResult handle(GetUserByEmailQuery command) {
         User user = readRepository.getByEmail(command.email()).orElseThrow(() -> buildUserByEmailNotFound(command));
-        return new GetUserByEmailQueryResult(new UserDto(user));
+        return new GetUserByEmailQueryResult(new UserDto(user, messageResolver));
     }
 
     private AppException buildUserByEmailNotFound(GetUserByEmailQuery command) {

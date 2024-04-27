@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.annotations.CurrentTimestamp;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.OptimisticLocking;
@@ -21,7 +20,6 @@ import java.util.UUID;
 @Entity(name = "users_read")
 @Table(name = "users")
 @OptimisticLocking
-@ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 class UserEntityRead {
@@ -109,5 +107,48 @@ class UserEntityRead {
                 null,
                 null
                 );
+    }
+
+    @Override
+    public String toString() {
+        return "UserEntityRead{" +
+                "id=" + id +
+                ", uuid=" + uuid +
+                ", version=" + version +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", roles='" + roles + '\'' +
+                ", lastLogin=" + lastLogin +
+                ", createdAt=" + createdAt +
+                ", modifiedAt=" + modifiedAt +
+                ", creator=" + getCreator().map(UserEntityRead::toStringInnerEntity).orElse(null) +
+                ", modifier=" + getModifier().map(UserEntityRead::toStringInnerEntity).orElse(null) +
+                '}';
+    }
+
+    protected String toStringInnerEntity() {
+        return "UserEntityRead{" +
+                "id=" + id +
+                ", uuid=" + uuid +
+                ", version=" + version +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", roles='" + roles + '\'' +
+                ", lastLogin=" + lastLogin +
+                ", createdAt=" + createdAt +
+                ", modifiedAt=" + modifiedAt +
+                '}';
+    }
+
+    private Optional<UserEntityRead> getCreator() {
+        return Optional.ofNullable(creator);
+    }
+
+    private Optional<UserEntityRead> getModifier() {
+        return Optional.ofNullable(modifier);
     }
 }

@@ -6,7 +6,7 @@ import {Observable} from "rxjs";
 import {GetAllRolesResponseInterface} from "../model/get-all-roles-response.interface";
 import {UserExistsResponseInterface} from "../model/user-exists-response.interface";
 import {UserListResponseInterface} from "../model/user-list-response.interface";
-import {GetUserDetailsResponse} from "../model/GetUserDetailsResponse";
+import {GetUseDetailsResponseInterface} from "../model/get-use-details-response.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -51,8 +51,8 @@ export class UserHttpService {
     );
   }
 
-  getUserDetails(userId: string): Observable<GetUserDetailsResponse> {
-    return this.http.get<GetUserDetailsResponse>(
+  getUserDetails(userId: string): Observable<GetUseDetailsResponseInterface> {
+    return this.http.get<GetUseDetailsResponseInterface>(
       'http://localhost:8080/api/user/' + userId
     );
   }

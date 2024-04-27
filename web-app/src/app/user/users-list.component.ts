@@ -20,6 +20,8 @@ import {MatIconButton} from "@angular/material/button";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {MatIcon} from "@angular/material/icon";
 import {UserListDataInterface} from "./model/user-list-data.interface";
+import {MatDialog} from "@angular/material/dialog";
+import {UserDetailsComponent} from "./user-details.component";
 
 @Component({
   selector: 'app-users-list',
@@ -50,10 +52,14 @@ import {UserListDataInterface} from "./model/user-list-data.interface";
 export class UsersListComponent {
 
   protected dataSource: UserListDataSource = new UserListDataSource(this.userListService);
-  protected readonly columnsDef: string[] = ['email', 'firstName', 'lastName', 'role']
-  protected readonly rowsDef: string[] = ['email', 'firstName', 'lastName', 'role', 'options']
+  protected readonly columnsDef: string[] = ['email', 'firstName', 'lastName', 'role'];
+  protected readonly rowsDef: string[] = ['email', 'firstName', 'lastName', 'role', 'options'];
 
-  constructor(private userListService: UsersListService, private http: UserHttpService) {
+  constructor(
+    private userListService: UsersListService,
+    private http: UserHttpService,
+    private dialog: MatDialog
+  ) {
   }
 
   onPageChange(event: PageEvent) {
@@ -64,12 +70,8 @@ export class UsersListComponent {
 
   onDetails(element: UserListDataInterface) {
     this.http.getUserDetails(element.id).subscribe(response => {
-      console.log(response);
+      this.dialog.open(UserDetailsComponent, { data: response })
     })
-  }
-
-  onEdit(element: UserListDataInterface) {
-
   }
 
   onRemove(element: UserListDataInterface) {
