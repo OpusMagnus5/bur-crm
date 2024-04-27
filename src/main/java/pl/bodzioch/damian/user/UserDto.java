@@ -11,6 +11,7 @@ import java.util.UUID;
 public record UserDto(
         Long id,
         UUID uuid,
+        Integer version,
         String email,
         String password,
         String firstName,
@@ -27,6 +28,7 @@ public record UserDto(
         this(
                 user.id(),
                 user.uuid(),
+                user.version(),
                 user.email(),
                 user.password(),
                 user.firstName(),
@@ -48,6 +50,7 @@ public record UserDto(
                 .map(userDto -> new UserDto(
                         user.id(),
                         user.uuid(),
+                        user.version(),
                         user.email(),
                         user.password(),
                         user.firstName(),

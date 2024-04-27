@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.bodzioch.damian.dto.*;
 import pl.bodzioch.damian.infrastructure.command.CommandExecutor;
 import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
-import pl.bodzioch.damian.user.commandDto.CreateNewUserCommand;
-import pl.bodzioch.damian.user.commandDto.CreateNewUserCommandResult;
-import pl.bodzioch.damian.user.commandDto.GetAllRolesCommand;
-import pl.bodzioch.damian.user.commandDto.GetAllRolesCommandResult;
+import pl.bodzioch.damian.user.commandDto.*;
 import pl.bodzioch.damian.user.queryDto.*;
 import pl.bodzioch.damian.utils.CipherComponent;
 import pl.bodzioch.damian.utils.validator.IdKindV;
@@ -87,5 +84,14 @@ class UserController {
         GetUserByIdQuery query = new GetUserByIdQuery(userId);
         GetUserByIdQueryResult result = queryExecutor.execute(query);
         return new GetUserByIdResponse(result.userDto(), cipher);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    DeleteUserByIdResponse deleteById(@PathVariable String id) {
+        long userId = Long.parseLong(cipher.decryptMessage(id));
+        DeleteUserByIdCommand command = new DeleteUserByIdCommand(userId);
+        DeleteUserByIdCommandResult result = commandExecutor.execute(command);
+        return new DeleteUserByIdResponse(result.message());
     }
 }

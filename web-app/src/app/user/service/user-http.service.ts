@@ -7,6 +7,7 @@ import {GetAllRolesResponseInterface} from "../model/get-all-roles-response.inte
 import {UserExistsResponseInterface} from "../model/user-exists-response.interface";
 import {UserListResponseInterface} from "../model/user-list-response.interface";
 import {GetUseDetailsResponseInterface} from "../model/get-use-details-response.interface";
+import {DeleteUserByIdResponseInterface} from "../model/delete-user-by-id-response.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -53,6 +54,12 @@ export class UserHttpService {
 
   getUserDetails(userId: string): Observable<GetUseDetailsResponseInterface> {
     return this.http.get<GetUseDetailsResponseInterface>(
+      'http://localhost:8080/api/user/' + userId
+    );
+  }
+
+  deleteUser(userId: string): Observable<DeleteUserByIdResponseInterface> {
+    return this.http.delete<DeleteUserByIdResponseInterface>(
       'http://localhost:8080/api/user/' + userId
     );
   }

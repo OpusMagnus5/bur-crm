@@ -12,6 +12,7 @@ public record GetUserByIdResponse(
 
 		String id,
 		String email,
+		Integer version,
 		String firstName,
 		String lastName,
 		List<RoleDto> roles,
@@ -29,6 +30,7 @@ public record GetUserByIdResponse(
 		this(
 				cipher.encryptMessage(userDto.id().toString()),
 				userDto.email(),
+				userDto.version(),
 				userDto.firstName(),
 				userDto.lastName(),
 				userDto.roles(),

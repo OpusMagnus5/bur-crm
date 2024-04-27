@@ -10,8 +10,8 @@ CREATE TABLE users (
                        last_login TIMESTAMP,
                        created_at TIMESTAMP NOT NULL,
                        modified_at TIMESTAMP,
-                       created_by BIGINT NOT NULL REFERENCES users(id),
-                       modified_by BIGINT REFERENCES users(id)
+                       created_by BIGINT NOT NULL,
+                       modified_by BIGINT
 );
 
 ALTER SEQUENCE users_id_seq INCREMENT BY 50;

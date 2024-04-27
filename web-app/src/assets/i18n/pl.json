@@ -46,7 +46,8 @@
     "lastName-header": "Nazwisko",
     "role-header": "Rola",
     "option-details": "Szczegóły",
-    "option-delete": "Usuń"
+    "option-delete": "Usuń",
+    "no-users": "Nie znaleziono użytkowników w bazie danych"
   },
   "user-dashboard": {
     "new-user-tab": "Dodaj użytkownika",
@@ -63,6 +64,9 @@
     "creator": "Utworzony przez",
     "modifier": "Zmodyfikowany przez:",
     "last-login": "Ostatnio zalogowany",
+    "close": "Zamknij"
+  },
+  "delete-user": {
     "close": "Zamknij"
   },
   "common": {
