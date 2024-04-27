@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>{{ 'http-error.title' | translate }}</h2>
+<mat-dialog-content class="details-container">
+
+  <p>{{ 'http-error.error-id' | translate }}: {{ data.errorId }}</p>
+  <p>{{ 'http-error.request-id' | translate }}: {{ data.requestId }}</p>
+  <p>{{ 'http-error.time' | translate }}: {{ data.timestamp | localizedDate }}</p>
+
+  <mat-divider></mat-divider>
+
+  <h3>{{ 'http-error.error-list' | translate }}</h3>
+  @for (error of data.errors; track error) {
+    <p>{{ 'http-error.error-code' | translate }}: {{ error.code }}</p>
+    <p>{{ error.detail }}</p>
+    <mat-divider></mat-divider>
+  }
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button
+          [mat-dialog-close]="true"
+          color="primary"
+          [tabIndex]="-1">{{ 'new-user-details.close' | translate }}</button>
+</mat-dialog-actions>

@@ -71,5 +71,14 @@
   },
   "common": {
     "no-data": "Brak danych"
+  },
+  "http-error": {
+    "title": "Wystąpił błąd",
+    "error-id": "Nr błędu",
+    "request-id": "Nr żądania",
+    "time": "Czas",
+    "error-list": "Szczegoły błędów",
+    "error-code": "Kod błędu",
+    "close": "Zamknij"
   }
 }
