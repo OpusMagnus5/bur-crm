@@ -17,7 +17,7 @@ class I18nConfiguration {
     LocaleResolver localeResolver() {
         CookieLocaleResolver localeResolver = new CookieLocaleResolver("client-language");
         localeResolver.setCookieMaxAge(ChronoUnit.FOREVER.getDuration());
-        localeResolver.setDefaultLocale(Locale.of("PL"));
+        localeResolver.setDefaultLocale(Locale.of("pl"));
         return localeResolver;
     }
 
