@@ -5,7 +5,7 @@ import jakarta.transaction.Transactional;
 interface IUserWriteRepository {
 
     @Transactional(Transactional.TxType.REQUIRED)
-    void createNew(UserEntityWrite userEntityWrite);
+    void createNew(User user);
 
     @Transactional(Transactional.TxType.REQUIRED)
     void delete(Long id);

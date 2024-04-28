@@ -1,11 +1,11 @@
 package pl.bodzioch.damian.configuration;
 
-import jakarta.persistence.EntityManagerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.jdbc.support.JdbcTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -22,9 +22,10 @@ class DatabaseConfiguration {
     }
 
     @Bean
-    PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
-        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
-        jpaTransactionManager.setEntityManagerFactory(entityManagerFactory);
-        return jpaTransactionManager;
+    @DependsOn("dataSource")
+    PlatformTransactionManager transactionManager(DataSource dataSource) {
+        JdbcTransactionManager jdbcTransactionManager = new JdbcTransactionManager();
+        jdbcTransactionManager.setDataSource(dataSource);
+        return jdbcTransactionManager;
     }
 }

@@ -29,7 +29,7 @@ class GetUsersPageQueryHandler implements QueryHandler<GetUsersPageQuery, GetUse
         PageQuery pageQuery = new PageQuery(command.pageNumber(), command.pageSize());
         PageQueryResult<User> result = readRepository.getUsers(pageQuery);
         List<UserDto> users = result.elements().stream()
-                .sorted(Comparator.comparing(User::firstName).thenComparing(User::lastName))
+                .sorted(Comparator.comparing(User::usr_first_name).thenComparing(User::usr_last_name))
                 .map(element -> new UserDto(element, messageResolver))
                 .toList();
         return new GetUsersPageQueryResult(users, result.totalElements());

@@ -6,20 +6,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CurrentTimestamp;
 import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.OptimisticLocking;
 import org.hibernate.annotations.SourceType;
 import org.hibernate.generator.EventType;
 import pl.bodzioch.damian.utils.GeneratedUuidValue;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Optional;
 import java.util.UUID;
 
-@Entity(name = "users_read")
+/*@Entity(name = "users_read")
 @Table(name = "users")
-@OptimisticLocking
+@OptimisticLocking*/
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 class UserEntityRead {
@@ -67,7 +64,7 @@ class UserEntityRead {
     @JoinColumn(name = "modified_by")
     private UserEntityRead modifier;
 
-    User toUser() {
+   /* User toUser() {
         return new User(
                 id,
                 uuid,
@@ -86,9 +83,9 @@ class UserEntityRead {
                 Optional.ofNullable(creator).map(this::toUser).orElse(null),
                 Optional.ofNullable(modifier).map(this::toUser).orElse(null)
                 );
-    }
+    }*/
 
-    private User toUser(UserEntityRead userEntityRead) {
+    /*private User toUser(UserEntityRead userEntityRead) {
         return new User(
                 id,
                 uuid,
@@ -107,22 +104,22 @@ class UserEntityRead {
                 null,
                 null
                 );
-    }
+    }*/
 
     @Override
     public String toString() {
         return "UserEntityRead{" +
-                "id=" + id +
-                ", uuid=" + uuid +
-                ", version=" + version +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", roles='" + roles + '\'' +
-                ", lastLogin=" + lastLogin +
-                ", createdAt=" + createdAt +
-                ", modifiedAt=" + modifiedAt +
+                "usr_id=" + id +
+                ", usr_uuid=" + uuid +
+                ", usr_version=" + version +
+                ", usr_email='" + email + '\'' +
+                ", usr_password='" + password + '\'' +
+                ", usr_first_name='" + firstName + '\'' +
+                ", usr_last_name='" + lastName + '\'' +
+                ", usr_roles='" + roles + '\'' +
+                ", usr_last_login=" + lastLogin +
+                ", usr_created_at=" + createdAt +
+                ", usr_modified_at=" + modifiedAt +
                 ", creator=" + getCreator().map(UserEntityRead::toStringInnerEntity).orElse(null) +
                 ", modifier=" + getModifier().map(UserEntityRead::toStringInnerEntity).orElse(null) +
                 '}';
@@ -130,17 +127,17 @@ class UserEntityRead {
 
     protected String toStringInnerEntity() {
         return "UserEntityRead{" +
-                "id=" + id +
-                ", uuid=" + uuid +
-                ", version=" + version +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", roles='" + roles + '\'' +
-                ", lastLogin=" + lastLogin +
-                ", createdAt=" + createdAt +
-                ", modifiedAt=" + modifiedAt +
+                "usr_id=" + id +
+                ", usr_uuid=" + uuid +
+                ", usr_version=" + version +
+                ", usr_email='" + email + '\'' +
+                ", usr_password='" + password + '\'' +
+                ", usr_first_name='" + firstName + '\'' +
+                ", usr_last_name='" + lastName + '\'' +
+                ", usr_roles='" + roles + '\'' +
+                ", usr_last_login=" + lastLogin +
+                ", usr_created_at=" + createdAt +
+                ", usr_modified_at=" + modifiedAt +
                 '}';
     }
 

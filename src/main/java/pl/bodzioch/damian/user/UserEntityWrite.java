@@ -7,22 +7,19 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.CurrentTimestamp;
 import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.OptimisticLocking;
 import org.hibernate.annotations.SourceType;
 import org.hibernate.generator.EventType;
 import pl.bodzioch.damian.utils.Encoder;
 import pl.bodzioch.damian.utils.GeneratedUuidValue;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Entity(name = "users_write")
+/*@Entity(name = "users_write")
 @Table(name = "users")
-@OptimisticLocking
+@OptimisticLocking*/
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -70,24 +67,24 @@ class UserEntityWrite {
     private Long modifiedBy;
 
     UserEntityWrite(User user) {
-        this.id = user.id();
-        this.uuid = user.uuid();
-        this.version = user.version();
-        this.email = user.email();
-        this.firstName = user.firstName();
-        this.lastName = user.lastName();
-        this.password = Encoder.encodePassword(user.password());
-        this.createdAt = user.createdAt();
-        this.modifiedAt = user.modifiedAt();
-        this.createdBy = Optional.ofNullable(user.creator()).map(User::id).orElse(null);
-        this.modifiedBy = Optional.ofNullable(user.modifier()).map(User::id).orElse(null);
-        this.roles = user.roles().stream()
+        this.id = user.usr_id();
+        this.uuid = user.usr_uuid();
+        this.version = user.usr_version();
+        this.email = user.usr_email();
+        this.firstName = user.usr_first_name();
+        this.lastName = user.usr_last_name();
+        this.password = Encoder.encodePassword(user.usr_password());
+        this.createdAt = user.usr_created_at();
+        this.modifiedAt = user.usr_modified_at();
+        this.createdBy = Optional.ofNullable(user.creator()).map(User::usr_id).orElse(null);
+        this.modifiedBy = Optional.ofNullable(user.modifier()).map(User::usr_id).orElse(null);
+        this.roles = user.usr_roles().stream()
                 .map(UserRole::name)
                 .collect(Collectors.joining(";"));
-        this.lastLogin = user.lastLogin();
+        this.lastLogin = user.usr_last_login();
     }
 
-    User toUser() {
+    /*User toUser() {
         return new User(
                 id,
                 uuid,
@@ -106,5 +103,5 @@ class UserEntityWrite {
                 new User(createdBy, null, null, null, null, null, null, null, null, null, null, null, null),
                 new User(createdBy, null, null, null, null, null, null, null, null, null, null, null, null)
         );
-    }
+    }*/
 }
