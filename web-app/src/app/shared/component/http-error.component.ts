@@ -30,6 +30,10 @@ import {MatButton} from "@angular/material/button";
 })
 export class HttpErrorComponent {
 
+  public serverError: boolean = false;
+  public clientError: boolean = false;
+  public unknownError: boolean = false;
+
   constructor(@Inject(MAT_DIALOG_DATA) protected data: HttpErrorResponseInterface) {
   }
 }

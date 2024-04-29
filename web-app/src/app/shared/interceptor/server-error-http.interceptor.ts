@@ -16,7 +16,15 @@ export class ServerErrorHttpInterceptor implements HttpInterceptor {
           catchError(error => {
             if (error instanceof HttpErrorResponse){
               const response = (<HttpErrorResponse> error).error as HttpErrorResponseInterface
-              this.dialog.open(HttpErrorComponent, {data: response})
+              const statusCode: number = error.status
+              const dialogRef = this.dialog.open(HttpErrorComponent, {data: response});
+              if (statusCode.toString().startsWith('5') && response.errorId) {
+                dialogRef.componentInstance.serverError = true;
+              } else if (statusCode.toString().startsWith('4') && response.errorId) {
+                dialogRef.componentInstance.clientError = true;
+              } else {
+                dialogRef.componentInstance.unknownError = true;
+              }
             }
             throw error;
           })

@@ -79,10 +79,9 @@
   "http-error": {
     "title": "Wystąpił błąd",
     "error-id": "Nr błędu",
-    "request-id": "Nr żądania",
     "time": "Czas",
     "error-list": "Szczegoły błędów",
-    "error-code": "Kod błędu",
-    "close": "Zamknij"
+    "close": "Zamknij",
+    "general-content": "Wystąpił nieoczekiwany błąd. Proszę spróbowac ponownie poźniej."
   }
 }
