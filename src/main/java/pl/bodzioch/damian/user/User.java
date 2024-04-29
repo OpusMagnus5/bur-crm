@@ -51,6 +51,14 @@ record User (
         );
     }
 
+    private User(String firstName, String lastName) {
+        this (
+                null, null, null, null, null, firstName, lastName, null,
+                null, null, null, null, null, null,
+                null
+        );
+    }
+
     static String generateFirstPassword() {
         String passwordCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
         int passwordLength = 12;
@@ -132,41 +140,15 @@ record User (
 
     private static User buildCreator(Map<String, Object> record) {
         return new User(
-                null,
-                null,
-                null,
-                null,
-                null,
                 record.get("creator_usr_first_name") instanceof String ? (String) record.get("creator_usr_first_name") : null,
-                record.get("creator_usr_last_name") instanceof String ? (String) record.get("creator_usr_last_name") : null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
+                record.get("creator_usr_last_name") instanceof String ? (String) record.get("creator_usr_last_name") : null
         );
     }
 
     private static User buildModifier(Map<String, Object> record) {
         return new User(
-                null,
-                null,
-                null,
-                null,
-                null,
                 record.get("modifier_usr_first_name") instanceof String ? (String) record.get("modifier_usr_first_name") : null,
-                record.get("modifier_usr_last_name") instanceof String ? (String) record.get("modifier_usr_last_name") : null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
+                record.get("modifier_usr_last_name") instanceof String ? (String) record.get("modifier_usr_last_name") : null
         );
     }
 }

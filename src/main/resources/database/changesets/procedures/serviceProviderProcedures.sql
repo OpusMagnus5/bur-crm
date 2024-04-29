@@ -4,14 +4,15 @@ CREATE OR REPLACE PROCEDURE service_provider_create_new(
     IN _spr_uuid service_provider.spr_uuid%TYPE,
     IN _spr_bur_id service_provider.spr_bur_id%TYPE,
     IN _spr_name service_provider.spr_name%TYPE,
-    IN _spr_nip service_provider.spr_nip%TYPE
+    IN _spr_nip service_provider.spr_nip%TYPE,
+    IN _spr_created_by service_provider.spr_created_by%TYPE
 )
 LANGUAGE plpgsql
 AS $$
 BEGIN
 
-    INSERT INTO service_provider(spr_uuid, spr_version, spr_bur_id, spr_name, spr_nip)
-    VALUES(_spr_uuid, 0, _spr_bur_id, _spr_name, _spr_nip);
+    INSERT INTO service_provider(spr_uuid, spr_version, spr_bur_id, spr_name, spr_nip, spr_created_by, spr_created_at)
+    VALUES(_spr_uuid, 0, _spr_bur_id, _spr_name, _spr_nip, _spr_created_by, current_timestamp);
 
 END$$;
 
@@ -40,7 +41,8 @@ AS $$
 BEGIN
 
     OPEN _cursor FOR
-        SELECT spr_id, spr_uuid, spr_bur_id, spr_version, spr_name, spr_nip
+        SELECT spr_id, spr_uuid, spr_bur_id, spr_version, spr_name, spr_nip, spr_created_at, spr_modified_at,
+               spr_modified_by, spr_created_by
         FROM service_provider WHERE spr_id = _spr_id;
 
 END$$;
@@ -76,7 +78,8 @@ CREATE OR REPLACE PROCEDURE service_provider_update(
     IN _spr_id service_provider.spr_id%TYPE,
     IN _spr_version service_provider.spr_version%TYPE,
     IN _spr_name service_provider.spr_name%TYPE,
-    IN _spr_nip service_provider.spr_nip%TYPE
+    IN _spr_nip service_provider.spr_nip%TYPE,
+    in _spr_modified_by service_provider.spr_modified_by%TYPE
 )
     LANGUAGE plpgsql
 AS $$
@@ -99,7 +102,9 @@ BEGIN
     UPDATE service_provider
     SET spr_version = spr_version + 1,
         spr_name = _spr_name,
-        spr_nip = _spr_nip
+        spr_nip = _spr_nip,
+        spr_modified_by = _spr_modified_by,
+        spr_modified_at = current_timestamp
     WHERE spr_id = _spr_id;
 
 END$$;

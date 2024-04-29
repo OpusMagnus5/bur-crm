@@ -1,7 +1,6 @@
 package pl.bodzioch.damian.user;
 
 import jakarta.transaction.Transactional;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Slf4j
 @Repository
 class UserReadRepository implements IUserReadRepository {
 
@@ -26,7 +24,7 @@ class UserReadRepository implements IUserReadRepository {
     private final SimpleJdbcCall getPageOfUsersProc;
     private final SimpleJdbcCall getDetailsProc;
 
-    public UserReadRepository(DataSource dataSource, IJdbcCaller jdbcCaller) {
+    UserReadRepository(DataSource dataSource, IJdbcCaller jdbcCaller) {
         this.jdbcCaller = jdbcCaller;
         this.getByEmailProc = buildSimpleJdbcCall(dataSource, "users_get_by_email");
         this.getPageOfUsersProc = buildSimpleJdbcCall(dataSource, "users_get_page_of_users");

@@ -30,7 +30,7 @@ class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     CreateUserResponse createNewUser(@Valid @RequestBody CreateNewUserRequest request) {
-        CreateNewUserCommand command = new CreateNewUserCommand(
+        CreateNewUserCommand command = new CreateNewUserCommand( //TODO dopisać creatora
                 request.email(), request.firstName(), request.lastName(), 1L, request.role()
         );
         CreateNewUserCommandResult result = commandExecutor.execute(command);

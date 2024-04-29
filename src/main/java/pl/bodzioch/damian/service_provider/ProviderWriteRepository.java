@@ -1,4 +1,4 @@
-package pl.bodzioch.damian.user;
+package pl.bodzioch.damian.service_provider;
 
 import jakarta.transaction.Transactional;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -7,19 +7,16 @@ import org.springframework.stereotype.Repository;
 import pl.bodzioch.damian.infrastructure.database.IJdbcCaller;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
 
 @Repository
-class UserWriteRepository implements IUserWriteRepository {
+class ProviderWriteRepository implements IProviderWriteRepository {
 
     private final IJdbcCaller jdbcCaller;
     private final SimpleJdbcCall createNewProc;
-    private final SimpleJdbcCall deleteProc;
 
-    UserWriteRepository(DataSource dataSource, IJdbcCaller jdbcCaller) {
+    ProviderWriteRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
         this.jdbcCaller = jdbcCaller;
-        this.createNewProc = buildSimpleJdbcCall(dataSource, "users_create_new");
-        this.deleteProc = buildSimpleJdbcCall(dataSource, "users_delete");
+        this.createNewProc = buildSimpleJdbcCall(dataSource, "service_provider_create_new");
     }
 
     private SimpleJdbcCall buildSimpleJdbcCall(DataSource dataSource, String procedure) {
@@ -30,15 +27,7 @@ class UserWriteRepository implements IUserWriteRepository {
 
     @Override
     @Transactional(Transactional.TxType.REQUIRED)
-    public void createNew(User user) {
-        this.jdbcCaller.call(this.createNewProc, user.getPropertySource());
-    }
-
-    @Override
-    @Transactional(Transactional.TxType.REQUIRED)
-    public void delete(Long id) {
-        HashMap<String, Object> properties = new HashMap<>();
-        properties.put("_usr_id", id);
-        this.jdbcCaller.call(this.deleteProc, properties);
+    public void createNew(ServiceProvider serviceProvider) {
+        this.jdbcCaller.call(this.createNewProc, serviceProvider.getPropertySource());
     }
 }
