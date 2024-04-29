@@ -93,7 +93,7 @@ BEGIN
         FROM users
         ORDER BY usr_last_name, usr_first_name
         OFFSET _offset
-        FETCH FIRST _max ROW ONLY;
+        LIMIT _max;
 
     SELECT count(usr_id)
     INTO _total_users

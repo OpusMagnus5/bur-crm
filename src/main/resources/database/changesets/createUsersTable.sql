@@ -1,7 +1,7 @@
 CREATE TABLE users (
                        usr_id BIGSERIAL PRIMARY KEY,
                        usr_uuid UUID UNIQUE NOT NULL,
-                       usr_version INTEGER,
+                       usr_version INTEGER NOT NULL,
                        usr_password VARCHAR NOT NULL,
                        usr_email VARCHAR UNIQUE NOT NULL,
                        usr_first_name VARCHAR NOT NULL,

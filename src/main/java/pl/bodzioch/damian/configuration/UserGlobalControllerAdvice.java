@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-@Order(2)
+@Order
 @RestControllerAdvice
 @RequiredArgsConstructor
 class UserGlobalControllerAdvice {
