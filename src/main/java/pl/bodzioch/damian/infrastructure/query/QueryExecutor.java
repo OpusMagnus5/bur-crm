@@ -38,8 +38,8 @@ public class QueryExecutor {
         QueryStatus queryStatus = QueryStatus.NOT_FOUND;
         R result = null;
         try {
-            queryStatus = QueryStatus.FOUND;
             result = handler.handle(command);
+            queryStatus = QueryStatus.FOUND;
         } catch (Throwable e) {
             log.error("Error occurred while handling query.", e);
             throw e;

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
+import pl.bodzioch.damian.infrastructure.database.IJdbcCaller;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -13,10 +14,12 @@ import java.util.HashMap;
 @Repository
 class UserWriteRepository implements IUserWriteRepository {
 
+    private final IJdbcCaller jdbcCaller;
     private final SimpleJdbcCall createNewProc;
     private final SimpleJdbcCall deleteProc;
 
-    public UserWriteRepository(DataSource dataSource) {
+    public UserWriteRepository(DataSource dataSource, IJdbcCaller jdbcCaller) {
+        this.jdbcCaller = jdbcCaller;
         this.createNewProc = buildSimpleJdbcCall(dataSource, "users_create_new");
         this.deleteProc = buildSimpleJdbcCall(dataSource, "users_delete");
     }
@@ -30,7 +33,7 @@ class UserWriteRepository implements IUserWriteRepository {
     @Override
     @Transactional(Transactional.TxType.REQUIRED)
     public void createNew(User user) {
-        this.createNewProc.execute(user.getPropertySource());
+        this.jdbcCaller.call(this.createNewProc, user.getPropertySource());
     }
 
     @Override
@@ -38,6 +41,6 @@ class UserWriteRepository implements IUserWriteRepository {
     public void delete(Long id) {
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("_usr_id", id);
-        this.deleteProc.execute(properties);
+        this.jdbcCaller.call(this.deleteProc, properties);
     }
 }

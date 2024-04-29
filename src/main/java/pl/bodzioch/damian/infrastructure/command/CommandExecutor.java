@@ -38,8 +38,8 @@ public class CommandExecutor {
         CommandStatus commandStatus = CommandStatus.FAIL;
         R result = null;
         try {
-            commandStatus = CommandStatus.SUCCESS;
             result = handler.handle(command);
+            commandStatus = CommandStatus.SUCCESS;
         } catch (Throwable e) {
             log.error("Error occurred while handling command.", e);
             throw e;
