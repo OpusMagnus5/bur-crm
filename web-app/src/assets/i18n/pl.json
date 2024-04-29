@@ -67,7 +67,11 @@
     "close": "Zamknij"
   },
   "delete-user": {
-    "close": "Zamknij"
+    "close": "Zamknij",
+    "confirmation-title": "Usuń użytkownika",
+    "confirmation-content" : "Czy napewno chcesz usunąć tego użytkownika?",
+    "yes": "Tak",
+    "no": "Nie"
   },
   "common": {
     "no-data": "Brak danych"

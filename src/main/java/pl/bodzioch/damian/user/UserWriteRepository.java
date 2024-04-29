@@ -34,10 +34,10 @@ class UserWriteRepository implements IUserWriteRepository {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void delete(Long id) {
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("_usr_id", id);
         this.deleteProc.execute(properties);
-
     }
 }

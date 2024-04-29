@@ -25,6 +25,7 @@ import {UserDetailsComponent} from "./user-details.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Subject} from "rxjs";
 import {UserListResponseInterface} from "./model/user-list-response.interface";
+import {DeleteConfirmationComponent} from "./dialog/delete-confirmation.component";
 
 @Component({
   selector: 'app-users-list',
@@ -58,6 +59,7 @@ export class UsersListComponent {
   protected dataSource: UserListDataSource = new UserListDataSource(this.data);
   protected readonly columnsDef: string[] = ['email', 'firstName', 'lastName', 'role'];
   protected readonly rowsDef: string[] = ['email', 'firstName', 'lastName', 'role', 'options'];
+  protected pageDef: { pageNumber: number; pageSize: number; } = { pageNumber: 1, pageSize: 10 };
 
   constructor(
     private http: UserHttpService,
@@ -71,6 +73,7 @@ export class UsersListComponent {
   }
 
   onPageChange(event: PageEvent) {
+    this.pageDef = { pageNumber: event.pageIndex, pageSize: event.pageSize };
     this.http.getUserPage(event.pageIndex + 1, event.pageSize).subscribe(response =>{
         this.data.next(response);
       }
@@ -84,6 +87,16 @@ export class UsersListComponent {
   }
 
   onRemove(element: UserListDataInterface) {
+    const dialogRef = this.dialog.open(DeleteConfirmationComponent);
+    dialogRef.componentInstance.deleteConfirmation.subscribe(value => {
+      if (value) {
+        dialogRef.close();
+        this.deleteUser(element);
+      }
+    })
+  }
+
+  private deleteUser(element: UserListDataInterface) {
     this.http.deleteUser(element.id).subscribe(response => {
       const action = this.translator.instant('delete-user.close');
       this.snackBar.open(response.message, action, {
@@ -91,6 +104,7 @@ export class UsersListComponent {
         verticalPosition: "top",
         duration: 3000
       })
+      this.onPageChange({ pageIndex: this.pageDef.pageNumber - 1, pageSize: this.pageDef.pageSize, previousPageIndex: 1, length: 1 })
     })
   }
 }

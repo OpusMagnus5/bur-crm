@@ -31,13 +31,13 @@ record User (
 
 
 
-    User(CreateNewUserCommand command) {
+    User(CreateNewUserCommand command, String firstPassword) {
         this (
                 null,
                 Generators.timeBasedEpochGenerator().generate(),
                 null,
                 command.email(),
-                Encoder.encodePassword(generateFirstPassword()),
+                Encoder.encodePassword(firstPassword),
                 command.firstName(),
                 command.lastName(),
                 resolveRoles(command.role()),
@@ -51,7 +51,7 @@ record User (
         );
     }
 
-    private static String generateFirstPassword() {
+    static String generateFirstPassword() {
         String passwordCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
         int passwordLength = 12;
         SecureRandom secureRandom = new SecureRandom();
