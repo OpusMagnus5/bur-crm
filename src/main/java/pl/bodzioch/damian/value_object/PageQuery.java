@@ -1,4 +1,4 @@
-package pl.bodzioch.damian.valueobject;
+package pl.bodzioch.damian.value_object;
 
 public record PageQuery(
 

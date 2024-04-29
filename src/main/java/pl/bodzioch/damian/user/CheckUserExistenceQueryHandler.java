@@ -3,8 +3,8 @@ package pl.bodzioch.damian.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.infrastructure.query.QueryHandler;
-import pl.bodzioch.damian.user.queryDto.CheckUserExistenceQuerResult;
-import pl.bodzioch.damian.user.queryDto.CheckUserExistenceQuery;
+import pl.bodzioch.damian.user.query_dto.CheckUserExistenceQuerResult;
+import pl.bodzioch.damian.user.query_dto.CheckUserExistenceQuery;
 
 @Component
 @RequiredArgsConstructor

@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import pl.bodzioch.damian.dto.*;
 import pl.bodzioch.damian.infrastructure.command.CommandExecutor;
 import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
-import pl.bodzioch.damian.user.commandDto.*;
-import pl.bodzioch.damian.user.queryDto.*;
+import pl.bodzioch.damian.user.command_dto.*;
+import pl.bodzioch.damian.user.query_dto.*;
 import pl.bodzioch.damian.utils.CipherComponent;
 import pl.bodzioch.damian.utils.validator.IdKindV;
 

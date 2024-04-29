@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.dto.RoleDto;
 import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
 import pl.bodzioch.damian.user.UserDto;
-import pl.bodzioch.damian.user.queryDto.GetUserByEmailQuery;
+import pl.bodzioch.damian.user.query_dto.GetUserByEmailQuery;
 
 @Component
 @RequiredArgsConstructor

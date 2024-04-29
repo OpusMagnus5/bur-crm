@@ -3,8 +3,8 @@ package pl.bodzioch.damian.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.infrastructure.command.CommandHandler;
-import pl.bodzioch.damian.user.commandDto.DeleteUserByIdCommand;
-import pl.bodzioch.damian.user.commandDto.DeleteUserByIdCommandResult;
+import pl.bodzioch.damian.user.command_dto.DeleteUserByIdCommand;
+import pl.bodzioch.damian.user.command_dto.DeleteUserByIdCommandResult;
 import pl.bodzioch.damian.utils.MessageResolver;
 
 @Component

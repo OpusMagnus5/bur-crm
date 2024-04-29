@@ -2,7 +2,7 @@ package pl.bodzioch.damian.user;
 
 import com.fasterxml.uuid.Generators;
 import pl.bodzioch.damian.exception.AppException;
-import pl.bodzioch.damian.user.commandDto.CreateNewUserCommand;
+import pl.bodzioch.damian.user.command_dto.CreateNewUserCommand;
 import pl.bodzioch.damian.utils.Encoder;
 
 import java.security.SecureRandom;

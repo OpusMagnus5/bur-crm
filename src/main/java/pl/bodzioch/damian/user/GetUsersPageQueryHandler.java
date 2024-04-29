@@ -3,11 +3,11 @@ package pl.bodzioch.damian.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.infrastructure.query.QueryHandler;
-import pl.bodzioch.damian.user.queryDto.GetUsersPageQuery;
-import pl.bodzioch.damian.user.queryDto.GetUsersPageQueryResult;
+import pl.bodzioch.damian.user.query_dto.GetUsersPageQuery;
+import pl.bodzioch.damian.user.query_dto.GetUsersPageQueryResult;
 import pl.bodzioch.damian.utils.MessageResolver;
-import pl.bodzioch.damian.valueobject.PageQuery;
-import pl.bodzioch.damian.valueobject.PageQueryResult;
+import pl.bodzioch.damian.value_object.PageQuery;
+import pl.bodzioch.damian.value_object.PageQueryResult;
 
 import java.util.Comparator;
 import java.util.List;

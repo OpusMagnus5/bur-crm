@@ -5,10 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.infrastructure.query.QueryHandler;
-import pl.bodzioch.damian.user.queryDto.GetUserByIdQuery;
-import pl.bodzioch.damian.user.queryDto.GetUserByIdQueryResult;
+import pl.bodzioch.damian.user.query_dto.GetUserByIdQuery;
+import pl.bodzioch.damian.user.query_dto.GetUserByIdQueryResult;
 import pl.bodzioch.damian.utils.MessageResolver;
-import pl.bodzioch.damian.valueobject.ErrorData;
+import pl.bodzioch.damian.value_object.ErrorData;
 
 import java.util.List;
 

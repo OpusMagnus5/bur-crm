@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.dto.RoleDto;
 import pl.bodzioch.damian.infrastructure.command.CommandHandler;
-import pl.bodzioch.damian.user.commandDto.GetAllRolesCommand;
-import pl.bodzioch.damian.user.commandDto.GetAllRolesCommandResult;
+import pl.bodzioch.damian.user.command_dto.GetAllRolesCommand;
+import pl.bodzioch.damian.user.command_dto.GetAllRolesCommandResult;
 import pl.bodzioch.damian.utils.MessageResolver;
 
 import java.util.Arrays;

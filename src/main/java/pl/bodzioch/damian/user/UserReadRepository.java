@@ -6,8 +6,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
-import pl.bodzioch.damian.valueobject.PageQuery;
-import pl.bodzioch.damian.valueobject.PageQueryResult;
+import pl.bodzioch.damian.value_object.PageQuery;
+import pl.bodzioch.damian.value_object.PageQueryResult;
 
 import javax.sql.DataSource;
 import java.sql.Types;

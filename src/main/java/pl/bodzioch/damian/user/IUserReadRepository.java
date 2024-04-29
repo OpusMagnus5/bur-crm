@@ -1,8 +1,8 @@
 package pl.bodzioch.damian.user;
 
 import jakarta.transaction.Transactional;
-import pl.bodzioch.damian.valueobject.PageQuery;
-import pl.bodzioch.damian.valueobject.PageQueryResult;
+import pl.bodzioch.damian.value_object.PageQuery;
+import pl.bodzioch.damian.value_object.PageQueryResult;
 
 import java.util.Optional;
 

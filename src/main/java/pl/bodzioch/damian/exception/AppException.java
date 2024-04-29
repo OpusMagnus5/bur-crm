@@ -4,7 +4,7 @@ import com.fasterxml.uuid.Generators;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import pl.bodzioch.damian.valueobject.ErrorData;
+import pl.bodzioch.damian.value_object.ErrorData;
 
 import java.time.LocalDateTime;
 import java.util.List;
