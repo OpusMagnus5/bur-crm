@@ -1,1 +1,23 @@
-<p>new-service-provider works!</p>
+<div class="form-container mat-elevation-z3">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <mat-label>{{ 'new-service-provider.nip-input-label' | translate }}</mat-label>
+      <input matInput
+             [formControl]="nipControl">
+      @if (nipControl.invalid) {
+        <mat-error>{{ getValidationMessage('nip', nipControl) }}</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{ 'new-service-provider.name-input-label' | translate }}</mat-label>
+      <input matInput
+             [formControl]="nameControl">
+      @if (nameControl.invalid) {
+        <mat-error>{{ getValidationMessage('name', nameControl) }}</mat-error>
+      }
+    </mat-form-field>
+    <button mat-flat-button
+            color="primary"
+            [disabled]="form.invalid">{{ 'new-service-provider.send-button-label' | translate }}</button>
+  </form>
+</div>

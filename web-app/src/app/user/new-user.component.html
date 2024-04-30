@@ -5,7 +5,7 @@
       <input matInput
              [formControl]="emailControl">
       @if (emailControl.invalid){
-        <mat-error > {{ getValidationMessage('email', emailControl) }}</mat-error>
+        <mat-error> {{ getValidationMessage('email', emailControl) }}</mat-error>
       }
     </mat-form-field>
     <mat-form-field>
@@ -37,6 +37,6 @@
     </mat-form-field>
     <button mat-flat-button
             color="primary"
-            [disabled]="!form.valid">{{ 'new-user.send-button-label' | translate }}</button>
+            [disabled]="form.invalid">{{ 'new-user.send-button-label' | translate }}</button>
   </form>
 </div>
