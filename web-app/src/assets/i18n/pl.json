@@ -2,7 +2,9 @@
   "navigation": {
     "home-path": "Strona Główna",
     "administration-path": "Administracja",
-    "users-path": "Użytkownicy"
+    "users-path": "Użytkownicy",
+    "registry-path": "Rejestr",
+    "service-provider-path": "Dostawcy usług"
   },
   "not-found": {
     "message": "Przepraszamy, szukana strona nie została znaleziona."
@@ -83,5 +85,8 @@
     "error-list": "Szczegoły błędów",
     "close": "Zamknij",
     "general-content": "Wystąpił nieoczekiwany błąd. Proszę spróbowac ponownie poźniej."
+  },
+  "service-provider": {
+    "new-service-provider" : "Dodaj dostawcę"
   }
 }

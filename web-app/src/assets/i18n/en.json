@@ -2,7 +2,9 @@
   "navigation": {
     "home-path": "Home",
     "administration-path": "Administration",
-    "users-path": "Users"
+    "users-path": "Users",
+    "registry-path": "Registry",
+    "service-provider-path": "Service providers"
   },
   "not-found": {
     "message": "Sorry, the requested page was not found."
@@ -66,5 +68,8 @@
   },
   "common": {
     "no-data": "No data"
+  },
+  "service-provider": {
+    "new-service-provider" : "Add provider"
   }
 }

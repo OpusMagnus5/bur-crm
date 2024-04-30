@@ -1,20 +1,18 @@
-<div class="user-container">
+<div class="service-provider-container">
   <nav mat-tab-nav-bar
-       [tabPanel]="tabPanel"
+       [tabPanel]="tabNavPanel"
        mat-stretch-tabs="false"
        mat-align-tabs="end"
        animationDuration="0ms">
-    @for (link of links; track link) {
+    @for(link of links; track link) {
       <a mat-tab-link
-         [routerLink]="[link.path]"
+         [routerLink]="link.path"
          [active]="routerService.isActivePath(getFullRoutePath(link.path))">
         {{ link.name }}
       </a>
     }
   </nav>
-  <mat-tab-nav-panel #tabPanel>
+  <mat-tab-nav-panel #tabNavPanel>
     <router-outlet></router-outlet>
   </mat-tab-nav-panel>
 </div>
-
-

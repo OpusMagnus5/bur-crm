@@ -8,9 +8,17 @@
       <a mat-list-item
          [routerLink]="[BASE_PATH]"
          [activated]="routerService.isActivePath(BASE_PATH)">{{ 'navigation.home-path' | translate }}</a>
-      <a mat-list-item [matMenuTriggerFor]="menu" [activated]="routerService.isPartOfActivePath(ADMINISTRATION_PATH)">{{ 'navigation.administration-path' | translate }}</a>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item routerLink="{{ADMINISTRATION_USERS_PATH}}" >{{ 'navigation.users-path' | translate }}</button>
+      <a mat-list-item
+         [matMenuTriggerFor]="registryMenu"
+         [activated]="routerService.isPartOfActivePath(REGISTRY_PATH)">{{ 'navigation.registry-path' | translate }}</a>
+      <mat-menu #registryMenu>
+        <button mat-menu-item routerLink="{{REGISTRY_SERVICE_PROVIDER_PATH}}">{{ 'navigation.service-provider-path' | translate }}</button>
+      </mat-menu>
+      <a mat-list-item
+         [matMenuTriggerFor]="administrationMenu"
+         [activated]="routerService.isPartOfActivePath(ADMINISTRATION_PATH)">{{ 'navigation.administration-path' | translate }}</a>
+      <mat-menu #administrationMenu="matMenu">
+        <button mat-menu-item routerLink="{{ADMINISTRATION_USERS_PATH}}">{{ 'navigation.users-path' | translate }}</button>
       </mat-menu>
     </mat-nav-list>
   </mat-sidenav>

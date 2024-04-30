@@ -11,7 +11,14 @@ import {Observable} from 'rxjs';
 import {map, shareReplay} from 'rxjs/operators';
 import {UserDashboardComponent} from '../user/user-dashboard.component';
 import {RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
-import {ADMINISTRATION_PATH, ADMINISTRATION_USERS_PATH, BASE_PATH, USER_LIST_PATH} from "../app.routes";
+import {
+  ADMINISTRATION_PATH,
+  ADMINISTRATION_USERS_PATH,
+  BASE_PATH,
+  REGISTRY_PATH,
+  REGISTRY_SERVICE_PROVIDER_PATH,
+  USER_LIST_PATH
+} from "../app.routes";
 import {RouterService} from "../shared/service/router.service";
 import {TranslateModule} from "@ngx-translate/core";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
@@ -58,4 +65,7 @@ export class NavigationComponent {
         shareReplay()
       );
   }
+
+  protected readonly REGISTRY_PATH = REGISTRY_PATH;
+  protected readonly REGISTRY_SERVICE_PROVIDER_PATH = REGISTRY_SERVICE_PROVIDER_PATH;
 }
