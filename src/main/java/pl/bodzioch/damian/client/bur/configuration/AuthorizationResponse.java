@@ -1,8 +1,8 @@
-package pl.bodzioch.damian.client.bur.dto;
+package pl.bodzioch.damian.client.bur.configuration;
 
 import java.io.Serializable;
 
-public record AuthorizationResponse(
+record AuthorizationResponse(
 
         String token
 ) implements Serializable {

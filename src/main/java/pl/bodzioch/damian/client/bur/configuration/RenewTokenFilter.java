@@ -1,14 +1,21 @@
 package pl.bodzioch.damian.client.bur.configuration;
 
+import io.netty.handler.logging.LogLevel;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.*;
-import pl.bodzioch.damian.client.bur.BurCredentialsProperties;
-import pl.bodzioch.damian.client.bur.dto.AuthorizationRequest;
-import pl.bodzioch.damian.client.bur.dto.AuthorizationResponse;
+import pl.bodzioch.damian.client.Dictionary;
+import pl.bodzioch.damian.exception.AppException;
 import reactor.core.publisher.Mono;
+import reactor.netty.http.client.HttpClient;
+import reactor.netty.transport.logging.AdvancedByteBufFormat;
 import reactor.util.annotation.NonNull;
 
+import static pl.bodzioch.damian.client.Dictionary.DictionaryKey.BUR;
+
+@Slf4j
 @Component
 class RenewTokenFilter implements ExchangeFilterFunction {
 
@@ -19,7 +26,14 @@ class RenewTokenFilter implements ExchangeFilterFunction {
 
     public RenewTokenFilter(BurCredentialsProperties burCredentials, WebClient.Builder builder) {
         this.burCredentials = burCredentials;
-        this.webClient = builder.baseUrl(BurClientConfig.BUR_URL + AUTHORIZATION_PATH).build();
+
+        HttpClient httpClient = HttpClient
+                .create()
+                .wiretap(HttpClient.class.getCanonicalName(), LogLevel.INFO, AdvancedByteBufFormat.TEXTUAL);
+        this.webClient = builder.baseUrl(BurClientConfig.BUR_URL + AUTHORIZATION_PATH)
+                .filter(handleError())
+                .clientConnector(new ReactorClientHttpConnector(httpClient))
+                .build();
     }
 
     @Override
@@ -29,20 +43,31 @@ class RenewTokenFilter implements ExchangeFilterFunction {
             if (response.statusCode().value() == HttpStatus.UNAUTHORIZED.value()) {
                 return response.releaseBody()
                         .then(authorize())
-                        .flatMap(token -> next.exchange(request));
+                        .then(Mono.defer(() -> {
+                            ClientRequest newRequest = ClientRequest.from(request).build();
+                            return next.exchange(newRequest);
+                        }));
             } else {
                 return Mono.just(response);
             }
         });
     }
 
-    private Mono<String> authorize() {
+    private Mono<Void> authorize() {
         return webClient.post()
-                .uri(uriBuilder -> uriBuilder.pathSegment(AUTHORIZATION_PATH).build())
-                .bodyValue(new AuthorizationRequest(this.burCredentials))
+                .bodyValue(this.burCredentials.toAuthorizationRequest())
                 .retrieve()
                 .bodyToMono(AuthorizationResponse.class)
-                .doOnNext(response -> Token.setToken(response.token()))
-                .map(AuthorizationResponse::token);
+                .doOnNext(response -> Dictionary.put(BUR, response.token()))
+                .then();
+    }
+
+    private ExchangeFilterFunction handleError() {
+        return ExchangeFilterFunction.ofResponseProcessor(response -> {
+            if (response.statusCode().isError()) {
+                return Mono.error(new AppException("Exception occurred while calling BUR API"));
+            }
+            return Mono.just(response);
+        });
     }
 }

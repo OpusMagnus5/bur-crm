@@ -1,4 +1,8 @@
 package pl.bodzioch.damian.dto;
 
-public record CreateNewServiceProviderResponse() {
+import java.io.Serializable;
+
+public record CreateNewServiceProviderResponse(
+        String message
+) implements Serializable {
 }

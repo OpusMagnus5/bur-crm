@@ -2,6 +2,8 @@ package pl.bodzioch.damian.user;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.exception.AppException;
@@ -13,10 +15,10 @@ import pl.bodzioch.damian.value_object.ErrorData;
 import java.util.List;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 class CreateNewUserCommandHandler implements CommandHandler<CreateNewUserCommand, CreateNewUserCommandResult> {
 
-    private final IUserReadRepository readRepository;
     private final IUserWriteRepository writeRepository;
 
     @Override
@@ -27,14 +29,15 @@ class CreateNewUserCommandHandler implements CommandHandler<CreateNewUserCommand
     @Override
     @Transactional //TODO dopisać walidacje roli zakładającego konto
     public CreateNewUserCommandResult handle(CreateNewUserCommand command) {
-        boolean isUserExists = readRepository.getByEmail(command.email()).isPresent();
-        if (isUserExists) {
-            throw buildUserByEmailAlreadyExistsException(command.email());
-        }
         String firstPassword = User.generateFirstPassword();
         User user = new User(command, firstPassword);
         CreateNewUserCommandResult result = new CreateNewUserCommandResult(user.usr_email(), firstPassword);
-        writeRepository.createNew(user);
+        try {
+            writeRepository.createNew(user);
+        } catch (DuplicateKeyException e) {
+            log.warn("User with email: {} already exists", command.email(), e);
+            throw buildUserByEmailAlreadyExistsException(command.email());
+        }
         return result;
     }
 
