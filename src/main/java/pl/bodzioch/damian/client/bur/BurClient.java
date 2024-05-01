@@ -21,7 +21,7 @@ class BurClient implements IBurClient {
     }
 
     @Override
-    public Mono<Long> getServiceProviderBurId(Long nip) {
+    public Mono<BurServiceProviderDto> getServiceProvider(Long nip) {
             return webClient.get()
                     .uri(uriBuilder -> uriBuilder.pathSegment(SERVICE_PROVIDERS_PATH)
                             .queryParam(NIP_QUERY_PARAM, nip)
@@ -29,6 +29,6 @@ class BurClient implements IBurClient {
                             .build())
                     .retrieve()
                     .bodyToMono(ServiceProviderResponse.class)
-                    .map(response -> response.serviceProviders().getFirst().id().longValue());
+                    .map(ServiceProviderResponse::mapFirst);
     }
 }

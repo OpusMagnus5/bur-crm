@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import pl.bodzioch.damian.client.bur.BurServiceProviderDto;
 import pl.bodzioch.damian.client.bur.IBurClient;
 import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.infrastructure.command.CommandHandler;
@@ -14,6 +15,7 @@ import pl.bodzioch.damian.utils.MessageResolver;
 import pl.bodzioch.damian.value_object.ErrorData;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Slf4j
@@ -31,8 +33,11 @@ class CreateNewServiceProviderCommandHandler implements CommandHandler<CreateNew
 
     @Override
     public CreateNewServiceProviderCommandResult handle(CreateNewServiceProviderCommand command) {
-        Long burId = burClient.getServiceProviderBurId(command.nip()).onErrorComplete().block();
-        ServiceProvider serviceProvider = new ServiceProvider(command, burId);
+        Optional<Long> burId = burClient.getServiceProvider(command.nip())
+                .onErrorComplete()
+                .blockOptional()
+                .map(BurServiceProviderDto::id);
+        ServiceProvider serviceProvider = new ServiceProvider(command, burId.orElse(null));
         try {
             writeRepository.createNew(serviceProvider);
         } catch (DuplicateKeyException e) {

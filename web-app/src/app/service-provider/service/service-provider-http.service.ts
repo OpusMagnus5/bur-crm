@@ -5,6 +5,7 @@ import {Observable} from "rxjs";
 import {ServiceProviderCreateNewResponseInterface} from "../model/service-provider-create-new-response.interface";
 import {ServiceProviderExistenceResponseInterface} from "../model/service-provider-existence-response.interface";
 import {UserExistsResponseInterface} from "../../user/model/user-exists-response.interface";
+import {ServiceProviderNameResponseInterface} from "../model/service-provider-name-response.interface";
 
 @Injectable({ providedIn: "root" })
 export class ServiceProviderHttpService {
@@ -26,6 +27,16 @@ export class ServiceProviderHttpService {
         params: new HttpParams()
           .append('kindOfId', idKind)
           .append('id', id)
+      }
+    );
+  }
+
+  getProviderNameFromBur(nip: string): Observable<ServiceProviderNameResponseInterface> {
+    return this.http.get<ServiceProviderNameResponseInterface>(
+      'http://localhost:8080/api/service-provider/name',
+      {
+        params: new HttpParams()
+          .append('nip', nip)
       }
     );
   }

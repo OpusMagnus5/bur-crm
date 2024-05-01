@@ -8,13 +8,19 @@ import {HttpErrorResponseInterface} from "../model/http-error-response.interface
 @Injectable({providedIn: "root"})
 export class ServerErrorHttpInterceptor implements HttpInterceptor {
 
+  private readonly excludedUrl: string[] = [
+    "api/service-provider/exists",
+    "api/service-provider/name",
+    "api/user/exists"
+  ];
+
   constructor(private dialog: MatDialog) {
   }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(req).pipe(
           catchError(error => {
-            if (error instanceof HttpErrorResponse){
+            if (error instanceof HttpErrorResponse && this.isExcluded(req)){
               const response = (<HttpErrorResponse> error).error as HttpErrorResponseInterface
               const statusCode: number = error.status
               const dialogRef = this.dialog.open(HttpErrorComponent, {data: response});
@@ -31,4 +37,7 @@ export class ServerErrorHttpInterceptor implements HttpInterceptor {
         )
     }
 
+  private isExcluded(req: HttpRequest<any>) {
+    return this.excludedUrl.some(str => req.url.includes(str));
+  }
 }

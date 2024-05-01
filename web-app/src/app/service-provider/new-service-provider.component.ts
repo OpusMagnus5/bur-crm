@@ -95,6 +95,14 @@ export class NewServiceProviderComponent {
     });
   }
 
+  onNipBlur(control: FormControl) {
+    return this.httpService.getProviderNameFromBur(control.value.trim()).subscribe({
+      next: response => {
+        this.nameControl.setValue(response.name);
+      }
+    });
+  }
+
   private showPopUp(response: ServiceProviderCreateNewResponseInterface) {
     const action = this.translator.instant('new-service-provider.close');
     this.snackBar.open(response.message, action, {

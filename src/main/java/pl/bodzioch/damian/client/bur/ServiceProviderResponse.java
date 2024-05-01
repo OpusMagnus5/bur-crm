@@ -9,4 +9,11 @@ record ServiceProviderResponse(
         @JsonProperty("lista")
         List<ServiceProviderBur> serviceProviders
 ) {
+
+        BurServiceProviderDto mapFirst() {
+                return serviceProviders().stream()
+                        .map(provider -> new BurServiceProviderDto(provider.id().longValue(), provider.name()))
+                        .findFirst()
+                        .orElse(null);
+        }
 }
