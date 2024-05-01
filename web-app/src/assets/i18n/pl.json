@@ -88,5 +88,23 @@
   },
   "service-provider": {
     "new-service-provider" : "Dodaj dostawcę"
+  },
+  "new-service-provider": {
+    "nip-input-label": "NIP",
+    "name-input-label": "Nazwa dostawcy",
+    "send-button-label": "Zapisz",
+    "close": "Zamknij",
+    "validation": {
+      "nip": {
+        "required": "Pole nip nie może być puste",
+        "pattern": "Podany nip jest nieprawidłowy",
+        "incorrect": "Podany nip jest nieprawidłowy",
+        "exists": "Istnieje już dostawca o podanym numerze nip"
+      },
+      "name" : {
+        "required": "Pole nazwa nie może być puste",
+        "pattern": "Podana nazwa jest nieprawidłowa."
+      }
+    }
   }
 }

@@ -25,8 +25,8 @@ class GetUsersPageQueryHandler implements QueryHandler<GetUsersPageQuery, GetUse
     }
 
     @Override
-    public GetUsersPageQueryResult handle(GetUsersPageQuery command) {
-        PageQuery pageQuery = new PageQuery(command.pageNumber(), command.pageSize());
+    public GetUsersPageQueryResult handle(GetUsersPageQuery query) {
+        PageQuery pageQuery = new PageQuery(query.pageNumber(), query.pageSize());
         PageQueryResult<User> result = readRepository.getUsers(pageQuery);
         List<UserDto> users = result.elements().stream()
                 .sorted(Comparator.comparing(User::usr_first_name).thenComparing(User::usr_last_name))

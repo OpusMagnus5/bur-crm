@@ -4,5 +4,5 @@ public interface QueryHandler<C extends Query<R>, R extends QueryResult> {
 
     Class<C> queryClass();
 
-    R handle(C command);
+    R handle(C query);
 }

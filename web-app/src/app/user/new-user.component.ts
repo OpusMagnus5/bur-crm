@@ -86,7 +86,7 @@ export class NewUserComponent {
   }
 
   validateEmailOccupation(control: AbstractControl): Observable<ValidationErrors | null> {
-    return this.httpService.getIsUserExists('EMAIL', control.value).pipe(
+    return this.httpService.getIsUserExists('EMAIL', control.value.trim()).pipe(
       map(response => (response.exists ? { 'exists': true } : null)),
       catchError(() => of(null))
     );
@@ -101,8 +101,8 @@ export class NewUserComponent {
   private openDialog(response: CreateNewUserResponseInterface) {
     const dialogRef: MatDialogRef<NewUserDetailsComponent> = this.dialog.open(NewUserDetailsComponent, {
       data: {
-        login: response.login,
-        password: response.password
+        login: response.login.trim(),
+        password: response.password.trim()
       },
       maxWidth: '50em',
       disableClose: true

@@ -71,5 +71,23 @@
   },
   "service-provider": {
     "new-service-provider" : "Add provider"
+  },
+  "new-service-provider": {
+    "nip-input-label": "NIP",
+    "name-input-label": "Provider Name",
+    "send-button-label": "Save",
+    "close": "Close",
+    "validation": {
+      "nip": {
+        "required": "NIP field cannot be empty",
+        "pattern": "Invalid NIP provided",
+        "incorrect": "Invalid NIP provided",
+        "exists": "A provider with the provided NIP already exists"
+      },
+      "name" : {
+        "required": "Name field cannot be empty",
+        "pattern": "Invalid name provided."
+      }
+    }
   }
 }

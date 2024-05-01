@@ -30,15 +30,15 @@ public class QueryExecutor {
 
 
     @SuppressWarnings("unchecked")
-    public <C extends Query<R>, R extends QueryResult> R execute(C command) {
-        QueryHandler<C, R> handler = (QueryHandler<C, R>) handlerMap.get(command.getClass());
-        log.info("Executing query: {}", command);
+    public <C extends Query<R>, R extends QueryResult> R execute(C query) {
+        QueryHandler<C, R> handler = (QueryHandler<C, R>) handlerMap.get(query.getClass());
+        log.info("Executing query: {}", query);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         QueryStatus queryStatus = QueryStatus.NOT_FOUND;
         R result = null;
         try {
-            result = handler.handle(command);
+            result = handler.handle(query);
             queryStatus = QueryStatus.FOUND;
         } catch (Throwable e) {
             log.error("Error occurred while handling query.", e);
@@ -46,7 +46,7 @@ public class QueryExecutor {
         } finally {
             stopWatch.stop();
             log.info("Query with class: {} executed in {}ms with status {} and result: {}",
-                    command.getClass().getSimpleName(), stopWatch.getTotalTimeMillis(), queryStatus, result);
+                    query.getClass().getSimpleName(), stopWatch.getTotalTimeMillis(), queryStatus, result);
         }
         return result;
     }

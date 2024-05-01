@@ -1,6 +1,6 @@
 package pl.bodzioch.damian.user;
 
-public enum IdKind {
+public enum UserIdKind {
 
 	EMAIL
 }

@@ -13,7 +13,7 @@ import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
 import pl.bodzioch.damian.user.command_dto.*;
 import pl.bodzioch.damian.user.query_dto.*;
 import pl.bodzioch.damian.utils.CipherComponent;
-import pl.bodzioch.damian.utils.validator.IdKindV;
+import pl.bodzioch.damian.utils.validator.UserIdKindV;
 
 import java.util.List;
 
@@ -53,8 +53,8 @@ class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/exists")
-    UserExistsResponse isUserExists(@RequestParam @IdKindV(message = "error.client.incorrectIdKind") String kindOfId, @RequestParam String id) {
-        CheckUserExistenceQuery query = new CheckUserExistenceQuery(IdKind.valueOf(kindOfId), id);
+    UserExistsResponse isUserExists(@RequestParam @UserIdKindV(message = "error.client.incorrectIdKind") String kindOfId, @RequestParam String id) {
+        CheckUserExistenceQuery query = new CheckUserExistenceQuery(UserIdKind.valueOf(kindOfId), id);
         CheckUserExistenceQuerResult result = queryExecutor.execute(query);
         return new UserExistsResponse(result.exists());
     }

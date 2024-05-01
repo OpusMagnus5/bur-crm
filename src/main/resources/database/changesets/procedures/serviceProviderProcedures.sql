@@ -30,10 +30,10 @@ BEGIN
 END$$;
 
 
-DROP PROCEDURE IF EXISTS service_provider_get_by_id;
+DROP PROCEDURE IF EXISTS service_provider_get_by_nip;
 /*PROCEDURE service_provider_get_by_id*/
-CREATE OR REPLACE PROCEDURE service_provider_get_by_id(
-    IN _spr_id service_provider.spr_id%TYPE,
+CREATE OR REPLACE PROCEDURE service_provider_get_by_nip(
+    IN _spr_nip service_provider.spr_nip%TYPE,
     OUT _cursor REFCURSOR
 )
     LANGUAGE plpgsql
@@ -43,7 +43,7 @@ BEGIN
     OPEN _cursor FOR
         SELECT spr_id, spr_uuid, spr_bur_id, spr_version, spr_name, spr_nip, spr_created_at, spr_modified_at,
                spr_modified_by, spr_created_by
-        FROM service_provider WHERE spr_id = _spr_id;
+        FROM service_provider WHERE spr_nip = _spr_nip;
 
 END$$;
 

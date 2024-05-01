@@ -21,6 +21,12 @@ public class AppException extends RuntimeException {
     private final LocalDateTime occurredAt = LocalDateTime.now();
     private final List<ErrorData> errors;
 
+    public AppException(String message, HttpStatus httpStatus, List<ErrorData> errors) {
+        super(message);
+        this.httpStatus = httpStatus;
+        this.errors = errors;
+    }
+
     public AppException(String message) {
         super(message);
         httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;

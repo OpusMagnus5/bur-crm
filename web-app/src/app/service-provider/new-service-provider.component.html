@@ -10,8 +10,8 @@
     </mat-form-field>
     <mat-form-field>
       <mat-label>{{ 'new-service-provider.name-input-label' | translate }}</mat-label>
-      <input matInput
-             [formControl]="nameControl">
+      <textarea matInput
+                [formControl]="nameControl"></textarea>
       @if (nameControl.invalid) {
         <mat-error>{{ getValidationMessage('name', nameControl) }}</mat-error>
       }

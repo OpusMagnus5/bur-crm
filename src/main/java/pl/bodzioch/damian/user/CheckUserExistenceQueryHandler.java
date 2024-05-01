@@ -18,10 +18,10 @@ class CheckUserExistenceQueryHandler implements QueryHandler<CheckUserExistenceQ
 	}
 
 	@Override
-	public CheckUserExistenceQuerResult handle(CheckUserExistenceQuery command) {
+	public CheckUserExistenceQuerResult handle(CheckUserExistenceQuery query) {
 		boolean present = false;
-		if (command.idKind() == IdKind.EMAIL) {
-			present = readRepository.getByEmail(command.id()).isPresent();
+		if (query.userIdKind() == UserIdKind.EMAIL) {
+			present = readRepository.getByEmail(query.id()).isPresent();
 		}
 		return new CheckUserExistenceQuerResult(present);
 	}

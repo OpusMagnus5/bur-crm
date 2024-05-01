@@ -24,15 +24,15 @@ class GetUserByEmailQueryHandler implements QueryHandler<GetUserByEmailQuery, Ge
     }
 
     @Override
-    public GetUserByEmailQueryResult handle(GetUserByEmailQuery command) {
-        User user = readRepository.getByEmail(command.email()).orElseThrow(() -> buildUserByEmailNotFound(command));
+    public GetUserByEmailQueryResult handle(GetUserByEmailQuery query) {
+        User user = readRepository.getByEmail(query.email()).orElseThrow(() -> buildUserByEmailNotFound(query));
         return new GetUserByEmailQueryResult(new UserDto(user, messageResolver));
     }
 
-    private AppException buildUserByEmailNotFound(GetUserByEmailQuery command) {
+    private AppException buildUserByEmailNotFound(GetUserByEmailQuery query) {
         return new AppException(
                 HttpStatus.NOT_FOUND,
-                List.of(new ErrorData("error.client.userByEmailNotFound", List.of(command.email())))
+                List.of(new ErrorData("error.client.userByEmailNotFound", List.of(query.email())))
         );
     }
 }

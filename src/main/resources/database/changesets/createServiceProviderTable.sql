@@ -12,3 +12,4 @@ CREATE TABLE service_provider (
 );
 
 CREATE UNIQUE INDEX service_provider_id_idx ON service_provider (spr_id);
+CREATE UNIQUE INDEX service_provider_nip_idx ON service_provider (spr_nip);
