@@ -89,7 +89,7 @@
   },
   "new-service-provider": {
     "nip-input-label": "NIP",
-    "name-input-label": "Provider Name"
+    "name-input-label": "Provider Name",
     "validation": {
       "nip": {
         "required": "NIP field cannot be empty",
