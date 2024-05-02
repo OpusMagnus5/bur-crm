@@ -111,5 +111,9 @@
     "title": "Service provider details",
     "name": "Provider name",
     "nip": "NIP"
+  },
+  "delete-service-provider": {
+    "confirmation-title": "Delete service provider",
+    "confirmation-content": "Are you sure you want to delete this service provider?"
   }
 }

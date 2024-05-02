@@ -17,13 +17,15 @@ import {Subject} from "rxjs";
 import {ServiceProviderListResponseInterface} from "./model/service-provider-list-response.interface";
 import {ServiceProviderHttpService} from "./service/service-provider-http.service";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
-import {TranslateModule} from "@ngx-translate/core";
+import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {MatIcon} from "@angular/material/icon";
 import {MatIconButton} from "@angular/material/button";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
-import {UserListDataInterface} from "../user/model/user-list-data.interface";
 import {MatDialog} from "@angular/material/dialog";
 import {ServiceProviderDetailsComponent} from "./service-provider-details.component";
+import {DeleteServiceProviderConfirmationComponent} from "./dialog/delete-service-provider-confirmation.component";
+import {ServiceProviderDataInterface} from "./model/service-provider-data.interface";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-service-provider-list',
@@ -62,6 +64,8 @@ export class ServiceProviderListComponent {
   constructor(
     private http: ServiceProviderHttpService,
     private dialog: MatDialog,
+    private translator: TranslateService,
+    private snackBar: MatSnackBar
   ) {
     this.http.getProviderPage(1, 10).subscribe(response =>
       this.data.next(response)
@@ -76,13 +80,31 @@ export class ServiceProviderListComponent {
     )
   }
 
-  onDetails(element: UserListDataInterface) {
+  onDetails(element: ServiceProviderDataInterface) {
     this.http.getDetails(element.id).subscribe(response => {
       this.dialog.open(ServiceProviderDetailsComponent, { data: response })
     })
   }
 
-  onRemove(element: UserListDataInterface) {
+  onRemove(element: ServiceProviderDataInterface) {
+    const dialogRef = this.dialog.open(DeleteServiceProviderConfirmationComponent);
+    dialogRef.componentInstance.deleteConfirmation.subscribe(value => {
+      if (value) {
+        dialogRef.close();
+        this.deleteServiceProvider(element);
+      }
+    })
+  }
 
+  private deleteServiceProvider(element: ServiceProviderDataInterface) {
+    this.http.delete(element.id).subscribe(response => {
+      const action = this.translator.instant('common.close-button');
+      this.snackBar.open(response.message, action, {
+        horizontalPosition: "center",
+        verticalPosition: "top",
+        duration: 3000
+      })
+      this.onPageChange({ pageIndex: this.pageDef.pageNumber - 1, pageSize: this.pageDef.pageSize, previousPageIndex: 1, length: 1 })
+    })
   }
 }

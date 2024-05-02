@@ -112,5 +112,9 @@
     "title": "Szczegóły dostawcy usług",
     "name": "Nazwa dostawcy",
     "nip": "NIP"
+  },
+  "delete-service-provider": {
+    "confirmation-title": "Usuń dostawcę usług",
+    "confirmation-content": "Czy napewno chcesz usunąć tego dostawcę usług?"
   }
 }

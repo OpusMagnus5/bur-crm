@@ -8,6 +8,7 @@ import {UserExistsResponseInterface} from "../../user/model/user-exists-response
 import {ServiceProviderNameResponseInterface} from "../model/service-provider-name-response.interface";
 import {ServiceProviderListResponseInterface} from "../model/service-provider-list-response.interface";
 import {ServiceProviderDetailsResponseInterface} from "../model/service-provider-details-response.interface";
+import {DeleteServiceProviderResponseInterface} from "../model/delete-service=provider-response.interface";
 
 @Injectable({ providedIn: "root" })
 export class ServiceProviderHttpService {
@@ -56,6 +57,12 @@ export class ServiceProviderHttpService {
 
   getDetails(id: string): Observable<ServiceProviderDetailsResponseInterface> {
     return this.http.get<ServiceProviderDetailsResponseInterface>(
+      'http://localhost:8080/api/service-provider/' + id
+    );
+  }
+
+  delete(id: string): Observable<DeleteServiceProviderResponseInterface> {
+    return this.http.delete<DeleteServiceProviderResponseInterface>(
       'http://localhost:8080/api/service-provider/' + id
     );
   }

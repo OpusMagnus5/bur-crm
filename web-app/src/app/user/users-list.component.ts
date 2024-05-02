@@ -98,7 +98,7 @@ export class UsersListComponent {
 
   private deleteUser(element: UserListDataInterface) {
     this.http.deleteUser(element.id).subscribe(response => {
-      const action = this.translator.instant('delete-user.close');
+      const action = this.translator.instant('common.close-button');
       this.snackBar.open(response.message, action, {
         horizontalPosition: "center",
         verticalPosition: "top",
