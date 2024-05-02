@@ -14,4 +14,17 @@ public record ServiceProviderDto(
         LocalDateTime createdAt,
         LocalDateTime modifiedAt
 ) {
+
+    ServiceProviderDto(ServiceProvider serviceProvider) {
+        this(
+                serviceProvider.spr_id(),
+                serviceProvider.spr_uuid(),
+                serviceProvider.spr_version(),
+                serviceProvider.spr_bur_id(),
+                serviceProvider.spr_name(),
+                serviceProvider.spr_nip(),
+                serviceProvider.spr_created_at(),
+                serviceProvider.spr_modified_at()
+        );
+    }
 }

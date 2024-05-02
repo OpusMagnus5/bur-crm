@@ -9,7 +9,6 @@ import pl.bodzioch.damian.utils.MessageResolver;
 import pl.bodzioch.damian.value_object.PageQuery;
 import pl.bodzioch.damian.value_object.PageQueryResult;
 
-import java.util.Comparator;
 import java.util.List;
 
 @Component
@@ -29,7 +28,6 @@ class GetUsersPageQueryHandler implements QueryHandler<GetUsersPageQuery, GetUse
         PageQuery pageQuery = new PageQuery(query.pageNumber(), query.pageSize());
         PageQueryResult<User> result = readRepository.getUsers(pageQuery);
         List<UserDto> users = result.elements().stream()
-                .sorted(Comparator.comparing(User::usr_first_name).thenComparing(User::usr_last_name))
                 .map(element -> new UserDto(element, messageResolver))
                 .toList();
         return new GetUsersPageQueryResult(users, result.totalElements());

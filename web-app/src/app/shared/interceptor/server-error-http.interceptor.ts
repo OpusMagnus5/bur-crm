@@ -20,7 +20,7 @@ export class ServerErrorHttpInterceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(req).pipe(
           catchError(error => {
-            if (error instanceof HttpErrorResponse && this.isExcluded(req)){
+            if (error instanceof HttpErrorResponse && !this.isExcluded(req)){
               const response = (<HttpErrorResponse> error).error as HttpErrorResponseInterface
               const statusCode: number = error.status
               const dialogRef = this.dialog.open(HttpErrorComponent, {data: response});

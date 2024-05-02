@@ -1,15 +1,14 @@
 package pl.bodzioch.damian.service_provider;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.pl.NIP;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pl.bodzioch.damian.dto.CreateNewServiceProviderRequest;
-import pl.bodzioch.damian.dto.CreateNewServiceProviderResponse;
-import pl.bodzioch.damian.dto.ProviderExistsResponse;
-import pl.bodzioch.damian.dto.ProviderNameResponse;
+import pl.bodzioch.damian.dto.*;
 import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.infrastructure.command.CommandExecutor;
 import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
@@ -17,8 +16,13 @@ import pl.bodzioch.damian.service_provider.command_dto.CreateNewServiceProviderC
 import pl.bodzioch.damian.service_provider.command_dto.CreateNewServiceProviderCommandResult;
 import pl.bodzioch.damian.service_provider.command_dto.GetProviderNameByNipFromBurCommand;
 import pl.bodzioch.damian.service_provider.command_dto.GetProviderNameByNipFromBurCommandResult;
+import pl.bodzioch.damian.service_provider.query_dto.GetProvidersPageQuery;
+import pl.bodzioch.damian.service_provider.query_dto.GetProvidersPageQueryResult;
 import pl.bodzioch.damian.service_provider.query_dto.GetServiceProviderByNipQuery;
+import pl.bodzioch.damian.utils.CipherComponent;
 import pl.bodzioch.damian.utils.validator.ProviderIdKindV;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/service-provider")
@@ -28,6 +32,7 @@ class ServiceProviderController {
 
     private final CommandExecutor commandExecutor;
     private final QueryExecutor queryExecutor;
+    private final CipherComponent cipher;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -57,5 +62,23 @@ class ServiceProviderController {
         GetProviderNameByNipFromBurCommand command = new GetProviderNameByNipFromBurCommand(nip);
         GetProviderNameByNipFromBurCommandResult result = commandExecutor.execute(command);
         return new ProviderNameResponse(result.name());
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    ServiceProviderPageResponse getServiceProviders(
+            @RequestParam
+            @Min(value = 1, message = "error.client.minPageNumber")
+            @Max(value = Integer.MAX_VALUE, message = "error.client.maxPageNumber")
+            int pageNumber,
+            @Min(value = 10, message = "error.client.minPageSize")
+            @Max(value = 50, message = "error.client.maxPageSize")
+            @RequestParam int pageSize){
+        GetProvidersPageQuery query = new GetProvidersPageQuery(pageNumber, pageSize);
+        GetProvidersPageQueryResult result = queryExecutor.execute(query);
+        List<ServiceProviderData> providersData = result.providers().stream()
+                .map(element -> new ServiceProviderData(element, cipher))
+                .toList();
+        return new ServiceProviderPageResponse(providersData, result.totalProviders());
     }
 }
