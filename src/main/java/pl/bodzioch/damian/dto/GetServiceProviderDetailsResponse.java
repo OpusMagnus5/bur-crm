@@ -11,6 +11,7 @@ public record GetServiceProviderDetailsResponse(
 
         String id,
         String nip,
+        Integer version,
         String name,
         LocalDateTime createdAt,
         LocalDateTime modifiedAt,
@@ -25,6 +26,7 @@ public record GetServiceProviderDetailsResponse(
         this(
                 cipher.encryptMessage(serviceProviderDto.id().toString()),
                 serviceProviderDto.nip().toString(),
+                serviceProviderDto.version(),
                 serviceProviderDto.name(),
                 serviceProviderDto.createdAt(),
                 serviceProviderDto.modifiedAt(),

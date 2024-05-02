@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {
   MatCell,
   MatCellDef,
@@ -23,7 +23,7 @@ import {UserListDataInterface} from "./model/user-list-data.interface";
 import {MatDialog} from "@angular/material/dialog";
 import {UserDetailsComponent} from "./user-details.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {Subject} from "rxjs";
+import {Subject, Subscription} from "rxjs";
 import {UserListResponseInterface} from "./model/user-list-response.interface";
 import {DeleteConfirmationComponent} from "./dialog/delete-confirmation.component";
 
@@ -53,13 +53,14 @@ import {DeleteConfirmationComponent} from "./dialog/delete-confirmation.componen
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.css'
 })
-export class UsersListComponent {
+export class UsersListComponent implements OnDestroy {
 
   private readonly data: Subject<UserListResponseInterface> = new Subject<UserListResponseInterface>()
   protected readonly dataSource: UserListDataSource = new UserListDataSource(this.data);
   protected readonly columnsDef: string[] = ['email', 'firstName', 'lastName', 'role'];
   protected readonly rowsDef: string[] = ['email', 'firstName', 'lastName', 'role', 'options'];
   protected pageDef: { pageNumber: number; pageSize: number; } = { pageNumber: 1, pageSize: 10 };
+  private subscription: Subscription | undefined;
 
   constructor(
     private http: UserHttpService,
@@ -71,6 +72,10 @@ export class UsersListComponent {
       this.data.next(response)
     );
   }
+
+  ngOnDestroy(): void {
+        this.subscription?.unsubscribe();
+    }
 
   onPageChange(event: PageEvent) {
     this.pageDef = { pageNumber: event.pageIndex + 1, pageSize: event.pageSize };
@@ -88,7 +93,7 @@ export class UsersListComponent {
 
   onRemove(element: UserListDataInterface) {
     const dialogRef = this.dialog.open(DeleteConfirmationComponent);
-    dialogRef.componentInstance.deleteConfirmation.subscribe(value => {
+    this.subscription = dialogRef.componentInstance.deleteConfirmation.subscribe(value => {
       if (value) {
         dialogRef.close();
         this.deleteUser(element);

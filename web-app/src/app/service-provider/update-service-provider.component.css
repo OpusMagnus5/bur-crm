@@ -1,0 +1,24 @@
+.update-service-provider-form-container {
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.update-service-provider-form-container form {
+  display: flex;
+  flex-direction: column;
+  padding: 50px;
+}
+
+.update-service-provider-form-container {
+  display: flex;
+  justify-content: center;
+}
+
+mat-form-field {
+  width: 20em;
+}
+
+button {
+  width: 30%;
+  align-self: end;
+}
+

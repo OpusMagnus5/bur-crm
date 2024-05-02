@@ -13,13 +13,13 @@ import {MatInput} from "@angular/material/input";
 import {ValidationMessageService} from "../shared/service/validation-message.service";
 import {MatButton} from "@angular/material/button";
 import {ServiceProviderHttpService} from "./service/service-provider-http.service";
-import {catchError, forkJoin, Observable, of} from "rxjs";
-import {map} from "rxjs/operators";
+import {Observable} from "rxjs";
 import {ServiceProviderCreateNewRequestInterface} from "./model/service-provider-create-new-request.interface";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ServiceProviderCreateNewResponseInterface} from "./model/service-provider-create-new-response.interface";
 import {ActivatedRoute, Router} from "@angular/router";
 import {SERVICE_PROVIDER_LIST_PATH} from "../app.routes";
+import {ServiceProviderService} from "./service/service-provider.service";
 
 @Component({
   selector: 'app-new-service-provider',
@@ -32,6 +32,9 @@ import {SERVICE_PROVIDER_LIST_PATH} from "../app.routes";
     MatButton,
     MatError,
     MatLabel
+  ],
+  providers: [
+    ServiceProviderService
   ],
   templateUrl: './new-service-provider.component.html',
   styleUrl: './new-service-provider.component.css'
@@ -48,10 +51,11 @@ export class NewServiceProviderComponent {
     private snackBar: MatSnackBar,
     private translator: TranslateService,
     private router: Router,
-    private activeRoute: ActivatedRoute
+    private activeRoute: ActivatedRoute,
+    private service: ServiceProviderService
   ) {
     this.nipControl = new FormControl(null, {
-     validators: [Validators.required, Validators.pattern('\\d{10}'), this.validateNip.bind(this)],
+     validators: [Validators.required, Validators.pattern('\\d{10}'), this.service.validateNip.bind(this)],
      asyncValidators: [this.validateNipOccupation.bind(this)],
      updateOn: 'blur'
     });
@@ -67,36 +71,8 @@ export class NewServiceProviderComponent {
     });
   }
 
-  validateNip(control: AbstractControl): ValidationErrors | null {
-    if (!control.value) {
-      return { 'incorrect': true };
-    }
-    const nip = control.value as string;
-
-    const weight = [6, 5, 7, 2, 3, 4, 5, 6, 7];
-    let sum = 0;
-    const controlNumber = parseInt(nip.substring(9, 10));
-    const weightCount = weight.length;
-    for (let i = 0; i < weightCount; i++) {
-      sum += (parseInt(nip.substring(i, i + 1)) * weight[i]);
-    }
-
-    return sum % 11 == controlNumber ? null : { 'incorrect': true };
-  }
-
   validateNipOccupation(control: AbstractControl): Observable<ValidationErrors | null> {
-    const isProviderExists = this.httpService.getIsProviderExists('NIP', control.value.trim());
-    const providerNameFromBur = this.httpService.getProviderNameFromBur(control.value.trim());
-
-    return forkJoin([isProviderExists, providerNameFromBur]).pipe(
-      map(([exists, name]) => {
-        if (!exists.exists && name.name.length > 0) {
-          this.nameControl.setValue(name.name);
-        }
-        return exists.exists ? { 'exists': true } : null;
-      }),
-    catchError(() => of(null))
-    );
+    return this.service.validateNipOccupation(control, this.nameControl);
   }
 
   protected onSubmit() {
@@ -111,7 +87,7 @@ export class NewServiceProviderComponent {
   }
 
   private showPopUp(response: ServiceProviderCreateNewResponseInterface) {
-    const action = this.translator.instant('new-service-provider.close');
+    const action = this.translator.instant('common.close-button');
     this.snackBar.open(response.message, action, {
       horizontalPosition: "center",
       verticalPosition: "top",

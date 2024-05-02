@@ -1,6 +1,7 @@
 export interface ServiceProviderDetailsResponseInterface {
 
   id: string,
+  version: number,
   nip: string,
   name: string,
   createdAt: Date,

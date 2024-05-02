@@ -117,5 +117,22 @@
   "delete-service-provider": {
     "confirmation-title": "Usuń dostawcę usług",
     "confirmation-content": "Czy na pewno chcesz usunąć tego dostawcę usług? Spowoduje to odpięcie go od wszystkich powiązanych usług."
+  },
+  "update-service-provider": {
+    "title": "Edycja dostawcy usług",
+    "nip-input-label": "NIP",
+    "name-input-label": "Nazwa dostawcy",
+    "validation": {
+      "nip": {
+        "required": "Pole nip nie może być puste",
+        "pattern": "Podany nip jest nieprawidłowy",
+        "incorrect": "Podany nip jest nieprawidłowy",
+        "exists": "Istnieje już dostawca o podanym numerze nip"
+      },
+      "name" : {
+        "required": "Pole nazwa nie może być puste",
+        "pattern": "Podana nazwa jest nieprawidłowa."
+      }
+    }
   }
 }

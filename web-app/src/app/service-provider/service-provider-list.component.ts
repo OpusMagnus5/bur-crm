@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {
   MatCell,
   MatCellDef,
@@ -13,7 +13,7 @@ import {
   MatTable
 } from "@angular/material/table";
 import {ServiceProviderListDataSource} from "./model/service-provider-list-data-source";
-import {Subject} from "rxjs";
+import {Subject, Subscription} from "rxjs";
 import {ServiceProviderListResponseInterface} from "./model/service-provider-list-response.interface";
 import {ServiceProviderHttpService} from "./service/service-provider-http.service";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
@@ -26,6 +26,7 @@ import {ServiceProviderDetailsComponent} from "./service-provider-details.compon
 import {DeleteServiceProviderConfirmationComponent} from "./dialog/delete-service-provider-confirmation.component";
 import {ServiceProviderDataInterface} from "./model/service-provider-data.interface";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {UpdateServiceProviderComponent} from "./update-service-provider.component";
 
 @Component({
   selector: 'app-service-provider-list',
@@ -53,13 +54,15 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   templateUrl: './service-provider-list.component.html',
   styleUrl: './service-provider-list.component.css'
 })
-export class ServiceProviderListComponent {
+export class ServiceProviderListComponent implements OnDestroy {
 
   private readonly data: Subject<ServiceProviderListResponseInterface> = new Subject<ServiceProviderListResponseInterface>();
   protected readonly dataSource: ServiceProviderListDataSource = new ServiceProviderListDataSource(this.data);
   protected readonly columnsDef: string[] = ['name', 'nip'];
   protected readonly rowsDef: string[] = ['name', 'nip', 'options'];
   protected pageDef: { pageNumber: number; pageSize: number; } = { pageNumber: 1, pageSize: 10 };
+  private removeSubscription: Subscription | undefined;
+  private updateSubscription: Subscription | undefined;
 
   constructor(
     private http: ServiceProviderHttpService,
@@ -71,6 +74,11 @@ export class ServiceProviderListComponent {
       this.data.next(response)
     );
   }
+
+  ngOnDestroy(): void {
+        this.removeSubscription?.unsubscribe();
+        this.updateSubscription?.unsubscribe();
+    }
 
   onPageChange(event: PageEvent) {
     this.pageDef = { pageNumber: event.pageIndex + 1, pageSize: event.pageSize };
@@ -88,7 +96,7 @@ export class ServiceProviderListComponent {
 
   onRemove(element: ServiceProviderDataInterface) {
     const dialogRef = this.dialog.open(DeleteServiceProviderConfirmationComponent);
-    dialogRef.componentInstance.deleteConfirmation.subscribe(value => {
+    this.removeSubscription = dialogRef.componentInstance.deleteConfirmation.subscribe(value => {
       if (value) {
         dialogRef.close();
         this.deleteServiceProvider(element);
@@ -109,6 +117,14 @@ export class ServiceProviderListComponent {
   }
 
   onEdit(element: ServiceProviderDataInterface) {
-
+    this.http.getDetails(element.id).subscribe(response => {
+      const dialogRef = this.dialog.open(UpdateServiceProviderComponent, { data: response });
+      this.updateSubscription = dialogRef.componentInstance.updateConfirmation.subscribe(value => {
+        if (value) {
+          dialogRef.close();
+          this.onPageChange({ pageIndex: this.pageDef.pageNumber - 1, pageSize: this.pageDef.pageSize, previousPageIndex: 1, length: 1 });
+        }
+      })
+    });
   }
 }

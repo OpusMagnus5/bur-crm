@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>{{ 'update-service-provider.title' | translate }}</h2>
+<mat-dialog-content class="update-service-provider-form-container">
+  <form [formGroup]="form">
+    <mat-form-field>
+      <mat-label>{{ 'update-service-provider.nip-input-label' | translate }}</mat-label>
+      <input matInput
+             [formControl]="nipControl">
+      @if (nipControl.invalid) {
+        <mat-error>{{ getValidationMessage('nip', nipControl) }}</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{ 'update-service-provider.name-input-label' | translate }}</mat-label>
+      <textarea matInput
+                [formControl]="nameControl"></textarea>
+      @if (nameControl.invalid) {
+        <mat-error>{{ getValidationMessage('name', nameControl) }}</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-flat-button
+          color="primary"
+          (click)="onSubmit()"
+          [disabled]="form.invalid">{{ 'common.save-button' | translate }}</button>
+  <button mat-stroked-button
+          [mat-dialog-close]="true"
+          color="primary"
+          [tabIndex]="-1">{{ 'common.close-button' | translate }}</button>
+</mat-dialog-actions>

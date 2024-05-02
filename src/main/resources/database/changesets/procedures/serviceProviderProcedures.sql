@@ -93,7 +93,7 @@ BEGIN
 
     IF _current_version <> _spr_version THEN
         RAISE SQLSTATE '55000' USING MESSAGE = 'The resource with ID: ' || _spr_id || ' was changed by another user',
-        TABLE = service_provider,
+        TABLE = 'service_provider',
         COLUMN = 'spr_version',
         DETAIL = 'Provided version: ' || _spr_version || ', current version: ' || _current_version;
     END IF;

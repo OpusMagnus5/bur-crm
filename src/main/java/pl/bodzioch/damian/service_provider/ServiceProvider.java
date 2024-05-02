@@ -98,7 +98,7 @@ record ServiceProvider(
                 (String) record.get("spr_name"),
                 (Long) record.get("spr_nip"),
                 record.get("spr_created_at") instanceof Timestamp ? ((Timestamp) record.get("spr_created_at")).toLocalDateTime() : null,
-                record.get("spr_modified_at") instanceof Timestamp ? ((Timestamp) record.get("usr_modified_at")).toLocalDateTime() : null,
+                record.get("usr_modified_at") instanceof Timestamp ? ((Timestamp) record.get("usr_modified_at")).toLocalDateTime() : null,
                 record.get("usr_modified_by") instanceof Long ? (Long) record.get("usr_modified_by") : null,
                 (Long) record.get("usr_created_by"),
                 buildInnerUser(record, "creator"),

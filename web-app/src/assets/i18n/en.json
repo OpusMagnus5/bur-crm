@@ -67,6 +67,7 @@
     "no-data": "No data",
     "send-button": "Send",
     "save-button": "Save",
+    "close-button": "Close",
     "option-details": "Details",
     "option-delete": "Delete",
     "option-edit": "Edit",
@@ -116,5 +117,22 @@
   "delete-service-provider": {
     "confirmation-title": "Delete service provider",
     "confirmation-content": "Are you sure you want to delete this service provider? This will unplug it from all related services."
+  },
+  "update-service-provider": {
+    "title": "Edit service provider",
+    "nip-input-label": "NIP",
+    "name-input-label": "Provider Name",
+    "validation": {
+      "nip": {
+        "required": "NIP field cannot be empty",
+        "pattern": "Invalid NIP provided",
+        "incorrect": "Invalid NIP provided",
+        "exists": "A provider with the provided NIP already exists"
+      },
+      "name" : {
+        "required": "Name field cannot be empty",
+        "pattern": "Invalid name provided."
+      }
+    }
   }
 }

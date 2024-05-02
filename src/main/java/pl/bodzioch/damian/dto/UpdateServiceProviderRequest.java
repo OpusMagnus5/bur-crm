@@ -7,7 +7,7 @@ public record UpdateServiceProviderRequest(
         @NotEmpty(message = "error.client.serviceProvider.emptyId")
         String id,
         @NotNull(message = "error.client.serviceProvider.nullVersion")
-        @Min(value = 1, message = "error.client.serviceProvider.minVersion")
+        @Min(value = 0, message = "error.client.serviceProvider.minVersion")
         @Max(value = Integer.MAX_VALUE, message = "error.client.serviceProvider.maxVersion")
         Integer version,
         @NotEmpty(message = "error.client.serviceProvider.emptyName")

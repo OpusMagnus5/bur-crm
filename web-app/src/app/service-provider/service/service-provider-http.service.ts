@@ -9,6 +9,8 @@ import {ServiceProviderNameResponseInterface} from "../model/service-provider-na
 import {ServiceProviderListResponseInterface} from "../model/service-provider-list-response.interface";
 import {ServiceProviderDetailsResponseInterface} from "../model/service-provider-details-response.interface";
 import {DeleteServiceProviderResponseInterface} from "../model/delete-service=provider-response.interface";
+import {UpdateServiceProviderRequestInterface} from "../model/update-service-provider-request.interface";
+import {UpdateServiceProviderResponseInterface} from "../model/update-service-provider-response.interface";
 
 @Injectable({ providedIn: "root" })
 export class ServiceProviderHttpService {
@@ -64,6 +66,13 @@ export class ServiceProviderHttpService {
   delete(id: string): Observable<DeleteServiceProviderResponseInterface> {
     return this.http.delete<DeleteServiceProviderResponseInterface>(
       'http://localhost:8080/api/service-provider/' + id
+    );
+  }
+
+  update(request: UpdateServiceProviderRequestInterface): Observable<UpdateServiceProviderResponseInterface> {
+    return this.http.patch<UpdateServiceProviderResponseInterface>(
+      'http://localhost:8080/api/service-provider',
+      request
     );
   }
 }

@@ -1,15 +1,23 @@
 package pl.bodzioch.damian.infrastructure.database;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StopWatch;
+import pl.bodzioch.damian.exception.AppException;
+import pl.bodzioch.damian.value_object.ErrorData;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
 @Repository
 class JdbcCaller implements IJdbcCaller {
+
+    private static final String OPTIMISTIC_LOCKING_SQL_STATE = "55000";
 
     @Override
     public Map<String, Object> call(SimpleJdbcCall procedure, Map<String, Object> properties) {
@@ -22,7 +30,13 @@ class JdbcCaller implements IJdbcCaller {
         try {
             result = procedure.execute(properties);
             callStatus = JdbcCallStatus.SUCCESS;
-        } catch (Exception e) {
+        } catch (UncategorizedSQLException e) {
+            if (OPTIMISTIC_LOCKING_SQL_STATE.equals(e.getSQLException().getSQLState())) {
+                log.warn("Optimistic locking error", e);
+                throw buildOptimisticLockingException();
+            }
+        }
+        catch (Exception e) {
             log.error("Error occurred while calling procedure.", e);
             throw e;
         } finally {
@@ -31,5 +45,12 @@ class JdbcCaller implements IJdbcCaller {
                     procedureName, stopWatch.getTotalTimeMillis(), callStatus, result);
         }
         return result;
+    }
+
+    private AppException buildOptimisticLockingException() {
+        return new AppException(
+                HttpStatus.CONFLICT,
+                List.of(new ErrorData("error.client.optimisticLocking", Collections.emptyList()))
+        );
     }
 }
