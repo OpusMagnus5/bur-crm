@@ -1,0 +1,13 @@
+.service-provider-details-container {
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.label-title {
+  margin-bottom: 0;
+  font-size: small;
+  font-weight: bold;
+}
+
+.audit-container {
+  margin: 5px 0;
+}

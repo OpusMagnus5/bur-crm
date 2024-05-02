@@ -14,7 +14,6 @@
     "first-name-input-label": "Enter first name",
     "last-name-input-label": "Enter last name",
     "role-input-label": "Select role",
-    "send-button-label": "Send",
     "validation": {
       "email": {
         "required": "Email field cannot be empty",
@@ -39,16 +38,14 @@
     "content1" : "Below are the login details for the new employee. Please securely pass this information to the intended employee.",
     "login": "Login",
     "password" : "Password",
-    "content2": "We recommend exercising caution when sharing this information and ensuring that the intended person is appropriately secured.",
-    "close": "Close"
+    "content2": "We recommend exercising caution when sharing this information and ensuring that the intended person is appropriately secured."
   },
   "users-list": {
     "email-header": "Email",
     "firstName-header": "First name",
     "lastName-header": "Last name",
     "role-header": "Role",
-    "option-details": "Details",
-    "option-delete": "Delete"
+    "no-users": "No users found in the database"
   },
   "user-dashboard": {
     "new-user-tab": "Add user",
@@ -66,8 +63,25 @@
     "modifier": "Modified By",
     "last-login": "Last Logged In"
   },
+  "delete-user": {
+    "confirmation-title": "Delete user",
+    "confirmation-content" : "Are you sure you want to delete this user?"
+  },
   "common": {
-    "no-data": "No data"
+    "no-data": "No data",
+    "send-button": "Send",
+    "save-button": "Save",
+    "option-details": "Details",
+    "option-delete": "Delete",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "http-error": {
+    "title": "An error occurred",
+    "error-id": "Error No.",
+    "time": "Time",
+    "error-list": "Error details",
+    "general-content": "An unexpected error has occurred. Please try again later."
   },
   "service-provider": {
     "new-service-provider" : "Add provider",
@@ -75,9 +89,7 @@
   },
   "new-service-provider": {
     "nip-input-label": "NIP",
-    "name-input-label": "Provider Name",
-    "send-button-label": "Save",
-    "close": "Close",
+    "name-input-label": "Provider Name"
     "validation": {
       "nip": {
         "required": "NIP field cannot be empty",
@@ -93,8 +105,11 @@
   },
   "service-provider-list": {
     "name-header": "Name",
-    "nip-header": "NIP",
-    "option-details": "Details",
-    "option-delete": "Delete"
+    "nip-header": "NIP"
+  },
+  "service-provider-details": {
+    "title": "Service provider details",
+    "name": "Provider name",
+    "nip": "NIP"
   }
 }

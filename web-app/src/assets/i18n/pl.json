@@ -14,7 +14,6 @@
     "first-name-input-label": "Wprowadź imię",
     "last-name-input-label": "Wprowadź nazwisko",
     "role-input-label": "Wybierz rolę",
-    "send-button-label": "Wyślij",
     "validation": {
       "email": {
         "required": "Pole e-mail nie może być puste",
@@ -39,16 +38,13 @@
     "content1" : "Poniżej znajdują się dane logowania do systemu dla nowego pracownika. Proszę przekazać te informacje pracownikowi docelowemu w bezpieczny sposób .",
     "login": "Login",
     "password" : "Hasło",
-    "content2": "Zalecamy zachowanie ostrożności przy przekazywaniu tych informacji i upewnienie się, że docelowa osoba jest odpowiednio zabezpieczona.",
-    "close": "Zamknij"
+    "content2": "Zalecamy zachowanie ostrożności przy przekazywaniu tych informacji i upewnienie się, że docelowa osoba jest odpowiednio zabezpieczona."
   },
   "users-list": {
     "email-header": "Email",
     "firstName-header": "Imię",
     "lastName-header": "Nazwisko",
     "role-header": "Rola",
-    "option-details": "Szczegóły",
-    "option-delete": "Usuń",
     "no-users": "Nie znaleziono użytkowników w bazie danych"
   },
   "user-dashboard": {
@@ -61,29 +57,31 @@
     "first-name": "Imię",
     "last-name": "Nazwisko",
     "roles": "Role",
+    "last-login": "Ostatnio zalogowany"
+  },
+  "delete-user": {
+    "confirmation-title": "Usuń użytkownika",
+    "confirmation-content" : "Czy napewno chcesz usunąć tego użytkownika?"
+  },
+  "common": {
+    "no-data": "Brak danych",
+    "send-button": "Wyślij",
+    "save-button": "Zapisz",
+    "close-button": "Zamknij",
+    "option-details": "Szczegóły",
+    "option-delete": "Usuń",
+    "yes": "Tak",
+    "no": "Nie",
     "created-at": "Data utworzenia",
     "modified-at": "Data modyfikacji",
     "creator": "Utworzony przez",
-    "modifier": "Zmodyfikowany przez:",
-    "last-login": "Ostatnio zalogowany",
-    "close": "Zamknij"
-  },
-  "delete-user": {
-    "close": "Zamknij",
-    "confirmation-title": "Usuń użytkownika",
-    "confirmation-content" : "Czy napewno chcesz usunąć tego użytkownika?",
-    "yes": "Tak",
-    "no": "Nie"
-  },
-  "common": {
-    "no-data": "Brak danych"
+    "modifier": "Zmodyfikowany przez"
   },
   "http-error": {
     "title": "Wystąpił błąd",
     "error-id": "Nr błędu",
     "time": "Czas",
     "error-list": "Szczegoły błędów",
-    "close": "Zamknij",
     "general-content": "Wystąpił nieoczekiwany błąd. Proszę spróbowac ponownie poźniej."
   },
   "service-provider": {
@@ -93,8 +91,6 @@
   "new-service-provider": {
     "nip-input-label": "NIP",
     "name-input-label": "Nazwa dostawcy",
-    "send-button-label": "Zapisz",
-    "close": "Zamknij",
     "validation": {
       "nip": {
         "required": "Pole nip nie może być puste",
@@ -110,8 +106,11 @@
   },
   "service-provider-list": {
     "name-header": "Nazwa",
-    "nip-header": "NIP",
-    "option-details": "Szczegóły",
-    "option-delete": "Usuń"
+    "nip-header": "NIP"
+  },
+  "service-provider-details": {
+    "title": "Szczegóły dostawcy usług",
+    "name": "Nazwa dostawcy",
+    "nip": "NIP"
   }
 }

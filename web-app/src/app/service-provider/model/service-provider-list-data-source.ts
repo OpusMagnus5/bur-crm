@@ -21,6 +21,7 @@ export class ServiceProviderListDataSource implements DataSource<ServiceProvider
           map(response => response.providers)
         );
   }
+
   disconnect(collectionViewer: CollectionViewer): void {
   }
 

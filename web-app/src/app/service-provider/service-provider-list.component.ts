@@ -22,6 +22,8 @@ import {MatIcon} from "@angular/material/icon";
 import {MatIconButton} from "@angular/material/button";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {UserListDataInterface} from "../user/model/user-list-data.interface";
+import {MatDialog} from "@angular/material/dialog";
+import {ServiceProviderDetailsComponent} from "./service-provider-details.component";
 
 @Component({
   selector: 'app-service-provider-list',
@@ -58,7 +60,8 @@ export class ServiceProviderListComponent {
   protected pageDef: { pageNumber: number; pageSize: number; } = { pageNumber: 1, pageSize: 10 };
 
   constructor(
-    private http: ServiceProviderHttpService
+    private http: ServiceProviderHttpService,
+    private dialog: MatDialog,
   ) {
     this.http.getProviderPage(1, 10).subscribe(response =>
       this.data.next(response)
@@ -74,7 +77,9 @@ export class ServiceProviderListComponent {
   }
 
   onDetails(element: UserListDataInterface) {
-
+    this.http.getDetails(element.id).subscribe(response => {
+      this.dialog.open(ServiceProviderDetailsComponent, { data: response })
+    })
   }
 
   onRemove(element: UserListDataInterface) {
