@@ -6,6 +6,7 @@ import {ServiceProviderCreateNewResponseInterface} from "../model/service-provid
 import {ServiceProviderExistenceResponseInterface} from "../model/service-provider-existence-response.interface";
 import {UserExistsResponseInterface} from "../../user/model/user-exists-response.interface";
 import {ServiceProviderNameResponseInterface} from "../model/service-provider-name-response.interface";
+import {ServiceProviderListResponseInterface} from "../model/service-provider-list-response.interface";
 
 @Injectable({ providedIn: "root" })
 export class ServiceProviderHttpService {
@@ -40,4 +41,15 @@ export class ServiceProviderHttpService {
       }
     );
   }
+
+  getProviderPage(pageNumber: number, pageSize: number) {
+    return this.http.get<ServiceProviderListResponseInterface>(
+      'http://localhost:8080/api/service-provider',
+      {
+        params: new HttpParams()
+          .append('pageNumber', pageNumber)
+          .append('pageSize', pageSize)
+      }
+    )
+  };
 }

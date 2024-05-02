@@ -11,11 +11,11 @@ public record CreateNewUserRequest(
         @Email(message = "error.client.incorrectEmail")
         String email,
         @NotEmpty(message = "error.client.firstNameEmpty")
-        @Pattern(regexp = "[a-zA-ZążęćłóńĄŻĘĆŁÓŃ]{1,15}", message = "error.client.incorrectFirstName")
+        @Pattern(regexp = "[a-zA-ZążęćłóńśĄŻĘĆŁÓŃŚ]{1,15}", message = "error.client.incorrectFirstName")
         String firstName,
 
         @NotEmpty(message = "error.client.lastNameEmpty")
-        @Pattern(regexp = "[a-zA-ZążęćłóńĄŻĘĆŁÓŃ -]{1,60}", message = "error.client.incorrectLastName")
+        @Pattern(regexp = "[a-zA-ZążęćłóńśĄŻĘĆŁÓŃŚ -]{1,60}", message = "error.client.incorrectLastName")
         String lastName,
 
         @NotEmpty(message = "error.client.roleEmpty")

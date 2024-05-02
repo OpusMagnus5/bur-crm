@@ -13,11 +13,13 @@ import {MatInput} from "@angular/material/input";
 import {ValidationMessageService} from "../shared/service/validation-message.service";
 import {MatButton} from "@angular/material/button";
 import {ServiceProviderHttpService} from "./service/service-provider-http.service";
-import {catchError, Observable, of} from "rxjs";
+import {catchError, forkJoin, Observable, of} from "rxjs";
 import {map} from "rxjs/operators";
 import {ServiceProviderCreateNewRequestInterface} from "./model/service-provider-create-new-request.interface";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ServiceProviderCreateNewResponseInterface} from "./model/service-provider-create-new-response.interface";
+import {ActivatedRoute, Router} from "@angular/router";
+import {SERVICE_PROVIDER_LIST_PATH} from "../app.routes";
 
 @Component({
   selector: 'app-new-service-provider',
@@ -44,7 +46,9 @@ export class NewServiceProviderComponent {
     private validationMessage: ValidationMessageService,
     private httpService: ServiceProviderHttpService,
     private snackBar: MatSnackBar,
-    private translator: TranslateService
+    private translator: TranslateService,
+    private router: Router,
+    private activeRoute: ActivatedRoute
   ) {
     this.nipControl = new FormControl(null, {
      validators: [Validators.required, Validators.pattern('\\d{10}'), this.validateNip.bind(this)],
@@ -52,7 +56,7 @@ export class NewServiceProviderComponent {
      updateOn: 'blur'
     });
     this.nameControl = new FormControl(null,
-      [Validators.required, Validators.pattern('[a-zA-ZążęćłóńĄŻĘĆŁÓŃ -/.\"\\\\]{1,150}')])
+      [Validators.required, Validators.pattern('[a-zA-ZążęćłóńśĄŻĘĆŁÓŃŚ -/.\"\\\\]{1,150}')])
     this.form = this.buildFormGroup();
   }
 
@@ -81,9 +85,17 @@ export class NewServiceProviderComponent {
   }
 
   validateNipOccupation(control: AbstractControl): Observable<ValidationErrors | null> {
-    return this.httpService.getIsProviderExists('NIP', control.value.trim()).pipe(
-      map(response => (response.exists ? { 'exists': true } : null)),
-      catchError(() => of(null))
+    const isProviderExists = this.httpService.getIsProviderExists('NIP', control.value.trim());
+    const providerNameFromBur = this.httpService.getProviderNameFromBur(control.value.trim());
+
+    return forkJoin([isProviderExists, providerNameFromBur]).pipe(
+      map(([exists, name]) => {
+        if (!exists.exists && name.name.length > 0) {
+          this.nameControl.setValue(name.name);
+        }
+        return exists.exists ? { 'exists': true } : null;
+      }),
+    catchError(() => of(null))
     );
   }
 
@@ -91,14 +103,9 @@ export class NewServiceProviderComponent {
     this.httpService.createNew(this.form.value as ServiceProviderCreateNewRequestInterface).subscribe({
       next: response => {
         this.showPopUp(response);
-      }
-    });
-  }
-
-  onNipBlur(control: FormControl) {
-    return this.httpService.getProviderNameFromBur(control.value.trim()).subscribe({
-      next: response => {
-        this.nameControl.setValue(response.name);
+        this.router.navigate(['../' + SERVICE_PROVIDER_LIST_PATH], {
+          relativeTo: this.activeRoute
+        })
       }
     });
   }

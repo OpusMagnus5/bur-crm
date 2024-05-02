@@ -70,7 +70,8 @@
     "no-data": "No data"
   },
   "service-provider": {
-    "new-service-provider" : "Add provider"
+    "new-service-provider" : "Add provider",
+    "service-provider-list": "Providers list"
   },
   "new-service-provider": {
     "nip-input-label": "NIP",
@@ -89,5 +90,11 @@
         "pattern": "Invalid name provided."
       }
     }
+  },
+  "service-provider-list": {
+    "name-header": "Name",
+    "nip-header": "NIP",
+    "option-details": "Details",
+    "option-delete": "Delete"
   }
 }

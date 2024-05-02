@@ -6,6 +6,7 @@ import {NotFoundComponent} from "./not-found/not-found.component";
 import {HomeComponent} from "./home/home.component";
 import {ServiceProviderDashboardComponent} from "./service-provider/service-provider-dashboard.component";
 import {NewServiceProviderComponent} from "./service-provider/new-service-provider.component";
+import {ServiceProviderListComponent} from "./service-provider/service-provider-list.component";
 
 export const ADMINISTRATION_PATH: string = 'administration';
 export const BASE_PATH: string = '';
@@ -15,6 +16,7 @@ export const USER_LIST_PATH: string = 'list';
 export const REGISTRY_PATH: string = 'registry'
 export const REGISTRY_SERVICE_PROVIDER_PATH: string = REGISTRY_PATH + '/service-provider'
 export const NEW_SERVICE_PROVIDER_PATH: string = 'new';
+export const SERVICE_PROVIDER_LIST_PATH: string = 'list';
 
 const NOT_FOUND_PATH = 'not-found';
 
@@ -29,6 +31,10 @@ export const routes: Routes = [
       {
         path: NEW_SERVICE_PROVIDER_PATH,
         component: NewServiceProviderComponent
+      },
+      {
+        path: SERVICE_PROVIDER_LIST_PATH,
+        component: ServiceProviderListComponent
       }
     ]
   },

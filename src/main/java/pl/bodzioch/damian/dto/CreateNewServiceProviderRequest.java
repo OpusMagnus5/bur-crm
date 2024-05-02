@@ -9,7 +9,7 @@ import java.io.Serializable;
 public record CreateNewServiceProviderRequest(
 
         @NotEmpty(message = "error.client.serviceProvider.createNew.emptyName")
-        @Pattern(regexp = "[a-zA-ZążęćłóńĄŻĘĆŁÓŃ -/.\"\\\\]{1,150}", message = "error.client.serviceProvider.createNew.incorrectName")
+        @Pattern(regexp = "[a-zA-ZążęćłóńśĄŻĘĆŁÓŃŚ -/.\"\\\\]{1,150}", message = "error.client.serviceProvider.createNew.incorrectName")
         String name,
         @NotEmpty(message = "error.client.serviceProvider.createNew.emptyNIP")
         @NIP(message = "error.client.serviceProvider.createNew.incorrectNIP")

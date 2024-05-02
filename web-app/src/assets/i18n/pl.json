@@ -87,7 +87,8 @@
     "general-content": "Wystąpił nieoczekiwany błąd. Proszę spróbowac ponownie poźniej."
   },
   "service-provider": {
-    "new-service-provider" : "Dodaj dostawcę"
+    "new-service-provider" : "Dodaj dostawcę",
+    "service-provider-list": "Lista dostawców"
   },
   "new-service-provider": {
     "nip-input-label": "NIP",
@@ -106,5 +107,11 @@
         "pattern": "Podana nazwa jest nieprawidłowa."
       }
     }
+  },
+  "service-provider-list": {
+    "name-header": "Nazwa",
+    "nip-header": "NIP",
+    "option-details": "Szczegóły",
+    "option-delete": "Usuń"
   }
 }

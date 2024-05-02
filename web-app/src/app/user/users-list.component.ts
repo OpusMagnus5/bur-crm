@@ -55,8 +55,8 @@ import {DeleteConfirmationComponent} from "./dialog/delete-confirmation.componen
 })
 export class UsersListComponent {
 
-  data: Subject<UserListResponseInterface> = new Subject<UserListResponseInterface>()
-  protected dataSource: UserListDataSource = new UserListDataSource(this.data);
+  private readonly data: Subject<UserListResponseInterface> = new Subject<UserListResponseInterface>()
+  protected readonly dataSource: UserListDataSource = new UserListDataSource(this.data);
   protected readonly columnsDef: string[] = ['email', 'firstName', 'lastName', 'role'];
   protected readonly rowsDef: string[] = ['email', 'firstName', 'lastName', 'role', 'options'];
   protected pageDef: { pageNumber: number; pageSize: number; } = { pageNumber: 1, pageSize: 10 };

@@ -129,7 +129,7 @@ record User (
                         .map(UserRole::valueOf)
                         .toList(),
                 record.get("usr_last_login") instanceof Timestamp ? ((Timestamp) record.get("usr_last_login")).toLocalDateTime() : null,
-                ((Timestamp) record.get("usr_created_at")).toLocalDateTime(),
+                record.get("usr_created_at") instanceof Timestamp ? ((Timestamp) record.get("usr_created_at")).toLocalDateTime() : null,
                 record.get("usr_modified_at") instanceof Timestamp ? ((Timestamp) record.get("usr_modified_at")).toLocalDateTime() : null,
                 record.get("usr_modified_by") instanceof Long ? (Long) record.get("usr_modified_by") : null,
                 record.get("usr_created_by") instanceof Long ? (Long) record.get("usr_created_by") : null,

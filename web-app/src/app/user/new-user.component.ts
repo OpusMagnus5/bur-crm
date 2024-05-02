@@ -60,8 +60,8 @@ export class NewUserComponent {
       asyncValidators: [this.validateEmailOccupation.bind(this)],
       updateOn: 'blur'
     });
-    this.firstNameControl = new FormControl(null, [Validators.required, Validators.pattern('[a-zA-ZążęćłóńĄŻĘĆŁÓŃ]{1,15}')]);
-    this.lastNameControl = new FormControl(null, [Validators.required, Validators.pattern('[a-zA-ZążęćłóńĄŻĘĆŁÓŃ -]{1,60}')]);
+    this.firstNameControl = new FormControl(null, [Validators.required, Validators.pattern('[a-zA-ZążęćłóńśĄŻĘĆŁÓŃŚ]{1,15}')]);
+    this.lastNameControl = new FormControl(null, [Validators.required, Validators.pattern('[a-zA-ZążęćłóńśĄŻĘĆŁÓŃŚ -]{1,60}')]);
     this.roleControl = new FormControl(null, Validators.required);
     this.form = this.buildFormGroup();
 

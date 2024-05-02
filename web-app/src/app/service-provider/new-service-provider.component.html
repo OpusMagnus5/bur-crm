@@ -3,8 +3,7 @@
     <mat-form-field>
       <mat-label>{{ 'new-service-provider.nip-input-label' | translate }}</mat-label>
       <input matInput
-             [formControl]="nipControl"
-             (blur)="onNipBlur(nipControl)">
+             [formControl]="nipControl">
       @if (nipControl.invalid) {
         <mat-error>{{ getValidationMessage('nip', nipControl) }}</mat-error>
       }
