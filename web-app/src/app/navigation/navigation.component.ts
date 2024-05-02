@@ -17,6 +17,7 @@ import {
   BASE_PATH,
   REGISTRY_PATH,
   REGISTRY_SERVICE_PROVIDER_PATH,
+  SERVICE_PROVIDER_LIST_PATH,
   USER_LIST_PATH
 } from "../app.routes";
 import {RouterService} from "../shared/service/router.service";
@@ -55,6 +56,8 @@ export class NavigationComponent {
   protected readonly BASE_PATH = BASE_PATH;
   protected readonly ADMINISTRATION_PATH = ADMINISTRATION_PATH;
   protected readonly ADMINISTRATION_USERS_PATH = ADMINISTRATION_USERS_PATH + '/' + USER_LIST_PATH;
+  protected readonly REGISTRY_PATH = REGISTRY_PATH;
+  protected readonly REGISTRY_SERVICE_PROVIDER_PATH = REGISTRY_SERVICE_PROVIDER_PATH + '/' + SERVICE_PROVIDER_LIST_PATH;
 
   protected isHandset$: Observable<boolean>;
 
@@ -65,7 +68,4 @@ export class NavigationComponent {
         shareReplay()
       );
   }
-
-  protected readonly REGISTRY_PATH = REGISTRY_PATH;
-  protected readonly REGISTRY_SERVICE_PROVIDER_PATH = REGISTRY_SERVICE_PROVIDER_PATH;
 }
