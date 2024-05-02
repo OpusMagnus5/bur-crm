@@ -73,7 +73,7 @@ export class ServiceProviderListComponent {
   }
 
   onPageChange(event: PageEvent) {
-    this.pageDef = { pageNumber: event.pageIndex, pageSize: event.pageSize };
+    this.pageDef = { pageNumber: event.pageIndex + 1, pageSize: event.pageSize };
     this.http.getProviderPage(event.pageIndex + 1, event.pageSize).subscribe(response =>{
         this.data.next(response);
       }
@@ -106,5 +106,9 @@ export class ServiceProviderListComponent {
       })
       this.onPageChange({ pageIndex: this.pageDef.pageNumber - 1, pageSize: this.pageDef.pageSize, previousPageIndex: 1, length: 1 })
     })
+  }
+
+  onEdit(element: ServiceProviderDataInterface) {
+
   }
 }

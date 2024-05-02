@@ -1,5 +1,7 @@
 package pl.bodzioch.damian.configuration;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
@@ -37,7 +39,7 @@ class UserControllerAdvice {
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity<AppErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    ResponseEntity<AppErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.error(e.getMessage(), e);
         List<ErrorDto> errors = new ArrayList<>();
         e.getBindingResult().getFieldErrors().forEach(fieldError -> errors.add(
@@ -51,9 +53,31 @@ class UserControllerAdvice {
                 .body(new AppErrorResponse(errors));
     }
 
+    @ExceptionHandler({ConstraintViolationException.class})
+    ResponseEntity<AppErrorResponse> handleConstraintViolationException(ConstraintViolationException e) {
+        log.error(e.getMessage(), e);
+        List<ErrorDto> errors = new ArrayList<>();
+        e.getConstraintViolations().forEach(violation -> errors.add(
+                new ErrorDto(
+                violation.getMessage(),
+                getMessage(violation)
+        )));
+        log.error(errors.toString());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
+                .body(new AppErrorResponse(errors));
+    }
+
     private String getMessage(FieldError fieldError) {
         return messageResolver.getMessage(
                 Optional.ofNullable(fieldError.getDefaultMessage()).orElseThrow(() -> new AppException("No message found in exception")),
                 Optional.ofNullable(fieldError.getRejectedValue()).map(Object::toString).map(List::of).orElse(Collections.emptyList()));
+    }
+
+    @SuppressWarnings("rawtypes")
+    private String getMessage(ConstraintViolation fieldError) {
+        return messageResolver.getMessage(
+                Optional.ofNullable(fieldError.getMessage()).orElseThrow(() -> new AppException("No message found in exception")),
+                Optional.ofNullable(fieldError.getInvalidValue()).map(Object::toString).map(List::of).orElse(Collections.emptyList()));
     }
 }

@@ -94,4 +94,18 @@ class ServiceProviderController {
         DeleteServiceProviderCommandResult result = commandExecutor.execute(command);
         return new DeleteServiceProviderResponse(result.message());
     }
+
+    @PatchMapping
+    @ResponseStatus(HttpStatus.OK)
+    UpdateServiceProviderResponse update(@Valid @RequestBody UpdateServiceProviderRequest request) {
+        long providerId = Long.parseLong(cipher.decryptMessage(request.id()));
+        UpdateServiceProviderCommand command = new UpdateServiceProviderCommand(
+                providerId,
+                request.version(),
+                request.name(),
+                Long.parseLong(request.nip()),
+                1L);
+        UpdateServiceProviderCommandResult result = commandExecutor.execute(command);
+        return new UpdateServiceProviderResponse(result.message());
+    }
 }

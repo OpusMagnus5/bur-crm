@@ -15,11 +15,13 @@ class ProviderWriteRepository implements IProviderWriteRepository {
     private final IJdbcCaller jdbcCaller;
     private final SimpleJdbcCall createNewProc;
     private final SimpleJdbcCall deleteProc;
+    private final SimpleJdbcCall updateProc;
 
     ProviderWriteRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
         this.jdbcCaller = jdbcCaller;
         this.createNewProc = buildSimpleJdbcCall(dataSource, "service_provider_create_new");
         this.deleteProc = buildSimpleJdbcCall(dataSource, "service_provider_delete");
+        this.updateProc = buildSimpleJdbcCall(dataSource, "service_provider_update");
     }
 
     private SimpleJdbcCall buildSimpleJdbcCall(DataSource dataSource, String procedure) {
@@ -40,5 +42,11 @@ class ProviderWriteRepository implements IProviderWriteRepository {
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("_spr_id", id);
         this.jdbcCaller.call(this.deleteProc, properties);
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.REQUIRED)
+    public void update(ServiceProvider serviceProvider) {
+        this.jdbcCaller.call(this.updateProc, serviceProvider.getPropertySource());
     }
 }

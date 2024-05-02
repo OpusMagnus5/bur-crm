@@ -24,6 +24,10 @@
             <mat-icon>open_in_new</mat-icon>
             <span>{{ 'common.option-details' | translate }}</span>
           </button>
+          <button mat-menu-item (click)="onEdit(element)">
+            <mat-icon>open_in_new</mat-icon>
+            <span>{{ 'common.option-edit' | translate }}</span>
+          </button>
           <button mat-menu-item (click)="onRemove(element)">
             <mat-icon>delete</mat-icon>
             <span>{{ 'common.option-delete' | translate }}</span>

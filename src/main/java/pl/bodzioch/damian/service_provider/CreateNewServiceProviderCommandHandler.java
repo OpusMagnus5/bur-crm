@@ -52,7 +52,7 @@ class CreateNewServiceProviderCommandHandler implements CommandHandler<CreateNew
         return new AppException(
                 HttpStatus.BAD_REQUEST,
                 List.of(new ErrorData(
-                        "error.client.serviceProvider.createNew.nipAlreadyExists",
+                        "error.client.serviceProvider.nipAlreadyExists",
                         List.of(nip.toString())
                 ))
         );

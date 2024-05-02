@@ -70,6 +70,7 @@
     "close-button": "Zamknij",
     "option-details": "Szczegóły",
     "option-delete": "Usuń",
+    "option-edit": "Edytuj",
     "yes": "Tak",
     "no": "Nie",
     "created-at": "Data utworzenia",
@@ -115,6 +116,6 @@
   },
   "delete-service-provider": {
     "confirmation-title": "Usuń dostawcę usług",
-    "confirmation-content": "Czy napewno chcesz usunąć tego dostawcę usług?"
+    "confirmation-content": "Czy na pewno chcesz usunąć tego dostawcę usług? Spowoduje to odpięcie go od wszystkich powiązanych usług."
   }
 }

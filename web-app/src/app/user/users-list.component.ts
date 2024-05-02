@@ -73,7 +73,7 @@ export class UsersListComponent {
   }
 
   onPageChange(event: PageEvent) {
-    this.pageDef = { pageNumber: event.pageIndex, pageSize: event.pageSize };
+    this.pageDef = { pageNumber: event.pageIndex + 1, pageSize: event.pageSize };
     this.http.getUserPage(event.pageIndex + 1, event.pageSize).subscribe(response =>{
         this.data.next(response);
       }

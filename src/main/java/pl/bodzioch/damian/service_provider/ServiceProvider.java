@@ -2,6 +2,7 @@ package pl.bodzioch.damian.service_provider;
 
 import com.fasterxml.uuid.Generators;
 import pl.bodzioch.damian.service_provider.command_dto.CreateNewServiceProviderCommand;
+import pl.bodzioch.damian.service_provider.command_dto.UpdateServiceProviderCommand;
 import pl.bodzioch.damian.user.InnerUser;
 import pl.bodzioch.damian.user.InnerUserDto;
 
@@ -29,6 +30,23 @@ record ServiceProvider(
         this(
                 null, Generators.timeBasedEpochGenerator().generate(), 0, burId, command.name(), command.nip(),
                 null, null, null, command.createdBy(), null, null
+        );
+    }
+
+    ServiceProvider(UpdateServiceProviderCommand command) {
+        this(
+                command.id(),
+                null,
+                command.version(),
+                null,
+                command.name(),
+                command.nip(),
+                null,
+                null,
+                command.modifiedBy(),
+                null,
+                null,
+                null
         );
     }
 
