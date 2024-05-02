@@ -12,10 +12,7 @@ import pl.bodzioch.damian.dto.*;
 import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.infrastructure.command.CommandExecutor;
 import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
-import pl.bodzioch.damian.service_provider.command_dto.CreateNewServiceProviderCommand;
-import pl.bodzioch.damian.service_provider.command_dto.CreateNewServiceProviderCommandResult;
-import pl.bodzioch.damian.service_provider.command_dto.GetProviderNameByNipFromBurCommand;
-import pl.bodzioch.damian.service_provider.command_dto.GetProviderNameByNipFromBurCommandResult;
+import pl.bodzioch.damian.service_provider.command_dto.*;
 import pl.bodzioch.damian.service_provider.query_dto.*;
 import pl.bodzioch.damian.utils.CipherComponent;
 import pl.bodzioch.damian.utils.validator.ProviderIdKindV;
@@ -87,5 +84,14 @@ class ServiceProviderController {
         GetServiceProviderDetailsQuery query = new GetServiceProviderDetailsQuery(providerId);
         GetServiceProviderDetailsQueryResult result = queryExecutor.execute(query);
         return new GetServiceProviderDetailsResponse(result.serviceProvider(), cipher);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    DeleteServiceProviderResponse delete(@PathVariable String id) {
+        long providerId = Long.parseLong(cipher.decryptMessage(id));
+        DeleteServiceProviderCommand command = new DeleteServiceProviderCommand(providerId);
+        DeleteServiceProviderCommandResult result = commandExecutor.execute(command);
+        return new DeleteServiceProviderResponse(result.message());
     }
 }
