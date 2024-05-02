@@ -12,4 +12,7 @@ interface IProviderReadRepository {
 
     @Transactional(Transactional.TxType.NOT_SUPPORTED)
     PageQueryResult<ServiceProvider> getPage(PageQuery pageQuery);
+
+    @Transactional(Transactional.TxType.NOT_SUPPORTED)
+    Optional<ServiceProvider> getDetails(Long id);
 }

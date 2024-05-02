@@ -16,9 +16,7 @@ import pl.bodzioch.damian.service_provider.command_dto.CreateNewServiceProviderC
 import pl.bodzioch.damian.service_provider.command_dto.CreateNewServiceProviderCommandResult;
 import pl.bodzioch.damian.service_provider.command_dto.GetProviderNameByNipFromBurCommand;
 import pl.bodzioch.damian.service_provider.command_dto.GetProviderNameByNipFromBurCommandResult;
-import pl.bodzioch.damian.service_provider.query_dto.GetProvidersPageQuery;
-import pl.bodzioch.damian.service_provider.query_dto.GetProvidersPageQueryResult;
-import pl.bodzioch.damian.service_provider.query_dto.GetServiceProviderByNipQuery;
+import pl.bodzioch.damian.service_provider.query_dto.*;
 import pl.bodzioch.damian.utils.CipherComponent;
 import pl.bodzioch.damian.utils.validator.ProviderIdKindV;
 
@@ -80,5 +78,14 @@ class ServiceProviderController {
                 .map(element -> new ServiceProviderData(element, cipher))
                 .toList();
         return new ServiceProviderPageResponse(providersData, result.totalProviders());
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    GetServiceProviderDetailsResponse getDetails(@PathVariable String id) {
+        long providerId = Long.parseLong(cipher.decryptMessage(id));
+        GetServiceProviderDetailsQuery query = new GetServiceProviderDetailsQuery(providerId);
+        GetServiceProviderDetailsQueryResult result = queryExecutor.execute(query);
+        return new GetServiceProviderDetailsResponse(result.serviceProvider(), cipher);
     }
 }

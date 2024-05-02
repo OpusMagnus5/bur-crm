@@ -2,12 +2,13 @@ package pl.bodzioch.damian.service_provider;
 
 import com.fasterxml.uuid.Generators;
 import pl.bodzioch.damian.service_provider.command_dto.CreateNewServiceProviderCommand;
+import pl.bodzioch.damian.user.InnerUser;
+import pl.bodzioch.damian.user.InnerUserDto;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 
-//Rejestr
 record ServiceProvider(
 
         Long spr_id,
@@ -19,13 +20,15 @@ record ServiceProvider(
         LocalDateTime spr_created_at,
         LocalDateTime spr_modified_at,
         Long spr_modified_by,
-        Long spr_created_by
+        Long spr_created_by,
+        InnerUser creator,
+        InnerUser modifier
 ) {
 
     ServiceProvider(CreateNewServiceProviderCommand command, Long burId) {
         this(
                 null, Generators.timeBasedEpochGenerator().generate(), 0, burId, command.name(), command.nip(),
-                null, null, null, command.createdBy()
+                null, null, null, command.createdBy(), null, null
         );
     }
 
@@ -38,7 +41,9 @@ record ServiceProvider(
                 spr_name,
                 spr_nip,
                 spr_created_at,
-                spr_modified_at
+                spr_modified_at,
+                Optional.ofNullable(creator).map(InnerUserDto::new).orElse(null),
+                Optional.ofNullable(modifier).map(InnerUserDto::new).orElse(null)
         );
     }
 
@@ -77,7 +82,16 @@ record ServiceProvider(
                 record.get("spr_created_at") instanceof Timestamp ? ((Timestamp) record.get("spr_created_at")).toLocalDateTime() : null,
                 record.get("spr_modified_at") instanceof Timestamp ? ((Timestamp) record.get("usr_modified_at")).toLocalDateTime() : null,
                 record.get("usr_modified_by") instanceof Long ? (Long) record.get("usr_modified_by") : null,
-                (Long) record.get("usr_created_by")
+                (Long) record.get("usr_created_by"),
+                buildInnerUser(record, "creator"),
+                buildInnerUser(record, "modifier")
+        );
+    }
+
+    private static InnerUser buildInnerUser(Map<String, Object> record, String userKind) {
+        return new InnerUser(
+                (String) record.get(userKind + "_usr_first_name"),
+                (String) record.get(userKind + "_usr_last_name")
         );
     }
 }

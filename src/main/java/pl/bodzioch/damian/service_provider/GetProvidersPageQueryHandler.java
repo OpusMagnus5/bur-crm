@@ -12,7 +12,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class GetProvidersPageQueryHandler implements QueryHandler<GetProvidersPageQuery, GetProvidersPageQueryResult> {
+class GetProvidersPageQueryHandler implements QueryHandler<GetProvidersPageQuery, GetProvidersPageQueryResult> {
 
     private final IProviderReadRepository readRepository;
 

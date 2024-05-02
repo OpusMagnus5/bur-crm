@@ -41,8 +41,7 @@ AS $$
 BEGIN
 
     OPEN _cursor FOR
-        SELECT spr_id, spr_uuid, spr_bur_id, spr_version, spr_name, spr_nip, spr_created_at, spr_modified_at,
-               spr_modified_by, spr_created_by
+        SELECT spr_id, spr_uuid, spr_bur_id, spr_version, spr_name, spr_nip
         FROM service_provider WHERE spr_nip = _spr_nip;
 
 END$$;
@@ -106,5 +105,26 @@ BEGIN
         spr_modified_by = _spr_modified_by,
         spr_modified_at = current_timestamp
     WHERE spr_id = _spr_id;
+
+END$$;
+
+DROP PROCEDURE IF EXISTS service_provider_get_details;
+/*PROCEDURE service_provider_get_details*/
+CREATE OR REPLACE PROCEDURE service_provider_get_details(
+    IN _spr_id service_provider.spr_id%TYPE,
+    OUT _cursor REFCURSOR
+)
+    LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    OPEN _cursor FOR
+        SELECT spr_id, spr_uuid, spr_bur_id, spr_version, spr_name, spr_nip, spr_created_at, spr_modified_at,
+               c.usr_first_name as creator_usr_first_name, c.usr_last_name as creator_usr_last_name,
+               m.usr_first_name as modifier_usr_first_name, m.usr_last_name as modifier_usr_last_name
+        FROM service_provider spr
+        LEFT JOIN users c ON spr.spr_created_by = c.usr_id
+        LEFT JOIN users m ON spr.spr_modified_by = m.usr_id
+        WHERE spr_id = _spr_id;
 
 END$$;

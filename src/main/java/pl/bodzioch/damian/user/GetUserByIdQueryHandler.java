@@ -25,14 +25,14 @@ class GetUserByIdQueryHandler implements QueryHandler<GetUserByIdQuery, GetUserB
 
     @Override
     public GetUserByIdQueryResult handle(GetUserByIdQuery query) {
-        User user = readRepository.getById(query.id()).orElseThrow(() -> buildUserByIdNotFound(query));
+        User user = readRepository.getById(query.id()).orElseThrow(() -> buildUserByIdNotFound(query.id()));
         return new GetUserByIdQueryResult(new UserDto(user, messageResolver));
     }
 
-    private AppException buildUserByIdNotFound(GetUserByIdQuery command) {
+    private AppException buildUserByIdNotFound(Long id) {
         return new AppException(
                 HttpStatus.NOT_FOUND,
-                List.of(new ErrorData("error.client.userByIdNotFound", List.of(command.id().toString())))
+                List.of(new ErrorData("error.client.userByIdNotFound", List.of(id.toString())))
         );
     }
 }
