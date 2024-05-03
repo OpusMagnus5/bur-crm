@@ -8,5 +8,6 @@ http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
     <include file="changesets/createUsersTable.sql" id="1" relativeToChangelogFile="true"/>
     <include file="changesets/addFirstUser.sql" id="2" relativeToChangelogFile="true"/>
     <include file="changesets/createServiceProviderTable.sql" id="3" relativeToChangelogFile="true"/>
+    <include file="changesets/createOperatorTable.sql" id="4" relativeToChangelogFile="true"/>
     <include file="changesets/procedures.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
