@@ -13,6 +13,7 @@
          [activated]="routerService.isPartOfActivePath(REGISTRY_PATH)">{{ 'navigation.registry-path' | translate }}</a>
       <mat-menu #registryMenu>
         <button mat-menu-item routerLink="{{REGISTRY_SERVICE_PROVIDER_PATH}}">{{ 'navigation.service-provider-path' | translate }}</button>
+        <button mat-menu-item routerLink="{{REGISTRY_OPERATOR_PATH}}">{{ 'navigation.operator-path' | translate }}</button>
       </mat-menu>
       <a mat-list-item
          [matMenuTriggerFor]="administrationMenu"

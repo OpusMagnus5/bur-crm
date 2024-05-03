@@ -4,7 +4,8 @@
     "administration-path": "Administracja",
     "users-path": "Użytkownicy",
     "registry-path": "Rejestr",
-    "service-provider-path": "Dostawcy usług"
+    "service-provider-path": "Dostawcy usług",
+    "operator-path": "Oparatorzy"
   },
   "not-found": {
     "message": "Przepraszamy, szukana strona nie została znaleziona."
@@ -132,6 +133,22 @@
       "name" : {
         "required": "Pole nazwa nie może być puste",
         "pattern": "Podana nazwa jest nieprawidłowa."
+      }
+    }
+  },
+  "operator": {
+    "new-operator": "Dodaj operatora"
+  },
+  "new-operator": {
+    "name-input-label": "Nazwa operatora",
+    "phone-number-label": "Numer telefonu",
+    "validation": {
+      "name": {
+        "required": "Pole nazwa operatora nie może być puste",
+        "pattern": "Podana nazwa operatora jest nieprawidłowa"
+      },
+      "phone-number": {
+        "pattern": "Podany numer telefonu jest nieprawidłowy"
       }
     }
   }

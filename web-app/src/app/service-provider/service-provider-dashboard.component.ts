@@ -29,7 +29,7 @@ export class ServiceProviderDashboardComponent {
       path: NEW_SERVICE_PROVIDER_PATH,
       name: ''
     }
-  ]
+  ];
 
   constructor(protected routerService: RouterService, private translate: TranslateService) {
     this.links[1].name = translate.instant('service-provider.new-service-provider');

@@ -34,7 +34,7 @@ record Operator(
                 null,
                 null,
                 null,
-                null,
+                command.createdBy(),
                 null,
                 null
         );

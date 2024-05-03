@@ -7,6 +7,8 @@ import {HomeComponent} from "./home/home.component";
 import {ServiceProviderDashboardComponent} from "./service-provider/service-provider-dashboard.component";
 import {NewServiceProviderComponent} from "./service-provider/new-service-provider.component";
 import {ServiceProviderListComponent} from "./service-provider/service-provider-list.component";
+import {OperatorDashboardComponent} from "./operator/operator-dashboard.component";
+import {CreateNewOperatorComponent} from "./operator/create-new-operator.component";
 
 export const ADMINISTRATION_PATH: string = 'administration';
 export const BASE_PATH: string = '';
@@ -17,12 +19,24 @@ export const REGISTRY_PATH: string = 'registry'
 export const REGISTRY_SERVICE_PROVIDER_PATH: string = REGISTRY_PATH + '/service-provider'
 export const NEW_SERVICE_PROVIDER_PATH: string = 'new';
 export const SERVICE_PROVIDER_LIST_PATH: string = 'list';
+export const REGISTRY_OPERATOR_PATH: string = REGISTRY_PATH + '/operator';
+export const NEW_OPERATOR_PATH: string = 'new';
 
 const NOT_FOUND_PATH = 'not-found';
 
 export const routes: Routes = [
   {
     path: BASE_PATH, component: HomeComponent, pathMatch: "full"
+  },
+  {
+    path: REGISTRY_OPERATOR_PATH,
+    component: OperatorDashboardComponent,
+    children: [
+      {
+        path: NEW_OPERATOR_PATH,
+        component: CreateNewOperatorComponent
+      }
+    ]
   },
   {
     path: REGISTRY_SERVICE_PROVIDER_PATH,

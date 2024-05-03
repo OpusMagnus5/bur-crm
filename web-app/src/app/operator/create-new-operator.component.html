@@ -1,0 +1,21 @@
+<div class="form-container mat-elevation-z3">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <mat-label>{{ 'new-operator.name-input-label' | translate }}</mat-label>
+      <input matInput [formControl]="nameControl">
+      @if (nameControl.invalid) {
+        <mat-error>{{ getValidationMessage('name', nameControl) }}</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{ 'new-operator.phone-number-label' | translate }}</mat-label>
+      <input matInput [formControl]="phoneNumberControl" placeholder="111222333">
+      @if (phoneNumberControl.invalid) {
+        <mat-error>{{ getValidationMessage('phone-number', phoneNumberControl) }}</mat-error>
+      }
+    </mat-form-field>
+    <button mat-flat-button
+            color="primary"
+            [disabled]="form.invalid">{{ 'common.save-button' | translate }}</button>
+  </form>
+</div>

@@ -4,7 +4,8 @@
     "administration-path": "Administration",
     "users-path": "Users",
     "registry-path": "Registry",
-    "service-provider-path": "Service providers"
+    "service-provider-path": "Service providers",
+    "operator-path": "Operators"
   },
   "not-found": {
     "message": "Sorry, the requested page was not found."
@@ -132,6 +133,22 @@
       "name" : {
         "required": "Name field cannot be empty",
         "pattern": "Invalid name provided."
+      }
+    }
+  },
+  "operator": {
+    "new-operator": "Add operator"
+  },
+  "new-operator": {
+    "name-input-label": "Operator name",
+    "phone-number-label": "Phone number",
+    "validation": {
+      "name": {
+        "required": "Operator name field cannot be empty",
+        "pattern": "Invalid operator name provided"
+      },
+      "phone-number": {
+        "pattern": "Invalid phone number provided"
       }
     }
   }
