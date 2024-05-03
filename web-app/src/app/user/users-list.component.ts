@@ -87,7 +87,7 @@ export class UsersListComponent implements OnDestroy {
 
   onDetails(element: UserListDataInterface) {
     this.http.getUserDetails(element.id).subscribe(response => {
-      this.dialog.open(UserDetailsComponent, { data: response })
+      this.dialog.open(UserDetailsComponent, { data: response, disableClose: true })
     })
   }
 

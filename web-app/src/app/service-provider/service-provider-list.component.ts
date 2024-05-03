@@ -90,7 +90,7 @@ export class ServiceProviderListComponent implements OnDestroy {
 
   onDetails(element: ServiceProviderDataInterface) {
     this.http.getDetails(element.id).subscribe(response => {
-      this.dialog.open(ServiceProviderDetailsComponent, { data: response })
+      this.dialog.open(ServiceProviderDetailsComponent, { data: response, disableClose: true })
     })
   }
 
@@ -118,7 +118,7 @@ export class ServiceProviderListComponent implements OnDestroy {
 
   onEdit(element: ServiceProviderDataInterface) {
     this.http.getDetails(element.id).subscribe(response => {
-      const dialogRef = this.dialog.open(UpdateServiceProviderComponent, { data: response });
+      const dialogRef = this.dialog.open(UpdateServiceProviderComponent, { data: response, disableClose: true });
       this.updateSubscription = dialogRef.componentInstance.updateConfirmation.subscribe(value => {
         if (value) {
           dialogRef.close();

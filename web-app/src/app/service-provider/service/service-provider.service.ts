@@ -27,7 +27,7 @@ export class ServiceProviderService {
     return sum % 11 == controlNumber ? null : { 'incorrect': true };
   }
 
-  validateNipOccupation(nipControl: AbstractControl, nameControl: AbstractControl): Observable<ValidationErrors | null> {
+  validateNipOccupationAndGetProviderName(nipControl: AbstractControl, nameControl: AbstractControl): Observable<ValidationErrors | null> {
     const isProviderExists = this.httpService.getIsProviderExists('NIP', nipControl.value.trim());
     const providerNameFromBur = this.httpService.getProviderNameFromBur(nipControl.value.trim());
 

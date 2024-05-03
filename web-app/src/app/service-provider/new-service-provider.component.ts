@@ -60,7 +60,7 @@ export class NewServiceProviderComponent {
      updateOn: 'blur'
     });
     this.nameControl = new FormControl(null,
-      [Validators.required, Validators.pattern('[a-zA-ZążęćłóńśĄŻĘĆŁÓŃŚ -/.\"\\\\]{1,150}')])
+      [Validators.required, Validators.pattern('[a-zA-ZążęćłóńśĄŻĘĆŁÓŃŚ0-9 -/.\"\\\\]{1,150}')])
     this.form = this.buildFormGroup();
   }
 
@@ -72,7 +72,7 @@ export class NewServiceProviderComponent {
   }
 
   validateNipOccupation(control: AbstractControl): Observable<ValidationErrors | null> {
-    return this.service.validateNipOccupation(control, this.nameControl);
+    return this.service.validateNipOccupationAndGetProviderName(control, this.nameControl);
   }
 
   protected onSubmit() {
