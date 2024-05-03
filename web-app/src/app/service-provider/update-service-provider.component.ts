@@ -19,7 +19,7 @@ import {
   Validators
 } from "@angular/forms";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
-import {Observable, Subject} from "rxjs";
+import {Observable, of, Subject} from "rxjs";
 import {ServiceProviderService} from "./service/service-provider.service";
 import {ValidationMessageService} from "../shared/service/validation-message.service";
 import {ServiceProviderHttpService} from "./service/service-provider-http.service";
@@ -65,16 +65,13 @@ export class UpdateServiceProviderComponent {
     private translator: TranslateService,
     private snackBar: MatSnackBar,
   ) {
-    this.nipControl = new FormControl(data.nip, { //TODO trzy żadania z walidacją na starcie
-      // TODO nie walidowac nipu czy istnieje bo mozemy chciez zmienic tylko nazwę, nip walidowac dopiero po zmianie
-      // TODO sprawdzic komunikat optimistic locking
-      // TODO nazwa firmy powinno dopuszczac cyfry
+    this.nipControl = new FormControl(data.nip, {
       validators: [Validators.required, Validators.pattern('\\d{10}'), this.service.validateNip.bind(this)],
-      asyncValidators: [this.validateNipOccupation.bind(this)],
+      asyncValidators: [this.validateNipOccupationAndGetProviderName.bind(this)],
       updateOn: 'blur'
     });
     this.nameControl = new FormControl(data.name,
-      [Validators.required, Validators.pattern('[a-zA-ZążęćłóńśĄŻĘĆŁÓŃŚ -/.\"\\\\]{1,150}')])
+      [Validators.required, Validators.pattern('[a-zA-ZążęćłóńśĄŻĘĆŁÓŃŚ0-9 -/.\"\\\\]{1,150}')])
     this.form = this.buildFormGroup();
   }
 
@@ -85,8 +82,11 @@ export class UpdateServiceProviderComponent {
     });
   }
 
-  protected validateNipOccupation(control: AbstractControl): Observable<ValidationErrors | null> {
-    return this.service.validateNipOccupation(control, this.nameControl);
+  protected validateNipOccupationAndGetProviderName(control: AbstractControl): Observable<ValidationErrors | null> {
+    if (control.value !== this.data.nip) {
+      return this.service.validateNipOccupationAndGetProviderName(control, this.nameControl);
+    }
+    return of(null);
   }
 
   protected getValidationMessage(fieldName: string, control: FormControl): string {

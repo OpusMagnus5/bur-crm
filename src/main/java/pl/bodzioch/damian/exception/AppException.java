@@ -49,4 +49,14 @@ public class AppException extends RuntimeException {
         httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         errors = List.of(ErrorData.getGeneralErrorData());
     }
+
+    @Override
+    public String toString() {
+        return "AppException{" +
+                "errorId=" + errorId +
+                ", httpStatus=" + httpStatus +
+                ", occurredAt=" + occurredAt +
+                ", errors=" + errors +
+                '}';
+    }
 }

@@ -34,6 +34,9 @@ class JdbcCaller implements IJdbcCaller {
             if (OPTIMISTIC_LOCKING_SQL_STATE.equals(e.getSQLException().getSQLState())) {
                 log.warn("Optimistic locking error", e);
                 throw buildOptimisticLockingException();
+            } else {
+                log.error("Error occurred while calling procedure.", e);
+                throw e;
             }
         }
         catch (Exception e) {
@@ -49,6 +52,7 @@ class JdbcCaller implements IJdbcCaller {
 
     private AppException buildOptimisticLockingException() {
         return new AppException(
+                "Optimistic locking error",
                 HttpStatus.CONFLICT,
                 List.of(new ErrorData("error.client.optimisticLocking", Collections.emptyList()))
         );

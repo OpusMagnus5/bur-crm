@@ -18,12 +18,6 @@
 } @else if (clientError) {
   <mat-dialog-content class="details-container">
 
-    <p>{{ 'http-error.error-id' | translate }}: {{ data.errorId }}</p>
-    <p>{{ 'http-error.time' | translate }}: {{ data.timestamp | localizedDate }}</p>
-
-    <mat-divider></mat-divider>
-
-    <h3>{{ 'http-error.error-list' | translate }}</h3>
     @for (error of data.errors; track error) {
       <p>{{ error.detail }}</p>
       <mat-divider></mat-divider>

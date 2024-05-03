@@ -34,7 +34,7 @@ class UserControllerAdvice {
 
     @ExceptionHandler({AppException.class})
     ResponseEntity<AppErrorResponse> handleUserAppException(AppException e) {
-        log.error(e.getMessage(), e);
+        log.error(e.toString(), e);
         return UserGlobalControllerAdvice.getResponseEntity(e, messageResolver);
     }
 
@@ -47,10 +47,11 @@ class UserControllerAdvice {
                         fieldError.getDefaultMessage(),
                         getMessage(fieldError)
                 )));
-        log.error(errors.toString());
+        AppErrorResponse body = new AppErrorResponse(errors);
+        log.error(body.toString());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
-                .body(new AppErrorResponse(errors));
+                .body(body);
     }
 
     @ExceptionHandler({ConstraintViolationException.class})
@@ -62,10 +63,11 @@ class UserControllerAdvice {
                 violation.getMessage(),
                 getMessage(violation)
         )));
-        log.error(errors.toString());
+        AppErrorResponse body = new AppErrorResponse(errors);
+        log.error(body.toString());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
-                .body(new AppErrorResponse(errors));
+                .body(body);
     }
 
     private String getMessage(FieldError fieldError) {
