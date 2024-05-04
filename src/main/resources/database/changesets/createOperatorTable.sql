@@ -11,3 +11,4 @@ CREATE TABLE operator (
 );
 
 CREATE UNIQUE INDEX operator_id_idx ON operator (opr_id);
+CREATE UNIQUE INDEX operator_name_idx ON operator (opr_name);

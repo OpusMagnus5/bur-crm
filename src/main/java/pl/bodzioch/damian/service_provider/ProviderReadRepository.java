@@ -1,7 +1,6 @@
 package pl.bodzioch.damian.service_provider;
 
 import jakarta.transaction.Transactional;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
@@ -26,15 +25,9 @@ class ProviderReadRepository implements IProviderReadRepository {
 
     public ProviderReadRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
         this.jdbcCaller = jdbcCaller;
-        this.getByNipProc = buildSimpleJdbcCall(dataSource, "service_provider_get_by_nip");
-        this.getPageProc = buildSimpleJdbcCall(dataSource, "service_provider_get_page");
-        this.getDetailsProc = buildSimpleJdbcCall(dataSource, "service_provider_get_details");
-    }
-
-    private SimpleJdbcCall buildSimpleJdbcCall(DataSource dataSource, String procedure) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcTemplate.setResultsMapCaseInsensitive(true);
-        return new SimpleJdbcCall(jdbcTemplate).withProcedureName(procedure);
+        this.getByNipProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_provider_get_by_nip");
+        this.getPageProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_provider_get_page");
+        this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_provider_get_details");
     }
 
     @Override

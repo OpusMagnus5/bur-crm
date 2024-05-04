@@ -5,8 +5,8 @@ import pl.bodzioch.damian.service_provider.command_dto.CreateNewServiceProviderC
 import pl.bodzioch.damian.service_provider.command_dto.UpdateServiceProviderCommand;
 import pl.bodzioch.damian.user.InnerUser;
 import pl.bodzioch.damian.user.InnerUserDto;
+import pl.bodzioch.damian.utils.DbCaster;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -78,29 +78,22 @@ record ServiceProvider(
         return fields;
     }
 
-    @SuppressWarnings("unchecked")
     static List<ServiceProvider> fromProperties(Map<String, Object> properties, String cursorName) {
-        ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) properties.get(cursorName);
-        ArrayList<ServiceProvider> serviceProviders = new ArrayList<>();
-        for (Map<String, Object> record : list) {
-            ServiceProvider serviceProvider = buildServiceProvider(record);
-            serviceProviders.add(serviceProvider);
-        }
-        return serviceProviders;
+        return DbCaster.fromProperties(ServiceProvider::buildServiceProvider, properties, cursorName);
     }
 
     private static ServiceProvider buildServiceProvider(Map<String, Object> record) {
         return new ServiceProvider(
-                (Long) record.get("spr_id"),
-                (UUID) record.get("spr_uuid"),
-                (Integer) record.get("spr_version"),
-                (Long) record.get("spr_bur_id"),
-                (String) record.get("spr_name"),
-                (Long) record.get("spr_nip"),
-                record.get("spr_created_at") instanceof Timestamp ? ((Timestamp) record.get("spr_created_at")).toLocalDateTime() : null,
-                record.get("usr_modified_at") instanceof Timestamp ? ((Timestamp) record.get("usr_modified_at")).toLocalDateTime() : null,
-                record.get("usr_modified_by") instanceof Long ? (Long) record.get("usr_modified_by") : null,
-                (Long) record.get("usr_created_by"),
+                DbCaster.cast(Long.class, record.get("spr_id")),
+                DbCaster.cast(UUID.class, record.get("spr_uuid")),
+                DbCaster.cast(Integer.class, record.get("spr_version")),
+                DbCaster.cast(Long.class, record.get("spr_bur_id")),
+                DbCaster.cast(String.class, record.get("spr_name")),
+                DbCaster.cast(Long.class, record.get("spr_nip")),
+                DbCaster.mapTimestamp(record.get("spr_created_at")),
+                DbCaster.mapTimestamp(record.get("spr_modified_at")),
+                DbCaster.cast(Long.class, record.get("spr_modified_by")),
+                DbCaster.cast(Long.class, record.get("spr_created_by")),
                 buildInnerUser(record, "creator"),
                 buildInnerUser(record, "modifier")
         );
@@ -108,8 +101,8 @@ record ServiceProvider(
 
     private static InnerUser buildInnerUser(Map<String, Object> record, String userKind) {
         return new InnerUser(
-                (String) record.get(userKind + "_usr_first_name"),
-                (String) record.get(userKind + "_usr_last_name")
+                DbCaster.cast(String.class, record.get(userKind + "_usr_first_name")),
+                DbCaster.cast(String.class, record.get(userKind + "_usr_last_name"))
         );
     }
 }

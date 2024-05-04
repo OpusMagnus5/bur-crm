@@ -14,3 +14,19 @@ BEGIN
     VALUES(_opr_uuid, 0, _opr_name, _opr_phone_number, current_timestamp, _opr_created_by);
 
 END$$;
+
+DROP PROCEDURE IF EXISTS operator_get_by_name;
+/*PROCEDURE operator_get_by_name*/
+CREATE OR REPLACE PROCEDURE operator_get_by_name(
+    IN _opr_name operator.opr_name%TYPE,
+    OUT _cursor REFCURSOR
+)
+    LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    OPEN _cursor FOR
+        SELECT opr_id, opr_name
+        FROM operator WHERE opr_name = _opr_name;
+
+END$$;

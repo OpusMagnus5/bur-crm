@@ -3,13 +3,15 @@ package pl.bodzioch.damian.user;
 import com.fasterxml.uuid.Generators;
 import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.user.command_dto.CreateNewUserCommand;
+import pl.bodzioch.damian.utils.DbCaster;
 import pl.bodzioch.damian.utils.Encoder;
 
 import java.security.SecureRandom;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 record User (
          Long usr_id,
@@ -96,7 +98,7 @@ record User (
         fields.put("_usr_password", usr_password);
         fields.put("_usr_first_name", usr_first_name);
         fields.put("_usr_last_name", usr_last_name);
-        fields.put("_usr_roles", usr_roles.stream().map(Enum::name).collect(Collectors.joining(";")));
+        fields.put("_usr_roles", DbCaster.enumsToDb(usr_roles));
         fields.put("_usr_last_login", usr_last_login);
         fields.put("_usr_created_at", usr_created_at);
         fields.put("_usr_modified_at", usr_modified_at);
@@ -105,34 +107,25 @@ record User (
         return fields;
     }
 
-    @SuppressWarnings("unchecked")
     static List<User> fromProperties(Map<String, Object> properties, String cursorName) {
-        ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) properties.get(cursorName);
-        ArrayList<User> users = new ArrayList<>();
-        for (Map<String, Object> record : list) {
-            User user = buildUser(record);
-            users.add(user);
-        }
-        return users;
+        return DbCaster.fromProperties(User::buildUser, properties, cursorName);
     }
 
     private static User buildUser(Map<String, Object> record) {
         return new User(
-                (Long) record.get("usr_id"),
-                (UUID) record.get("usr_uuid"),
-                (Integer) record.get("usr_version"),
-                (String) record.get("usr_email"),
-                (String) record.get("usr_password"),
-                (String) record.get("usr_first_name"),
-                (String) record.get("usr_last_name"),
-                Arrays.stream(((String) record.get("usr_roles")).split(";"))
-                        .map(UserRole::valueOf)
-                        .toList(),
-                record.get("usr_last_login") instanceof Timestamp ? ((Timestamp) record.get("usr_last_login")).toLocalDateTime() : null,
-                record.get("usr_created_at") instanceof Timestamp ? ((Timestamp) record.get("usr_created_at")).toLocalDateTime() : null,
-                record.get("usr_modified_at") instanceof Timestamp ? ((Timestamp) record.get("usr_modified_at")).toLocalDateTime() : null,
-                record.get("usr_modified_by") instanceof Long ? (Long) record.get("usr_modified_by") : null,
-                record.get("usr_created_by") instanceof Long ? (Long) record.get("usr_created_by") : null,
+                DbCaster.cast(Long.class, record.get("usr_id")),
+                DbCaster.cast(UUID.class, record.get("usr_uuid")),
+                DbCaster.cast(Integer.class, record.get("usr_version")),
+                DbCaster.cast(String.class, record.get("usr_email")),
+                DbCaster.cast(String.class, record.get("usr_password")),
+                DbCaster.cast(String.class, record.get("usr_first_name")),
+                DbCaster.cast(String.class, record.get("usr_last_name")),
+                DbCaster.toEnums(UserRole.class, record.get("usr_roles")),
+                DbCaster.mapTimestamp(record.get("usr_last_login")),
+                DbCaster.mapTimestamp(record.get("usr_created_at")),
+                DbCaster.mapTimestamp(record.get("usr_modified_at")),
+                DbCaster.cast(Long.class, record.get("usr_modified_by")),
+                DbCaster.cast(Long.class, record.get("usr_created_by")),
                 buildCreator(record),
                 buildModifier(record)
         );
@@ -140,15 +133,15 @@ record User (
 
     private static User buildCreator(Map<String, Object> record) {
         return new User(
-                record.get("creator_usr_first_name") instanceof String ? (String) record.get("creator_usr_first_name") : null,
-                record.get("creator_usr_last_name") instanceof String ? (String) record.get("creator_usr_last_name") : null
+                DbCaster.cast(String.class, record.get("creator_usr_first_name")),
+                DbCaster.cast(String.class, record.get("creator_usr_last_name"))
         );
     }
 
     private static User buildModifier(Map<String, Object> record) {
         return new User(
-                record.get("modifier_usr_first_name") instanceof String ? (String) record.get("modifier_usr_first_name") : null,
-                record.get("modifier_usr_last_name") instanceof String ? (String) record.get("modifier_usr_last_name") : null
+                DbCaster.cast(String.class, record.get("modifier_usr_first_name")),
+                DbCaster.cast(String.class, record.get("modifier_usr_last_name"))
         );
     }
 }

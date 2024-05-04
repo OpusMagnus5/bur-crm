@@ -1,7 +1,6 @@
 package pl.bodzioch.damian.user;
 
 import jakarta.transaction.Transactional;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 import pl.bodzioch.damian.infrastructure.database.IJdbcCaller;
@@ -18,14 +17,8 @@ class UserWriteRepository implements IUserWriteRepository {
 
     UserWriteRepository(DataSource dataSource, IJdbcCaller jdbcCaller) {
         this.jdbcCaller = jdbcCaller;
-        this.createNewProc = buildSimpleJdbcCall(dataSource, "users_create_new");
-        this.deleteProc = buildSimpleJdbcCall(dataSource, "users_delete");
-    }
-
-    private SimpleJdbcCall buildSimpleJdbcCall(DataSource dataSource, String procedure) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcTemplate.setResultsMapCaseInsensitive(true);
-        return new SimpleJdbcCall(jdbcTemplate).withProcedureName(procedure);
+        this.createNewProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "users_create_new");
+        this.deleteProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "users_delete");
     }
 
     @Override

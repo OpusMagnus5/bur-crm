@@ -3,12 +3,14 @@ package pl.bodzioch.damian.infrastructure.database;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.UncategorizedSQLException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StopWatch;
 import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.value_object.ErrorData;
 
+import javax.sql.DataSource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +50,13 @@ class JdbcCaller implements IJdbcCaller {
                     procedureName, stopWatch.getTotalTimeMillis(), callStatus, result);
         }
         return result;
+    }
+
+    @Override
+    public SimpleJdbcCall buildSimpleJdbcCall(DataSource dataSource, String procedure) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        jdbcTemplate.setResultsMapCaseInsensitive(true);
+        return new SimpleJdbcCall(jdbcTemplate).withProcedureName(procedure);
     }
 
     private AppException buildOptimisticLockingException() {

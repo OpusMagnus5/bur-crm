@@ -1,7 +1,6 @@
 package pl.bodzioch.damian.user;
 
 import jakarta.transaction.Transactional;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
@@ -26,15 +25,9 @@ class UserReadRepository implements IUserReadRepository {
 
     UserReadRepository(DataSource dataSource, IJdbcCaller jdbcCaller) {
         this.jdbcCaller = jdbcCaller;
-        this.getByEmailProc = buildSimpleJdbcCall(dataSource, "users_get_by_email");
-        this.getPageOfUsersProc = buildSimpleJdbcCall(dataSource, "users_get_page_of_users");
-        this.getDetailsProc  = buildSimpleJdbcCall(dataSource, "users_get_details");
-    }
-
-    private SimpleJdbcCall buildSimpleJdbcCall(DataSource dataSource, String procedure) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcTemplate.setResultsMapCaseInsensitive(true);
-        return new SimpleJdbcCall(jdbcTemplate).withProcedureName(procedure);
+        this.getByEmailProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "users_get_by_email");
+        this.getPageOfUsersProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "users_get_page_of_users");
+        this.getDetailsProc  = jdbcCaller.buildSimpleJdbcCall(dataSource, "users_get_details");
     }
 
     @Override
