@@ -13,6 +13,8 @@ import pl.bodzioch.damian.infrastructure.command.CommandExecutor;
 import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
 import pl.bodzioch.damian.operator.command_dto.CreateNewOperatorCommand;
 import pl.bodzioch.damian.operator.command_dto.CreateNewOperatorCommandResult;
+import pl.bodzioch.damian.operator.command_dto.DeleteOperatorCommand;
+import pl.bodzioch.damian.operator.command_dto.DeleteOperatorCommandResult;
 import pl.bodzioch.damian.operator.query_dto.GetOperatorByNameQuery;
 import pl.bodzioch.damian.operator.query_dto.GetOperatorsPageQuery;
 import pl.bodzioch.damian.operator.query_dto.GetOperatorsPageQueryResult;
@@ -69,5 +71,14 @@ class OperatorController {
                 .map(element -> new OperatorData(element, cipher))
                 .toList();
         return new OperatorsPageResponse(providersData, result.totalOperators());
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    DeleteOperatorResponse delete(@PathVariable String id) {
+        long operatorId = Long.parseLong(cipher.decryptMessage(id));
+        DeleteOperatorCommand command = new DeleteOperatorCommand(operatorId);
+        DeleteOperatorCommandResult result = commandExecutor.execute(command);
+        return new DeleteOperatorResponse(result.message());
     }
 }

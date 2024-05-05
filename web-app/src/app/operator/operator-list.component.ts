@@ -80,7 +80,7 @@ export class OperatorListComponent {
   }
 
   onRemove(element: OperatorPageDataSource) {
-
+    
   }
 
   onEdit(element: OperatorPageDataSource) {

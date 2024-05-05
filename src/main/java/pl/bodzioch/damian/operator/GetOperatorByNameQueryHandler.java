@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class GetOperatorByNameQueryHandler implements QueryHandler<GetOperatorByNameQuery, GetOperatorByNameQueryResult> {
+class GetOperatorByNameQueryHandler implements QueryHandler<GetOperatorByNameQuery, GetOperatorByNameQueryResult> {
 
     private final IOperatorReadRepository readRepository;
 

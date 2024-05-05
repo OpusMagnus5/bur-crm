@@ -5,4 +5,7 @@ import jakarta.transaction.Transactional;
 interface IOperatorWriteRepository {
     @Transactional(Transactional.TxType.REQUIRED)
     void createNew(Operator operator);
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    void delete(Long id);
 }

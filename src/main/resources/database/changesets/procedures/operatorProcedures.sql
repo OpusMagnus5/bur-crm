@@ -55,3 +55,16 @@ BEGIN
     FROM operator;
 
 END$$;
+
+DROP PROCEDURE IF EXISTS operator_delete;
+/*PROCEDURE operator_delete*/
+CREATE OR REPLACE PROCEDURE operator_delete(
+    IN _opr_id operator.opr_id%TYPE
+)
+    LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    DELETE FROM operator WHERE opr_id = _opr_id;
+
+END$$;

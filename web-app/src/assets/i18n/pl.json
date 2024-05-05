@@ -117,7 +117,7 @@
   },
   "delete-service-provider": {
     "confirmation-title": "Usuń dostawcę usług",
-    "confirmation-content": "Czy na pewno chcesz usunąć tego dostawcę usług? Spowoduje to odpięcie go od wszystkich powiązanych usług."
+    "confirmation-content": "Czy na pewno chcesz usunąć tego dostawcę usług?"
   },
   "update-service-provider": {
     "title": "Edycja dostawcy usług",
