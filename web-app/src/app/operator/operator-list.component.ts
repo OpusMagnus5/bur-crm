@@ -97,7 +97,7 @@ export class OperatorListComponent implements OnDestroy {
     });
   }
 
-  private deleteOperator(element: OperatorDataInterface) {
+  private deleteOperator(element: OperatorDataInterface) { //TODO wydzielic top center snackbar, wydzielic komponent DELETE
     this.http.delete(element.id).subscribe(response => {
       this.translator.get('common.close-button').subscribe(text => {
         this.snackBar.open(response.message, text, {

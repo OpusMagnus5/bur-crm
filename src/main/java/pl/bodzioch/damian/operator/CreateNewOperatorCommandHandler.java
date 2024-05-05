@@ -31,7 +31,7 @@ class CreateNewOperatorCommandHandler implements CommandHandler<CreateNewOperato
     public CreateNewOperatorCommandResult handle(CreateNewOperatorCommand command) {
         Operator operator = new Operator(command);
         try {
-            writeRepository.createNew(operator);
+            writeRepository.createNew(operator); //TODO dopisać sprawdzanie po lowercase name
         } catch (DuplicateKeyException e) {
             log.warn("Operator with name: {} already exists", command.name(), e);
             throw buildOperatorByNameAlreadyExistsException(command.name());

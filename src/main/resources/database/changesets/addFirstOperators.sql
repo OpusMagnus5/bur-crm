@@ -1,0 +1,17 @@
+INSERT INTO operator(opr_uuid, opr_version, opr_name, opr_created_at, opr_created_by) VALUES (gen_random_uuid(), 0, 'DOLNOŚLĄSKA AGENCJA ROZWOJU REGIONALNEGO SPÓŁKA AKCYJNA', current_timestamp, 1);
+INSERT INTO operator(opr_uuid, opr_version, opr_name, opr_created_at, opr_created_by) VALUES (gen_random_uuid(), 0, 'Łódzka Agencja Rozwoju Regionalnego S.A.', current_timestamp, 1);
+INSERT INTO operator(opr_uuid, opr_version, opr_name, opr_created_at, opr_created_by) VALUES (gen_random_uuid(), 0, 'MAŁOPOLSKA AGENCJA ROZWOJU REGIONALNEGO S.A.', current_timestamp, 1);
+INSERT INTO operator(opr_uuid, opr_version, opr_name, opr_created_at, opr_created_by) VALUES (gen_random_uuid(), 0, 'Fundacja Rozwoju Regionu Rabka', current_timestamp, 1);
+INSERT INTO operator(opr_uuid, opr_version, opr_name, opr_created_at, opr_created_by) VALUES (gen_random_uuid(), 0, 'Stowarzyszenie na Rzecz Szkoły Zarządzania i Handlu w Oświęcimiu', current_timestamp, 1);
+INSERT INTO operator(opr_uuid, opr_version, opr_name, opr_created_at, opr_created_by) VALUES (gen_random_uuid(), 0, 'Miasto Nowy Sącz-Centrum Pozyskiwania Funduszy i Przedsiębiorczości', current_timestamp, 1);
+INSERT INTO operator(opr_uuid, opr_version, opr_name, opr_created_at, opr_created_by) VALUES (gen_random_uuid(), 0, 'KDK Info spółka z ograniczoną odpowiedzialnością', current_timestamp, 1);
+INSERT INTO operator(opr_uuid, opr_version, opr_name, opr_created_at, opr_created_by) VALUES (gen_random_uuid(), 0, 'Agencja Rozwoju Regionalnego MARR S.A.', current_timestamp, 1);
+INSERT INTO operator(opr_uuid, opr_version, opr_name, opr_created_at, opr_created_by) VALUES (gen_random_uuid(), 0, 'ŁÓDZKA IZBA PRZEMYSŁOWO-HANDLOWA', current_timestamp, 1);
+INSERT INTO operator(opr_uuid, opr_version, opr_name, opr_created_at, opr_created_by) VALUES (gen_random_uuid(), 0, 'Instytut ADN spółka z ograniczoną odpowiedzialnością sp.k.', current_timestamp, 1);
+INSERT INTO operator(opr_uuid, opr_version, opr_name, opr_created_at, opr_created_by) VALUES (gen_random_uuid(), 0, 'HRP GRANTS Sp. z o. o.', current_timestamp, 1);
+INSERT INTO operator(opr_uuid, opr_version, opr_name, opr_created_at, opr_created_by) VALUES (gen_random_uuid(), 0, 'Rzeszowska Agencja Rozwoju Regionalnego S.A.', current_timestamp, 1);
+INSERT INTO operator(opr_uuid, opr_version, opr_name, opr_created_at, opr_created_by) VALUES (gen_random_uuid(), 0, 'Wojewódzki Urząd Pracy w Kielcach', current_timestamp, 1);
+INSERT INTO operator(opr_uuid, opr_version, opr_name, opr_created_at, opr_created_by) VALUES (gen_random_uuid(), 0, 'Krajowa Agencja Informacyjna INFO Spółka z ograniczoną odpowiedzialnością', current_timestamp, 1);
+INSERT INTO operator(opr_uuid, opr_version, opr_name, opr_created_at, opr_created_by) VALUES (gen_random_uuid(), 0, 'Techpal Sp. z o.o.', current_timestamp, 1);
+INSERT INTO operator(opr_uuid, opr_version, opr_name, opr_created_at, opr_created_by) VALUES (gen_random_uuid(), 0, 'Wielkopolska Agencja Rozwoju Przedsiębiorczoś ci Sp. z o.o.', current_timestamp, 1);
+INSERT INTO operator(opr_uuid, opr_version, opr_name, opr_created_at, opr_created_by) VALUES (gen_random_uuid(), 0, 'KRAJOWA IZBA GOSPODARCZA', current_timestamp, 1);
