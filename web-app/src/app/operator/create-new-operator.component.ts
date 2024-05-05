@@ -1,5 +1,13 @@
 import {Component} from '@angular/core';
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators
+} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
@@ -9,6 +17,8 @@ import {OperatorHttpService} from "./service/operator-http.service";
 import {CreateNewOperatorRequestInterface} from "./model/create-new-operator-request.interface";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {CreateNewOperatorResponseInterface} from "./model/create-new-operator-response.interface";
+import {catchError, Observable, of} from "rxjs";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-create-new-operator',
@@ -38,8 +48,11 @@ export class CreateNewOperatorComponent {
     private translator: TranslateService,
     private snackBar: MatSnackBar,
   ) {
-    this.nameControl = new FormControl(null, //TODO async name
-      [Validators.required, Validators.pattern('[a-zA-ZążęćłóńśĄŻĘĆŁÓŃŚ0-9 -/.\"\\\\]{1,150}')]);
+    this.nameControl = new FormControl(null, {
+      validators: [Validators.required, Validators.pattern('[a-zA-ZążęćłóńśĄŻĘĆŁÓŃŚ0-9 -/.\"\\\\]{1,150}')],
+      asyncValidators: [this.validateNameOccupation.bind(this)],
+      updateOn: "blur"
+    });
     this.phoneNumberControl = new FormControl(null, [Validators.pattern('\\d{9}')]);
 
     this.form = this.buildFormGroup();
@@ -61,6 +74,13 @@ export class CreateNewOperatorComponent {
         })*/
       }
     });
+  }
+
+  validateNameOccupation(control: AbstractControl): Observable<ValidationErrors | null> {
+    return this.httpService.getIsOperatorExists('NAME', control.value.trim()).pipe(
+      map(response => (response.exists ? { 'exists': true } : null)),
+      catchError(() => of(null))
+    );
   }
 
   private showPopUp(response: CreateNewOperatorResponseInterface) {

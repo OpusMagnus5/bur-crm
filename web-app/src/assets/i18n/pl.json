@@ -145,7 +145,8 @@
     "validation": {
       "name": {
         "required": "Pole nazwa operatora nie może być puste",
-        "pattern": "Podana nazwa operatora jest nieprawidłowa"
+        "pattern": "Podana nazwa operatora jest nieprawidłowa",
+        "exists": "Istnieje już operator o podanej nazwie"
       },
       "phone-number": {
         "pattern": "Podany numer telefonu jest nieprawidłowy"

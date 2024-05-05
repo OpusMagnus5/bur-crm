@@ -11,7 +11,8 @@ export class ServerErrorHttpInterceptor implements HttpInterceptor {
   private readonly excludedUrl: string[] = [
     "api/service-provider/exists",
     "api/service-provider/name",
-    "api/user/exists"
+    "api/user/exists",
+    "api/operator/exists"
   ];
 
   constructor(private dialog: MatDialog) {

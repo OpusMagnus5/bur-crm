@@ -145,7 +145,8 @@
     "validation": {
       "name": {
         "required": "Operator name field cannot be empty",
-        "pattern": "Invalid operator name provided"
+        "pattern": "Invalid operator name provided",
+        "exists": "A operator with the provided name already exists"
       },
       "phone-number": {
         "pattern": "Invalid phone number provided"
