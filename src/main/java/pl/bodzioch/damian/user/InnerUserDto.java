@@ -1,5 +1,7 @@
 package pl.bodzioch.damian.user;
 
+import java.util.Optional;
+
 public record InnerUserDto(
 
         String firstName,
@@ -8,8 +10,8 @@ public record InnerUserDto(
 
     public InnerUserDto(InnerUser user) {
         this(
-                user.firstName(),
-                user.lastName()
+                Optional.ofNullable(user).map(InnerUser::firstName).orElse(null),
+                Optional.ofNullable(user).map(InnerUser::lastName).orElse(null)
         );
     }
 }

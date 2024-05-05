@@ -46,6 +46,7 @@ public class DbCaster {
             return null;
         }
     }
+
     @SuppressWarnings("unchecked")
     public static <T> List<T> fromProperties(Function<Map<String, Object>, T> mapper, Map<String, Object> properties, String cursorName) {
         ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) properties.get(cursorName);

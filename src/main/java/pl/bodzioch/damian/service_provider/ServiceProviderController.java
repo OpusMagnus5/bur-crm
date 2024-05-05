@@ -40,7 +40,7 @@ class ServiceProviderController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/exists")
     ProviderExistsResponse isProviderExists(
-            @RequestParam @ProviderIdKindV(message = "error.client.incorrectIdKind") String kindOfId,
+            @RequestParam @ProviderIdKindV String kindOfId,
             @RequestParam String id) {
         GetServiceProviderByNipQuery query = new GetServiceProviderByNipQuery(Long.parseLong(id));
         try {

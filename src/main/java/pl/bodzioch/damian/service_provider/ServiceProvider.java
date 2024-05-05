@@ -8,7 +8,10 @@ import pl.bodzioch.damian.user.InnerUserDto;
 import pl.bodzioch.damian.utils.DbCaster;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 record ServiceProvider(
 
@@ -60,8 +63,8 @@ record ServiceProvider(
                 spr_nip,
                 spr_created_at,
                 spr_modified_at,
-                Optional.ofNullable(creator).map(InnerUserDto::new).orElse(null),
-                Optional.ofNullable(modifier).map(InnerUserDto::new).orElse(null)
+                new InnerUserDto(creator),
+                new InnerUserDto(modifier)
         );
     }
 

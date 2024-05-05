@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = ProviderIdKindValidator.class)
 public @interface ProviderIdKindV {
 
-    String message() default "Invalid value";
+    String message() default "error.client.incorrectIdKind";
     Class<?>[] groups() default { };
     Class<? extends Payload>[] payload() default { };
 }

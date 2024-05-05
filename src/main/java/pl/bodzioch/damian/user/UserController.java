@@ -53,7 +53,7 @@ class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/exists")
-    UserExistsResponse isUserExists(@RequestParam @UserIdKindV(message = "error.client.incorrectIdKind") String kindOfId, @RequestParam String id) {
+    UserExistsResponse isUserExists(@RequestParam @UserIdKindV String kindOfId, @RequestParam String id) {
         CheckUserExistenceQuery query = new CheckUserExistenceQuery(UserIdKind.valueOf(kindOfId), id);
         CheckUserExistenceQuerResult result = queryExecutor.execute(query);
         return new UserExistsResponse(result.exists());
