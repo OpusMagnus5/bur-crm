@@ -19,6 +19,8 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {CreateNewOperatorResponseInterface} from "./model/create-new-operator-response.interface";
 import {catchError, Observable, of} from "rxjs";
 import {map} from "rxjs/operators";
+import {ActivatedRoute, Router} from "@angular/router";
+import {OPERATOR_LIST_PATH} from "../app.routes";
 
 @Component({
   selector: 'app-create-new-operator',
@@ -47,6 +49,8 @@ export class CreateNewOperatorComponent {
     private httpService: OperatorHttpService,
     private translator: TranslateService,
     private snackBar: MatSnackBar,
+    private activeRoute: ActivatedRoute,
+    private router: Router,
   ) {
     this.nameControl = new FormControl(null, {
       validators: [Validators.required, Validators.pattern('[a-zA-ZążęćłóńśĄŻĘĆŁÓŃŚ0-9 -/.\"\\\\]{1,150}')],
@@ -69,9 +73,9 @@ export class CreateNewOperatorComponent {
     this.httpService.createNew(this.form.value as CreateNewOperatorRequestInterface).subscribe({
       next: response => {
         this.showPopUp(response);
-/*        this.router.navigate(['../' + SERVICE_PROVIDER_LIST_PATH], {
+        this.router.navigate(['../' + OPERATOR_LIST_PATH], {
           relativeTo: this.activeRoute
-        })*/
+        })
       }
     });
   }

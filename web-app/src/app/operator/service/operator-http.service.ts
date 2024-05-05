@@ -5,6 +5,7 @@ import {CreateNewOperatorResponseInterface} from "../model/create-new-operator-r
 import {Observable} from "rxjs";
 import {OperatorExistsResponseInterface} from "../model/operator-exists-response.interface";
 import {OperatorPageResponseInterface} from "../model/operator-page-response.interface";
+import {DeleteOperatorResponseInterface} from "../model/delete-operator-response.interface";
 
 @Injectable({ providedIn: "root" })
 export class OperatorHttpService {
@@ -40,4 +41,10 @@ export class OperatorHttpService {
       }
     )
   };
+
+  delete(id: string): Observable<DeleteOperatorResponseInterface> {
+    return this.http.delete<DeleteOperatorResponseInterface>(
+      'http://localhost:8080/api/operator/' + id
+    );
+  }
 }

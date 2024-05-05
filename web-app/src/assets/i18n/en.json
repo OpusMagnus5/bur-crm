@@ -163,5 +163,9 @@
   "operator-list": {
     "name-header": "Name",
     "no-operators": "No operators found in the database"
+  },
+  "delete-operator": {
+    "confirmation-title": "Delete operator",
+    "confirmation-content": "Are you sure you want to delete this operator?"
   }
 }
