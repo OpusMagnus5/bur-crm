@@ -30,3 +30,28 @@ BEGIN
         FROM operator WHERE lower(opr_name) = lower(_opr_name);
 
 END$$;
+
+DROP PROCEDURE IF EXISTS operator_get_page;
+/*PROCEDURE operator_get_page*/
+CREATE OR REPLACE PROCEDURE operator_get_page(
+    IN _offset NUMERIC,
+    IN _max NUMERIC,
+    OUT _cursor REFCURSOR,
+    OUT _total_operators BIGINT
+)
+    LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    OPEN _cursor FOR
+        SELECT opr_id, opr_name, opr_phone_number
+        FROM operator
+        ORDER BY opr_name
+        OFFSET _offset
+            LIMIT _max;
+
+    SELECT count(opr_id)
+    INTO _total_operators
+    FROM operator;
+
+END$$;
