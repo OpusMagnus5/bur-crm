@@ -108,7 +108,8 @@
   },
   "service-provider-list": {
     "name-header": "Name",
-    "nip-header": "NIP"
+    "nip-header": "NIP",
+    "no-service-providers": "No service providers found in the database"
   },
   "service-provider-details": {
     "title": "Service provider details",
@@ -164,6 +165,6 @@
   },
   "operator-list": {
     "name-header": "Name",
-    "phoneNumber-header": "Phone No."
+    "no-operators": "No operators found in the database"
   }
 }

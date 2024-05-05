@@ -9,10 +9,7 @@
     </mat-form-field>
     <mat-form-field>
       <mat-label>{{ 'new-operator.phone-number-label' | translate }}</mat-label>
-      <input matInput [formControl]="phoneNumberControl" placeholder="111222333">
-      @if (phoneNumberControl.invalid) {
-        <mat-error>{{ getValidationMessage('phone-number', phoneNumberControl) }}</mat-error>
-      }
+      <textarea matInput [formControl]="notesControl"></textarea>
     </mat-form-field>
     <button mat-flat-button
             color="primary"

@@ -108,7 +108,8 @@
   },
   "service-provider-list": {
     "name-header": "Nazwa",
-    "nip-header": "NIP"
+    "nip-header": "NIP",
+    "no-service-providers": "Nie znaleziono operatorów w bazie danych"
   },
   "service-provider-details": {
     "title": "Szczegóły dostawcy usług",
@@ -164,6 +165,6 @@
   },
   "operator-list": {
     "name-header": "Nazwa",
-    "phoneNumber-header": "Nr telefonu"
+    "no-operators": "Nie znaleziono operatorów w bazie danych"
   }
 }

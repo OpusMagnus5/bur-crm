@@ -4,7 +4,7 @@ import pl.bodzioch.damian.infrastructure.command.Command;
 
 public record CreateNewOperatorCommand(
         String name,
-        String phoneNumber,
+        String notes,
         Long createdBy
 
 ) implements Command<CreateNewOperatorCommandResult> {

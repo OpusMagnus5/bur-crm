@@ -40,7 +40,7 @@ export class CreateNewOperatorComponent {
 
   protected readonly form: FormGroup;
   protected readonly nameControl: FormControl;
-  protected readonly phoneNumberControl: FormControl;
+  protected readonly notesControl: FormControl;
 
   constructor(
     private validationMessage: ValidationMessageService,
@@ -53,7 +53,7 @@ export class CreateNewOperatorComponent {
       asyncValidators: [this.validateNameOccupation.bind(this)],
       updateOn: "blur"
     });
-    this.phoneNumberControl = new FormControl(null, [Validators.pattern('\\d{9}')]);
+    this.notesControl = new FormControl(null);
 
     this.form = this.buildFormGroup();
   }
@@ -61,7 +61,7 @@ export class CreateNewOperatorComponent {
   private buildFormGroup(): FormGroup {
     return new FormGroup({
       'name': this.nameControl,
-      'phoneNumber': this.phoneNumberControl
+      'notes': this.notesControl
     });
   }
 

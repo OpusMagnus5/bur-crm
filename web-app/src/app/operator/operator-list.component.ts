@@ -56,8 +56,8 @@ export class OperatorListComponent {
 
   private readonly data: Subject<OperatorPageResponseInterface> = new Subject<OperatorPageResponseInterface>();
   protected readonly dataSource: OperatorPageDataSource = new OperatorPageDataSource(this.data);
-  protected readonly columnsDef: string[] = ['name', 'phoneNumber'];
-  protected readonly rowsDef: string[] = ['name', 'phoneNumber', 'options'];
+  protected readonly columnsDef: string[] = ['name'];
+  protected readonly rowsDef: string[] = ['name', 'options'];
   protected pageDef: { pageNumber: number; pageSize: number; } = { pageNumber: 1, pageSize: 10 };
 
   constructor(
@@ -80,7 +80,7 @@ export class OperatorListComponent {
   }
 
   onRemove(element: OperatorPageDataSource) {
-    
+
   }
 
   onEdit(element: OperatorPageDataSource) {

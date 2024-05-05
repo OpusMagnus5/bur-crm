@@ -8,14 +8,14 @@ import java.io.Serializable;
 public record OperatorData(
         String id,
         String name,
-        String phoneNumber
+        String notes
 ) implements Serializable {
 
     public OperatorData(OperatorDto operator, CipherComponent cipher) {
         this(
                 cipher.encryptMessage(operator.id().toString()),
                 operator.name(),
-                operator.phoneNumber()
+                operator.notes()
         );
     }
 }

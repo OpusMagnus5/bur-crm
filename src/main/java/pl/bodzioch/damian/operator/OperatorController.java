@@ -36,7 +36,7 @@ class OperatorController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     CreateNewOperatorResponse createNew(@Valid @RequestBody CreateNewOperatorRequest request) {
-        CreateNewOperatorCommand command = new CreateNewOperatorCommand(request.name(), request.phoneNumber(), 1L);//TODO poprawić
+        CreateNewOperatorCommand command = new CreateNewOperatorCommand(request.name(), request.notes(), 1L);//TODO poprawić
         CreateNewOperatorCommandResult result = commandExecutor.execute(command);
         return new CreateNewOperatorResponse(result.message());
     }

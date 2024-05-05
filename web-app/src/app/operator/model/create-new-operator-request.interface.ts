@@ -1,5 +1,5 @@
 export interface CreateNewOperatorRequestInterface {
 
   name: string,
-  phoneNumber: string
+  notes: string
 }
