@@ -12,7 +12,7 @@ import {
   MatRowDef,
   MatTable
 } from "@angular/material/table";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {MatPaginatorIntl, MatPaginatorModule, PageEvent} from "@angular/material/paginator";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {UserListDataSource} from "./service/user-list.data-source";
 import {UserHttpService} from "./service/user-http.service";
@@ -26,6 +26,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {Subject, Subscription} from "rxjs";
 import {UserListResponseInterface} from "./model/user-list-response.interface";
 import {DeleteConfirmationComponent} from "./dialog/delete-confirmation.component";
+import {PaginatorLocalizerService} from "../shared/service/paginator-localizer.service";
 
 @Component({
   selector: 'app-users-list',
@@ -37,7 +38,7 @@ import {DeleteConfirmationComponent} from "./dialog/delete-confirmation.componen
     MatHeaderCell,
     MatHeaderRow,
     MatHeaderRowDef,
-    MatPaginator,
+    MatPaginatorModule,
     MatRow,
     MatRowDef,
     MatTable,
@@ -50,6 +51,7 @@ import {DeleteConfirmationComponent} from "./dialog/delete-confirmation.componen
     MatMenuItem,
     MatNoDataRow,
   ],
+  providers: [{provide: MatPaginatorIntl, useClass: PaginatorLocalizerService}],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.css'
 })
@@ -103,12 +105,13 @@ export class UsersListComponent implements OnDestroy {
 
   private deleteUser(element: UserListDataInterface) {
     this.http.deleteUser(element.id).subscribe(response => {
-      const action = this.translator.instant('common.close-button');
-      this.snackBar.open(response.message, action, {
-        horizontalPosition: "center",
-        verticalPosition: "top",
-        duration: 3000
-      })
+      this.translator.get('common.close-button').subscribe(text => {
+        this.snackBar.open(response.message, text, {
+          horizontalPosition: "center",
+          verticalPosition: "top",
+          duration: 3000
+        });
+      });
       this.onPageChange({ pageIndex: this.pageDef.pageNumber - 1, pageSize: this.pageDef.pageSize, previousPageIndex: 1, length: 1 })
     })
   }

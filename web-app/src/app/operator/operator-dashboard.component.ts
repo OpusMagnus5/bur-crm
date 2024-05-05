@@ -39,7 +39,7 @@ export class OperatorDashboardComponent {
   ];
 
   constructor(protected routerService: RouterService, private translate: TranslateService) {
-    this.links[0].name = translate.instant('operator.new-operator');
+    translate.get('operator.new-operator').subscribe(text => this.links[0].name = text);
     /*this.links[0].name = translate.instant('operator.operator-list');*/
   }
 

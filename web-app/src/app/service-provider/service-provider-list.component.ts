@@ -16,7 +16,7 @@ import {ServiceProviderListDataSource} from "./model/service-provider-list-data-
 import {Subject, Subscription} from "rxjs";
 import {ServiceProviderListResponseInterface} from "./model/service-provider-list-response.interface";
 import {ServiceProviderHttpService} from "./service/service-provider-http.service";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {MatPaginatorIntl, MatPaginatorModule, PageEvent} from "@angular/material/paginator";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {MatIcon} from "@angular/material/icon";
 import {MatIconButton} from "@angular/material/button";
@@ -27,6 +27,7 @@ import {DeleteServiceProviderConfirmationComponent} from "./dialog/delete-servic
 import {ServiceProviderDataInterface} from "./model/service-provider-data.interface";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {UpdateServiceProviderComponent} from "./update-service-provider.component";
+import {PaginatorLocalizerService} from "../shared/service/paginator-localizer.service";
 
 @Component({
   selector: 'app-service-provider-list',
@@ -49,8 +50,9 @@ import {UpdateServiceProviderComponent} from "./update-service-provider.componen
     MatMenuItem,
     MatMenuTrigger,
     MatNoDataRow,
-    MatPaginator
+    MatPaginatorModule
   ],
+  providers: [{provide: MatPaginatorIntl, useClass: PaginatorLocalizerService}],
   templateUrl: './service-provider-list.component.html',
   styleUrl: './service-provider-list.component.css'
 })
@@ -106,12 +108,13 @@ export class ServiceProviderListComponent implements OnDestroy {
 
   private deleteServiceProvider(element: ServiceProviderDataInterface) {
     this.http.delete(element.id).subscribe(response => {
-      const action = this.translator.instant('common.close-button');
-      this.snackBar.open(response.message, action, {
-        horizontalPosition: "center",
-        verticalPosition: "top",
-        duration: 3000
-      })
+      this.translator.get('common.close-button').subscribe(text => {
+        this.snackBar.open(response.message, text, {
+          horizontalPosition: "center",
+          verticalPosition: "top",
+          duration: 3000
+        });
+      });
       this.onPageChange({ pageIndex: this.pageDef.pageNumber - 1, pageSize: this.pageDef.pageSize, previousPageIndex: 1, length: 1 })
     })
   }

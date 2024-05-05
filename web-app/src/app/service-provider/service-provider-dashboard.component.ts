@@ -32,8 +32,12 @@ export class ServiceProviderDashboardComponent {
   ];
 
   constructor(protected routerService: RouterService, private translate: TranslateService) {
-    this.links[1].name = translate.instant('service-provider.new-service-provider');
-    this.links[0].name = translate.instant('service-provider.service-provider-list');
+    translate.get('service-provider.new-service-provider').subscribe(text => {
+       this.links[1].name = text;
+    });
+    translate.get('service-provider.service-provider-list').subscribe(text => {
+      this.links[0].name = text;
+    });
   }
 
   protected getFullRoutePath(path: string) {

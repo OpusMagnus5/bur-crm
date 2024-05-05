@@ -152,5 +152,13 @@
         "pattern": "Invalid phone number provided"
       }
     }
+  },
+  "paginator": {
+    "items-per-page-label": "Items per page:",
+    "next-page-label": "Next page",
+    "previous-page-label": "Previous page",
+    "first-page-label": "First page",
+    "last-page-label": "Last page",
+    "range-label": "Page {{first}} of {{last}}"
   }
 }

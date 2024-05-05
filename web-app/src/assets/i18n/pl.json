@@ -152,5 +152,13 @@
         "pattern": "Podany numer telefonu jest nieprawidłowy"
       }
     }
+  },
+  "paginator": {
+    "items-per-page-label": "Elementy na stronę:",
+    "next-page-label": "Następna strona",
+    "previous-page-label": "Poprzednia strona",
+    "first-page-label": "Pierwsza strona",
+    "last-page-label": "Ostatnia strona",
+    "range-label": "Strona {{first}} z {{last}}"
   }
 }

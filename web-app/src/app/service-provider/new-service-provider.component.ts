@@ -87,12 +87,13 @@ export class NewServiceProviderComponent {
   }
 
   private showPopUp(response: ServiceProviderCreateNewResponseInterface) {
-    const action = this.translator.instant('common.close-button');
-    this.snackBar.open(response.message, action, {
-      horizontalPosition: "center",
-      verticalPosition: "top",
-      duration: 3000
-    })
+    this.translator.get('common.close-button').subscribe(text => {
+      this.snackBar.open(response.message, text, {
+        horizontalPosition: "center",
+        verticalPosition: "top",
+        duration: 3000
+      });
+    });
   }
 
   protected getValidationMessage(fieldName: string, control: FormControl): string {
