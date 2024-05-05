@@ -137,7 +137,8 @@
     }
   },
   "operator": {
-    "new-operator": "Dodaj operatora"
+    "new-operator": "Dodaj operatora",
+    "operator-list": "Lista operatorów"
   },
   "new-operator": {
     "name-input-label": "Nazwa operatora",
@@ -160,5 +161,9 @@
     "first-page-label": "Pierwsza strona",
     "last-page-label": "Ostatnia strona",
     "range-label": "Strona {{first}} z {{last}}"
+  },
+  "operator-list": {
+    "name-header": "Nazwa",
+    "phoneNumber-header": "Nr telefonu"
   }
 }

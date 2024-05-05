@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NEW_OPERATOR_PATH, REGISTRY_OPERATOR_PATH} from "../app.routes";
+import {NEW_OPERATOR_PATH, OPERATOR_LIST_PATH, REGISTRY_OPERATOR_PATH} from "../app.routes";
 import {RouterService} from "../shared/service/router.service";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {FormsModule} from "@angular/forms";
@@ -33,14 +33,18 @@ export class OperatorDashboardComponent {
 
   protected links: { path: string, name: string }[] = [
     {
+      path: OPERATOR_LIST_PATH,
+      name: ''
+    },
+    {
       path: NEW_OPERATOR_PATH,
       name: ''
     }
   ];
 
   constructor(protected routerService: RouterService, private translate: TranslateService) {
-    translate.get('operator.new-operator').subscribe(text => this.links[0].name = text);
-    /*this.links[0].name = translate.instant('operator.operator-list');*/
+    translate.get('operator.operator-list').subscribe(text => this.links[0].name = text);
+    translate.get('operator.new-operator').subscribe(text => this.links[1].name = text);
   }
 
   protected getFullRoutePath(path: string) {

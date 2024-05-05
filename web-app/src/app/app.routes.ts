@@ -9,6 +9,7 @@ import {NewServiceProviderComponent} from "./service-provider/new-service-provid
 import {ServiceProviderListComponent} from "./service-provider/service-provider-list.component";
 import {OperatorDashboardComponent} from "./operator/operator-dashboard.component";
 import {CreateNewOperatorComponent} from "./operator/create-new-operator.component";
+import {OperatorListComponent} from "./operator/operator-list.component";
 
 export const ADMINISTRATION_PATH: string = 'administration';
 export const BASE_PATH: string = '';
@@ -21,6 +22,7 @@ export const NEW_SERVICE_PROVIDER_PATH: string = 'new';
 export const SERVICE_PROVIDER_LIST_PATH: string = 'list';
 export const REGISTRY_OPERATOR_PATH: string = REGISTRY_PATH + '/operator';
 export const NEW_OPERATOR_PATH: string = 'new';
+export const OPERATOR_LIST_PATH: string = 'list';
 
 const NOT_FOUND_PATH = 'not-found';
 
@@ -35,6 +37,10 @@ export const routes: Routes = [
       {
         path: NEW_OPERATOR_PATH,
         component: CreateNewOperatorComponent
+      },
+      {
+        path: OPERATOR_LIST_PATH,
+        component: OperatorListComponent
       }
     ]
   },

@@ -4,6 +4,7 @@ import {CreateNewOperatorRequestInterface} from "../model/create-new-operator-re
 import {CreateNewOperatorResponseInterface} from "../model/create-new-operator-response.interface";
 import {Observable} from "rxjs";
 import {OperatorExistsResponseInterface} from "../model/operator-exists-response.interface";
+import {OperatorPageResponseInterface} from "../model/operator-page-response.interface";
 
 @Injectable({ providedIn: "root" })
 export class OperatorHttpService {
@@ -28,4 +29,15 @@ export class OperatorHttpService {
       }
     );
   }
+
+  getOperatorPage(pageNumber: number, pageSize: number) {
+    return this.http.get<OperatorPageResponseInterface>(
+      'http://localhost:8080/api/operator',
+      {
+        params: new HttpParams()
+          .append('pageNumber', pageNumber)
+          .append('pageSize', pageSize)
+      }
+    )
+  };
 }
