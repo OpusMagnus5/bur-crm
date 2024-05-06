@@ -1,8 +1,7 @@
-import {Component, OnDestroy} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatPaginator, MatPaginatorIntl, PageEvent} from "@angular/material/paginator";
 import {PaginatorLocalizerService} from "../shared/service/paginator-localizer.service";
-import {Subject, Subscription} from "rxjs";
-import {MatDialog} from "@angular/material/dialog";
+import {Subject} from "rxjs";
 import {TranslateModule} from "@ngx-translate/core";
 import {OperatorHttpService} from "./service/operator-http.service";
 import {OperatorPageResponseInterface} from "./model/operator-page-response.interface";
@@ -24,8 +23,9 @@ import {MatIcon} from "@angular/material/icon";
 import {MatIconButton} from "@angular/material/button";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {OperatorDataInterface} from "./model/operator-data.interface";
-import {DeleteOperatorConfirmationComponent} from "./dialog/delete-operator-confirmation.component";
 import {SnackbarService} from "../shared/service/snackbar.service";
+import {DeleteConfirmationDataInterface} from "../shared/model/delete-confirmation-data.interface";
+import {DialogService} from "../shared/service/dialog.service";
 
 @Component({
   selector: 'app-operator-list',
@@ -50,32 +50,34 @@ import {SnackbarService} from "../shared/service/snackbar.service";
     MatMenuTrigger,
     MatNoDataRow
   ],
-  providers: [{provide: MatPaginatorIntl, useClass: PaginatorLocalizerService}],
+  providers: [
+    { provide: MatPaginatorIntl, useClass: PaginatorLocalizerService },
+    DialogService
+  ],
   templateUrl: './operator-list.component.html',
   styleUrl: './operator-list.component.css'
 })
-export class OperatorListComponent implements OnDestroy {
+export class OperatorListComponent {
 
   private readonly data: Subject<OperatorPageResponseInterface> = new Subject<OperatorPageResponseInterface>();
   protected readonly dataSource: OperatorPageDataSource = new OperatorPageDataSource(this.data);
   protected readonly columnsDef: string[] = ['name'];
   protected readonly rowsDef: string[] = ['name', 'options'];
   protected pageDef: { pageNumber: number; pageSize: number; } = { pageNumber: 1, pageSize: 10 };
-
-  private removeSubscription: Subscription | undefined;
+  private deleteConfirmationData: DeleteConfirmationDataInterface = {
+    codeForTranslation: 'delete-operator',
+    callbackArgument: '',
+    removeCallback: this.deleteOperator
+  };
 
   constructor(
     private http: OperatorHttpService,
-    private dialog: MatDialog,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private deleteConfirmation: DialogService
   ) {
-    this.http.getOperatorPage(1, 10).subscribe(response =>
+    http.getOperatorPage(1, 10).subscribe(response =>
       this.data.next(response)
     );
-  }
-
-  ngOnDestroy(): void {
-    this.removeSubscription?.unsubscribe();
   }
 
   onPageChange(event: PageEvent) {
@@ -87,17 +89,12 @@ export class OperatorListComponent implements OnDestroy {
   }
 
   onRemove(element: OperatorDataInterface) {
-    const dialogRef = this.dialog.open(DeleteOperatorConfirmationComponent);
-    this.removeSubscription = dialogRef.componentInstance.deleteConfirmation.subscribe(value => {
-      if (value) {
-        dialogRef.close();
-        this.deleteOperator(element);
-      }
-    });
+    this.deleteConfirmationData.callbackArgument = element.id;
+    this.deleteConfirmation.openDeleteConfirmation(this.deleteConfirmationData);
   }
 
-  private deleteOperator(element: OperatorDataInterface) { //TODO wydzielic top center snackbar, wydzielic komponent DELETE
-    this.http.delete(element.id).subscribe(response => {
+  private deleteOperator(id: string) {
+    this.http.delete(id).subscribe(response => {
       this.snackbarService.openTopCenterSnackbar(response.message);
       this.onPageChange({ pageIndex: this.pageDef.pageNumber - 1, pageSize: this.pageDef.pageSize, previousPageIndex: 1, length: 1 })
     })

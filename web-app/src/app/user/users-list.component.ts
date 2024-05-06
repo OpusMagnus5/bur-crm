@@ -1,4 +1,4 @@
-import {Component, OnDestroy} from '@angular/core';
+import {Component} from '@angular/core';
 import {
   MatCell,
   MatCellDef,
@@ -22,11 +22,12 @@ import {MatIcon} from "@angular/material/icon";
 import {UserListDataInterface} from "./model/user-list-data.interface";
 import {MatDialog} from "@angular/material/dialog";
 import {UserDetailsComponent} from "./user-details.component";
-import {Subject, Subscription} from "rxjs";
+import {Subject} from "rxjs";
 import {UserListResponseInterface} from "./model/user-list-response.interface";
-import {DeleteConfirmationComponent} from "./dialog/delete-confirmation.component";
 import {PaginatorLocalizerService} from "../shared/service/paginator-localizer.service";
 import {SnackbarService} from "../shared/service/snackbar.service";
+import {DeleteConfirmationDataInterface} from "../shared/model/delete-confirmation-data.interface";
+import {DialogService} from "../shared/service/dialog.service";
 
 @Component({
   selector: 'app-users-list',
@@ -51,32 +52,36 @@ import {SnackbarService} from "../shared/service/snackbar.service";
     MatMenuItem,
     MatNoDataRow,
   ],
-  providers: [{provide: MatPaginatorIntl, useClass: PaginatorLocalizerService}],
+  providers: [
+    { provide: MatPaginatorIntl, useClass: PaginatorLocalizerService },
+    DialogService
+  ],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.css'
 })
-export class UsersListComponent implements OnDestroy {
+export class UsersListComponent {
 
   private readonly data: Subject<UserListResponseInterface> = new Subject<UserListResponseInterface>()
   protected readonly dataSource: UserListDataSource = new UserListDataSource(this.data);
   protected readonly columnsDef: string[] = ['email', 'firstName', 'lastName', 'role'];
   protected readonly rowsDef: string[] = ['email', 'firstName', 'lastName', 'role', 'options'];
   protected pageDef: { pageNumber: number; pageSize: number; } = { pageNumber: 1, pageSize: 10 };
-  private subscription: Subscription | undefined;
+  private deleteConfirmationData: DeleteConfirmationDataInterface = {
+    codeForTranslation: 'delete-operator',
+    callbackArgument: '',
+    removeCallback: this.deleteUser
+  };
 
   constructor(
     private http: UserHttpService,
     private dialog: MatDialog,
     private snackbar: SnackbarService,
+    private dialogService: DialogService
   ) {
     this.http.getUserPage(1, 10).subscribe(response =>
       this.data.next(response)
     );
   }
-
-  ngOnDestroy(): void {
-        this.subscription?.unsubscribe();
-    }
 
   onPageChange(event: PageEvent) {
     this.pageDef = { pageNumber: event.pageIndex + 1, pageSize: event.pageSize };
@@ -93,17 +98,13 @@ export class UsersListComponent implements OnDestroy {
   }
 
   onRemove(element: UserListDataInterface) {
-    const dialogRef = this.dialog.open(DeleteConfirmationComponent);
-    this.subscription = dialogRef.componentInstance.deleteConfirmation.subscribe(value => {
-      if (value) {
-        dialogRef.close();
-        this.deleteUser(element);
-      }
-    })
+    this.deleteConfirmationData.callbackArgument = element.id;
+    this.dialogService.openDeleteConfirmation(this.deleteConfirmationData);
+
   }
 
-  private deleteUser(element: UserListDataInterface) {
-    this.http.deleteUser(element.id).subscribe(response => {
+  private deleteUser(id: string) {
+    this.http.deleteUser(id).subscribe(response => {
       this.snackbar.openTopCenterSnackbar(response.message);
       this.onPageChange({ pageIndex: this.pageDef.pageNumber - 1, pageSize: this.pageDef.pageSize, previousPageIndex: 1, length: 1 })
     })
