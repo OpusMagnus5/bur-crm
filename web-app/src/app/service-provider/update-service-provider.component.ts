@@ -24,8 +24,8 @@ import {ServiceProviderService} from "./service/service-provider.service";
 import {ValidationMessageService} from "../shared/service/validation-message.service";
 import {ServiceProviderHttpService} from "./service/service-provider-http.service";
 import {UpdateServiceProviderRequestInterface} from "./model/update-service-provider-request.interface";
-import {UpdateServiceProviderResponseInterface} from "./model/update-service-provider-response.interface";
 import {SnackbarService} from "../shared/service/snackbar.service";
+import {OnSubmitInterface} from "../shared/model/on-submit.interface";
 
 @Component({
   selector: 'app-update-service-provider',
@@ -49,7 +49,7 @@ import {SnackbarService} from "../shared/service/snackbar.service";
   templateUrl: './update-service-provider.component.html',
   styleUrl: './update-service-provider.component.css'
 })
-export class UpdateServiceProviderComponent {
+export class UpdateServiceProviderComponent implements OnSubmitInterface {
 
   updateConfirmation: Subject<boolean> = new Subject();
 
@@ -99,7 +99,7 @@ export class UpdateServiceProviderComponent {
   protected onSubmit() {
     this.httpService.update(this.mapFormToRequest()).subscribe({
       next: response => {
-        this.showPopUp(response);
+        this.snackbar.openTopCenterSnackbar(response.message);
         this.updateConfirmation.next(true);
       }
     })
@@ -112,9 +112,5 @@ export class UpdateServiceProviderComponent {
       name: this.nameControl.value,
       nip: this.nipControl.value
     }
-  }
-
-  private showPopUp(response: UpdateServiceProviderResponseInterface) {
-    this.snackbar.openTopCenterSnackbar(response.message);
   }
 }

@@ -29,6 +29,7 @@ import {PaginatorLocalizerService} from "../shared/service/paginator-localizer.s
 import {SnackbarService} from "../shared/service/snackbar.service";
 import {DeleteConfirmationDataInterface} from "../shared/model/delete-confirmation-data.interface";
 import {DialogService} from "../shared/service/dialog.service";
+import {DialogDataInterface} from "../shared/model/dialog-data.interface";
 
 @Component({
   selector: 'app-service-provider-list',
@@ -73,12 +74,28 @@ export class ServiceProviderListComponent implements OnDestroy {
     callbackArgument: '',
     removeCallback: this.deleteServiceProvider
   };
+  private updateDialogData: DialogDataInterface = {
+    component: UpdateServiceProviderComponent,
+    config: {
+      data: null,
+      disableClose: true
+    },
+    callbackArguments: [
+      {
+        pageIndex: this.pageDef.pageNumber - 1,
+        pageSize: this.pageDef.pageSize,
+        previousPageIndex: 1,
+        length: 1
+      }
+    ],
+    callback: this.onPageChange
+  }
 
   constructor(
     private http: ServiceProviderHttpService,
     private dialog: MatDialog,
     private snackbar: SnackbarService,
-    private deleteConfirmation: DialogService
+    private dialogService: DialogService
   ) {
     this.http.getProviderPage(1, 10).subscribe(response =>
       this.data.next(response)
@@ -105,7 +122,7 @@ export class ServiceProviderListComponent implements OnDestroy {
 
   onRemove(element: ServiceProviderDataInterface) {
     this.deleteConfirmationData.callbackArgument = element.id;
-    this.deleteConfirmation.openDeleteConfirmation(this.deleteConfirmationData);
+    this.dialogService.openDeleteConfirmation(this.deleteConfirmationData);
   }
 
   private deleteServiceProvider(id: string) {
@@ -115,15 +132,10 @@ export class ServiceProviderListComponent implements OnDestroy {
     })
   }
 
-  onEdit(element: ServiceProviderDataInterface) { //TODO wydzielic service z otwieraniem dialogu z callbackiem
+  onEdit(element: ServiceProviderDataInterface) {
     this.http.getDetails(element.id).subscribe(response => {
-      const dialogRef = this.dialog.open(UpdateServiceProviderComponent, { data: response, disableClose: true });
-      this.updateSubscription = dialogRef.componentInstance.updateConfirmation.subscribe(value => {
-        if (value) {
-          dialogRef.close();
-          this.onPageChange({ pageIndex: this.pageDef.pageNumber - 1, pageSize: this.pageDef.pageSize, previousPageIndex: 1, length: 1 });
-        }
-      })
+      this.updateDialogData.config.data = response;
+      this.dialogService.openDetailsDialog(this.updateDialogData);
     });
   }
 }

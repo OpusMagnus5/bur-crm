@@ -3,6 +3,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {DeleteRecordConfirmationComponent} from "../component/delete-record-confirmation.component";
 import {DeleteConfirmationDataInterface} from "../model/delete-confirmation-data.interface";
 import {SubscriptionManager} from "../util/subscription-manager";
+import {DialogDataInterface} from "../model/dialog-data.interface";
 
 @Injectable()
 export class DialogService implements OnDestroy {
@@ -24,6 +25,16 @@ export class DialogService implements OnDestroy {
       if (doRemove) {
         dialogRef.close();
         data.removeCallback(data.callbackArgument);
+      }
+    });
+  }
+
+  public openDetailsDialog(data: DialogDataInterface): void {
+    const dialogRef = this.dialog.open(data.component, data.config);
+    dialogRef.componentInstance.updateConfirmation.subscribe(doUpdate => {
+      if (doUpdate) {
+        dialogRef.close();
+        data.callback(data.callbackArguments);
       }
     });
   }
