@@ -11,4 +11,4 @@ CREATE TABLE operator (
 );
 
 CREATE UNIQUE INDEX operator_id_idx ON operator (opr_id);
-CREATE UNIQUE INDEX operator_name_idx ON operator (opr_name);
+CREATE INDEX operator_name_idx ON operator USING gin (to_tsvector('simple', opr_name))

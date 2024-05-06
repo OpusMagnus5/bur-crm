@@ -16,7 +16,7 @@ export class DialogService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubcribeAll();
+    this.subscriptions.unsubscribeAll();
   }
 
   public openDeleteConfirmation(data: DeleteConfirmationDataInterface): void {
@@ -34,8 +34,14 @@ export class DialogService implements OnDestroy {
     this.subscriptions.add(dialogRef.componentInstance.updateConfirmation.subscribe(doUpdate => {
       if (doUpdate) {
         dialogRef.close();
-        data.callback(data.callbackArguments);
+        this.callCallback(data.callback, data.callbackArguments);
       }
     }));
+  }
+
+  private callCallback(callback: (...args: any[]) => void, callbackArguments: any[]) {
+    if (callbackArguments && callbackArguments.length !== 0) {
+      callback(callbackArguments);
+    }
   }
 }

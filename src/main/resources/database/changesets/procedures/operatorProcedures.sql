@@ -36,6 +36,7 @@ DROP PROCEDURE IF EXISTS operator_get_page;
 CREATE OR REPLACE PROCEDURE operator_get_page(
     IN _offset NUMERIC,
     IN _max NUMERIC,
+    IN _opr_name operator.opr_name%TYPE,
     OUT _cursor REFCURSOR,
     OUT _total_operators BIGINT
 )
@@ -46,6 +47,7 @@ BEGIN
     OPEN _cursor FOR
         SELECT opr_id, opr_name
         FROM operator
+        WHERE to_tsvector('simple', opr_name) @@ plainto_tsquery('simple', COALESCE(_opr_name, opr_name))
         ORDER BY opr_name
         OFFSET _offset
             LIMIT _max;

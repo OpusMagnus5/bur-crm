@@ -23,7 +23,7 @@ class GetOperatorsPageQueryHandler implements QueryHandler<GetOperatorsPageQuery
 
     @Override
     public GetOperatorsPageQueryResult handle(GetOperatorsPageQuery query) {
-        PageQuery pageQuery = new PageQuery(query.pageNumber(), query.pageSize());
+        PageQuery pageQuery = new PageQuery(query.pageNumber(), query.pageSize(), query.filters());
         PageQueryResult<Operator> result = readRepository.getPage(pageQuery);
         List<OperatorDto> operators = result.elements().stream()
                 .map(OperatorDto::new)

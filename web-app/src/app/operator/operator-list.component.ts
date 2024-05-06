@@ -1,7 +1,7 @@
-import {Component} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import {MatPaginator, MatPaginatorIntl, PageEvent} from "@angular/material/paginator";
 import {PaginatorLocalizerService} from "../shared/service/paginator-localizer.service";
-import {Subject} from "rxjs";
+import {debounceTime, fromEvent, Subject} from "rxjs";
 import {TranslateModule} from "@ngx-translate/core";
 import {OperatorHttpService} from "./service/operator-http.service";
 import {OperatorPageResponseInterface} from "./model/operator-page-response.interface";
@@ -26,6 +26,8 @@ import {OperatorDataInterface} from "./model/operator-data.interface";
 import {SnackbarService} from "../shared/service/snackbar.service";
 import {DeleteConfirmationDataInterface} from "../shared/model/delete-confirmation-data.interface";
 import {DialogService} from "../shared/service/dialog.service";
+import {MatFormField, MatLabel} from "@angular/material/form-field";
+import {MatInput} from "@angular/material/input";
 
 @Component({
   selector: 'app-operator-list',
@@ -48,7 +50,10 @@ import {DialogService} from "../shared/service/dialog.service";
     TranslateModule,
     MatHeaderCellDef,
     MatMenuTrigger,
-    MatNoDataRow
+    MatNoDataRow,
+    MatFormField,
+    MatInput,
+    MatLabel
   ],
   providers: [
     { provide: MatPaginatorIntl, useClass: PaginatorLocalizerService },
@@ -57,7 +62,7 @@ import {DialogService} from "../shared/service/dialog.service";
   templateUrl: './operator-list.component.html',
   styleUrl: './operator-list.component.css'
 })
-export class OperatorListComponent {
+export class OperatorListComponent implements AfterViewInit {
 
   private readonly data: Subject<OperatorPageResponseInterface> = new Subject<OperatorPageResponseInterface>();
   protected readonly dataSource: OperatorPageDataSource = new OperatorPageDataSource(this.data);
@@ -69,6 +74,7 @@ export class OperatorListComponent {
     callbackArgument: '',
     removeCallback: this.deleteOperator
   };
+  @ViewChild('filter') filter!: ElementRef;
 
   constructor(
     private http: OperatorHttpService,
@@ -78,6 +84,12 @@ export class OperatorListComponent {
     http.getOperatorPage(1, 10).subscribe(response =>
       this.data.next(response)
     );
+  }
+
+  ngAfterViewInit(): void {
+    fromEvent(this.filter.nativeElement, 'keyup').pipe(debounceTime(1500)).subscribe(event => {
+      //TODO dokończyc
+    });
   }
 
   onPageChange(event: PageEvent) {
@@ -105,6 +117,10 @@ export class OperatorListComponent {
   }
 
   onDetails(element: OperatorPageDataSource) {
+
+  }
+
+  applyFilter(event: KeyboardEvent) {
 
   }
 }

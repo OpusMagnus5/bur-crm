@@ -21,7 +21,10 @@ import pl.bodzioch.damian.operator.query_dto.GetOperatorsPageQueryResult;
 import pl.bodzioch.damian.utils.CipherComponent;
 import pl.bodzioch.damian.utils.validator.OperatorIdKindV;
 
+import java.util.HashMap;
 import java.util.List;
+
+import static pl.bodzioch.damian.operator.OperatorFilterField.NAME;
 
 @RestController
 @RequestMapping("/api/operator")
@@ -64,8 +67,11 @@ class OperatorController {
             int pageNumber,
             @Min(value = 10, message = "error.client.minPageSize")
             @Max(value = 50, message = "error.client.maxPageSize")
-            @RequestParam int pageSize){
-        GetOperatorsPageQuery query = new GetOperatorsPageQuery(pageNumber, pageSize);
+            @RequestParam int pageSize,
+            @RequestParam(required = false) String name){
+        HashMap<OperatorFilterField, Object> filters = new HashMap<>();
+        filters.put(NAME, name);
+        GetOperatorsPageQuery query = new GetOperatorsPageQuery(pageNumber, pageSize, filters);
         GetOperatorsPageQueryResult result = queryExecutor.execute(query);
         List<OperatorData> providersData = result.operators().stream()
                 .map(element -> new OperatorData(element, cipher))

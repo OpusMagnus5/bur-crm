@@ -7,7 +7,7 @@ export class SubscriptionManager {
     this.subscriptions.push(subscription);
   }
 
-  public unsubcribeAll() {
+  public unsubscribeAll() {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 }

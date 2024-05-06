@@ -44,6 +44,7 @@ class OperatorReadRepository implements IOperatorReadRepository {
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("_offset", pageQuery.getFirstResult());
         properties.put("_max", pageQuery.getMaxResult());
+        properties.putAll(pageQuery.toDbProperties());
 
         getPageProc.declareParameters(new SqlOutParameter("_cursor", Types.REF_CURSOR),
                 new SqlOutParameter("_total_operators", Types.BIGINT));

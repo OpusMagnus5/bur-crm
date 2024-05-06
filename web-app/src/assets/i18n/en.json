@@ -162,7 +162,8 @@
   },
   "operator-list": {
     "name-header": "Name",
-    "no-operators": "No operators found in the database"
+    "no-operators": "No operators found in the database",
+    "filter-label": "Search"
   },
   "delete-operator": {
     "confirmation-title": "Delete operator",
