@@ -21,21 +21,21 @@ export class DialogService implements OnDestroy {
 
   public openDeleteConfirmation(data: DeleteConfirmationDataInterface): void {
     const dialogRef = this.dialog.open(DeleteRecordConfirmationComponent, {data: data});
-    dialogRef.componentInstance.deleteConfirmation.subscribe(doRemove => {
+    this.subscriptions.add(dialogRef.componentInstance.deleteConfirmation.subscribe(doRemove => {
       if (doRemove) {
         dialogRef.close();
         data.removeCallback(data.callbackArgument);
       }
-    });
+    }));
   }
 
   public openDetailsDialog(data: DialogDataInterface): void {
     const dialogRef = this.dialog.open(data.component, data.config);
-    dialogRef.componentInstance.updateConfirmation.subscribe(doUpdate => {
+    this.subscriptions.add(dialogRef.componentInstance.updateConfirmation.subscribe(doUpdate => {
       if (doUpdate) {
         dialogRef.close();
         data.callback(data.callbackArguments);
       }
-    });
+    }));
   }
 }
