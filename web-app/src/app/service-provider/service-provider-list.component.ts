@@ -17,7 +17,7 @@ import {Subject, Subscription} from "rxjs";
 import {ServiceProviderListResponseInterface} from "./model/service-provider-list-response.interface";
 import {ServiceProviderHttpService} from "./service/service-provider-http.service";
 import {MatPaginatorIntl, MatPaginatorModule, PageEvent} from "@angular/material/paginator";
-import {TranslateModule, TranslateService} from "@ngx-translate/core";
+import {TranslateModule} from "@ngx-translate/core";
 import {MatIcon} from "@angular/material/icon";
 import {MatIconButton} from "@angular/material/button";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
@@ -25,9 +25,9 @@ import {MatDialog} from "@angular/material/dialog";
 import {ServiceProviderDetailsComponent} from "./service-provider-details.component";
 import {DeleteServiceProviderConfirmationComponent} from "./dialog/delete-service-provider-confirmation.component";
 import {ServiceProviderDataInterface} from "./model/service-provider-data.interface";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {UpdateServiceProviderComponent} from "./update-service-provider.component";
 import {PaginatorLocalizerService} from "../shared/service/paginator-localizer.service";
+import {SnackbarService} from "../shared/service/snackbar.service";
 
 @Component({
   selector: 'app-service-provider-list',
@@ -69,8 +69,7 @@ export class ServiceProviderListComponent implements OnDestroy {
   constructor(
     private http: ServiceProviderHttpService,
     private dialog: MatDialog,
-    private translator: TranslateService,
-    private snackBar: MatSnackBar
+    private snackbar: SnackbarService
   ) {
     this.http.getProviderPage(1, 10).subscribe(response =>
       this.data.next(response)
@@ -108,13 +107,7 @@ export class ServiceProviderListComponent implements OnDestroy {
 
   private deleteServiceProvider(element: ServiceProviderDataInterface) {
     this.http.delete(element.id).subscribe(response => {
-      this.translator.get('common.close-button').subscribe(text => {
-        this.snackBar.open(response.message, text, {
-          horizontalPosition: "center",
-          verticalPosition: "top",
-          duration: 3000
-        });
-      });
+      this.snackbar.openTopCenterSnackbar(response.message);
       this.onPageChange({ pageIndex: this.pageDef.pageNumber - 1, pageSize: this.pageDef.pageSize, previousPageIndex: 1, length: 1 })
     })
   }

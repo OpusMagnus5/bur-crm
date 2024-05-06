@@ -11,16 +11,16 @@ import {
 import {MatButton} from "@angular/material/button";
 import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
-import {TranslateModule, TranslateService} from "@ngx-translate/core";
+import {TranslateModule} from "@ngx-translate/core";
 import {ValidationMessageService} from "../shared/service/validation-message.service";
 import {OperatorHttpService} from "./service/operator-http.service";
 import {CreateNewOperatorRequestInterface} from "./model/create-new-operator-request.interface";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {CreateNewOperatorResponseInterface} from "./model/create-new-operator-response.interface";
 import {catchError, Observable, of} from "rxjs";
 import {map} from "rxjs/operators";
 import {ActivatedRoute, Router} from "@angular/router";
 import {OPERATOR_LIST_PATH} from "../app.routes";
+import {SnackbarService} from "../shared/service/snackbar.service";
 
 @Component({
   selector: 'app-create-new-operator',
@@ -47,10 +47,9 @@ export class CreateNewOperatorComponent {
   constructor(
     private validationMessage: ValidationMessageService,
     private httpService: OperatorHttpService,
-    private translator: TranslateService,
-    private snackBar: MatSnackBar,
     private activeRoute: ActivatedRoute,
     private router: Router,
+    private snackbar: SnackbarService
   ) {
     this.nameControl = new FormControl(null, {
       validators: [Validators.required, Validators.pattern('[a-zA-ZążęćłóńśĄŻĘĆŁÓŃŚ0-9 -/.\"\\\\]{1,150}')],
@@ -88,13 +87,7 @@ export class CreateNewOperatorComponent {
   }
 
   private showPopUp(response: CreateNewOperatorResponseInterface) {
-    this.translator.get('common.close-button').subscribe(text => {
-      this.snackBar.open(response.message, text, {
-        horizontalPosition: "center",
-        verticalPosition: "top",
-        duration: 3000
-      });
-    });
+    this.snackbar.openTopCenterSnackbar(response.message);
   }
 
   protected getValidationMessage(fieldName: string, control: FormControl): string {

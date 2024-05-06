@@ -3,8 +3,7 @@ import {MatPaginator, MatPaginatorIntl, PageEvent} from "@angular/material/pagin
 import {PaginatorLocalizerService} from "../shared/service/paginator-localizer.service";
 import {Subject, Subscription} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
-import {TranslateModule, TranslateService} from "@ngx-translate/core";
-import {MatSnackBar} from "@angular/material/snack-bar";
+import {TranslateModule} from "@ngx-translate/core";
 import {OperatorHttpService} from "./service/operator-http.service";
 import {OperatorPageResponseInterface} from "./model/operator-page-response.interface";
 import {OperatorPageDataSource} from "./operator-page-data-source";
@@ -26,6 +25,7 @@ import {MatIconButton} from "@angular/material/button";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {OperatorDataInterface} from "./model/operator-data.interface";
 import {DeleteOperatorConfirmationComponent} from "./dialog/delete-operator-confirmation.component";
+import {SnackbarService} from "../shared/service/snackbar.service";
 
 @Component({
   selector: 'app-operator-list',
@@ -67,8 +67,7 @@ export class OperatorListComponent implements OnDestroy {
   constructor(
     private http: OperatorHttpService,
     private dialog: MatDialog,
-    private translator: TranslateService,
-    private snackBar: MatSnackBar
+    private snackbarService: SnackbarService
   ) {
     this.http.getOperatorPage(1, 10).subscribe(response =>
       this.data.next(response)
@@ -99,13 +98,7 @@ export class OperatorListComponent implements OnDestroy {
 
   private deleteOperator(element: OperatorDataInterface) { //TODO wydzielic top center snackbar, wydzielic komponent DELETE
     this.http.delete(element.id).subscribe(response => {
-      this.translator.get('common.close-button').subscribe(text => {
-        this.snackBar.open(response.message, text, {
-          horizontalPosition: "center",
-          verticalPosition: "top",
-          duration: 3000
-        });
-      });
+      this.snackbarService.openTopCenterSnackbar(response.message);
       this.onPageChange({ pageIndex: this.pageDef.pageNumber - 1, pageSize: this.pageDef.pageSize, previousPageIndex: 1, length: 1 })
     })
   }

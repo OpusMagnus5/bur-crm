@@ -13,7 +13,7 @@ import {
   MatTable
 } from "@angular/material/table";
 import {MatPaginatorIntl, MatPaginatorModule, PageEvent} from "@angular/material/paginator";
-import {TranslateModule, TranslateService} from "@ngx-translate/core";
+import {TranslateModule} from "@ngx-translate/core";
 import {UserListDataSource} from "./service/user-list.data-source";
 import {UserHttpService} from "./service/user-http.service";
 import {MatIconButton} from "@angular/material/button";
@@ -22,11 +22,11 @@ import {MatIcon} from "@angular/material/icon";
 import {UserListDataInterface} from "./model/user-list-data.interface";
 import {MatDialog} from "@angular/material/dialog";
 import {UserDetailsComponent} from "./user-details.component";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {Subject, Subscription} from "rxjs";
 import {UserListResponseInterface} from "./model/user-list-response.interface";
 import {DeleteConfirmationComponent} from "./dialog/delete-confirmation.component";
 import {PaginatorLocalizerService} from "../shared/service/paginator-localizer.service";
+import {SnackbarService} from "../shared/service/snackbar.service";
 
 @Component({
   selector: 'app-users-list',
@@ -67,8 +67,7 @@ export class UsersListComponent implements OnDestroy {
   constructor(
     private http: UserHttpService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar,
-    private translator: TranslateService
+    private snackbar: SnackbarService,
   ) {
     this.http.getUserPage(1, 10).subscribe(response =>
       this.data.next(response)
@@ -105,13 +104,7 @@ export class UsersListComponent implements OnDestroy {
 
   private deleteUser(element: UserListDataInterface) {
     this.http.deleteUser(element.id).subscribe(response => {
-      this.translator.get('common.close-button').subscribe(text => {
-        this.snackBar.open(response.message, text, {
-          horizontalPosition: "center",
-          verticalPosition: "top",
-          duration: 3000
-        });
-      });
+      this.snackbar.openTopCenterSnackbar(response.message);
       this.onPageChange({ pageIndex: this.pageDef.pageNumber - 1, pageSize: this.pageDef.pageSize, previousPageIndex: 1, length: 1 })
     })
   }

@@ -18,14 +18,14 @@ import {
   ValidationErrors,
   Validators
 } from "@angular/forms";
-import {TranslateModule, TranslateService} from "@ngx-translate/core";
+import {TranslateModule} from "@ngx-translate/core";
 import {Observable, of, Subject} from "rxjs";
 import {ServiceProviderService} from "./service/service-provider.service";
 import {ValidationMessageService} from "../shared/service/validation-message.service";
 import {ServiceProviderHttpService} from "./service/service-provider-http.service";
 import {UpdateServiceProviderRequestInterface} from "./model/update-service-provider-request.interface";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {UpdateServiceProviderResponseInterface} from "./model/update-service-provider-response.interface";
+import {SnackbarService} from "../shared/service/snackbar.service";
 
 @Component({
   selector: 'app-update-service-provider',
@@ -62,8 +62,7 @@ export class UpdateServiceProviderComponent {
     private service: ServiceProviderService,
     private validationMessage: ValidationMessageService,
     private httpService: ServiceProviderHttpService,
-    private translator: TranslateService,
-    private snackBar: MatSnackBar,
+    private snackbar: SnackbarService,
   ) {
     this.nipControl = new FormControl(data.nip, {
       validators: [Validators.required, Validators.pattern('\\d{10}'), this.service.validateNip.bind(this)],
@@ -116,13 +115,6 @@ export class UpdateServiceProviderComponent {
   }
 
   private showPopUp(response: UpdateServiceProviderResponseInterface) {
-    this.translator.get('common.close-button').subscribe(text => {
-      this.snackBar.open(response.message, text, {
-        horizontalPosition: "center",
-        verticalPosition: "top",
-        duration: 3000
-      });
-    });
-
+    this.snackbar.openTopCenterSnackbar(response.message);
   }
 }

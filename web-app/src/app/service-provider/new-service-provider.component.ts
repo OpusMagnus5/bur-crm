@@ -8,18 +8,18 @@ import {
   Validators
 } from "@angular/forms";
 import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
-import {TranslateModule, TranslateService} from "@ngx-translate/core";
+import {TranslateModule} from "@ngx-translate/core";
 import {MatInput} from "@angular/material/input";
 import {ValidationMessageService} from "../shared/service/validation-message.service";
 import {MatButton} from "@angular/material/button";
 import {ServiceProviderHttpService} from "./service/service-provider-http.service";
 import {Observable} from "rxjs";
 import {ServiceProviderCreateNewRequestInterface} from "./model/service-provider-create-new-request.interface";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {ServiceProviderCreateNewResponseInterface} from "./model/service-provider-create-new-response.interface";
 import {ActivatedRoute, Router} from "@angular/router";
 import {SERVICE_PROVIDER_LIST_PATH} from "../app.routes";
 import {ServiceProviderService} from "./service/service-provider.service";
+import {SnackbarService} from "../shared/service/snackbar.service";
 
 @Component({
   selector: 'app-new-service-provider',
@@ -48,11 +48,10 @@ export class NewServiceProviderComponent {
   constructor(
     private validationMessage: ValidationMessageService,
     private httpService: ServiceProviderHttpService,
-    private snackBar: MatSnackBar,
-    private translator: TranslateService,
     private router: Router,
     private activeRoute: ActivatedRoute,
-    private service: ServiceProviderService
+    private service: ServiceProviderService,
+    private snackbar: SnackbarService
   ) {
     this.nipControl = new FormControl(null, {
      validators: [Validators.required, Validators.pattern('\\d{10}'), this.service.validateNip.bind(this)],
@@ -87,13 +86,7 @@ export class NewServiceProviderComponent {
   }
 
   private showPopUp(response: ServiceProviderCreateNewResponseInterface) {
-    this.translator.get('common.close-button').subscribe(text => {
-      this.snackBar.open(response.message, text, {
-        horizontalPosition: "center",
-        verticalPosition: "top",
-        duration: 3000
-      });
-    });
+    this.snackbar.openTopCenterSnackbar(response.message);
   }
 
   protected getValidationMessage(fieldName: string, control: FormControl): string {
