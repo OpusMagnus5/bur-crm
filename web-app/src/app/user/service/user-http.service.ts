@@ -8,6 +8,7 @@ import {UserExistsResponseInterface} from "../model/user-exists-response.interfa
 import {UserListResponseInterface} from "../model/user-list-response.interface";
 import {GetUseDetailsResponseInterface} from "../model/get-use-details-response.interface";
 import {DeleteUserByIdResponseInterface} from "../model/delete-user-by-id-response.interface";
+import {SERVER_URL} from "../../shared/http-config";
 
 @Injectable({
   providedIn: 'root'
@@ -19,20 +20,20 @@ export class UserHttpService {
 
   createNew(body: CreateNewUserRequestInterface): Observable<CreateNewUserResponseInterface> {
     return this.http.post<CreateNewUserResponseInterface>(
-      'http://localhost:8080/api/user',
+      SERVER_URL + 'api/user',
       body
     );
   }
 
   getAllRoles(): Observable<GetAllRolesResponseInterface> {
     return this.http.get<GetAllRolesResponseInterface>(
-      'http://localhost:8080/api/user/allRoles'
+      SERVER_URL + 'api/user/allRoles'
     );
   }
 
   getIsUserExists(idKind: string, id: string): Observable<UserExistsResponseInterface> {
     return this.http.get<UserExistsResponseInterface>(
-      'http://localhost:8080/api/user/exists',
+      SERVER_URL + 'api/user/exists',
       {
         params: new HttpParams()
           .append('kindOfId', idKind)
@@ -43,7 +44,7 @@ export class UserHttpService {
 
   getUserPage(pageNumber: number, pageSize: number): Observable<UserListResponseInterface> {
     return this.http.get<UserListResponseInterface>(
-      'http://localhost:8080/api/user',
+      SERVER_URL + 'api/user',
       {
         params: new HttpParams()
           .append('pageNumber', pageNumber)
@@ -54,13 +55,13 @@ export class UserHttpService {
 
   getUserDetails(userId: string): Observable<GetUseDetailsResponseInterface> {
     return this.http.get<GetUseDetailsResponseInterface>(
-      'http://localhost:8080/api/user/' + userId
+      SERVER_URL + 'api/user/' + userId
     );
   }
 
   deleteUser(userId: string): Observable<DeleteUserByIdResponseInterface> {
     return this.http.delete<DeleteUserByIdResponseInterface>(
-      'http://localhost:8080/api/user/' + userId
+      SERVER_URL + 'api/user/' + userId
     );
   }
 }

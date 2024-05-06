@@ -11,6 +11,7 @@ import {ServiceProviderDetailsResponseInterface} from "../model/service-provider
 import {DeleteServiceProviderResponseInterface} from "../model/delete-service=provider-response.interface";
 import {UpdateServiceProviderRequestInterface} from "../model/update-service-provider-request.interface";
 import {UpdateServiceProviderResponseInterface} from "../model/update-service-provider-response.interface";
+import {SERVER_URL} from "../../shared/http-config";
 
 @Injectable({ providedIn: "root" })
 export class ServiceProviderHttpService {
@@ -20,14 +21,14 @@ export class ServiceProviderHttpService {
 
   createNew(body: ServiceProviderCreateNewRequestInterface): Observable<ServiceProviderCreateNewResponseInterface> {
     return this.http.post<ServiceProviderCreateNewResponseInterface>(
-      'http://localhost:8080/api/service-provider',
+      SERVER_URL + 'api/service-provider',
       body
     )
   }
 
   getIsProviderExists(idKind: string, id: string): Observable<ServiceProviderExistenceResponseInterface> {
     return this.http.get<UserExistsResponseInterface>(
-      'http://localhost:8080/api/service-provider/exists',
+      SERVER_URL + 'api/service-provider/exists',
       {
         params: new HttpParams()
           .append('kindOfId', idKind)
@@ -38,7 +39,7 @@ export class ServiceProviderHttpService {
 
   getProviderNameFromBur(nip: string): Observable<ServiceProviderNameResponseInterface> {
     return this.http.get<ServiceProviderNameResponseInterface>(
-      'http://localhost:8080/api/service-provider/name',
+      SERVER_URL + 'api/service-provider/name',
       {
         params: new HttpParams()
           .append('nip', nip)
@@ -48,7 +49,7 @@ export class ServiceProviderHttpService {
 
   getProviderPage(pageNumber: number, pageSize: number) {
     return this.http.get<ServiceProviderListResponseInterface>(
-      'http://localhost:8080/api/service-provider',
+      SERVER_URL + 'api/service-provider',
       {
         params: new HttpParams()
           .append('pageNumber', pageNumber)
@@ -59,19 +60,19 @@ export class ServiceProviderHttpService {
 
   getDetails(id: string): Observable<ServiceProviderDetailsResponseInterface> {
     return this.http.get<ServiceProviderDetailsResponseInterface>(
-      'http://localhost:8080/api/service-provider/' + id
+      SERVER_URL + 'api/service-provider/' + id
     );
   }
 
   delete(id: string): Observable<DeleteServiceProviderResponseInterface> {
     return this.http.delete<DeleteServiceProviderResponseInterface>(
-      'http://localhost:8080/api/service-provider/' + id
+      SERVER_URL + 'api/service-provider/' + id
     );
   }
 
   update(request: UpdateServiceProviderRequestInterface): Observable<UpdateServiceProviderResponseInterface> {
     return this.http.patch<UpdateServiceProviderResponseInterface>(
-      'http://localhost:8080/api/service-provider',
+      SERVER_URL + 'api/service-provider',
       request
     );
   }

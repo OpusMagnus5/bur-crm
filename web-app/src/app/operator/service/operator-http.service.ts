@@ -6,6 +6,7 @@ import {Observable} from "rxjs";
 import {OperatorExistsResponseInterface} from "../model/operator-exists-response.interface";
 import {OperatorPageResponseInterface} from "../model/operator-page-response.interface";
 import {DeleteOperatorResponseInterface} from "../model/delete-operator-response.interface";
+import {SERVER_URL} from "../../shared/http-config";
 
 @Injectable({ providedIn: "root" })
 export class OperatorHttpService {
@@ -15,14 +16,14 @@ export class OperatorHttpService {
 
   createNew(body: CreateNewOperatorRequestInterface): Observable<CreateNewOperatorResponseInterface> {
     return this.http.post<CreateNewOperatorResponseInterface>(
-      'http://localhost:8080/api/operator',
+      SERVER_URL + 'api/operator',
       body
     )
   }
 
   getIsOperatorExists(idKind: string, id: string): Observable<OperatorExistsResponseInterface> {
     return this.http.get<OperatorExistsResponseInterface>(
-      'http://localhost:8080/api/operator/exists',
+      SERVER_URL + 'api/operator/exists',
       {
         params: new HttpParams()
           .append('kindOfId', idKind)
@@ -33,7 +34,7 @@ export class OperatorHttpService {
 
   getOperatorPage(pageNumber: number, pageSize: number) {
     return this.http.get<OperatorPageResponseInterface>(
-      'http://localhost:8080/api/operator',
+      SERVER_URL + 'api/operator',
       {
         params: new HttpParams()
           .append('pageNumber', pageNumber)
@@ -44,7 +45,7 @@ export class OperatorHttpService {
 
   delete(id: string): Observable<DeleteOperatorResponseInterface> {
     return this.http.delete<DeleteOperatorResponseInterface>(
-      'http://localhost:8080/api/operator/' + id
+      SERVER_URL + 'api/operator/' + id
     );
   }
 }
