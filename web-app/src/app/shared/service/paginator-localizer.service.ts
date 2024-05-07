@@ -34,9 +34,9 @@ export class PaginatorLocalizerService implements MatPaginatorIntl {
 
   getRangeLabel(page: number, pageSize: number, length: number): string {
     if (length === 0) {
-      return this.translator.instant('paginator.range-label', {first: 1, last: 1});
+      return this.translator.instant('paginator.range-label', {first: 0, last: 0, total: 0});
     }
-    const amountPages = Math.ceil(length / pageSize);
-    return this.translator.instant('paginator.range-label', {first: page + 1, last: amountPages});
+    const endRange = (page + 1) * pageSize > length ? length : (page + 1) * pageSize
+    return this.translator.instant('paginator.range-label', {first: page * pageSize + 1, last: endRange, total: length});
   }
 }

@@ -6,7 +6,7 @@ import {OperatorPageResponseInterface} from "./model/operator-page-response.inte
 
 export class OperatorPageDataSource implements DataSource<OperatorDataInterface> {
 
-  data: OperatorDataInterface[] | undefined;
+  data: OperatorDataInterface[] = [];
   totalOperators: number = 0;
 
   constructor(private dataSource: Subject<OperatorPageResponseInterface>) {

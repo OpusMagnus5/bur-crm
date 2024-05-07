@@ -7,6 +7,7 @@ import {OperatorExistsResponseInterface} from "../model/operator-exists-response
 import {OperatorPageResponseInterface} from "../model/operator-page-response.interface";
 import {DeleteOperatorResponseInterface} from "../model/delete-operator-response.interface";
 import {SERVER_URL} from "../../shared/http-config";
+import {HttpQueryFiltersInterface} from "../../shared/model/http-query-filters.interface";
 
 @Injectable({ providedIn: "root" })
 export class OperatorHttpService {
@@ -32,13 +33,11 @@ export class OperatorHttpService {
     );
   }
 
-  getOperatorPage(pageNumber: number, pageSize: number) {
+  getOperatorPage(filters: HttpQueryFiltersInterface) {
     return this.http.get<OperatorPageResponseInterface>(
       SERVER_URL + 'api/operator',
       {
-        params: new HttpParams()
-          .append('pageNumber', pageNumber)
-          .append('pageSize', pageSize)
+        params: new HttpParams().appendAll(filters)
       }
     )
   };

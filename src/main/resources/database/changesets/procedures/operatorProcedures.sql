@@ -47,14 +47,15 @@ BEGIN
     OPEN _cursor FOR
         SELECT opr_id, opr_name
         FROM operator
-        WHERE to_tsvector('simple', opr_name) @@ plainto_tsquery('simple', COALESCE(_opr_name, opr_name))
+        WHERE to_tsvector('simple', opr_name) @@ (phraseto_tsquery('simple', COALESCE(_opr_name, opr_name))::text || ':*')::tsquery
         ORDER BY opr_name
         OFFSET _offset
-            LIMIT _max;
+        LIMIT _max;
 
     SELECT count(opr_id)
     INTO _total_operators
-    FROM operator;
+    FROM operator
+    WHERE to_tsvector('simple', opr_name) @@ (phraseto_tsquery('simple', COALESCE(_opr_name, opr_name))::text || ':*')::tsquery;
 
 END$$;
 

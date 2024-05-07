@@ -158,7 +158,7 @@
     "previous-page-label": "Previous page",
     "first-page-label": "First page",
     "last-page-label": "Last page",
-    "range-label": "Page {{first}} of {{last}}"
+    "range-label": "Showing {{first}} to {{last}} of {{total}} entries"
   },
   "operator-list": {
     "name-header": "Name",

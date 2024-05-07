@@ -1,7 +1,7 @@
 <div class="mat-elevation-z8 operator-list-container">
   <mat-form-field>
     <mat-label>{{ 'operator-list.filter-label' | translate }}</mat-label>
-    <input matInput (keyup)="applyFilter($event)" #filter>
+    <input matInput [(ngModel)]="nameFilter" #filter>
   </mat-form-field>
   <table mat-table [dataSource]="dataSource">
 

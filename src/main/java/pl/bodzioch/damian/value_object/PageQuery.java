@@ -1,5 +1,6 @@
 package pl.bodzioch.damian.value_object;
 
+import org.apache.commons.lang3.StringUtils;
 import pl.bodzioch.damian.utils.FilterField;
 
 import java.util.HashMap;
@@ -31,8 +32,17 @@ public record PageQuery(
         Set<? extends FilterField> keys = new HashSet<>(filters.keySet());
         keys.forEach(key -> {
             Object removed = filters.remove(key);
-            dbProperties.put(key.dbName(), removed);
+            dbProperties.put(key.dbName(), mapObject(removed));
         });
         return dbProperties;
+    }
+
+    private Object mapObject(Object value) {
+        try {
+            String text = (String) value;
+            return StringUtils.isNotBlank(text) ? text : null;
+        } catch (ClassCastException e) {
+            return value;
+        }
     }
 }

@@ -158,7 +158,7 @@
     "previous-page-label": "Poprzednia strona",
     "first-page-label": "Pierwsza strona",
     "last-page-label": "Ostatnia strona",
-    "range-label": "Strona {{first}} z {{last}}"
+    "range-label": "Wyświetlam od {{first}} do {{last}} z {{total}} wpisów"
   },
   "operator-list": {
     "name-header": "Nazwa",

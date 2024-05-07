@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, computed, ElementRef, Signal, signal, ViewChild, WritableSignal} from '@angular/core';
 import {MatPaginator, MatPaginatorIntl, PageEvent} from "@angular/material/paginator";
 import {PaginatorLocalizerService} from "../shared/service/paginator-localizer.service";
 import {debounceTime, fromEvent, Subject} from "rxjs";
@@ -28,6 +28,8 @@ import {DeleteConfirmationDataInterface} from "../shared/model/delete-confirmati
 import {DialogService} from "../shared/service/dialog.service";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
+import {HttpQueryFiltersInterface} from "../shared/model/http-query-filters.interface";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-operator-list',
@@ -53,7 +55,8 @@ import {MatInput} from "@angular/material/input";
     MatNoDataRow,
     MatFormField,
     MatInput,
-    MatLabel
+    MatLabel,
+    FormsModule
   ],
   providers: [
     { provide: MatPaginatorIntl, useClass: PaginatorLocalizerService },
@@ -68,12 +71,20 @@ export class OperatorListComponent implements AfterViewInit {
   protected readonly dataSource: OperatorPageDataSource = new OperatorPageDataSource(this.data);
   protected readonly columnsDef: string[] = ['name'];
   protected readonly rowsDef: string[] = ['name', 'options'];
-  protected pageDef: { pageNumber: number; pageSize: number; } = { pageNumber: 1, pageSize: 10 };
+  protected pageDef = signal({ pageNumber: 1, pageSize: 10 });
   private deleteConfirmationData: DeleteConfirmationDataInterface = {
     codeForTranslation: 'delete-operator',
     callbackArgument: '',
     removeCallback: this.deleteOperator
   };
+  protected nameFilter:WritableSignal<string> = signal('');
+  private filters: Signal<HttpQueryFiltersInterface> = computed(() => {
+    return {
+      'name': this.nameFilter(),
+      'pageNumber': this.pageDef().pageNumber,
+      'pageSize': this.pageDef().pageSize
+    };
+  });
   @ViewChild('filter') filter!: ElementRef;
 
   constructor(
@@ -81,20 +92,27 @@ export class OperatorListComponent implements AfterViewInit {
     private snackbarService: SnackbarService,
     private deleteConfirmation: DialogService
   ) {
-    http.getOperatorPage(1, 10).subscribe(response =>
-      this.data.next(response)
-    );
+    this.http.getOperatorPage(this.filters()).subscribe(response => {
+      this.data.next(response);
+    })
   }
 
   ngAfterViewInit(): void {
-    fromEvent(this.filter.nativeElement, 'keyup').pipe(debounceTime(1500)).subscribe(event => {
-      //TODO dokończyc
-    });
+    fromEvent(this.filter.nativeElement, 'input')
+      .pipe(debounceTime(1000))
+      .subscribe({
+        next: () => {
+            this.pageDef().pageNumber = 1;
+            this.http.getOperatorPage(this.filters()).subscribe(response => {
+              this.data.next(response);
+            });
+        }
+      });
   }
 
   onPageChange(event: PageEvent) {
-    this.pageDef = { pageNumber: event.pageIndex + 1, pageSize: event.pageSize };
-    this.http.getOperatorPage(event.pageIndex + 1, event.pageSize).subscribe(response =>{
+    this.pageDef.set({ pageNumber: event.pageIndex + 1, pageSize: event.pageSize });
+    this.http.getOperatorPage(this.filters()).subscribe(response =>{
         this.data.next(response);
       }
     )
@@ -108,7 +126,12 @@ export class OperatorListComponent implements AfterViewInit {
   private deleteOperator(id: string) {
     this.http.delete(id).subscribe(response => {
       this.snackbarService.openTopCenterSnackbar(response.message);
-      this.onPageChange({ pageIndex: this.pageDef.pageNumber - 1, pageSize: this.pageDef.pageSize, previousPageIndex: 1, length: 1 })
+      this.onPageChange({
+        pageIndex: this.pageDef().pageNumber - 1,
+        pageSize: this.pageDef().pageSize,
+        previousPageIndex: 1,
+        length: 1
+      });
     })
   }
 
@@ -117,10 +140,6 @@ export class OperatorListComponent implements AfterViewInit {
   }
 
   onDetails(element: OperatorPageDataSource) {
-
-  }
-
-  applyFilter(event: KeyboardEvent) {
 
   }
 }
