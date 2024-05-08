@@ -71,3 +71,24 @@ BEGIN
     DELETE FROM operator WHERE opr_id = _opr_id;
 
 END$$;
+
+DROP PROCEDURE IF EXISTS operator_get_details;
+/*PROCEDURE service_provider_get_details*/
+CREATE OR REPLACE PROCEDURE operator_get_details(
+    IN _opr_id operator.opr_id%TYPE,
+    OUT _cursor REFCURSOR
+)
+    LANGUAGE plpgsql
+AS $$
+BEGIN
+
+OPEN _cursor FOR
+SELECT opr_name, opr_notes, opr_created_at, opr_modified_at,
+       c.usr_first_name as creator_usr_first_name, c.usr_last_name as creator_usr_last_name,
+       m.usr_first_name as modifier_usr_first_name, m.usr_last_name as modifier_usr_last_name
+FROM operator opr
+         LEFT JOIN users c ON opr.opr_created_by = c.usr_id
+         LEFT JOIN users m ON opr.opr_modified_by = m.usr_id
+WHERE opr_id = _opr_id;
+
+END$$;

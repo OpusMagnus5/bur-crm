@@ -30,6 +30,8 @@ import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {HttpQueryFiltersInterface} from "../shared/model/http-query-filters.interface";
 import {FormsModule} from "@angular/forms";
+import {MatDialog} from "@angular/material/dialog";
+import {OperatorDetailsComponent} from "./operator-details.component";
 
 @Component({
   selector: 'app-operator-list',
@@ -90,7 +92,8 @@ export class OperatorListComponent implements AfterViewInit {
   constructor(
     private http: OperatorHttpService,
     private snackbarService: SnackbarService,
-    private deleteConfirmation: DialogService
+    private deleteConfirmation: DialogService,
+    private dialog: MatDialog,
   ) {
     this.http.getOperatorPage(this.filters()).subscribe(response => {
       this.data.next(response);
@@ -139,7 +142,9 @@ export class OperatorListComponent implements AfterViewInit {
 
   }
 
-  onDetails(element: OperatorPageDataSource) {
-
+  onDetails(element: OperatorDataInterface) {
+    this.http.getDetails(element.id).subscribe(response => {
+      this.dialog.open(OperatorDetailsComponent, { data: response })
+    })
   }
 }

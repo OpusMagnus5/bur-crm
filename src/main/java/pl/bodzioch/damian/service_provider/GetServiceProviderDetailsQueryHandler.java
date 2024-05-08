@@ -24,13 +24,14 @@ class GetServiceProviderDetailsQueryHandler implements QueryHandler<GetServicePr
 
     @Override
     public GetServiceProviderDetailsQueryResult handle(GetServiceProviderDetailsQuery query) {
-        ServiceProvider serviceProvider = readRepository.getDetails(query.id()).orElseThrow(() -> buildUserByIdNotFound(query.id()));
+        ServiceProvider serviceProvider = readRepository.getDetails(query.id()).orElseThrow(() -> buildServiceProviderByIdNotFound(query.id()));
         return new GetServiceProviderDetailsQueryResult(new ServiceProviderDto(serviceProvider));
 
     }
 
-    private AppException buildUserByIdNotFound(Long id) {
+    private AppException buildServiceProviderByIdNotFound(Long id) {
         return new AppException(
+                "No service provider with id: " + id,
                 HttpStatus.NOT_FOUND,
                 List.of(new ErrorData("error.client.serviceProviderByIdNotFound", List.of(id.toString())))
         );

@@ -8,6 +8,7 @@ import {OperatorPageResponseInterface} from "../model/operator-page-response.int
 import {DeleteOperatorResponseInterface} from "../model/delete-operator-response.interface";
 import {SERVER_URL} from "../../shared/http-config";
 import {HttpQueryFiltersInterface} from "../../shared/model/http-query-filters.interface";
+import {OperatorDetailsResponseInterface} from "../model/operator-details-response.interface";
 
 @Injectable({ providedIn: "root" })
 export class OperatorHttpService {
@@ -44,6 +45,12 @@ export class OperatorHttpService {
 
   delete(id: string): Observable<DeleteOperatorResponseInterface> {
     return this.http.delete<DeleteOperatorResponseInterface>(
+      SERVER_URL + 'api/operator/' + id
+    );
+  }
+
+  getDetails(id: string): Observable<OperatorDetailsResponseInterface> {
+    return this.http.get<OperatorDetailsResponseInterface>(
       SERVER_URL + 'api/operator/' + id
     );
   }

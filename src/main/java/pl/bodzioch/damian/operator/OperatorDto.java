@@ -3,6 +3,7 @@ package pl.bodzioch.damian.operator;
 import pl.bodzioch.damian.user.InnerUserDto;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 public record OperatorDto(
@@ -33,5 +34,13 @@ public record OperatorDto(
                 new InnerUserDto(operator.creator()),
                 new InnerUserDto(operator.modifier())
         );
+    }
+
+    public Optional<InnerUserDto> getCreator() {
+        return Optional.ofNullable(creator);
+    }
+
+    public Optional<InnerUserDto>  getModifier() {
+        return Optional.ofNullable(modifier);
     }
 }

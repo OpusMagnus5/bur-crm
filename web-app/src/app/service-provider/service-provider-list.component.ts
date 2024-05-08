@@ -116,7 +116,7 @@ export class ServiceProviderListComponent implements OnDestroy {
 
   onDetails(element: ServiceProviderDataInterface) {
     this.http.getDetails(element.id).subscribe(response => {
-      this.dialog.open(ServiceProviderDetailsComponent, { data: response, disableClose: true })
+      this.dialog.open(ServiceProviderDetailsComponent, { data: response })
     })
   }
 

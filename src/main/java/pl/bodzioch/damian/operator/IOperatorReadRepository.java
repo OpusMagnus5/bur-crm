@@ -12,4 +12,7 @@ interface IOperatorReadRepository {
 
     @Transactional(Transactional.TxType.NOT_SUPPORTED)
     PageQueryResult<Operator> getPage(PageQuery pageQuery);
+
+	@Transactional(Transactional.TxType.NOT_SUPPORTED)
+	Optional<Operator> getDetails(Long id);
 }

@@ -168,5 +168,10 @@
   "delete-operator": {
     "confirmation-title": "Usuń operatora",
     "confirmation-content": "Czy na pewno chcesz usunąć tego operatora?"
+  },
+  "operator-details": {
+    "title": "Szczegóły operatora",
+    "name": "Nazwa",
+    "notes": "Notatki"
   }
 }

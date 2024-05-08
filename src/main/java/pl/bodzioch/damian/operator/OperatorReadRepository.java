@@ -21,11 +21,13 @@ class OperatorReadRepository implements IOperatorReadRepository {
     private final IJdbcCaller jdbcCaller;
     private final SimpleJdbcCall getByNameProc;
     private final SimpleJdbcCall getPageProc;
+    private final SimpleJdbcCall getDetailsProc;
 
     public OperatorReadRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
         this.jdbcCaller = jdbcCaller;
         this.getByNameProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "operator_get_by_name");
         this.getPageProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "operator_get_page");
+        this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "operator_get_details");
     }
 
     @Override
@@ -53,5 +55,15 @@ class OperatorReadRepository implements IOperatorReadRepository {
         Long totalOperators = (Long) result.get("_total_operators");
         List<Operator> serviceProviders = Operator.fromProperties(result, "_cursor");
         return new PageQueryResult<>(serviceProviders, totalOperators);
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.NOT_SUPPORTED)
+    public Optional<Operator> getDetails(Long id) {
+        HashMap<String, Object> properties = new HashMap<>();
+        properties.put("_opr_id", id);
+        getDetailsProc.declareParameters(new SqlOutParameter("_cursor", Types.REF_CURSOR));
+        Map<String, Object> result = jdbcCaller.call(getDetailsProc, properties);
+        return Operator.fromProperties(result, "_cursor").stream().findFirst();
     }
 }

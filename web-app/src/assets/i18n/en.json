@@ -168,5 +168,10 @@
   "delete-operator": {
     "confirmation-title": "Delete operator",
     "confirmation-content": "Are you sure you want to delete this operator?"
+  },
+  "operator-details": {
+    "title": "Operator details",
+    "name": "Name",
+    "notes": "Notes"
   }
 }
