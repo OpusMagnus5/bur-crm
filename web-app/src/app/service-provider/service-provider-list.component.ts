@@ -13,7 +13,7 @@ import {
   MatTable
 } from "@angular/material/table";
 import {ServiceProviderListDataSource} from "./model/service-provider-list-data-source";
-import {Subject, Subscription} from "rxjs";
+import {Subject} from "rxjs";
 import {ServiceProviderListResponseInterface} from "./model/service-provider-list-response.interface";
 import {ServiceProviderHttpService} from "./service/service-provider-http.service";
 import {MatPaginatorIntl, MatPaginatorModule, PageEvent} from "@angular/material/paginator";
@@ -27,9 +27,8 @@ import {ServiceProviderDataInterface} from "./model/service-provider-data.interf
 import {UpdateServiceProviderComponent} from "./update-service-provider.component";
 import {PaginatorLocalizerService} from "../shared/service/paginator-localizer.service";
 import {SnackbarService} from "../shared/service/snackbar.service";
-import {DeleteConfirmationDataInterface} from "../shared/model/delete-confirmation-data.interface";
-import {DialogService} from "../shared/service/dialog.service";
-import {DialogDataInterface} from "../shared/model/dialog-data.interface";
+import {DeleteRecordConfirmationComponent} from "../shared/component/delete-record-confirmation.component";
+import {SubscriptionManager} from "../shared/util/subscription-manager";
 
 @Component({
   selector: 'app-service-provider-list',
@@ -55,47 +54,24 @@ import {DialogDataInterface} from "../shared/model/dialog-data.interface";
     MatPaginatorModule
   ],
   providers: [
-    { provide: MatPaginatorIntl, useClass: PaginatorLocalizerService },
-    DialogService
+    { provide: MatPaginatorIntl, useClass: PaginatorLocalizerService }
   ],
   templateUrl: './service-provider-list.component.html',
   styleUrl: './service-provider-list.component.css'
 })
 export class ServiceProviderListComponent implements OnDestroy {
 
+  private subscriptions: SubscriptionManager = new SubscriptionManager();
   private readonly data: Subject<ServiceProviderListResponseInterface> = new Subject<ServiceProviderListResponseInterface>();
   protected readonly dataSource: ServiceProviderListDataSource = new ServiceProviderListDataSource(this.data);
   protected readonly columnsDef: string[] = ['name', 'nip'];
   protected readonly rowsDef: string[] = ['name', 'nip', 'options'];
   protected pageDef: { pageNumber: number; pageSize: number; } = { pageNumber: 1, pageSize: 10 };
-  private updateSubscription: Subscription | undefined;
-  private deleteConfirmationData: DeleteConfirmationDataInterface = {
-    codeForTranslation: 'delete-service-provider',
-    callbackArgument: '',
-    removeCallback: this.deleteServiceProvider
-  };
-  private updateDialogData: DialogDataInterface = {
-    component: UpdateServiceProviderComponent,
-    config: {
-      data: null,
-      disableClose: true
-    },
-    callbackArguments: [
-      {
-        pageIndex: this.pageDef.pageNumber - 1,
-        pageSize: this.pageDef.pageSize,
-        previousPageIndex: 1,
-        length: 1
-      }
-    ],
-    callback: this.onPageChange
-  }
 
   constructor(
     private http: ServiceProviderHttpService,
     private dialog: MatDialog,
     private snackbar: SnackbarService,
-    private dialogService: DialogService
   ) {
     this.http.getProviderPage(1, 10).subscribe(response =>
       this.data.next(response)
@@ -103,7 +79,7 @@ export class ServiceProviderListComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-        this.updateSubscription?.unsubscribe();
+        this.subscriptions.unsubscribeAll();
     }
 
   onPageChange(event: PageEvent) {
@@ -121,21 +97,47 @@ export class ServiceProviderListComponent implements OnDestroy {
   }
 
   onRemove(element: ServiceProviderDataInterface) {
-    this.deleteConfirmationData.callbackArgument = element.id;
-    this.dialogService.openDeleteConfirmation(this.deleteConfirmationData);
+    const dialogRef = this.dialog.open(
+      DeleteRecordConfirmationComponent, {
+        data: {
+          codeForTranslation: 'delete-service-provider'
+        }
+      }
+    );
+    this.subscriptions.add(dialogRef.componentInstance.deleteConfirmation.subscribe(value => {
+      if (value) {
+        dialogRef.close();
+        this.deleteServiceProvider(element);
+      }
+    }));
   }
 
-  private deleteServiceProvider(id: string) {
-    this.http.delete(id).subscribe(response => {
+  private deleteServiceProvider(element: ServiceProviderDataInterface) {
+    this.http.delete(element.id).subscribe(response => {
       this.snackbar.openTopCenterSnackbar(response.message);
-      this.onPageChange({ pageIndex: this.pageDef.pageNumber - 1, pageSize: this.pageDef.pageSize, previousPageIndex: 1, length: 1 })
-    })
+      this.onPageChange({
+        pageIndex: this.pageDef.pageNumber - 1,
+        pageSize: this.pageDef.pageSize,
+        previousPageIndex: 1,
+        length: 1
+      });
+    });
   }
 
   onEdit(element: ServiceProviderDataInterface) {
     this.http.getDetails(element.id).subscribe(response => {
-      this.updateDialogData.config.data = response;
-      this.dialogService.openDetailsDialog(this.updateDialogData);
+      const dialogRef = this.dialog.open(UpdateServiceProviderComponent, { data: response, disableClose: true });
+      this.subscriptions.add(dialogRef.componentInstance.updateConfirmation.subscribe(value => {
+        if (value) {
+          dialogRef.close();
+          this.onPageChange({
+            pageIndex: this.pageDef.pageNumber - 1,
+            pageSize: this.pageDef.pageSize,
+            previousPageIndex: 1,
+            length: 1
+          });
+        }
+      }));
     });
   }
 }

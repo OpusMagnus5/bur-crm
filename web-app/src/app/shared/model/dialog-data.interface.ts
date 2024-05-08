@@ -4,7 +4,5 @@ import {OnSubmitInterface} from "./on-submit.interface";
 
 export interface DialogDataInterface {
   component: ComponentType<OnSubmitInterface>,
-  config: MatDialogConfig,
-  callbackArguments: any[],
-  callback: (...args: any[]) => void
+  config: MatDialogConfig
 }

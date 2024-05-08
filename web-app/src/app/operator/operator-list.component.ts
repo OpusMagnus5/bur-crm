@@ -1,4 +1,14 @@
-import {AfterViewInit, Component, computed, ElementRef, Signal, signal, ViewChild, WritableSignal} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  ElementRef,
+  OnDestroy,
+  Signal,
+  signal,
+  ViewChild,
+  WritableSignal
+} from '@angular/core';
 import {MatPaginator, MatPaginatorIntl, PageEvent} from "@angular/material/paginator";
 import {PaginatorLocalizerService} from "../shared/service/paginator-localizer.service";
 import {debounceTime, fromEvent, Subject} from "rxjs";
@@ -24,16 +34,15 @@ import {MatIconButton} from "@angular/material/button";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {OperatorDataInterface} from "./model/operator-data.interface";
 import {SnackbarService} from "../shared/service/snackbar.service";
-import {DeleteConfirmationDataInterface} from "../shared/model/delete-confirmation-data.interface";
-import {DialogService} from "../shared/service/dialog.service";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {HttpQueryFiltersInterface} from "../shared/model/http-query-filters.interface";
 import {FormsModule} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
 import {OperatorDetailsComponent} from "./operator-details.component";
-import {DialogDataInterface} from "../shared/model/dialog-data.interface";
 import {UpdateOperatorComponent} from "./update-operator.component";
+import {SubscriptionManager} from "../shared/util/subscription-manager";
+import {DeleteRecordConfirmationComponent} from "../shared/component/delete-record-confirmation.component";
 
 @Component({
   selector: 'app-operator-list',
@@ -63,24 +72,19 @@ import {UpdateOperatorComponent} from "./update-operator.component";
     FormsModule
   ],
   providers: [
-    { provide: MatPaginatorIntl, useClass: PaginatorLocalizerService },
-    DialogService
+    { provide: MatPaginatorIntl, useClass: PaginatorLocalizerService }
   ],
   templateUrl: './operator-list.component.html',
   styleUrl: './operator-list.component.css'
 })
-export class OperatorListComponent implements AfterViewInit {
+export class OperatorListComponent implements AfterViewInit, OnDestroy {
 
+  private subscriptions: SubscriptionManager = new SubscriptionManager();
   private readonly data: Subject<OperatorPageResponseInterface> = new Subject<OperatorPageResponseInterface>();
   protected readonly dataSource: OperatorPageDataSource = new OperatorPageDataSource(this.data);
   protected readonly columnsDef: string[] = ['name'];
   protected readonly rowsDef: string[] = ['name', 'options'];
   protected pageDef = signal({ pageNumber: 1, pageSize: 10 });
-  private deleteConfirmationData: DeleteConfirmationDataInterface = {
-    codeForTranslation: 'delete-operator',
-    callbackArgument: '',
-    removeCallback: this.deleteOperator
-  };
   protected nameFilter:WritableSignal<string> = signal('');
   private filters: Signal<HttpQueryFiltersInterface> = computed(() => {
     return {
@@ -91,35 +95,18 @@ export class OperatorListComponent implements AfterViewInit {
   });
   @ViewChild('filter') filter!: ElementRef;
 
-  private updateDialogData: Signal<DialogDataInterface> = computed(() => {
-    return {
-      component: UpdateOperatorComponent,
-      config: {
-        data: null,
-        disableClose: true
-      },
-      callbackArguments: [
-        {
-          pageIndex: this.pageDef().pageNumber - 1,
-          pageSize: this.pageDef().pageSize,
-          previousPageIndex: 1,
-          length: 1
-        }
-      ],
-      callback: this.onPageChange
-    }
-  });
-
   constructor(
     private http: OperatorHttpService,
     private snackbarService: SnackbarService,
-    private deleteConfirmation: DialogService,
     private dialog: MatDialog,
-    private dialogService: DialogService
   ) {
     this.http.getOperatorPage(this.filters()).subscribe(response => {
       this.data.next(response);
     })
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribeAll();
   }
 
   ngAfterViewInit(): void {
@@ -144,26 +131,45 @@ export class OperatorListComponent implements AfterViewInit {
   }
 
   onRemove(element: OperatorDataInterface) {
-    this.deleteConfirmationData.callbackArgument = element.id;
-    this.deleteConfirmation.openDeleteConfirmation(this.deleteConfirmationData);
+    const dialogRef = this.dialog.open(
+      DeleteRecordConfirmationComponent, {
+        data: {
+          codeForTranslation: 'delete-operator'
+        }
+      });
+    this.subscriptions.add(dialogRef.componentInstance.deleteConfirmation.subscribe(value => {
+      if (value) {
+        dialogRef.close();
+        this.deleteOperator(element);
+      }
+    }));
   }
 
-  private deleteOperator(id: string) { //TODO nie działa
-    this.http.delete(id).subscribe(response => {
+  private deleteOperator(element: OperatorDataInterface) {
+    this.http.delete(element.id).subscribe(response => {
       this.snackbarService.openTopCenterSnackbar(response.message);
-      this.onPageChange({
-        pageIndex: this.pageDef().pageNumber - 1,
-        pageSize: this.pageDef().pageSize,
-        previousPageIndex: 1,
-        length: 1
-      });
+      this.onPageChange({ pageIndex: this.pageDef().pageNumber - 1, pageSize: this.pageDef().pageSize, previousPageIndex: 1, length: 1 })
     })
   }
 
   onEdit(element: OperatorDataInterface) {
     this.http.getDetails(element.id).subscribe(response => {
-      this.updateDialogData().config.data = response;
-      this.dialogService.openDetailsDialog(this.updateDialogData());
+      const dialogRef = this.dialog.open(
+        UpdateOperatorComponent, {
+          data: response,
+          disableClose: true
+        });
+      this.subscriptions.add(dialogRef.componentInstance.updateConfirmation.subscribe(value => {
+        if (value) {
+          dialogRef.close();
+          this.onPageChange({
+            pageIndex: this.pageDef().pageNumber - 1,
+            pageSize: this.pageDef().pageSize,
+            previousPageIndex: 1,
+            length: 1
+          });
+        }
+      }));
     });
   }
 
