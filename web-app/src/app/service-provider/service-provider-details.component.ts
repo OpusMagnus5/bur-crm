@@ -11,6 +11,7 @@ import {TranslateModule} from "@ngx-translate/core";
 import {MatDivider} from "@angular/material/divider";
 import {LocalizedDatePipe} from "../shared/pipe/localized-date.pipe";
 import {MatButton} from "@angular/material/button";
+import {NoDataIfEmptyDirective} from "../shared/directive/no-data-if-empty.directive";
 
 @Component({
   selector: 'app-service-provider-details',
@@ -23,7 +24,8 @@ import {MatButton} from "@angular/material/button";
     LocalizedDatePipe,
     MatButton,
     MatDialogActions,
-    MatDialogClose
+    MatDialogClose,
+    NoDataIfEmptyDirective
   ],
   templateUrl: './service-provider-details.component.html',
   styleUrl: './service-provider-details.component.css'

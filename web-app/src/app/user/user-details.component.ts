@@ -13,6 +13,7 @@ import {MatChip, MatChipSet} from "@angular/material/chips";
 import {DatePipe} from "@angular/common";
 import {LocalizedDatePipe} from "../shared/pipe/localized-date.pipe";
 import {MatButton} from "@angular/material/button";
+import {NoDataIfEmptyDirective} from "../shared/directive/no-data-if-empty.directive";
 
 @Component({
   selector: 'app-user-details',
@@ -28,7 +29,8 @@ import {MatButton} from "@angular/material/button";
     LocalizedDatePipe,
     MatButton,
     MatDialogActions,
-    MatDialogClose
+    MatDialogClose,
+    NoDataIfEmptyDirective
   ],
   templateUrl: './user-details.component.html',
   styleUrl: './user-details.component.css'

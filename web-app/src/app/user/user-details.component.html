@@ -40,11 +40,7 @@
     </div>
     <div>
       <p class="label-title">{{ 'common.modifier' | translate }}</p>
-      @if (data.modifierFirstName && data.modifierLastName) {
-        <p>{{ data.modifierFirstName }} {{ data.modifierLastName }}</p>
-      } @else {
-        <p>{{ 'common.no-data' | translate }}</p>
-      }
+      <p noDataIfEmpty>{{ data.modifierFirstName }} {{ data.modifierLastName }}</p>
     </div>
     <div>
       <p class="label-title">{{ 'user-details.last-login' | translate }}</p>
