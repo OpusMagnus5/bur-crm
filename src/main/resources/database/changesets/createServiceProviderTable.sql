@@ -11,5 +11,4 @@ CREATE TABLE service_provider (
     spr_modified_by BIGINT
 );
 
-CREATE UNIQUE INDEX service_provider_id_idx ON service_provider (spr_id);
 CREATE UNIQUE INDEX service_provider_nip_idx ON service_provider (spr_nip);

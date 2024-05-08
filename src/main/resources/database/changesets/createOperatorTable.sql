@@ -10,5 +10,4 @@ CREATE TABLE operator (
                         opr_modified_by BIGINT
 );
 
-CREATE UNIQUE INDEX operator_id_idx ON operator (opr_id);
 CREATE INDEX operator_name_idx ON operator USING gin (to_tsvector('simple', opr_name))

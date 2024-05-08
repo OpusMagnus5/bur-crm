@@ -14,5 +14,4 @@ CREATE TABLE users (
                        usr_modified_by BIGINT
 );
 
-CREATE UNIQUE INDEX users_id_idx ON users (usr_id);
 CREATE UNIQUE INDEX users_email_idx ON users (usr_email);
