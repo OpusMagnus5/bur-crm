@@ -2,6 +2,7 @@ package pl.bodzioch.damian.operator;
 
 import com.fasterxml.uuid.Generators;
 import pl.bodzioch.damian.operator.command_dto.CreateNewOperatorCommand;
+import pl.bodzioch.damian.operator.command_dto.UpdateOperatorCommand;
 import pl.bodzioch.damian.user.InnerUser;
 import pl.bodzioch.damian.utils.DbCaster;
 
@@ -37,6 +38,22 @@ record Operator(
                 null,
                 null,
                 command.createdBy(),
+                null,
+                null
+        );
+    }
+
+    Operator(UpdateOperatorCommand command) {
+        this(
+                command.id(),
+                null,
+                command.version(),
+                command.name(),
+                command.notes(),
+                null,
+                null,
+                command.modifiedBy(),
+                null,
                 null,
                 null
         );

@@ -73,7 +73,7 @@ BEGIN
 END$$;
 
 DROP PROCEDURE IF EXISTS operator_get_details;
-/*PROCEDURE service_provider_get_details*/
+/*PROCEDURE operator_get_details*/
 CREATE OR REPLACE PROCEDURE operator_get_details(
     IN _opr_id operator.opr_id%TYPE,
     OUT _cursor REFCURSOR
@@ -90,5 +90,42 @@ FROM operator opr
          LEFT JOIN users c ON opr.opr_created_by = c.usr_id
          LEFT JOIN users m ON opr.opr_modified_by = m.usr_id
 WHERE opr_id = _opr_id;
+
+END$$;
+
+DROP PROCEDURE IF EXISTS operator_update;
+/*PROCEDURE operator_update*/
+CREATE OR REPLACE PROCEDURE operator_update(
+    IN _opr_id operator.opr_id%TYPE,
+    IN _opr_version operator.opr_version%TYPE,
+    IN _opr_name operator.opr_name%TYPE,
+    IN _opr_notes operator.opr_notes%TYPE,
+    in _opr_modified_by operator.opr_modified_by%TYPE
+)
+    LANGUAGE plpgsql
+AS $$
+DECLARE
+    _current_version INTEGER;
+BEGIN
+
+    SELECT opr_version
+    INTO _current_version
+    FROM operator
+    WHERE opr_id = _opr_id;
+
+    IF _current_version <> _opr_version THEN
+        RAISE SQLSTATE '55000' USING MESSAGE = 'The resource with ID: ' || _opr_id || ' was changed by another user',
+            TABLE = 'operator',
+            COLUMN = 'opr_version',
+            DETAIL = 'Provided version: ' || _opr_version || ', current version: ' || _current_version;
+    END IF;
+
+    UPDATE operator
+    SET opr_version = opr_version + 1,
+        opr_name = _opr_name,
+        opr_notes = _opr_notes,
+        opr_modified_by = _opr_modified_by,
+        opr_modified_at = current_timestamp
+    WHERE opr_id = _opr_id;
 
 END$$;

@@ -11,10 +11,7 @@ import pl.bodzioch.damian.dto.*;
 import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.infrastructure.command.CommandExecutor;
 import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
-import pl.bodzioch.damian.operator.command_dto.CreateNewOperatorCommand;
-import pl.bodzioch.damian.operator.command_dto.CreateNewOperatorCommandResult;
-import pl.bodzioch.damian.operator.command_dto.DeleteOperatorCommand;
-import pl.bodzioch.damian.operator.command_dto.DeleteOperatorCommandResult;
+import pl.bodzioch.damian.operator.command_dto.*;
 import pl.bodzioch.damian.operator.query_dto.*;
 import pl.bodzioch.damian.utils.CipherComponent;
 import pl.bodzioch.damian.utils.validator.OperatorIdKindV;
@@ -93,5 +90,19 @@ class OperatorController {
         GetOperatorDetailsQuery query = new GetOperatorDetailsQuery(operatorrId);
         GetOperatorDetailsQueryResult result = queryExecutor.execute(query);
         return new GetOperatorDetailsResponse(result.operator(), cipher);
+    }
+
+    @PatchMapping
+    @ResponseStatus(HttpStatus.OK)
+    UpdateOperatorResponse update(@Valid @RequestBody UpdateOperatorRequest request) {
+        long providerId = Long.parseLong(cipher.decryptMessage(request.id()));
+        UpdateOperatorCommand command = new UpdateOperatorCommand(
+                providerId,
+                request.version(),
+                request.name(),
+                request.notes(),
+                1L);
+        UpdateOperatorCommandResult result = commandExecutor.execute(command);
+        return new UpdateOperatorResponse(result.message());
     }
 }
