@@ -1,0 +1,26 @@
+<h2 mat-dialog-title>{{ 'update-service-provider.title' | translate }}</h2>
+<mat-dialog-content class="update-operator-form-container">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <mat-label>{{ 'update-operator.name-input-label' | translate }}</mat-label>
+      <input matInput [formControl]="nameControl">
+      @if (nameControl.invalid) {
+        <mat-error>{{ getValidationMessage('name', nameControl) }}</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{ 'update-operator.notes-label' | translate }}</mat-label>
+      <textarea matInput [formControl]="notesControl"></textarea>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-flat-button
+          color="primary"
+          (click)="onSubmit()"
+          [disabled]="form.invalid">{{ 'common.save-button' | translate }}</button>
+  <button mat-stroked-button
+          [mat-dialog-close]="true"
+          color="primary"
+          [tabIndex]="-1">{{ 'common.close-button' | translate }}</button>
+</mat-dialog-actions>

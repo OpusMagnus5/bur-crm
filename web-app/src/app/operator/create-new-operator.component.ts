@@ -74,7 +74,7 @@ export class CreateNewOperatorComponent {
         this.showPopUp(response);
         this.router.navigate(['../' + OPERATOR_LIST_PATH], {
           relativeTo: this.activeRoute
-        })
+        });
       }
     });
   }

@@ -173,5 +173,17 @@
     "title": "Szczegóły operatora",
     "name": "Nazwa",
     "notes": "Notatki"
+  },
+  "update-operator": {
+    "name-input-label": "Nazwa operatora",
+    "notes-label": "Notatki",
+    "title": "Edycja operatora",
+    "validation": {
+      "name": {
+        "required": "Pole nazwa operatora nie może być puste",
+        "pattern": "Podana nazwa operatora jest nieprawidłowa",
+        "exists": "Istnieje już operator o podanej nazwie"
+      }
+    }
   }
 }

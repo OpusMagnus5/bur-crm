@@ -1,4 +1,6 @@
 export interface OperatorDetailsResponseInterface {
+  id: string,
+  version: number
   name: string,
   notes: string,
   createdAt: Date,

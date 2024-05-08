@@ -173,5 +173,17 @@
     "title": "Operator details",
     "name": "Name",
     "notes": "Notes"
+  },
+  "update-operator": {
+    "name-input-label": "Operator name",
+    "notes-label": "Notes",
+    "title": "Edit operator",
+    "validation": {
+      "name": {
+        "required": "Operator name field cannot be empty",
+        "pattern": "Invalid operator name provided",
+        "exists": "A operator with the provided name already exists"
+      }
+    }
   }
 }

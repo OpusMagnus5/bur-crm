@@ -92,6 +92,6 @@ class OperatorController {
         long operatorrId = Long.parseLong(cipher.decryptMessage(id));
         GetOperatorDetailsQuery query = new GetOperatorDetailsQuery(operatorrId);
         GetOperatorDetailsQueryResult result = queryExecutor.execute(query);
-        return new GetOperatorDetailsResponse(result.operator());
+        return new GetOperatorDetailsResponse(result.operator(), cipher);
     }
 }

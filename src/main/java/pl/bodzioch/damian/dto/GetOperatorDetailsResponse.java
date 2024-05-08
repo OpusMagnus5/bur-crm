@@ -2,10 +2,13 @@ package pl.bodzioch.damian.dto;
 
 import pl.bodzioch.damian.operator.OperatorDto;
 import pl.bodzioch.damian.user.InnerUserDto;
+import pl.bodzioch.damian.utils.CipherComponent;
 
 import java.time.LocalDateTime;
 
 public record GetOperatorDetailsResponse(
+		String id,
+		Integer version,
 		String name,
 		String notes,
 		LocalDateTime createdAt,
@@ -16,8 +19,10 @@ public record GetOperatorDetailsResponse(
 		String modifierLastName
 ) {
 
-	public GetOperatorDetailsResponse(OperatorDto operator) {
+	public GetOperatorDetailsResponse(OperatorDto operator, CipherComponent cipher) {
 		this(
+				cipher.encryptMessage(operator.id().toString()),
+				operator.version(),
 				operator.name(),
 				operator.notes(),
 				operator.createdAt(),

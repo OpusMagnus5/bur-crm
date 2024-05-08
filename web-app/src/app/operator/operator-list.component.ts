@@ -32,6 +32,8 @@ import {HttpQueryFiltersInterface} from "../shared/model/http-query-filters.inte
 import {FormsModule} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
 import {OperatorDetailsComponent} from "./operator-details.component";
+import {DialogDataInterface} from "../shared/model/dialog-data.interface";
+import {UpdateOperatorComponent} from "./update-operator.component";
 
 @Component({
   selector: 'app-operator-list',
@@ -89,11 +91,31 @@ export class OperatorListComponent implements AfterViewInit {
   });
   @ViewChild('filter') filter!: ElementRef;
 
+  private updateDialogData: Signal<DialogDataInterface> = computed(() => {
+    return {
+      component: UpdateOperatorComponent,
+      config: {
+        data: null,
+        disableClose: true
+      },
+      callbackArguments: [
+        {
+          pageIndex: this.pageDef().pageNumber - 1,
+          pageSize: this.pageDef().pageSize,
+          previousPageIndex: 1,
+          length: 1
+        }
+      ],
+      callback: this.onPageChange
+    }
+  });
+
   constructor(
     private http: OperatorHttpService,
     private snackbarService: SnackbarService,
     private deleteConfirmation: DialogService,
     private dialog: MatDialog,
+    private dialogService: DialogService
   ) {
     this.http.getOperatorPage(this.filters()).subscribe(response => {
       this.data.next(response);
@@ -126,7 +148,7 @@ export class OperatorListComponent implements AfterViewInit {
     this.deleteConfirmation.openDeleteConfirmation(this.deleteConfirmationData);
   }
 
-  private deleteOperator(id: string) {
+  private deleteOperator(id: string) { //TODO nie działa
     this.http.delete(id).subscribe(response => {
       this.snackbarService.openTopCenterSnackbar(response.message);
       this.onPageChange({
@@ -138,8 +160,11 @@ export class OperatorListComponent implements AfterViewInit {
     })
   }
 
-  onEdit(element: OperatorPageDataSource) {
-
+  onEdit(element: OperatorDataInterface) {
+    this.http.getDetails(element.id).subscribe(response => {
+      this.updateDialogData().config.data = response;
+      this.dialogService.openDetailsDialog(this.updateDialogData());
+    });
   }
 
   onDetails(element: OperatorDataInterface) {

@@ -62,7 +62,7 @@ export class UpdateServiceProviderComponent implements OnSubmitInterface {
     private service: ServiceProviderService,
     private validationMessage: ValidationMessageService,
     private httpService: ServiceProviderHttpService,
-    private snackbar: SnackbarService,
+    private snackbar: SnackbarService
   ) {
     this.nipControl = new FormControl(data.nip, {
       validators: [Validators.required, Validators.pattern('\\d{10}'), this.service.validateNip.bind(this)],
