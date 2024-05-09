@@ -12,16 +12,19 @@ spring:
   liquibase:
     change-log: database/changelog-master.xml
     enabled: true
-  jpa:
-    hibernate:
-      ddl-auto: none
-    open-in-view: false
   datasource:
     jdbc-url: jdbc:postgresql://localhost:${POSTGRES_PORT_WRITE}/${POSTGRES_DB_WRITE}?escapeSyntaxCallMode=callIfNoReturn
     username: ${POSTGRES_USER_WRITE}
     password: ${POSTGRES_PASSWORD_WRITE}
     driver-class-name: org.postgresql.Driver
     auto-commit: false
+  data:
+    jpa:
+      repositories:
+        enabled: false
+    jdbc:
+      repositories:
+        enabled: false
 
 rsa:
   private-key: file:${user.dir}${file.separator}src${file.separator}main${file.separator}resources${file.separator}certs${file.separator}private.pem
