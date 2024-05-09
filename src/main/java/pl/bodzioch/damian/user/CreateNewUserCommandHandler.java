@@ -31,7 +31,7 @@ class CreateNewUserCommandHandler implements CommandHandler<CreateNewUserCommand
     public CreateNewUserCommandResult handle(CreateNewUserCommand command) {
         String firstPassword = User.generateFirstPassword();
         User user = new User(command, firstPassword);
-        CreateNewUserCommandResult result = new CreateNewUserCommandResult(user.usr_email(), firstPassword);
+        CreateNewUserCommandResult result = new CreateNewUserCommandResult(user.email(), firstPassword);
         try {
             writeRepository.createNew(user);
         } catch (DuplicateKeyException e) {

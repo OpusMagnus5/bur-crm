@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
+import pl.bodzioch.damian.infrastructure.database.DbCaster;
 import pl.bodzioch.damian.infrastructure.database.IJdbcCaller;
 import pl.bodzioch.damian.value_object.PageQuery;
 import pl.bodzioch.damian.value_object.PageQueryResult;
@@ -14,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static pl.bodzioch.damian.infrastructure.database.DbCaster.GENERAL_CURSOR_NAME;
 
 @Repository
 class OperatorReadRepository implements IOperatorReadRepository {
@@ -35,9 +38,9 @@ class OperatorReadRepository implements IOperatorReadRepository {
     public Optional<Operator> getByName(String name) {
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("_opr_name", name);
-        getByNameProc.declareParameters(new SqlOutParameter("_cursor", Types.REF_CURSOR));
+        getByNameProc.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR));
         Map<String, Object> result = jdbcCaller.call(getByNameProc, properties);
-        return Operator.fromProperties(result, "_cursor").stream().findFirst();
+        return DbCaster.fromProperties(result, Operator.class).stream().findFirst();
     }
 
     @Override
@@ -48,12 +51,12 @@ class OperatorReadRepository implements IOperatorReadRepository {
         properties.put("_max", pageQuery.getMaxResult());
         properties.putAll(pageQuery.toDbProperties());
 
-        getPageProc.declareParameters(new SqlOutParameter("_cursor", Types.REF_CURSOR),
+        getPageProc.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR),
                 new SqlOutParameter("_total_operators", Types.BIGINT));
         Map<String, Object> result = jdbcCaller.call(getPageProc, properties);
 
         Long totalOperators = (Long) result.get("_total_operators");
-        List<Operator> serviceProviders = Operator.fromProperties(result, "_cursor");
+        List<Operator> serviceProviders = DbCaster.fromProperties(result, Operator.class);
         return new PageQueryResult<>(serviceProviders, totalOperators);
     }
 
@@ -62,8 +65,8 @@ class OperatorReadRepository implements IOperatorReadRepository {
     public Optional<Operator> getDetails(Long id) {
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("_opr_id", id);
-        getDetailsProc.declareParameters(new SqlOutParameter("_cursor", Types.REF_CURSOR));
+        getDetailsProc.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR));
         Map<String, Object> result = jdbcCaller.call(getDetailsProc, properties);
-        return Operator.fromProperties(result, "_cursor").stream().findFirst();
+        return DbCaster.fromProperties(result, Operator.class).stream().findFirst();
     }
 }

@@ -22,15 +22,15 @@ public record OperatorDto(
 
     OperatorDto(Operator operator) {
         this(
-                operator.opr_id(),
-                operator.opr_uuid(),
-                operator.opr_version(),
-                operator.opr_name(),
-                operator.opr_notes(),
-                operator.opr_created_at(),
-                operator.opr_modified_at(),
-                operator.opr_modified_by(),
-                operator.opr_created_by(),
+                operator.id(),
+                operator.uuid(),
+                operator.version(),
+                operator.name(),
+                operator.notes(),
+                operator.createdAt(),
+                operator.modifiedAt(),
+                operator.modifiedBy(),
+                operator.createdBy(),
                 new InnerUserDto(operator.creator()),
                 new InnerUserDto(operator.modifier())
         );

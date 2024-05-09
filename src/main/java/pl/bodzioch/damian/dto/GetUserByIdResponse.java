@@ -1,5 +1,6 @@
 package pl.bodzioch.damian.dto;
 
+import pl.bodzioch.damian.user.InnerUserDto;
 import pl.bodzioch.damian.user.UserDto;
 import pl.bodzioch.damian.utils.CipherComponent;
 
@@ -37,10 +38,10 @@ public record GetUserByIdResponse(
 				userDto.lastLogin(),
 				userDto.createdAt(),
 				userDto.modifiedAt(),
-				Optional.ofNullable(userDto.creator()).map(UserDto::firstName).orElse(null),
-				Optional.ofNullable(userDto.creator()).map(UserDto::lastName).orElse(null),
-				Optional.ofNullable(userDto.modifier()).map(UserDto::firstName).orElse(null),
-				Optional.ofNullable(userDto.modifier()).map(UserDto::lastName).orElse(null)
+				Optional.ofNullable(userDto.creator()).map(InnerUserDto::firstName).orElse(null),
+				Optional.ofNullable(userDto.creator()).map(InnerUserDto::lastName).orElse(null),
+				Optional.ofNullable(userDto.modifier()).map(InnerUserDto::firstName).orElse(null),
+				Optional.ofNullable(userDto.modifier()).map(InnerUserDto::lastName).orElse(null)
 		);
 	}
 }
