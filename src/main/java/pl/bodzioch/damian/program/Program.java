@@ -1,15 +1,17 @@
 package pl.bodzioch.damian.program;
 
+import com.fasterxml.uuid.Generators;
 import pl.bodzioch.damian.infrastructure.database.DbColumn;
 import pl.bodzioch.damian.infrastructure.database.DbConstructor;
 import pl.bodzioch.damian.infrastructure.database.DbManyToOne;
 import pl.bodzioch.damian.operator.InnerOperator;
+import pl.bodzioch.damian.program.command_dto.CreateNewProgramCommand;
 import pl.bodzioch.damian.user.InnerUser;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record Program(
+record Program(
         @DbColumn(name = "prg_id")
         Long prg_id,
         @DbColumn(name = "prg_uuid")
@@ -38,5 +40,22 @@ public record Program(
 
     @DbConstructor
     public Program {
+    }
+
+    Program(CreateNewProgramCommand command) {
+        this(
+                null,
+                Generators.timeBasedEpochGenerator().generate(),
+                null,
+                command.name(),
+                command.operatorId(),
+                null,
+                null,
+                command.createdBy(),
+                null,
+                null,
+                null,
+                null
+        );
     }
 }

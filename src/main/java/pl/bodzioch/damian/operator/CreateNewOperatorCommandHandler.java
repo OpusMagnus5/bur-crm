@@ -42,6 +42,7 @@ class CreateNewOperatorCommandHandler implements CommandHandler<CreateNewOperato
 
     private AppException buildOperatorByNameAlreadyExistsException(String name) {
         return new AppException(
+                "Operator with name: " + name + " already exists!",
                 HttpStatus.BAD_REQUEST,
                 List.of(new ErrorData(
                         "error.client.operator.nameAlreadyExists",
