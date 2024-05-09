@@ -85,11 +85,14 @@ BEGIN
     OPEN _cursor FOR
         SELECT opr_id, opr_version, opr_name, opr_notes, opr_created_at, opr_modified_at,
                c.usr_first_name as creator_usr_first_name, c.usr_last_name as creator_usr_last_name,
-               m.usr_first_name as modifier_usr_first_name, m.usr_last_name as modifier_usr_last_name
+               m.usr_first_name as modifier_usr_first_name, m.usr_last_name as modifier_usr_last_name,
+               jsonb_agg(prg.prg_name) as programs
         FROM operator opr
                  LEFT JOIN users c ON opr.opr_created_by = c.usr_id
                  LEFT JOIN users m ON opr.opr_modified_by = m.usr_id
-        WHERE opr_id = _opr_id;
+                 LEFT JOIN program prg on opr.opr_id = prg.prg_operator_id
+        WHERE opr_id = _opr_id
+        GROUP BY opr_id;
 
 END$$;
 

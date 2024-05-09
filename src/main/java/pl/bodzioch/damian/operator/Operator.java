@@ -4,11 +4,14 @@ import com.fasterxml.uuid.Generators;
 import pl.bodzioch.damian.infrastructure.database.DbColumn;
 import pl.bodzioch.damian.infrastructure.database.DbConstructor;
 import pl.bodzioch.damian.infrastructure.database.DbManyToOne;
+import pl.bodzioch.damian.infrastructure.database.DbOneToMany;
 import pl.bodzioch.damian.operator.command_dto.CreateNewOperatorCommand;
 import pl.bodzioch.damian.operator.command_dto.UpdateOperatorCommand;
+import pl.bodzioch.damian.program.InnerProgram;
 import pl.bodzioch.damian.user.InnerUser;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 record Operator(
@@ -30,6 +33,8 @@ record Operator(
         Long modifiedBy,
         @DbColumn(name = "opr_created_by")
         Long createdBy,
+        @DbOneToMany(listName = "programs")
+        List<InnerProgram> programs,
         @DbManyToOne(prefix = "creator")
         InnerUser creator,
         @DbManyToOne(prefix = "modifier")
@@ -53,6 +58,7 @@ record Operator(
                 null,
                 command.createdBy(),
                 null,
+                null,
                 null
         );
     }
@@ -67,6 +73,7 @@ record Operator(
                 null,
                 null,
                 command.modifiedBy(),
+                null,
                 null,
                 null,
                 null

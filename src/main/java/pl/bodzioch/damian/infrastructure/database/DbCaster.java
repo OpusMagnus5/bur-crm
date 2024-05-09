@@ -1,5 +1,9 @@
 package pl.bodzioch.damian.infrastructure.database;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import pl.bodzioch.damian.exception.AppException;
@@ -90,10 +94,11 @@ public class DbCaster {
         throw new DbCasterException("Not implemented type, field: " + field + " object: " + object);
     }
 
-    private static Object getObjectForField(Map<String, Object> record, String prefix, Field field) throws ReflectiveOperationException {
+    private static Object getObjectForField(Map<String, Object> record, String prefix, Field field) throws ReflectiveOperationException, JsonProcessingException {
         List<Annotation> annotations = Arrays.asList(field.getDeclaredAnnotations());
         Optional<DbColumn> dbColumn = findAnnotationType(annotations, DbColumn.class);
         Optional<DbManyToOne> dbManyToOne = findAnnotationType(annotations, DbManyToOne.class);
+        Optional<DbOneToMany> dbOneToMany = findAnnotationType(annotations, DbOneToMany.class);
         if (dbColumn.isPresent()) {
             String columnName = dbColumn.get().name();
             String paramName = StringUtils.isBlank(prefix) ? columnName : prefix + "_" + columnName;
@@ -101,6 +106,11 @@ public class DbCaster {
             return castSimpleObject(parameter, field);
         } else if (dbManyToOne.isPresent()) {
             return extractInnerObject(record, field.getType(), dbManyToOne.get().prefix());
+        } else if (dbOneToMany.isPresent()) {
+            String listName = dbOneToMany.get().listName();
+            String json = (String) record.get(listName); //TODO zwerfykowac
+            CollectionType collectionType = TypeFactory.defaultInstance().constructCollectionType(List.class, field.getType());
+            new ObjectMapper().readValue(json, collectionType)
         }
         throw new DbCasterException("This is not annotated field");
     }
