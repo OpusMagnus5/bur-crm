@@ -13,10 +13,10 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
 
-    INSERT INTO users (usr_uuid, usr_version, usr_password, usr_email, usr_first_name, usr_last_name, usr_roles, usr_last_login,
-                       usr_created_at, usr_modified_at, usr_created_by, usr_modified_by)
-    VALUES (_usr_uuid, 0, _usr_password, _usr_email, _usr_first_name, _usr_last_name,
-            _usr_roles, null, current_timestamp, null, _usr_created_by, null);
+    INSERT INTO users (usr_uuid, usr_password, usr_email, usr_first_name, usr_last_name, usr_roles, usr_last_login,
+                       usr_modified_at, usr_created_by, usr_modified_by)
+    VALUES (_usr_uuid, _usr_password, _usr_email, _usr_first_name, _usr_last_name,
+            _usr_roles, null, null, _usr_created_by, null);
 
 END$$;
 

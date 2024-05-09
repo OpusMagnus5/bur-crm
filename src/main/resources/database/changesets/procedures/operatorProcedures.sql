@@ -10,8 +10,8 @@ CREATE OR REPLACE PROCEDURE operator_create_new(
 AS $$
 BEGIN
 
-    INSERT INTO operator(opr_uuid, opr_version, opr_name, opr_notes, opr_created_at, opr_created_by)
-    VALUES(_opr_uuid, 0, _opr_name, _opr_notes, current_timestamp, _opr_created_by);
+    INSERT INTO operator(opr_uuid, opr_name, opr_notes, opr_created_by)
+    VALUES(_opr_uuid, _opr_name, _opr_notes, _opr_created_by);
 
 END$$;
 
@@ -82,14 +82,14 @@ CREATE OR REPLACE PROCEDURE operator_get_details(
 AS $$
 BEGIN
 
-OPEN _cursor FOR
-SELECT opr_id, opr_version, opr_name, opr_notes, opr_created_at, opr_modified_at,
-       c.usr_first_name as creator_usr_first_name, c.usr_last_name as creator_usr_last_name,
-       m.usr_first_name as modifier_usr_first_name, m.usr_last_name as modifier_usr_last_name
-FROM operator opr
-         LEFT JOIN users c ON opr.opr_created_by = c.usr_id
-         LEFT JOIN users m ON opr.opr_modified_by = m.usr_id
-WHERE opr_id = _opr_id;
+    OPEN _cursor FOR
+        SELECT opr_id, opr_version, opr_name, opr_notes, opr_created_at, opr_modified_at,
+               c.usr_first_name as creator_usr_first_name, c.usr_last_name as creator_usr_last_name,
+               m.usr_first_name as modifier_usr_first_name, m.usr_last_name as modifier_usr_last_name
+        FROM operator opr
+                 LEFT JOIN users c ON opr.opr_created_by = c.usr_id
+                 LEFT JOIN users m ON opr.opr_modified_by = m.usr_id
+        WHERE opr_id = _opr_id;
 
 END$$;
 

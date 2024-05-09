@@ -11,8 +11,8 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
 
-    INSERT INTO service_provider(spr_uuid, spr_version, spr_bur_id, spr_name, spr_nip, spr_created_by, spr_created_at)
-    VALUES(_spr_uuid, 0, _spr_bur_id, _spr_name, _spr_nip, _spr_created_by, current_timestamp);
+    INSERT INTO service_provider(spr_uuid, spr_bur_id, spr_name, spr_nip, spr_created_by)
+    VALUES(_spr_uuid, _spr_bur_id, _spr_name, _spr_nip, _spr_created_by);
 
 END$$;
 
