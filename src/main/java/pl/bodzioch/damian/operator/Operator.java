@@ -9,8 +9,6 @@ import pl.bodzioch.damian.operator.command_dto.UpdateOperatorCommand;
 import pl.bodzioch.damian.user.InnerUser;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 record Operator(
@@ -73,17 +71,5 @@ record Operator(
                 null,
                 null
         );
-    }
-
-    Map<String, Object> getPropertySource() {
-        HashMap<String, Object> fields = new HashMap<>();
-        fields.put("_opr_id", id);
-        fields.put("_opr_uuid", uuid);
-        fields.put("_opr_version", version);
-        fields.put("_opr_name", name);
-        fields.put("_opr_notes", notes);
-        fields.put("_opr_created_by", createdBy);
-        fields.put("_opr_modified_by", modifiedBy);
-        return fields;
     }
 }

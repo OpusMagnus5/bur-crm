@@ -10,8 +10,6 @@ import pl.bodzioch.damian.user.InnerUser;
 import pl.bodzioch.damian.user.InnerUserDto;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 record ServiceProvider(
@@ -82,18 +80,5 @@ record ServiceProvider(
                 new InnerUserDto(creator),
                 new InnerUserDto(modifier)
         );
-    }
-
-    Map<String, Object> getPropertySource() {
-        HashMap<String, Object> fields = new HashMap<>();
-        fields.put("_spr_id", id);
-        fields.put("_spr_uuid", uuid);
-        fields.put("_spr_version", version);
-        fields.put("_spr_bur_id", burId);
-        fields.put("_spr_name", name);
-        fields.put("_spr_nip", nip);
-        fields.put("_spr_created_by", createdBy);
-        fields.put("_spr_modified_by", modifiedBy);
-        return fields;
     }
 }

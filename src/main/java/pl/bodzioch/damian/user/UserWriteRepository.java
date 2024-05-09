@@ -3,10 +3,12 @@ package pl.bodzioch.damian.user;
 import jakarta.transaction.Transactional;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
+import pl.bodzioch.damian.infrastructure.database.DbCaster;
 import pl.bodzioch.damian.infrastructure.database.IJdbcCaller;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
+import java.util.Map;
 
 @Repository
 class UserWriteRepository implements IUserWriteRepository {
@@ -24,7 +26,8 @@ class UserWriteRepository implements IUserWriteRepository {
     @Override
     @Transactional(Transactional.TxType.REQUIRED)
     public void createNew(User user) {
-        this.jdbcCaller.call(this.createNewProc, user.getPropertySource());
+        Map<String, Object> properties = DbCaster.toProperties(user);
+        this.jdbcCaller.call(this.createNewProc, properties);
     }
 
     @Override

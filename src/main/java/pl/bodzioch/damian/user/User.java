@@ -2,7 +2,6 @@ package pl.bodzioch.damian.user;
 
 import com.fasterxml.uuid.Generators;
 import pl.bodzioch.damian.exception.AppException;
-import pl.bodzioch.damian.infrastructure.database.DbCaster;
 import pl.bodzioch.damian.infrastructure.database.DbColumn;
 import pl.bodzioch.damian.infrastructure.database.DbConstructor;
 import pl.bodzioch.damian.infrastructure.database.DbManyToOne;
@@ -11,9 +10,7 @@ import pl.bodzioch.damian.utils.Encoder;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 record User (
@@ -99,24 +96,6 @@ record User (
             }
         }
         throw AppException.getGeneralError();
-    }
-
-    Map<String, Object> getPropertySource() {
-        HashMap<String, Object> fields = new HashMap<>();
-        fields.put("_usr_id", id);
-        fields.put("_usr_uuid", uuid);
-        fields.put("_usr_version", version);
-        fields.put("_usr_email", email);
-        fields.put("_usr_password", password);
-        fields.put("_usr_first_name", firstName);
-        fields.put("_usr_last_name", lastName);
-        fields.put("_usr_roles", DbCaster.enumsToDb(roles));
-        fields.put("_usr_last_login", lastLogin);
-        fields.put("_usr_created_at", createdAt);
-        fields.put("_usr_modified_at", modifiedAt);
-        fields.put("_usr_modified_by", modifiedBy);
-        fields.put("_usr_created_by", createdBy);
-        return fields;
     }
 }
 

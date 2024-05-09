@@ -18,36 +18,7 @@ import java.util.stream.Collectors;
 public class DbCaster {
 
     public static final String GENERAL_CURSOR_NAME = "_cursor";
-
-    public static <T> T cast(Class<T> clazz, Object object) {
-        try {
-            return clazz.cast(object);
-        } catch (ClassCastException e) {
-            return null;
-        }
-    }
-
-    public static String enumsToDb(List<? extends Enum<?>> enums) {
-        return enums.stream()
-                .map(Enum::name)
-                .collect(Collectors.joining(";"));
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public static <T extends Enum> List<T> toEnums(Class<T> clazz, Object dbEnums) {
-        String enums = cast(String.class, dbEnums);
-        enums = enums == null ? "" : enums;
-        return (List<T>) Arrays.stream(enums.split(";"))
-                .map(value -> Enum.valueOf(clazz, value))
-                .toList();
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public static <T extends Enum> T toEnum(Class<T> clazz, Object dbEnums) {
-        String enums = cast(String.class, dbEnums);
-        enums = enums == null ? "" : enums;
-        return (T) Enum.valueOf(clazz, enums);
-    }
+    public static final String PROPERTIES_PREFIX = "_";
 
     @SuppressWarnings("unchecked")
     public static <T> List<T> fromProperties(Map<String, Object> properties, Class<T> clazz) {
@@ -75,6 +46,50 @@ public class DbCaster {
         }
     }
 
+    public static Map<String, Object> toProperties(Object object) {
+        HashMap<String, Object> properties = new HashMap<>();
+        Class<?> clazz = object.getClass();
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            DbColumn dbColumn = field.getDeclaredAnnotation(DbColumn.class);
+            if (dbColumn == null) {
+                continue;
+            }
+            String columnName = dbColumn.name();
+            String key = PROPERTIES_PREFIX + columnName;
+            Object value = getValue(object, field);
+            properties.put(key, value);
+        }
+        return properties;
+    }
+
+    private static Object getValue(Object object, Field field) {
+        try {
+            if (field.getType().isInstance(Enum.class)) {
+                return enumsToDb(List.of((Enum<?>) field.get(object)));
+            } else if (List.class.isAssignableFrom(field.getType())) {
+                return mapEnumListToDb(field, object);
+            } else {
+                return field.get(object);
+            }
+        }  catch (IllegalAccessException e) {
+            throw AppException.getGeneralError(e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Object mapEnumListToDb(Field field, Object object) throws IllegalAccessException {
+        Type genericType = field.getGenericType();
+        if (genericType instanceof ParameterizedType) {
+            Type[] typeArguments = ((ParameterizedType) genericType).getActualTypeArguments();
+            if(typeArguments.length == 1 && typeArguments[0] instanceof Class && ((Class<?>) typeArguments[0]).isEnum()) {
+                return enumsToDb((List<? extends Enum<?>>) field.get(object));
+            }
+        }
+        throw new DbCasterException("Not implemented type, field: " + field + " object: " + object);
+    }
+
     private static Object getObjectForField(Map<String, Object> record, String prefix, Field field) throws ReflectiveOperationException {
         List<Annotation> annotations = Arrays.asList(field.getDeclaredAnnotations());
         Optional<DbColumn> dbColumn = findAnnotationType(annotations, DbColumn.class);
@@ -88,6 +103,12 @@ public class DbCaster {
             return extractInnerObject(record, field.getType(), dbManyToOne.get().prefix());
         }
         throw new DbCasterException("This is not annotated field");
+    }
+
+    public static String enumsToDb(List<? extends Enum<?>> enums) {
+        return enums.stream()
+                .map(Enum::name)
+                .collect(Collectors.joining(";"));
     }
 
     @SuppressWarnings("unchecked")
@@ -119,6 +140,13 @@ public class DbCaster {
         return parameter;
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static <T extends Enum> T toEnum(Class<T> clazz, Object dbEnums) {
+        String enums = castOrNull(String.class, dbEnums);
+        enums = enums == null ? "" : enums;
+        return (T) Enum.valueOf(clazz, enums);
+    }
+
     @SuppressWarnings({"rawtypes"})
     private static List<? extends Enum> getList(Object parameter, Field field) {
         Type genericType = field.getGenericType();
@@ -127,6 +155,14 @@ public class DbCaster {
             return getParametrizedObject(typeArguments, parameter);
         }
         throw new DbCasterException("Not implemented type: " + field);
+    }
+
+    private static <T> T castOrNull(Class<T> clazz, Object object) {
+        try {
+            return clazz.cast(object);
+        } catch (ClassCastException e) {
+            return null;
+        }
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -142,6 +178,15 @@ public class DbCaster {
                 .filter(constructor -> constructor.isAnnotationPresent(DbConstructor.class))
                 .findFirst()
                 .orElseThrow(() -> new DbCasterException("The entity constructor should be annotated with @DbConstructor!"));
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static <T extends Enum> List<T> toEnums(Class<T> clazz, Object dbEnums) {
+        String enums = castOrNull(String.class, dbEnums);
+        enums = enums == null ? "" : enums;
+        return (List<T>) Arrays.stream(enums.split(";"))
+                .map(value -> Enum.valueOf(clazz, value))
+                .toList();
     }
 
     @SuppressWarnings("unchecked")

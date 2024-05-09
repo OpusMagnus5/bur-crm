@@ -3,9 +3,11 @@ package pl.bodzioch.damian.program;
 import jakarta.transaction.Transactional;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
+import pl.bodzioch.damian.infrastructure.database.DbCaster;
 import pl.bodzioch.damian.infrastructure.database.IJdbcCaller;
 
 import javax.sql.DataSource;
+import java.util.Map;
 
 @Repository
 class ProgramWriteRepository implements IProgramWriteRepository {
@@ -21,7 +23,7 @@ class ProgramWriteRepository implements IProgramWriteRepository {
     @Override
     @Transactional(Transactional.TxType.REQUIRED)
     public void createNew(Program program) {
-        this.jdbcCaller.call(this.createNewProc, program.getPropertySource());
+        Map<String, Object> properties = DbCaster.toProperties(program);
+        this.jdbcCaller.call(this.createNewProc, properties);
     }
-
 }

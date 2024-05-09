@@ -3,10 +3,12 @@ package pl.bodzioch.damian.operator;
 import jakarta.transaction.Transactional;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
+import pl.bodzioch.damian.infrastructure.database.DbCaster;
 import pl.bodzioch.damian.infrastructure.database.IJdbcCaller;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
+import java.util.Map;
 
 @Repository
 class OperatorWriteRepository implements IOperatorWriteRepository {
@@ -26,7 +28,8 @@ class OperatorWriteRepository implements IOperatorWriteRepository {
     @Override
     @Transactional(Transactional.TxType.REQUIRED)
     public void createNew(Operator operator) {
-        this.jdbcCaller.call(this.createNewProc, operator.getPropertySource());
+        Map<String, Object> properties = DbCaster.toProperties(operator);
+        this.jdbcCaller.call(this.createNewProc, properties);
     }
 
     @Override
@@ -40,6 +43,7 @@ class OperatorWriteRepository implements IOperatorWriteRepository {
     @Override
     @Transactional(Transactional.TxType.REQUIRED)
     public void update(Operator operator) {
-        this.jdbcCaller.call(this.updateProc, operator.getPropertySource());
+        Map<String, Object> properties = DbCaster.toProperties(operator);
+        this.jdbcCaller.call(this.updateProc, properties);
     }
 }
