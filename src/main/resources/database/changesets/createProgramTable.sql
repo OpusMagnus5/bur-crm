@@ -1,11 +1,11 @@
 CREATE TABLE program(
     prg_id BIGSERIAL PRIMARY KEY,
     prg_uuid UUID UNIQUE NOT NULL,
-    prg_version INTEGER NOT NULL,
+    prg_version INTEGER NOT NULL DEFAULT 0,
     prg_name VARCHAR NOT NULL,
     prg_operator_id BIGINT NOT NULL REFERENCES operator(opr_id),
-    prg_created_at TIMESTAMP NOT NULL,
-    prg_modified_at TIMESTAMP,
+    prg_created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
+    prg_modified_at TIMESTAMP WITH TIME ZONE,
     prg_created_by BIGINT NOT NULL,
     prg_modified_by BIGINT
 );
