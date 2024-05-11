@@ -27,7 +27,8 @@ BEGIN
 
     OPEN _cursor FOR
         SELECT opr_id, opr_name
-        FROM operator WHERE lower(opr_name) = lower(_opr_name);
+        FROM operator
+        WHERE lower(opr_name) = lower(_opr_name);
 
 END$$;
 

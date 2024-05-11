@@ -14,6 +14,7 @@ import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static pl.bodzioch.damian.infrastructure.database.DbCaster.GENERAL_CURSOR_NAME;
 
@@ -22,10 +23,12 @@ class ProgramReadRepository implements IProgramReadRepository {
 
     private final IJdbcCaller jdbcCaller;
     private final SimpleJdbcCall getPageProc;
+    private final SimpleJdbcCall getByNameProc;
 
     public ProgramReadRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
         this.jdbcCaller = jdbcCaller;
         this.getPageProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "program_get_page");
+        this.getByNameProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "program_get_by_name");
     }
 
     @Override
@@ -43,5 +46,15 @@ class ProgramReadRepository implements IProgramReadRepository {
         Long totalPrograms = (Long) result.get("_total_programs");
         List<Program> serviceProviders = DbCaster.fromProperties(result, Program.class);
         return new PageQueryResult<>(serviceProviders, totalPrograms);
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.NOT_SUPPORTED)
+    public Optional<Program> getByName(String name) {
+        HashMap<String, Object> properties = new HashMap<>();
+        properties.put("_prg_name", name);
+        getByNameProc.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR));
+        Map<String, Object> result = jdbcCaller.call(getByNameProc, properties);
+        return DbCaster.fromProperties(result, Program.class).stream().findFirst();
     }
 }

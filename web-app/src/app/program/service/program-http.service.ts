@@ -1,9 +1,10 @@
 import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {SERVER_URL} from "../../shared/http-config";
 import {CreateNewProgramRequestInterface} from "../model/create-new-program-request.interface";
 import {CreateNewProgramResponseInterface} from "../model/create-new-program-response-interface";
+import {ProgramExistsResponseInterface} from "../model/program-exists-response.interface";
 
 @Injectable({providedIn: "root"})
 export class ProgramHttpService {
@@ -18,5 +19,14 @@ export class ProgramHttpService {
     );
   }
 
-
+  getIsOperatorExists(idKind: string, id: string): Observable<ProgramExistsResponseInterface> {
+    return this.http.get<ProgramExistsResponseInterface>(
+      SERVER_URL + 'api/program/exists',
+      {
+        params: new HttpParams()
+          .append('kindOfId', idKind)
+          .append('id', id)
+      }
+    );
+  }
 }

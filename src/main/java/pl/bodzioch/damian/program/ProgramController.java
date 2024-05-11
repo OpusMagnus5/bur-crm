@@ -7,18 +7,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pl.bodzioch.damian.dto.CreateNewProgramRequest;
-import pl.bodzioch.damian.dto.CreateNewProgramResponse;
-import pl.bodzioch.damian.dto.ProgramData;
-import pl.bodzioch.damian.dto.ProgramPageResponse;
+import pl.bodzioch.damian.dto.*;
+import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.infrastructure.command.CommandExecutor;
 import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
 import pl.bodzioch.damian.operator.OperatorFilterField;
 import pl.bodzioch.damian.program.command_dto.CreateNewProgramCommand;
 import pl.bodzioch.damian.program.command_dto.CreateNewProgramCommandResult;
+import pl.bodzioch.damian.program.query_dto.GetProgramByNameQuery;
 import pl.bodzioch.damian.program.query_dto.GetProgramPageQuery;
 import pl.bodzioch.damian.program.query_dto.GetProgramPageQueryResult;
 import pl.bodzioch.damian.utils.CipherComponent;
+import pl.bodzioch.damian.utils.validator.OperatorIdKindV;
 
 import java.util.HashMap;
 import java.util.List;
@@ -62,5 +62,19 @@ class ProgramController {
                 .map(element -> new ProgramData(element, cipher))
                 .toList();
         return new ProgramPageResponse(programData, result.totalPrograms());
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/exists")
+    ProgramExistsResponse isProviderExists(
+            @RequestParam @OperatorIdKindV String kindOfId,
+            @RequestParam String id) {
+        GetProgramByNameQuery query = new GetProgramByNameQuery(id);
+        try {
+            queryExecutor.execute(query);
+        } catch (AppException e) {
+            return new ProgramExistsResponse(false);
+        }
+        return new ProgramExistsResponse(true);
     }
 }

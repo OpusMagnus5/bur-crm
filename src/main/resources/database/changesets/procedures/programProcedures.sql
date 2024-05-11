@@ -42,3 +42,20 @@ BEGIN
     WHERE to_tsvector('simple', prg_name) @@ (phraseto_tsquery('simple', COALESCE(_prg_name, prg_name))::text || ':*')::tsquery;
 
 END$$;
+
+DROP PROCEDURE IF EXISTS program_get_by_name;
+/*PROCEDURE program_get_by_name*/
+CREATE OR REPLACE PROCEDURE program_get_by_name(
+    IN _prg_name program.prg_name%TYPE,
+    OUT _cursor REFCURSOR
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    OPEN _cursor FOR
+        SELECT prg_id, prg_name
+        FROM program
+        WHERE lower(prg_name) = lower(_prg_name);
+
+END$$;
