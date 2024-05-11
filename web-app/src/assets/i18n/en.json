@@ -172,7 +172,8 @@
   "operator-details": {
     "title": "Operator details",
     "name": "Name",
-    "notes": "Notes"
+    "notes": "Notes",
+    "programs": "Programs"
   },
   "update-operator": {
     "name-input-label": "Operator name",

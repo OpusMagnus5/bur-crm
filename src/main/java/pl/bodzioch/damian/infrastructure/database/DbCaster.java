@@ -26,7 +26,7 @@ public class DbCaster {
 
     @SuppressWarnings("unchecked")
     public static <T> List<T> fromProperties(Map<String, Object> properties, Class<T> clazz) {
-        try (ExecutorService executor = Executors.newCachedThreadPool()){
+        try {
             List<Map<String, Object>> records = getRecordsFromCursor(properties);
             Constructor<T> constructor = (Constructor<T>) getDbConstructor(clazz);
             Field[] fields = clazz.getDeclaredFields();
@@ -34,7 +34,6 @@ public class DbCaster {
 
             List<T> entities = new ArrayList<>();
             Set<Long> entityIds = new HashSet<>();
-            List<Future<T>> futures = new ArrayList<>();
 
             Iterator<Map<String, Object>> iterator = records.iterator();
             while (iterator.hasNext()) {
@@ -44,15 +43,9 @@ public class DbCaster {
                     iterator.remove();
                     continue;
                 }
-                Future<T> future = executor.submit(() -> {
-                    List<Object> arguments = getArgumentsForRecord(fields, record, records, idColumnName);
-                    return constructor.newInstance(arguments.toArray());
-                });
-                futures.add(future);
-            }
-
-            for (Future<T> future : futures) {
-                entities.add(future.get());
+                List<Object> arguments = getArgumentsForRecord(fields, record, records, idColumnName);
+                T instance = constructor.newInstance(arguments.toArray());
+                entities.add(instance);
             }
 
             return entities;

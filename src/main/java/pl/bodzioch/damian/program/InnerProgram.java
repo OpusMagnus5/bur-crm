@@ -6,7 +6,7 @@ import pl.bodzioch.damian.infrastructure.database.DbId;
 
 public record InnerProgram(
         @DbId
-        @DbColumn(name = "prg_di")
+        @DbColumn(name = "prg_id")
         Long id,
         @DbColumn(name = "prg_name")
         String name

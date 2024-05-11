@@ -4,8 +4,21 @@
     <p class="label-title">{{ 'operator-details.name' | translate }}</p>
     <p>{{ data.name }}</p>
     <p class="label-title">{{ 'operator-details.notes' | translate }}</p>
-    <p class="whitespace-pre-line">{{ data.notes }}</p>
+    <p noDataIfEmpty class="whitespace-pre-line">{{ data.notes }}</p>
   </div>
+  @if (data.programs.length > 0) {
+    <mat-list class="programs-list">
+      <p class="label-title">{{ 'operator-details.programs' | translate }}</p>
+      @for (program of data.programs; track program) {
+        <mat-list-item>
+          <span>{{ program.name }}</span>
+        </mat-list-item>
+      }
+    </mat-list>
+  } @else {
+    <p>{{ 'common.no-data' | translate }}</p>
+  }
+
 
   <mat-divider></mat-divider>
 

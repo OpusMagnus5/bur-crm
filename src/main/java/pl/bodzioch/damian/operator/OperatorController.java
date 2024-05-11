@@ -86,8 +86,8 @@ class OperatorController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     GetOperatorDetailsResponse getDetails(@PathVariable String id) {
-        long operatorrId = Long.parseLong(cipher.decryptMessage(id));
-        GetOperatorDetailsQuery query = new GetOperatorDetailsQuery(operatorrId);
+        long operatorId = Long.parseLong(cipher.decryptMessage(id));
+        GetOperatorDetailsQuery query = new GetOperatorDetailsQuery(operatorId);
         GetOperatorDetailsQueryResult result = queryExecutor.execute(query);
         return new GetOperatorDetailsResponse(result.operator(), cipher);
     }

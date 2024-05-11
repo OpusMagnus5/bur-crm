@@ -1,3 +1,5 @@
+import {ProgramDataInterface} from "./program-data-interface";
+
 export interface OperatorDetailsResponseInterface {
   id: string,
   version: number
@@ -8,5 +10,6 @@ export interface OperatorDetailsResponseInterface {
   creatorFirstName: string,
   creatorLastName: string,
   modifierFirstName: string,
-  modifierLastName: string
+  modifierLastName: string,
+  programs: ProgramDataInterface[]
 }

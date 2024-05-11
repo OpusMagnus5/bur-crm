@@ -5,6 +5,7 @@ import pl.bodzioch.damian.user.InnerUserDto;
 import pl.bodzioch.damian.utils.CipherComponent;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record GetOperatorDetailsResponse(
 		String id,
@@ -16,7 +17,8 @@ public record GetOperatorDetailsResponse(
 		String creatorFirstName,
 		String creatorLastName,
 		String modifierFirstName,
-		String modifierLastName
+		String modifierLastName,
+		List<ProgramData> programs
 ) {
 
 	public GetOperatorDetailsResponse(OperatorDto operator, CipherComponent cipher) {
@@ -30,7 +32,10 @@ public record GetOperatorDetailsResponse(
 				operator.getCreator().map(InnerUserDto::firstName).orElse(null),
 				operator.getCreator().map(InnerUserDto::lastName).orElse(null),
 				operator.getModifier().map(InnerUserDto::firstName).orElse(null),
-				operator.getModifier().map(InnerUserDto::lastName).orElse(null)
+				operator.getModifier().map(InnerUserDto::lastName).orElse(null),
+				operator.programs().stream()
+						.map(ProgramData::new)
+						.toList()
 		);
 	}
 }

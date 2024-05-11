@@ -12,21 +12,24 @@ import {MatButton} from "@angular/material/button";
 import {MatDivider} from "@angular/material/divider";
 import {TranslateModule} from "@ngx-translate/core";
 import {NoDataIfEmptyDirective} from "../shared/directive/no-data-if-empty.directive";
+import {MatList, MatListItem} from "@angular/material/list";
 
 @Component({
   selector: 'app-operator-details',
   standalone: true,
-    imports: [
-        LocalizedDatePipe,
-        MatButton,
-        MatDialogActions,
-        MatDialogContent,
-        MatDialogTitle,
-        MatDivider,
-        TranslateModule,
-        MatDialogClose,
-        NoDataIfEmptyDirective
-    ],
+  imports: [
+    LocalizedDatePipe,
+    MatButton,
+    MatDialogActions,
+    MatDialogContent,
+    MatDialogTitle,
+    MatDivider,
+    TranslateModule,
+    MatDialogClose,
+    NoDataIfEmptyDirective,
+    MatList,
+    MatListItem
+  ],
   templateUrl: './operator-details.component.html',
   styleUrl: './operator-details.component.css'
 })

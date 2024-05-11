@@ -1,8 +1,10 @@
 package pl.bodzioch.damian.operator;
 
+import pl.bodzioch.damian.program.InnerProgramDto;
 import pl.bodzioch.damian.user.InnerUserDto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,6 +18,7 @@ public record OperatorDto(
         LocalDateTime modifiedAt,
         Long modifiedBy,
         Long createdBy,
+        List<InnerProgramDto> programs,
         InnerUserDto creator,
         InnerUserDto modifier
 ) {
@@ -31,6 +34,9 @@ public record OperatorDto(
                 operator.modifiedAt(),
                 operator.modifiedBy(),
                 operator.createdBy(),
+                operator.programs().stream()
+                        .map(InnerProgramDto::new)
+                        .toList(),
                 new InnerUserDto(operator.creator()),
                 new InnerUserDto(operator.modifier())
         );
