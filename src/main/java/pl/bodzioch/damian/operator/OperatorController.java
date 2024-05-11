@@ -68,10 +68,10 @@ class OperatorController {
         filters.put(NAME, name);
         GetOperatorsPageQuery query = new GetOperatorsPageQuery(pageNumber, pageSize, filters);
         GetOperatorsPageQueryResult result = queryExecutor.execute(query);
-        List<OperatorData> providersData = result.operators().stream()
+        List<OperatorData> operatorData = result.operators().stream()
                 .map(element -> new OperatorData(element, cipher))
                 .toList();
-        return new OperatorsPageResponse(providersData, result.totalOperators());
+        return new OperatorsPageResponse(operatorData, result.totalOperators());
     }
 
     @DeleteMapping("/{id}")

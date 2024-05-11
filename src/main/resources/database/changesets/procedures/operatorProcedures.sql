@@ -40,7 +40,7 @@ CREATE OR REPLACE PROCEDURE operator_get_page(
     OUT _cursor REFCURSOR,
     OUT _total_operators BIGINT
 )
-    LANGUAGE plpgsql
+LANGUAGE plpgsql
 AS $$
 BEGIN
 

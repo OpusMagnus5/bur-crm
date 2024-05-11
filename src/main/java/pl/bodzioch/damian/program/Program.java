@@ -15,23 +15,23 @@ import java.util.UUID;
 record Program(
         @DbId
         @DbColumn(name = "prg_id")
-        Long prg_id,
+        Long id,
         @DbColumn(name = "prg_uuid")
-        UUID prg_uuid,
+        UUID uuid,
         @DbColumn(name = "prg_version")
-        Integer prg_version,
+        Integer version,
         @DbColumn(name = "prg_name")
-        String prg_name,
+        String name,
         @DbColumn(name = "prg_operator_id")
-        Long prg_operator_id,
+        Long operatorId,
         @DbColumn(name = "prg_created_at")
-        LocalDateTime prg_created_at,
+        LocalDateTime createdAt,
         @DbColumn(name = "prg_modified_at")
-        LocalDateTime prg_modified_at,
+        LocalDateTime modifiedAt,
         @DbColumn(name = "prg_created_by")
-        Long prg_created_by,
+        Long createdBy,
         @DbColumn(name = "prg_modified_by")
-        Long prg_modified_by,
+        Long modifiedBy,
         @DbManyToOne(prefix = "operator")
         InnerOperator operator,
         @DbManyToOne(prefix = "creator")

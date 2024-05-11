@@ -14,3 +14,31 @@ BEGIN
     VALUES(_prg_uuid, _prg_name, _prg_operator_id, _prg_created_by);
 
 END$$;
+
+DROP PROCEDURE IF EXISTS program_get_page;
+/*PROCEDURE program_get_page*/
+CREATE OR REPLACE PROCEDURE program_get_page(
+    IN _offset NUMERIC,
+    IN _max NUMERIC,
+    IN _prg_name program.prg_name%TYPE,
+    OUT _cursor REFCURSOR,
+    OUT _total_programs BIGINT
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    OPEN _cursor FOR
+        SELECT prg_id, prg_name
+        FROM program
+        WHERE to_tsvector('simple', prg_name) @@ (phraseto_tsquery('simple', COALESCE(_prg_name, prg_name))::text || ':*')::tsquery
+        ORDER BY prg_name
+        OFFSET _offset
+        LIMIT _max;
+
+    SELECT count(prg_id)
+    INTO _total_programs
+    FROM program
+    WHERE to_tsvector('simple', prg_name) @@ (phraseto_tsquery('simple', COALESCE(_prg_name, prg_name))::text || ':*')::tsquery;
+
+END$$;
