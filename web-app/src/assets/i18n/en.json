@@ -5,7 +5,8 @@
     "users-path": "Users",
     "registry-path": "Registry",
     "service-provider-path": "Service providers",
-    "operator-path": "Operators"
+    "operator-path": "Operators",
+    "program-path": "Programs"
   },
   "not-found": {
     "message": "Sorry, the requested page was not found."
@@ -184,6 +185,23 @@
         "required": "Operator name field cannot be empty",
         "pattern": "Invalid operator name provided",
         "exists": "A operator with the provided name already exists"
+      }
+    }
+  },
+  "program": {
+    "new-program": "Add program"
+  },
+  "new-program": {
+    "name-input-label": "Program name",
+    "operator-label": "Operator",
+    "validation": {
+      "name": {
+        "required": "Program name field cannot be empty",
+        "pattern": "Invalid program name provided",
+        "exists": "A program with the provided name already exists"
+      },
+      "operator": {
+        "required": "Operator field cannot be empty"
       }
     }
   }

@@ -18,6 +18,7 @@ import {
   OPERATOR_LIST_PATH,
   REGISTRY_OPERATOR_PATH,
   REGISTRY_PATH,
+  REGISTRY_PROGRAM_PATH,
   REGISTRY_SERVICE_PROVIDER_PATH,
   SERVICE_PROVIDER_LIST_PATH,
   USER_LIST_PATH
@@ -71,4 +72,6 @@ export class NavigationComponent {
         shareReplay()
       );
   }
+
+  protected readonly REGISTRY_PROGRAM_PATH = REGISTRY_PROGRAM_PATH;
 }
