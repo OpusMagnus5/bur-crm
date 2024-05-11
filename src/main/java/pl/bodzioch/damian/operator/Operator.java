@@ -1,10 +1,7 @@
 package pl.bodzioch.damian.operator;
 
 import com.fasterxml.uuid.Generators;
-import pl.bodzioch.damian.infrastructure.database.DbColumn;
-import pl.bodzioch.damian.infrastructure.database.DbConstructor;
-import pl.bodzioch.damian.infrastructure.database.DbManyToOne;
-import pl.bodzioch.damian.infrastructure.database.DbOneToMany;
+import pl.bodzioch.damian.infrastructure.database.*;
 import pl.bodzioch.damian.operator.command_dto.CreateNewOperatorCommand;
 import pl.bodzioch.damian.operator.command_dto.UpdateOperatorCommand;
 import pl.bodzioch.damian.program.InnerProgram;
@@ -15,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 record Operator(
+        @DbId
         @DbColumn(name = "opr_id")
         Long id,
         @DbColumn(name = "opr_uuid")
@@ -33,7 +31,7 @@ record Operator(
         Long modifiedBy,
         @DbColumn(name = "opr_created_by")
         Long createdBy,
-        @DbOneToMany(listName = "programs")
+        @DbOneToMany(prefix = "program")
         List<InnerProgram> programs,
         @DbManyToOne(prefix = "creator")
         InnerUser creator,

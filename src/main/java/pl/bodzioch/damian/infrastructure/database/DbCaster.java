@@ -1,9 +1,5 @@
 package pl.bodzioch.damian.infrastructure.database;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.CollectionType;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import pl.bodzioch.damian.exception.AppException;
@@ -16,6 +12,10 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -26,26 +26,37 @@ public class DbCaster {
 
     @SuppressWarnings("unchecked")
     public static <T> List<T> fromProperties(Map<String, Object> properties, Class<T> clazz) {
-        try {
+        try (ExecutorService executor = Executors.newCachedThreadPool()){
+            List<Map<String, Object>> records = getRecordsFromCursor(properties);
             Constructor<T> constructor = (Constructor<T>) getDbConstructor(clazz);
-            constructor.setAccessible(true);
             Field[] fields = clazz.getDeclaredFields();
-            List<Map<String, Object>> records = (List<Map<String, Object>>) properties.get(GENERAL_CURSOR_NAME);
+            String idColumnName = getIdColumnName(fields);
 
             List<T> entities = new ArrayList<>();
-            for (Map<String, Object> record : records) {
-                List<Object> arguments = new ArrayList<>();
-                for (Field field : fields) {
-                    try {
-                        Object objectForField = getObjectForField(record, null, field);
-                        arguments.add(objectForField);
-                    } catch (DbCasterException ignored) {
-                    }
+            Set<Long> entityIds = new HashSet<>();
+            List<Future<T>> futures = new ArrayList<>();
+
+            Iterator<Map<String, Object>> iterator = records.iterator();
+            while (iterator.hasNext()) {
+                Map<String, Object> record = iterator.next();
+                Long id = (Long) record.get(idColumnName);
+                if (!entityIds.add(id)) {
+                    iterator.remove();
+                    continue;
                 }
-                entities.add(constructor.newInstance(arguments.toArray()));
+                Future<T> future = executor.submit(() -> {
+                    List<Object> arguments = getArgumentsForRecord(fields, record, records, idColumnName);
+                    return constructor.newInstance(arguments.toArray());
+                });
+                futures.add(future);
             }
+
+            for (Future<T> future : futures) {
+                entities.add(future.get());
+            }
+
             return entities;
-        } catch (ReflectiveOperationException e) {
+        } catch (Exception e) {
             throw AppException.getGeneralError(e);
         }
     }
@@ -66,6 +77,33 @@ public class DbCaster {
             properties.put(key, value);
         }
         return properties;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static List<Map<String, Object>> getRecordsFromCursor(Map<String, Object> properties) {
+        return (List<Map<String, Object>>) properties.get(GENERAL_CURSOR_NAME);
+    }
+
+    private static List<Object> getArgumentsForRecord(
+            Field[] fields,
+            Map<String, Object> record,
+            List<Map<String, Object>> records,
+            String idColumnName
+    ) throws ExecutionException, InterruptedException {
+        List<Object> arguments = new ArrayList<>();
+        List<Future<Object>> futures = new ArrayList<>();
+        try(ExecutorService executor = Executors.newCachedThreadPool()) {
+            for (Field field : fields) {
+                Future<Object> future = executor.submit(() -> getObjectForField(record, null, field, records, idColumnName));
+                futures.add(future);
+            }
+            for (Future<Object> element : futures) {
+                arguments.add(element.get());
+            }
+            return arguments;
+        } catch (DbCasterException ignored) {
+            return arguments;
+        }
     }
 
     private static Object getValue(Object object, Field field) {
@@ -94,25 +132,114 @@ public class DbCaster {
         throw new DbCasterException("Not implemented type, field: " + field + " object: " + object);
     }
 
-    private static Object getObjectForField(Map<String, Object> record, String prefix, Field field) throws ReflectiveOperationException, JsonProcessingException {
+    private static Object getObjectForField(
+            Map<String, Object> record,
+            String prefix,
+            Field field,
+            List<Map<String, Object>> records,
+            String idColumnName
+    ) throws ReflectiveOperationException {
         List<Annotation> annotations = Arrays.asList(field.getDeclaredAnnotations());
         Optional<DbColumn> dbColumn = findAnnotationType(annotations, DbColumn.class);
         Optional<DbManyToOne> dbManyToOne = findAnnotationType(annotations, DbManyToOne.class);
         Optional<DbOneToMany> dbOneToMany = findAnnotationType(annotations, DbOneToMany.class);
         if (dbColumn.isPresent()) {
-            String columnName = dbColumn.get().name();
-            String paramName = StringUtils.isBlank(prefix) ? columnName : prefix + "_" + columnName;
-            Object parameter = record.get(paramName);
-            return castSimpleObject(parameter, field);
+            return handleDbColumn(record, prefix, field, dbColumn.get());
         } else if (dbManyToOne.isPresent()) {
-            return extractInnerObject(record, field.getType(), dbManyToOne.get().prefix());
+            return handleDbManyToOne(record, prefix, field, records, dbManyToOne.get());
         } else if (dbOneToMany.isPresent()) {
-            String listName = dbOneToMany.get().listName();
-            String json = (String) record.get(listName); //TODO zwerfykowac
-            CollectionType collectionType = TypeFactory.defaultInstance().constructCollectionType(List.class, field.getType());
-            new ObjectMapper().readValue(json, collectionType)
+            return handleDbOneToMany(record, prefix, field, records, idColumnName, dbOneToMany.get());
+
         }
         throw new DbCasterException("This is not annotated field");
+    }
+
+    @SuppressWarnings("unchecked")
+    private static List<Object> handleDbOneToMany(
+            Map<String, Object> record,
+            String prefix, Field field,
+            List<Map<String, Object>> records,
+            String idColumnName, DbOneToMany dbOneToMany
+    ) {
+        String innerPrefix = getInnerPrefix(prefix, dbOneToMany);
+        Class<Object> listType = (Class<Object>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
+        String typeIdColumnName = getIdColumnName(listType.getDeclaredFields());
+        Long parentId = (Long) record.get(idColumnName);
+        Set<Long> ids = new HashSet<>();
+
+        List<Map<String, Object>> filteredRecords = records.stream()
+                .filter(el -> parentId.equals(record.get(idColumnName)))
+                .dropWhile(el -> {
+                    Long id = (Long) el.get(innerPrefix + PROPERTIES_PREFIX + typeIdColumnName);
+                    return !ids.add(id);
+                })
+                .toList();
+        return filteredRecords.parallelStream()
+                .map(el -> extractInnerObject(el, listType, innerPrefix, records))
+                .toList();
+    }
+
+    private static String getInnerPrefix(String prefix, DbOneToMany dbOneToMany) {
+        String innerPrefix;
+        if (StringUtils.isNotBlank(prefix)) {
+            innerPrefix = prefix + PROPERTIES_PREFIX + dbOneToMany.prefix();
+        } else {
+            innerPrefix = dbOneToMany.prefix();
+        }
+        return innerPrefix;
+    }
+
+    private static Object handleDbManyToOne(
+            Map<String, Object> record,
+            String prefix, Field field,
+            List<Map<String, Object>> records,
+            DbManyToOne dbManyToOne) {
+        String innerPrefix = getInnerPrefix(prefix, dbManyToOne);
+        return extractInnerObject(record, field.getType(), innerPrefix, records);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T extractInnerObject(
+            Map<String, Object> record,
+            Class<T> type,
+            String prefix,
+            List<Map<String, Object>> records
+    ){
+        try {
+            Constructor<T> dbConstructor = (Constructor<T>) getDbConstructor(type);
+            dbConstructor.setAccessible(true);
+            Field[] fields = type.getDeclaredFields();
+            String idColumnName = getIdColumnName(fields);
+            List<Object> arguments = new ArrayList<>();
+            for (Field field : fields) {
+                try {
+                    Object object = getObjectForField(record, prefix, field, records, idColumnName);
+                    arguments.add(object);
+                } catch (DbCasterException ignored) {
+                }
+            }
+            return dbConstructor.newInstance(arguments.toArray());
+        } catch (ReflectiveOperationException e) {
+            throw new DbCasterException("Error occurred while used creating object through reflection!", e);
+        }
+
+    }
+
+    private static String getInnerPrefix(String prefix, DbManyToOne dbManyToOne) {
+        String innerPrefix;
+        if (StringUtils.isNotBlank(prefix)) {
+            innerPrefix = prefix + PROPERTIES_PREFIX + dbManyToOne.prefix();
+        } else {
+            innerPrefix = dbManyToOne.prefix();
+        }
+        return innerPrefix;
+    }
+
+    private static Object handleDbColumn(Map<String, Object> record, String prefix, Field field, DbColumn dbColumn) {
+        String columnName = dbColumn.name();
+        String paramName = StringUtils.isBlank(prefix) ? columnName : prefix + "_" + columnName;
+        Object parameter = record.get(paramName);
+        return castSimpleObject(parameter, field);
     }
 
     public static String enumsToDb(List<? extends Enum<?>> enums) {
@@ -121,20 +248,16 @@ public class DbCaster {
                 .collect(Collectors.joining(";"));
     }
 
-    @SuppressWarnings("unchecked")
-    private static <T> T extractInnerObject(Map<String, Object> record, Class<T> type, String prefix) throws ReflectiveOperationException {
-        Constructor<T> dbConstructor = (Constructor<T>) getDbConstructor(type);
-        dbConstructor.setAccessible(true);
-        Field[] fields = type.getDeclaredFields();
-        List<Object> arguments = new ArrayList<>();
-        for (Field field : fields) {
-            try {
-                Object object = getObjectForField(record, prefix, field);
-                arguments.add(object);
-            } catch (DbCasterException ignored) {
-            }
-        }
-        return dbConstructor.newInstance(arguments.toArray());
+    private static String getIdColumnName(Field[] fields) {
+        return Arrays.stream(fields)
+                .filter(field -> field.isAnnotationPresent(DbId.class))
+                .map(field -> field.getDeclaredAnnotation(DbColumn.class))
+                .map(DbColumn::name)
+                .findFirst()
+                .orElseThrow(() -> {
+                    log.warn("Entity should have field with @DbId Annotation");
+                    return new DbCasterException("Entity should have field with @DbId Annotation");
+                });
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -184,10 +307,12 @@ public class DbCaster {
     }
 
     private static <T> Constructor<?> getDbConstructor(Class<T> clazz) {
-        return Arrays.stream(clazz.getDeclaredConstructors())
+        Constructor<?> constr = Arrays.stream(clazz.getDeclaredConstructors())
                 .filter(constructor -> constructor.isAnnotationPresent(DbConstructor.class))
                 .findFirst()
                 .orElseThrow(() -> new DbCasterException("The entity constructor should be annotated with @DbConstructor!"));
+        constr.setAccessible(true);
+        return constr;
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})

@@ -4,6 +4,7 @@ import com.fasterxml.uuid.Generators;
 import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.infrastructure.database.DbColumn;
 import pl.bodzioch.damian.infrastructure.database.DbConstructor;
+import pl.bodzioch.damian.infrastructure.database.DbId;
 import pl.bodzioch.damian.infrastructure.database.DbManyToOne;
 import pl.bodzioch.damian.user.command_dto.CreateNewUserCommand;
 import pl.bodzioch.damian.utils.Encoder;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 record User (
+         @DbId
          @DbColumn(name = "usr_id")
          Long id,
          @DbColumn(name = "usr_uuid")

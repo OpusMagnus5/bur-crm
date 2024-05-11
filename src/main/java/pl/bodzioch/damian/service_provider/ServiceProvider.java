@@ -3,6 +3,7 @@ package pl.bodzioch.damian.service_provider;
 import com.fasterxml.uuid.Generators;
 import pl.bodzioch.damian.infrastructure.database.DbColumn;
 import pl.bodzioch.damian.infrastructure.database.DbConstructor;
+import pl.bodzioch.damian.infrastructure.database.DbId;
 import pl.bodzioch.damian.infrastructure.database.DbManyToOne;
 import pl.bodzioch.damian.service_provider.command_dto.CreateNewServiceProviderCommand;
 import pl.bodzioch.damian.service_provider.command_dto.UpdateServiceProviderCommand;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 record ServiceProvider(
+        @DbId
         @DbColumn(name = "spr_id")
         Long id,
         @DbColumn(name = "spr_uuid")
