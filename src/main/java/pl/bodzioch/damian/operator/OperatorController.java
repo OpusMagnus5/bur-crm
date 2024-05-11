@@ -105,4 +105,15 @@ class OperatorController {
         UpdateOperatorCommandResult result = commandExecutor.execute(command);
         return new UpdateOperatorResponse(result.message());
     }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    AllOperatorsResponse getAll() {
+        GetAllOperatorsQuery query = new GetAllOperatorsQuery();
+        GetAllOperatorsQueryResult result = queryExecutor.execute(query);
+        List<OperatorData> operators = result.operators().stream()
+                .map(el -> new OperatorData(el, cipher))
+                .toList();
+        return new AllOperatorsResponse(operators);
+    }
 }

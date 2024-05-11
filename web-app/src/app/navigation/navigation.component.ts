@@ -62,6 +62,7 @@ export class NavigationComponent {
   protected readonly REGISTRY_PATH = REGISTRY_PATH;
   protected readonly REGISTRY_SERVICE_PROVIDER_PATH = REGISTRY_SERVICE_PROVIDER_PATH + '/' + SERVICE_PROVIDER_LIST_PATH;
   protected readonly REGISTRY_OPERATOR_PATH = REGISTRY_OPERATOR_PATH + '/' + OPERATOR_LIST_PATH;
+  protected readonly REGISTRY_PROGRAM_PATH = REGISTRY_PROGRAM_PATH;
 
   protected isHandset$: Observable<boolean>;
 
@@ -72,6 +73,4 @@ export class NavigationComponent {
         shareReplay()
       );
   }
-
-  protected readonly REGISTRY_PROGRAM_PATH = REGISTRY_PROGRAM_PATH;
 }

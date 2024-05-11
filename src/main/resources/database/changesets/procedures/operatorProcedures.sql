@@ -132,3 +132,18 @@ BEGIN
     WHERE opr_id = _opr_id;
 
 END$$;
+
+
+DROP PROCEDURE IF EXISTS operator_get_all;
+--PROCEDURE program_get_all
+CREATE OR REPLACE PROCEDURE operator_get_all(
+    OUT _cursor REFCURSOR
+)
+    LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    OPEN _cursor FOR
+        SELECT opr_id, opr_name
+        FROM operator;
+END$$;

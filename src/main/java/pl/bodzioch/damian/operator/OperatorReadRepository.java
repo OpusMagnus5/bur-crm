@@ -25,12 +25,15 @@ class OperatorReadRepository implements IOperatorReadRepository {
     private final SimpleJdbcCall getByNameProc;
     private final SimpleJdbcCall getPageProc;
     private final SimpleJdbcCall getDetailsProc;
+    private final SimpleJdbcCall getAllProc;
 
     public OperatorReadRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
         this.jdbcCaller = jdbcCaller;
         this.getByNameProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "operator_get_by_name");
         this.getPageProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "operator_get_page");
         this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "operator_get_details");
+        this.getAllProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "operator_get_all");
+
     }
 
     @Override
@@ -68,5 +71,13 @@ class OperatorReadRepository implements IOperatorReadRepository {
         getDetailsProc.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR));
         Map<String, Object> result = jdbcCaller.call(getDetailsProc, properties);
         return DbCaster.fromProperties(result, Operator.class).stream().findFirst();
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.NOT_SUPPORTED)
+    public List<Operator> getAll() {
+        getAllProc.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR));
+        Map<String, Object> result = jdbcCaller.call(getAllProc, new HashMap<>());
+        return DbCaster.fromProperties(result, Operator.class);
     }
 }
