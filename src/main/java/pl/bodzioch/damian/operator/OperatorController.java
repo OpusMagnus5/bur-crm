@@ -53,7 +53,7 @@ class OperatorController {
         return new OperatorExistsResponse(true);
     }
 
-    @GetMapping
+    @GetMapping(params = {"pageNumber", "pageSize"})
     @ResponseStatus(HttpStatus.OK)
     OperatorsPageResponse getServiceProviders(
             @RequestParam

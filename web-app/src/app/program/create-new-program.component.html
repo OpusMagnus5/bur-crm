@@ -1,1 +1,30 @@
-<p>create-new-program works!</p>
+<div class="mat-elevation-z3 flex justify-center">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col p-5">
+    <mat-form-field class="w-96">
+      <mat-label>{{ 'new-program.name-input-label' | translate }}</mat-label>
+      <textarea matInput [formControl]="nameControl"></textarea>
+      @if (nameControl.invalid) {
+        <mat-error>{{ getValidationMessage('name', nameControl) }}</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field  class="w-96">
+      <mat-label>{{ 'new-program.operator-label' | translate }}</mat-label>
+      <input type="text"
+             matInput
+             [formControl]="operatorControl"
+             [matAutocomplete]="autocomplete">
+      @if (operatorControl.invalid) {
+        <mat-error>{{ getValidationMessage('name', operatorControl) }}</mat-error>
+      }
+      <mat-autocomplete #autocomplete="matAutocomplete" [displayWith]="displayOperatorName">
+        @for (operator of filteredOperators(); track operator) {
+          <mat-option [value]="operator">{{ operator.name }}</mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+    <button class="w-1/4 self-end"
+            mat-flat-button
+            color="primary"
+            [disabled]="form.invalid">{{ 'common.save-button' | translate }}</button>
+  </form>
+</div>

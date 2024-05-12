@@ -11,6 +11,7 @@ import {HttpQueryFiltersInterface} from "../../shared/model/http-query-filters.i
 import {OperatorDetailsResponseInterface} from "../model/operator-details-response.interface";
 import {UpdateOperatorRequestInterface} from "../model/update-operator-request.interface";
 import {UpdateOperatorResponseInterface} from "../model/update-operator-response.interface";
+import {OperatorGetAllResponseInterface} from "../model/operator-get-all-response.interface";
 
 @Injectable({ providedIn: "root" })
 export class OperatorHttpService {
@@ -61,6 +62,12 @@ export class OperatorHttpService {
     return this.http.patch<UpdateOperatorResponseInterface>(
       SERVER_URL + 'api/operator',
       request
+    );
+  }
+
+  getAll(): Observable<OperatorGetAllResponseInterface> {
+    return this.http.get<OperatorGetAllResponseInterface>(
+      SERVER_URL + 'api/operator'
     );
   }
 }

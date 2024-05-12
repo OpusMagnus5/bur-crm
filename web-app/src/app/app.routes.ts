@@ -11,6 +11,7 @@ import {OperatorDashboardComponent} from "./operator/operator-dashboard.componen
 import {CreateNewOperatorComponent} from "./operator/create-new-operator.component";
 import {OperatorListComponent} from "./operator/operator-list.component";
 import {ProgramDashboardComponent} from "./program/program-dashboard.component";
+import {CreateNewProgramComponent} from "./program/create-new-program.component";
 
 export const ADMINISTRATION_PATH: string = 'administration';
 export const BASE_PATH: string = '';
@@ -64,7 +65,13 @@ export const routes: Routes = [
   },
   {
     path: REGISTRY_PROGRAM_PATH,
-    component: ProgramDashboardComponent
+    component: ProgramDashboardComponent,
+    children: [
+      {
+        path: NEW_PROGRAM_PATH,
+        component: CreateNewProgramComponent
+      }
+    ]
   },
   { path: ADMINISTRATION_USERS_PATH,
     component: UserDashboardComponent,
