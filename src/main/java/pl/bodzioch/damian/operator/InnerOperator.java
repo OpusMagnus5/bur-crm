@@ -1,6 +1,7 @@
 package pl.bodzioch.damian.operator;
 
 import pl.bodzioch.damian.infrastructure.database.DbColumn;
+import pl.bodzioch.damian.infrastructure.database.DbConstructor;
 import pl.bodzioch.damian.infrastructure.database.DbId;
 
 public record InnerOperator(
@@ -10,4 +11,7 @@ public record InnerOperator(
         @DbColumn(name = "opr_name")
         String name
 ) {
+        @DbConstructor
+        public InnerOperator {
+        }
 }

@@ -78,7 +78,8 @@
     "created-at": "Created At",
     "modified-at": "Modified At",
     "creator": "Created By",
-    "modifier": "Modified By"
+    "modifier": "Modified By",
+    "search-label": "Search"
   },
   "http-error": {
     "title": "An error occurred",
@@ -163,8 +164,7 @@
   },
   "operator-list": {
     "name-header": "Name",
-    "no-operators": "No operators found in the database",
-    "filter-label": "Search"
+    "no-operators": "No operators found in the database"
   },
   "delete-operator": {
     "confirmation-title": "Delete operator",
@@ -189,7 +189,8 @@
     }
   },
   "program": {
-    "new-program": "Add program"
+    "new-program": "Add program",
+    "program-list": "Programs list"
   },
   "new-program": {
     "name-input-label": "Program name",
@@ -203,6 +204,13 @@
       "operator": {
         "required": "Operator field cannot be empty"
       }
+    }
+  },
+  "program-list": {
+    "name-header": "Program",
+    "no-programs": "No programs found in the database",
+    "operator": {
+      "name-header": "Operator"
     }
   }
 }

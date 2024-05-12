@@ -1,4 +1,4 @@
-import {ProgramDataInterface} from "./program-data-interface";
+import {ProgramDataInterface} from "../../program/model/program-data-interface";
 
 export interface OperatorDetailsResponseInterface {
   id: string,

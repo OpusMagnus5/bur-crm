@@ -20,7 +20,7 @@ DROP PROCEDURE IF EXISTS program_get_page;
 CREATE OR REPLACE PROCEDURE program_get_page(
     IN _offset NUMERIC,
     IN _max NUMERIC,
-    IN _prg_name program.prg_name%TYPE,
+    IN _prg_or_opr_name program.prg_name%TYPE,
     OUT _cursor REFCURSOR,
     OUT _total_programs BIGINT
 )
@@ -29,9 +29,11 @@ AS $$
 BEGIN
 
     OPEN _cursor FOR
-        SELECT prg_id, prg_name
+        SELECT prg_id, prg_name, opr.opr_name as operator_opr_name
         FROM program
-        WHERE to_tsvector('simple', prg_name) @@ (phraseto_tsquery('simple', COALESCE(_prg_name, prg_name))::text || ':*')::tsquery
+        LEFT JOIN operator opr ON prg_operator_id = opr.opr_id
+        WHERE to_tsvector('simple', prg_name) @@ (phraseto_tsquery('simple', COALESCE(_prg_or_opr_name, prg_name))::text || ':*')::tsquery
+            OR to_tsvector('simple', opr.opr_name) @@ (phraseto_tsquery('simple', COALESCE(_prg_or_opr_name, opr.opr_name))::text || ':*')::tsquery
         ORDER BY prg_name
         OFFSET _offset
         LIMIT _max;
@@ -39,7 +41,7 @@ BEGIN
     SELECT count(prg_id)
     INTO _total_programs
     FROM program
-    WHERE to_tsvector('simple', prg_name) @@ (phraseto_tsquery('simple', COALESCE(_prg_name, prg_name))::text || ':*')::tsquery;
+    WHERE to_tsvector('simple', prg_name) @@ (phraseto_tsquery('simple', COALESCE(_prg_or_opr_name, prg_name))::text || ':*')::tsquery;
 
 END$$;
 

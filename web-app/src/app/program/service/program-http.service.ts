@@ -5,6 +5,8 @@ import {SERVER_URL} from "../../shared/http-config";
 import {CreateNewProgramRequestInterface} from "../model/create-new-program-request.interface";
 import {CreateNewProgramResponseInterface} from "../model/create-new-program-response-interface";
 import {ProgramExistsResponseInterface} from "../model/program-exists-response.interface";
+import {HttpQueryFiltersInterface} from "../../shared/model/http-query-filters.interface";
+import {ProgramPageResponseInterface} from "../model/program-page-response.interface";
 
 @Injectable({providedIn: "root"})
 export class ProgramHttpService {
@@ -29,4 +31,13 @@ export class ProgramHttpService {
       }
     );
   }
+
+  getProgramPage(filters: HttpQueryFiltersInterface): Observable<ProgramPageResponseInterface> {
+    return this.http.get<ProgramPageResponseInterface>(
+      SERVER_URL + 'api/program',
+      {
+        params: new HttpParams().appendAll(filters)
+      }
+    )
+  };
 }

@@ -5,7 +5,7 @@ import pl.bodzioch.damian.utils.FilterField;
 
 @RequiredArgsConstructor
 public enum ProgramFilterField implements FilterField {
-    NAME("_prg_name");
+    NAME("_prg_or_opr_name");
 
     private final String dbName;
 

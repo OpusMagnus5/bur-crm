@@ -1,5 +1,5 @@
 <div class="mat-elevation-z8 operator-list-container">
-  <mat-form-field>
+  <mat-form-field class="w-full">
     <mat-label>{{ 'common.search-label' | translate }}</mat-label>
     <input matInput [(ngModel)]="nameFilter" #filter>
   </mat-form-field>
@@ -7,17 +7,17 @@
 
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let operator">{{ operator.id }}</td>
+      <td mat-cell *matCellDef="let program">{{ program.id }}</td>
     </ng-container>
 
     @for (column of columnsDef; track column) {
       <ng-container matColumnDef="{{column}}">
-        <th mat-header-cell *matHeaderCellDef>{{ 'operator-list.' + column + '-header' | translate }}</th>
-        <td mat-cell *matCellDef="let element">{{ element[column] }}</td>
+        <th mat-header-cell *matHeaderCellDef>{{ 'program-list.' + column + '-header' | translate }}</th>
+        <td mat-cell *matCellDef="let element">{{ getColumnData(element, column) }}</td>
       </ng-container>
     }
 
-    <ng-container matColumnDef="options">
+    <ng-container matColumnDef="options" class="w-8">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let element">
         <button mat-icon-button [matMenuTriggerFor]="menu">
@@ -44,11 +44,11 @@
     <tr mat-row *matRowDef="let row; columns: rowsDef;"></tr>
 
     <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" [colSpan]="rowsDef.length">{{ 'operator-list.no-operators' | translate }}</td>
+      <td class="mat-cell" [colSpan]="rowsDef.length">{{ 'program-list.no-programs' | translate }}</td>
     </tr>
   </table>
 
-  <mat-paginator [length]="dataSource.totalOperators"
+  <mat-paginator [length]="dataSource.totalPrograms"
                  [pageSize]="10"
                  [pageSizeOptions]="[10, 20, 50]"
                  (page)="onPageChange($event)">

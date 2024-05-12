@@ -78,7 +78,8 @@
     "created-at": "Data utworzenia",
     "modified-at": "Data modyfikacji",
     "creator": "Utworzony przez",
-    "modifier": "Zmodyfikowany przez"
+    "modifier": "Zmodyfikowany przez",
+    "search-label": "Szukaj"
   },
   "http-error": {
     "title": "Wystąpił błąd",
@@ -163,8 +164,7 @@
   },
   "operator-list": {
     "name-header": "Nazwa",
-    "no-operators": "Nie znaleziono operatorów w bazie danych",
-    "filter-label": "Wyszukaj"
+    "no-operators": "Nie znaleziono operatorów w bazie danych"
   },
   "delete-operator": {
     "confirmation-title": "Usuń operatora",
@@ -189,7 +189,8 @@
     }
   },
   "program": {
-    "new-program": "Dodaj program"
+    "new-program": "Dodaj program",
+    "program-list": "Lista programów"
   },
   "new-program": {
     "name-input-label": "Nazwa programu",
@@ -203,6 +204,13 @@
       "operator": {
         "required": "Pole operator nie może być puste"
       }
+    }
+  },
+  "program-list": {
+    "name-header": "Program",
+    "no-programs": "Nie znaleziono programów w bazie danych",
+    "operator": {
+      "name-header": "Operator"
     }
   }
 }
