@@ -12,7 +12,7 @@ import java.util.List;
 @Cacheable("operators")
 @Component
 @RequiredArgsConstructor
-public class GetAllOperatorsQueryHandler implements QueryHandler<GetAllOperatorsQuery, GetAllOperatorsQueryResult> {
+class GetAllOperatorsQueryHandler implements QueryHandler<GetAllOperatorsQuery, GetAllOperatorsQueryResult> {
 
     private final IOperatorReadRepository readRepository;
 

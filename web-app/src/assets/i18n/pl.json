@@ -216,5 +216,10 @@
   "delete-program": {
     "confirmation-title": "Usuń program",
     "confirmation-content": "Czy na pewno chcesz usunąć ten program?"
+  },
+  "program-details": {
+    "title": "Szczegóły programu",
+    "name": "Nazwa programu",
+    "operator-name": "Nazwa operatora"
   }
 }

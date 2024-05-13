@@ -40,6 +40,7 @@ import {debounceTime, fromEvent} from "rxjs";
 import {DeleteRecordConfirmationComponent} from "../shared/component/delete-record-confirmation.component";
 import {SubscriptionManager} from "../shared/util/subscription-manager";
 import {ProgramDataInterface} from "./model/program-data-interface";
+import {ProgramDetailsComponent} from "./program-details.component";
 
 @Component({
   selector: 'app-program-list',
@@ -153,8 +154,10 @@ export class ProgramListComponent implements AfterViewInit, OnDestroy {
 
   }
 
-  onDetails(element: any) {
-
+  onDetails(element: ProgramDataInterface) {
+    this.http.getDetails(element.id).subscribe(response => {
+      this.dialog.open(ProgramDetailsComponent, { data: response })
+    })
   }
 
   protected getColumnData(element: any, column: string): any {

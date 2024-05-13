@@ -216,5 +216,10 @@
   "delete-program": {
     "confirmation-title": "Delete program",
     "confirmation-content": "Are you sure you want to delete this program?"
+  },
+  "program-details": {
+    "title": "Program details",
+    "name": "Program name",
+    "operator-name": "Operator name"
   }
 }
