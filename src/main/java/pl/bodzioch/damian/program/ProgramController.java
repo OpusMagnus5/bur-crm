@@ -13,6 +13,8 @@ import pl.bodzioch.damian.infrastructure.command.CommandExecutor;
 import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
 import pl.bodzioch.damian.program.command_dto.CreateNewProgramCommand;
 import pl.bodzioch.damian.program.command_dto.CreateNewProgramCommandResult;
+import pl.bodzioch.damian.program.command_dto.DeleteProgramCommand;
+import pl.bodzioch.damian.program.command_dto.DeleteProgramCommandResult;
 import pl.bodzioch.damian.program.query_dto.GetProgramByNameQuery;
 import pl.bodzioch.damian.program.query_dto.GetProgramPageQuery;
 import pl.bodzioch.damian.program.query_dto.GetProgramPageQueryResult;
@@ -75,5 +77,14 @@ class ProgramController {
             return new ProgramExistsResponse(false);
         }
         return new ProgramExistsResponse(true);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    DeleteProgramResponse delete(@PathVariable String id) {
+        long programId = Long.parseLong(cipher.decryptMessage(id));
+        DeleteProgramCommand command = new DeleteProgramCommand(programId);
+        DeleteProgramCommandResult result = commandExecutor.execute(command);
+        return new DeleteProgramResponse(result.message());
     }
 }

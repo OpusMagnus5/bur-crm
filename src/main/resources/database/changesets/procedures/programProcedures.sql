@@ -61,3 +61,16 @@ BEGIN
         WHERE lower(prg_name) = lower(_prg_name);
 
 END$$;
+
+DROP PROCEDURE IF EXISTS program_delete;
+/*PROCEDURE program_delete*/
+CREATE OR REPLACE PROCEDURE program_delete(
+    IN _prg_id program.prg_id%TYPE
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    DELETE FROM program WHERE prg_id = _prg_id;
+
+END$$;
