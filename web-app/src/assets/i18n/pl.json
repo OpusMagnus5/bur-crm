@@ -212,5 +212,9 @@
     "operator": {
       "name-header": "Operator"
     }
+  },
+  "delete-program": {
+    "confirmation-title": "Usuń program",
+    "confirmation-content": "Czy na pewno chcesz usunąć ten program?"
   }
 }

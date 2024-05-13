@@ -1,4 +1,14 @@
-import {AfterViewInit, Component, computed, ElementRef, Signal, signal, ViewChild, WritableSignal} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  ElementRef,
+  OnDestroy,
+  Signal,
+  signal,
+  ViewChild,
+  WritableSignal
+} from '@angular/core';
 import {
   MatCell,
   MatCellDef,
@@ -27,6 +37,9 @@ import {SnackbarService} from "../shared/service/snackbar.service";
 import {MatDialog} from "@angular/material/dialog";
 import {ProgramHttpService} from "./service/program-http.service";
 import {debounceTime, fromEvent} from "rxjs";
+import {DeleteRecordConfirmationComponent} from "../shared/component/delete-record-confirmation.component";
+import {SubscriptionManager} from "../shared/util/subscription-manager";
+import {ProgramDataInterface} from "./model/program-data-interface";
 
 @Component({
   selector: 'app-program-list',
@@ -58,8 +71,9 @@ import {debounceTime, fromEvent} from "rxjs";
   ],
   templateUrl: './program-list.component.html'
 })
-export class ProgramListComponent implements AfterViewInit {
+export class ProgramListComponent implements AfterViewInit, OnDestroy {
 
+  private subscriptions = new SubscriptionManager();
   private readonly data: WritableSignal<ProgramPageResponseInterface> = signal({
     programs: [],
     totalPrograms: 0
@@ -88,6 +102,10 @@ export class ProgramListComponent implements AfterViewInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribeAll();
+  }
+
   ngAfterViewInit(): void {
     fromEvent(this.filter.nativeElement, 'input')
       .pipe(debounceTime(1000))
@@ -109,8 +127,26 @@ export class ProgramListComponent implements AfterViewInit {
     )
   }
 
-  onRemove(element: any) {
+  protected onRemove(element: ProgramDataInterface) {
+    const dialogRef = this.dialog.open(
+      DeleteRecordConfirmationComponent, {
+        data: {
+          codeForTranslation: 'delete-program'
+        }
+      });
+    this.subscriptions.add(dialogRef.componentInstance.deleteConfirmation.subscribe(value => {
+      if (value) {
+        dialogRef.close();
+        this.deleteOperator(element);
+      }
+    }));
+  }
 
+  private deleteOperator(element: ProgramDataInterface) {
+    this.http.delete(element.id).subscribe(response => {
+      this.snackbarService.openTopCenterSnackbar(response.message);
+      this.onPageChange({ pageIndex: this.pageDef().pageNumber - 1, pageSize: this.pageDef().pageSize, previousPageIndex: 1, length: 1 })
+    })
   }
 
   onEdit(element: any) {

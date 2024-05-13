@@ -7,6 +7,7 @@ import {CreateNewProgramResponseInterface} from "../model/create-new-program-res
 import {ProgramExistsResponseInterface} from "../model/program-exists-response.interface";
 import {HttpQueryFiltersInterface} from "../../shared/model/http-query-filters.interface";
 import {ProgramPageResponseInterface} from "../model/program-page-response.interface";
+import {DeleteOperatorResponseInterface} from "../../operator/model/delete-operator-response.interface";
 
 @Injectable({providedIn: "root"})
 export class ProgramHttpService {
@@ -40,4 +41,10 @@ export class ProgramHttpService {
       }
     )
   };
+
+  delete(id: string): Observable<DeleteOperatorResponseInterface> {
+    return this.http.delete<DeleteOperatorResponseInterface>(
+      SERVER_URL + 'api/program/' + id
+    );
+  }
 }
