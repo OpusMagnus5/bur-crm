@@ -12,4 +12,7 @@ interface IProgramReadRepository {
 
     @Transactional(Transactional.TxType.NOT_SUPPORTED)
     Optional<Program> getByName(String name);
+
+    @Transactional(Transactional.TxType.NOT_SUPPORTED)
+    Optional<Program> getDetails(Long id);
 }

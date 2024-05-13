@@ -30,7 +30,7 @@ class GetOperatorDetailsQueryHandler implements QueryHandler<GetOperatorDetailsQ
 
 	private AppException buildOperatorByIdNotFound(Long id) {
 		return new AppException(
-				"Not found opeartor with id: " + id,
+				"Not found operator with id: " + id,
 				HttpStatus.NOT_FOUND,
 				List.of(new ErrorData("error.client.operatorByIdNotFound", List.of(id.toString())))
 		);

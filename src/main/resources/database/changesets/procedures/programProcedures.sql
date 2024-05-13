@@ -74,3 +74,26 @@ BEGIN
     DELETE FROM program WHERE prg_id = _prg_id;
 
 END$$;
+
+DROP PROCEDURE IF EXISTS program_get_details;
+/*PROCEDURE program_get_details*/
+CREATE OR REPLACE PROCEDURE program_get_details(
+    IN _prg_id program.prg_id%TYPE,
+    OUT _cursor REFCURSOR
+)
+    LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    OPEN _cursor FOR
+        SELECT prg_id, prg_version, prg_name, prg_created_at, prg_modified_at,
+               c.usr_first_name as creator_usr_first_name, c.usr_last_name as creator_usr_last_name,
+               m.usr_first_name as modifier_usr_first_name, m.usr_last_name as modifier_usr_last_name,
+               opr.opr_name as program_prg_name
+        FROM program prg
+        LEFT JOIN users c ON prg.prg_created_by = c.usr_id
+        LEFT JOIN users m ON prg.prg_modified_by = m.usr_id
+        LEFT JOIN operator opr on prg.prg_operator_id = opr.opr_id
+        WHERE prg_id = _prg_id;
+
+END$$;
