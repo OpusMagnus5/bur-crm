@@ -11,10 +11,7 @@ import pl.bodzioch.damian.dto.*;
 import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.infrastructure.command.CommandExecutor;
 import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
-import pl.bodzioch.damian.program.command_dto.CreateNewProgramCommand;
-import pl.bodzioch.damian.program.command_dto.CreateNewProgramCommandResult;
-import pl.bodzioch.damian.program.command_dto.DeleteProgramCommand;
-import pl.bodzioch.damian.program.command_dto.DeleteProgramCommandResult;
+import pl.bodzioch.damian.program.command_dto.*;
 import pl.bodzioch.damian.program.query_dto.*;
 import pl.bodzioch.damian.utils.CipherComponent;
 import pl.bodzioch.damian.utils.validator.OperatorIdKindV;
@@ -93,5 +90,13 @@ class ProgramController {
         GetProgramDetailsQuery query = new GetProgramDetailsQuery(programId);
         GetProgramDetailsQueryResult result = queryExecutor.execute(query);
         return new GetProgramDetailsResponse(result.program(), cipher);
+    }
+
+    @PatchMapping
+    @ResponseStatus(HttpStatus.OK)
+    UpdateProgramResponse update(@Valid @RequestBody UpdateProgramRequest request) {
+        UpdateProgramCommand command = new UpdateProgramCommand(request, cipher);
+        UpdateProgramCommandResult result = commandExecutor.execute(command);
+        return new UpdateProgramResponse(result.message());
     }
 }

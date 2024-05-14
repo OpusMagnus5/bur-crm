@@ -9,7 +9,7 @@ public record UpdateOperatorRequest(
 		@Min(value = 0, message = "error.client.operator.minVersion")
 		@Max(value = Integer.MAX_VALUE, message = "error.client.operator.maxVersion")
 		Integer version,
-		@NotEmpty(message = "error.client.serviceProvider.emptyName")
+		@NotEmpty(message = "error.client.operator.emptyName")
 		@Pattern(regexp = "[a-zA-ZążęćłóńśĄŻĘĆŁÓŃŚ0-9 -/.\"\\\\]{1,150}", message = "error.client.operator.incorrectName")
 		String name,
 		String notes

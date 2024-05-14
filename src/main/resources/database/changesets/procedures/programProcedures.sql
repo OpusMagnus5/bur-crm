@@ -97,3 +97,40 @@ BEGIN
         WHERE prg_id = _prg_id;
 
 END$$;
+
+DROP PROCEDURE IF EXISTS program_update;
+/*PROCEDURE program_update*/
+CREATE OR REPLACE PROCEDURE program_update(
+    IN _prg_id program.prg_id%TYPE,
+    IN _prg_version program.prg_version%TYPE,
+    IN _prg_name program.prg_name%TYPE,
+    IN _prg_operator_id program.prg_operator_id%TYPE,
+    in _prg_modified_by program.prg_modified_by%TYPE
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    _current_version INTEGER;
+BEGIN
+
+    SELECT prg_version
+    INTO _current_version
+    FROM program
+    WHERE prg_id = _prg_id;
+
+    IF _current_version <> _prg_version THEN
+        RAISE SQLSTATE '55000' USING MESSAGE = 'The resource with ID: ' || _prg_id || ' was changed by another user',
+            TABLE = 'program',
+            COLUMN = 'prg_version',
+            DETAIL = 'Provided version: ' || _prg_version || ', current version: ' || _current_version;
+    END IF;
+
+    UPDATE program
+    SET prg_version = prg_version + 1,
+        prg_name = _prg_name,
+        prg_operator_id = _prg_operator_id,
+        prg_modified_by = _prg_modified_by,
+        prg_modified_at = current_timestamp
+    WHERE prg_id = _prg_id;
+
+END$$;

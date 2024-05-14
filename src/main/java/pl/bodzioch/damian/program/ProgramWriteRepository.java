@@ -16,11 +16,13 @@ class ProgramWriteRepository implements IProgramWriteRepository {
     private final IJdbcCaller jdbcCaller;
     private final SimpleJdbcCall createNewProc;
     private final SimpleJdbcCall deleteProc;
+    private final SimpleJdbcCall updateProc;
 
     ProgramWriteRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
         this.jdbcCaller = jdbcCaller;
         this.createNewProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "program_create_new");
         this.deleteProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "program_delete");
+        this.updateProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "program_update");
     }
 
     @Override
@@ -36,5 +38,12 @@ class ProgramWriteRepository implements IProgramWriteRepository {
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("_prg_id", id);
         this.jdbcCaller.call(this.deleteProc, properties);
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.REQUIRED)
+    public void update(Program operator) {
+        Map<String, Object> properties = DbCaster.toProperties(operator);
+        this.jdbcCaller.call(this.updateProc, properties);
     }
 }

@@ -7,6 +7,7 @@ import pl.bodzioch.damian.infrastructure.database.DbId;
 import pl.bodzioch.damian.infrastructure.database.DbManyToOne;
 import pl.bodzioch.damian.operator.InnerOperator;
 import pl.bodzioch.damian.program.command_dto.CreateNewProgramCommand;
+import pl.bodzioch.damian.program.command_dto.UpdateProgramCommand;
 import pl.bodzioch.damian.user.InnerUser;
 
 import java.time.LocalDateTime;
@@ -55,6 +56,23 @@ record Program(
                 null,
                 command.createdBy(),
                 null,
+                null,
+                null,
+                null
+        );
+    }
+
+    Program(UpdateProgramCommand command) {
+        this(
+                command.id(),
+                null,
+                command.version(),
+                command.name(),
+                command.operatorId(),
+                null,
+                null,
+                null,
+                command.modifiedBy(),
                 null,
                 null,
                 null
