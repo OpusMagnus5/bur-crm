@@ -1,6 +1,8 @@
 package pl.bodzioch.damian.infrastructure.database;
 
 import lombok.extern.slf4j.Slf4j;
+import org.postgresql.util.PSQLException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,6 +22,7 @@ import java.util.Map;
 class JdbcCaller implements IJdbcCaller {
 
     private static final String OPTIMISTIC_LOCKING_SQL_STATE = "55000";
+    private static final String FOREIGN_KEY_VIOLATION_SQL_STATE = "23503";
 
     @Override
     public Map<String, Object> call(SimpleJdbcCall procedure, Map<String, Object> properties) {
@@ -33,13 +36,9 @@ class JdbcCaller implements IJdbcCaller {
             result = procedure.execute(properties);
             callStatus = JdbcCallStatus.SUCCESS;
         } catch (UncategorizedSQLException e) {
-            if (OPTIMISTIC_LOCKING_SQL_STATE.equals(e.getSQLException().getSQLState())) {
-                log.warn("Optimistic locking error", e);
-                throw buildOptimisticLockingException();
-            } else {
-                log.error("Error occurred while calling procedure.", e);
-                throw e;
-            }
+            handleUncategorizedSQLException(e);
+        } catch (DataIntegrityViolationException e) {
+            handleDataIntegrityViolationException(e);
         }
         catch (Exception e) {
             log.error("Error occurred while calling procedure.", e);
@@ -59,11 +58,40 @@ class JdbcCaller implements IJdbcCaller {
         return new SimpleJdbcCall(jdbcTemplate).withProcedureName(procedure);
     }
 
+    private void handleUncategorizedSQLException(UncategorizedSQLException e) {
+        if (OPTIMISTIC_LOCKING_SQL_STATE.equals(e.getSQLException().getSQLState())) {
+            log.warn("Optimistic locking error", e);
+            throw buildOptimisticLockingException();
+        } else {
+            log.error("Error occurred while calling procedure.", e);
+            throw e;
+        }
+    }
+
+    private void handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+        PSQLException cause = (PSQLException) e.getCause();
+        String sqlState = cause.getSQLState();
+        if (FOREIGN_KEY_VIOLATION_SQL_STATE.equals(sqlState)) {
+            throw buildForeignKeyViolationException();
+        } else {
+            log.error("Error occurred while calling procedure.", e);
+            throw e;
+        }
+    }
+
     private AppException buildOptimisticLockingException() {
         return new AppException(
                 "Optimistic locking error",
                 HttpStatus.CONFLICT,
                 List.of(new ErrorData("error.client.optimisticLocking", Collections.emptyList()))
+        );
+    }
+
+    private AppException buildForeignKeyViolationException() {
+        return new AppException(
+                "Foreign key violation error",
+                HttpStatus.UNPROCESSABLE_ENTITY,
+                List.of(new ErrorData("error.client.foreignKeyViolation", Collections.emptyList()))
         );
     }
 }
