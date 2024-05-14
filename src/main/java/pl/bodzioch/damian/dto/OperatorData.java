@@ -21,9 +21,9 @@ public record OperatorData(
         );
     }
 
-    public OperatorData(InnerOperatorDto operator) {
+    public OperatorData(InnerOperatorDto operator, CipherComponent cipher) {
         this(
-                null,
+                Optional.ofNullable(operator).map(InnerOperatorDto::id).map(id -> cipher.encryptMessage(id.toString())).orElse(null),
                 Optional.ofNullable(operator).map(InnerOperatorDto::name).orElse(null),
                 null
         );

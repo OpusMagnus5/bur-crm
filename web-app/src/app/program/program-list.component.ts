@@ -41,6 +41,7 @@ import {DeleteRecordConfirmationComponent} from "../shared/component/delete-reco
 import {SubscriptionManager} from "../shared/util/subscription-manager";
 import {ProgramDataInterface} from "./model/program-data-interface";
 import {ProgramDetailsComponent} from "./program-details.component";
+import {UpdateProgramComponent} from "./update-program.component";
 
 @Component({
   selector: 'app-program-list',
@@ -150,8 +151,25 @@ export class ProgramListComponent implements AfterViewInit, OnDestroy {
     })
   }
 
-  onEdit(element: any) {
-
+  onEdit(element: ProgramDataInterface) {
+    this.http.getDetails(element.id).subscribe(response => {
+      const dialogRef = this.dialog.open(
+        UpdateProgramComponent, {
+          data: response,
+          disableClose: true
+        });
+      this.subscriptions.add(dialogRef.componentInstance.updateConfirmation.subscribe(value => {
+        if (value) {
+          dialogRef.close();
+          this.onPageChange({
+            pageIndex: this.pageDef().pageNumber - 1,
+            pageSize: this.pageDef().pageSize,
+            previousPageIndex: 1,
+            length: 1
+          });
+        }
+      }));
+    });
   }
 
   onDetails(element: ProgramDataInterface) {

@@ -221,5 +221,20 @@
     "title": "Program details",
     "name": "Program name",
     "operator-name": "Operator name"
+  },
+  "update-program": {
+    "title": "Edit program",
+    "name-input-label": "Program name",
+    "operator-label": "Operator",
+    "validation": {
+      "name": {
+        "required": "Program name field cannot be empty",
+        "pattern": "Invalid program name provided",
+        "exists": "A program with the provided name already exists"
+      },
+      "operator": {
+        "required": "Operator field cannot be empty"
+      }
+    }
   }
 }

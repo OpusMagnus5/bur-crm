@@ -221,5 +221,20 @@
     "title": "Szczegóły programu",
     "name": "Nazwa programu",
     "operator-name": "Nazwa operatora"
+  },
+  "update-program": {
+    "title": "Edycja programu",
+    "name-input-label": "Nazwa programu",
+    "operator-label": "Operator",
+    "validation": {
+      "name": {
+        "required": "Pole nazwa programu nie może być puste",
+        "pattern": "Podana nazwa programu jest nieprawidłowa",
+        "exists": "Istnieje już program o podanej nazwie"
+      },
+      "operator": {
+        "required": "Pole operator nie może być puste"
+      }
+    }
   }
 }

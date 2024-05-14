@@ -89,7 +89,7 @@ BEGIN
         SELECT prg_id, prg_version, prg_name, prg_created_at, prg_modified_at,
                c.usr_first_name as creator_usr_first_name, c.usr_last_name as creator_usr_last_name,
                m.usr_first_name as modifier_usr_first_name, m.usr_last_name as modifier_usr_last_name,
-               opr.opr_name as operator_opr_name
+               opr.opr_name as operator_opr_name, opr.opr_id as operator_opr_id
         FROM program prg
         LEFT JOIN users c ON prg.prg_created_by = c.usr_id
         LEFT JOIN users m ON prg.prg_modified_by = m.usr_id

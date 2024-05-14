@@ -25,7 +25,7 @@ public record ProgramData(
         this(
                 Optional.ofNullable(program).map(el -> cipher.encryptMessage(el.id().toString())).orElse(null),
                 Optional.ofNullable(program).map(ProgramDto::name).orElse(null),
-                Optional.ofNullable(program).map(el -> new OperatorData(el.operator())).orElse(null)
+                Optional.ofNullable(program).map(el -> new OperatorData(el.operator(), cipher)).orElse(null)
         );
     }
 }

@@ -9,6 +9,8 @@ import {HttpQueryFiltersInterface} from "../../shared/model/http-query-filters.i
 import {ProgramPageResponseInterface} from "../model/program-page-response.interface";
 import {DeleteProgramResponseInterface} from "../model/delete-program-response.interface";
 import {ProgramDetailsResponseInterface} from "../model/program-details-response.interface";
+import {UpdateProgramResponseInterface} from "../model/update-program-response.interface";
+import {UpdateProgramRequestInterface} from "../model/update-program-request.interface";
 
 @Injectable({providedIn: "root"})
 export class ProgramHttpService {
@@ -52,6 +54,13 @@ export class ProgramHttpService {
   getDetails(id: string): Observable<ProgramDetailsResponseInterface> {
     return this.http.get<ProgramDetailsResponseInterface>(
       SERVER_URL + 'api/program/' + id
+    );
+  }
+
+  update(request: UpdateProgramRequestInterface): Observable<UpdateProgramResponseInterface> {
+    return this.http.patch<UpdateProgramResponseInterface>(
+      SERVER_URL + 'api/program',
+      request
     );
   }
 }

@@ -31,7 +31,7 @@ public record GetProgramDetailsResponse(
                 program.creator().lastName(),
                 Optional.ofNullable(program.modifier()).map(InnerUserDto::firstName).orElse(null),
                 Optional.ofNullable(program.modifier()).map(InnerUserDto::lastName).orElse(null),
-                new OperatorData(program.operator())
+                new OperatorData(program.operator(), cipher)
         );
     }
 }
