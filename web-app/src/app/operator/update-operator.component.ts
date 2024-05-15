@@ -74,7 +74,7 @@ export class UpdateOperatorComponent implements OnSubmitInterface {
 
   validateNameOccupation(control: AbstractControl): Observable<ValidationErrors | null> {
     if (control.value.trim() !== this.data.name) {
-      return this.httpService.getIsOperatorExists('NAME', control.value.trim()).pipe(
+      return this.httpService.getIsOperatorExists(control.value.trim()).pipe(
         map(response => (response.exists ? { 'exists': true } : null)),
         catchError(() => of(null))
       );

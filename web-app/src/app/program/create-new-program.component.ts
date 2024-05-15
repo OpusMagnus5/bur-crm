@@ -115,7 +115,7 @@ export class CreateNewProgramComponent implements OnInit{
     const operatorId: string = (this.operatorControl?.value as OperatorDataInterface)?.id;
     const programName: string = this.nameControl?.value;
     if (programName && operatorId) {
-      return this.programHttp.getIsOperatorExists('NAME', programName, operatorId).pipe(
+      return this.programHttp.getIsOperatorExists(programName, operatorId).pipe(
         map(response => (response.exists ? { 'exists': true } : null)),
         catchError(() => of(null))
       );

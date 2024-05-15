@@ -26,13 +26,12 @@ export class OperatorHttpService {
     )
   }
 
-  getIsOperatorExists(idKind: string, id: string): Observable<OperatorExistsResponseInterface> {
+  getIsOperatorExists(name: string): Observable<OperatorExistsResponseInterface> {
     return this.http.get<OperatorExistsResponseInterface>(
       SERVER_URL + 'api/operator/exists',
       {
         params: new HttpParams()
-          .append('kindOfId', idKind)
-          .append('id', id)
+          .append('name', name)
       }
     );
   }

@@ -14,7 +14,6 @@ import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
 import pl.bodzioch.damian.program.command_dto.*;
 import pl.bodzioch.damian.program.query_dto.*;
 import pl.bodzioch.damian.utils.CipherComponent;
-import pl.bodzioch.damian.utils.validator.OperatorIdKindV;
 
 import java.util.HashMap;
 import java.util.List;
@@ -62,12 +61,9 @@ class ProgramController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/exists")
-    ProgramExistsResponse isProviderExists(
-            @RequestParam @OperatorIdKindV String kindOfId,
-            @RequestParam String id,
-            @RequestParam String operatorId) {
+    ProgramExistsResponse isProviderExists(@RequestParam String name, @RequestParam String operatorId) {
         long operator = Long.parseLong(cipher.decryptMessage(operatorId));
-        GetProgramByNameQuery query = new GetProgramByNameQuery(id, operator);
+        GetProgramByNameQuery query = new GetProgramByNameQuery(name, operator);
         try {
             queryExecutor.execute(query);
         } catch (AppException e) {

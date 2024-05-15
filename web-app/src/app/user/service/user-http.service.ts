@@ -31,13 +31,12 @@ export class UserHttpService {
     );
   }
 
-  getIsUserExists(idKind: string, id: string): Observable<UserExistsResponseInterface> {
+  getIsUserExists(email: string): Observable<UserExistsResponseInterface> {
     return this.http.get<UserExistsResponseInterface>(
       SERVER_URL + 'api/user/exists',
       {
         params: new HttpParams()
-          .append('kindOfId', idKind)
-          .append('id', id)
+          .append('email', email)
       }
     );
   }

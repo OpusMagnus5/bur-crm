@@ -102,7 +102,7 @@ export class UpdateProgramComponent implements OnInit {
     const operatorId: string = (this.operatorControl?.value as OperatorDataInterface)?.id;
     const programName: string = this.nameControl?.value;
     if (programName && operatorId && (programName.trim() !== this.data.name || operatorId !== this.data.operator.id)) {
-      return this.programHttp.getIsOperatorExists('NAME', programName, operatorId).pipe(
+      return this.programHttp.getIsOperatorExists(programName, operatorId).pipe(
         map(response => (response.exists ? { 'exists': true } : null)),
         catchError(() => of(null))
       );

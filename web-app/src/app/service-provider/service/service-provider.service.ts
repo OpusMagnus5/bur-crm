@@ -28,7 +28,7 @@ export class ServiceProviderService {
   }
 
   validateNipOccupationAndGetProviderName(nipControl: AbstractControl, nameControl: AbstractControl): Observable<ValidationErrors | null> {
-    const isProviderExists = this.httpService.getIsProviderExists('NIP', nipControl.value.trim());
+    const isProviderExists = this.httpService.getIsProviderExists(nipControl.value.trim());
     const providerNameFromBur = this.httpService.getProviderNameFromBur(nipControl.value.trim());
 
     return forkJoin([isProviderExists, providerNameFromBur]).pipe(

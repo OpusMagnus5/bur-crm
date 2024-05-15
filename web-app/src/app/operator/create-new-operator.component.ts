@@ -80,7 +80,7 @@ export class CreateNewOperatorComponent {
   }
 
   validateNameOccupation(control: AbstractControl): Observable<ValidationErrors | null> {
-    return this.httpService.getIsOperatorExists('NAME', control.value.trim()).pipe(
+    return this.httpService.getIsOperatorExists(control.value.trim()).pipe(
       map(response => (response.exists ? { 'exists': true } : null)),
       catchError(() => of(null))
     );

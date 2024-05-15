@@ -14,7 +14,6 @@ import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
 import pl.bodzioch.damian.operator.command_dto.*;
 import pl.bodzioch.damian.operator.query_dto.*;
 import pl.bodzioch.damian.utils.CipherComponent;
-import pl.bodzioch.damian.utils.validator.OperatorIdKindV;
 
 import java.util.HashMap;
 import java.util.List;
@@ -41,10 +40,8 @@ class OperatorController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/exists")
-    OperatorExistsResponse isProviderExists(
-            @RequestParam @OperatorIdKindV String kindOfId,
-            @RequestParam String id) {
-        GetOperatorByNameQuery query = new GetOperatorByNameQuery(id);
+    OperatorExistsResponse isProviderExists(@RequestParam String name) {
+        GetOperatorByNameQuery query = new GetOperatorByNameQuery(name);
         try {
             queryExecutor.execute(query);
         } catch (AppException e) {

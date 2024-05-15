@@ -1,10 +1,11 @@
 package pl.bodzioch.damian.user.query_dto;
 
 import pl.bodzioch.damian.infrastructure.query.QueryResult;
+import pl.bodzioch.damian.user.UserDto;
 
-public record CheckUserExistenceQuerResult(
+public record FindUserByEmailQueryResult(
 
-		boolean exists
+		UserDto user
 
 )  implements QueryResult {
 }

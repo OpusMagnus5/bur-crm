@@ -15,7 +15,6 @@ import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
 import pl.bodzioch.damian.service_provider.command_dto.*;
 import pl.bodzioch.damian.service_provider.query_dto.*;
 import pl.bodzioch.damian.utils.CipherComponent;
-import pl.bodzioch.damian.utils.validator.ProviderIdKindV;
 
 import java.util.List;
 
@@ -39,10 +38,8 @@ class ServiceProviderController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/exists")
-    ProviderExistsResponse isProviderExists(
-            @RequestParam @ProviderIdKindV String kindOfId,
-            @RequestParam String id) {
-        GetServiceProviderByNipQuery query = new GetServiceProviderByNipQuery(Long.parseLong(id));
+    ProviderExistsResponse isProviderExists(@RequestParam String nip) {
+        GetServiceProviderByNipQuery query = new GetServiceProviderByNipQuery(Long.parseLong(nip));
         try {
             queryExecutor.execute(query);
         } catch (AppException e) {

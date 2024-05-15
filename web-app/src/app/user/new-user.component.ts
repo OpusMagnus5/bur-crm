@@ -86,7 +86,7 @@ export class NewUserComponent {
   }
 
   validateEmailOccupation(control: AbstractControl): Observable<ValidationErrors | null> {
-    return this.httpService.getIsUserExists('EMAIL', control.value.trim()).pipe(
+    return this.httpService.getIsUserExists(control.value.trim()).pipe(
       map(response => (response.exists ? { 'exists': true } : null)),
       catchError(() => of(null))
     );
