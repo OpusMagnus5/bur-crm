@@ -1,5 +1,7 @@
 package pl.bodzioch.damian.customer;
 
+import com.fasterxml.uuid.Generators;
+import pl.bodzioch.damian.customer.command_dto.CreateNewCustomerCommand;
 import pl.bodzioch.damian.infrastructure.database.DbColumn;
 import pl.bodzioch.damian.infrastructure.database.DbConstructor;
 import pl.bodzioch.damian.infrastructure.database.DbId;
@@ -37,5 +39,21 @@ record Customer(
 
     @DbConstructor
     Customer {
+    }
+
+    Customer(CreateNewCustomerCommand command) {
+        this(
+                null,
+                Generators.timeBasedEpochGenerator().generate(),
+                null,
+                command.name(),
+                command.nip(),
+                null,
+                null,
+                null,
+                command.createdBy(),
+                null,
+                null
+        );
     }
 }
