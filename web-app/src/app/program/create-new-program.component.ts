@@ -1,12 +1,5 @@
 import {Component, OnInit, signal, WritableSignal} from '@angular/core';
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  Validators
-} from "@angular/forms";
+import {FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators} from "@angular/forms";
 import {ValidationMessageService} from "../shared/service/validation-message.service";
 import {catchError, Observable, of} from "rxjs";
 import {map} from "rxjs/operators";
@@ -64,22 +57,19 @@ export class CreateNewProgramComponent implements OnInit{
     });
     this.operatorControl = new FormControl(null, {
       validators: [Validators.required],
-      asyncValidators: [this.validateNameOccupation.bind(this)],
-      updateOn: "blur"
+      asyncValidators: [this.validateNameOccupation.bind(this)]
     });
     this.form = this.buildFormGroup();
     this.getAllOperators();
   }
 
   ngOnInit(): void {
-    this.operatorControl.valueChanges.pipe(
-      map(value => this.filterOperator(value))
-    ).subscribe(value => {
-      this.filteredOperators?.set(value);
+    this.operatorControl.valueChanges.subscribe(value => {
+      this.filterOperator(value);
     })
   }
 
-  private filterOperator(value: any): OperatorDataInterface[]{ //TODO poprawic async validator
+  private filterOperator(value: any = ''): void {
     let filterValue: string;
     try {
       filterValue = value.toLowerCase();
@@ -87,7 +77,7 @@ export class CreateNewProgramComponent implements OnInit{
       filterValue = value.name.toLowerCase();
     }
     const filteredValues = this.operators?.filter(operator => operator.name.toLowerCase().includes(filterValue));
-    return filteredValues ? filteredValues : [];
+    this.filteredOperators.set(filteredValues ? filteredValues : []);
   }
 
   private getAllOperators() {
@@ -121,16 +111,12 @@ export class CreateNewProgramComponent implements OnInit{
     });
   }
 
-  protected validateNameOccupation(control: AbstractControl): Observable<ValidationErrors | null> {
-    let operatorId: string;
-    try {
-      operatorId = (this.operatorControl.value as OperatorDataInterface).id;
-    } catch (error){
-      operatorId = '';
-    }
-    if (operatorId.length > 0) {
-      return this.programHttp.getIsOperatorExists('NAME', control.value.trim(), operatorId).pipe(
-        map(response => (response.exists ? {'exists': true} : null)),
+  protected validateNameOccupation(): Observable<ValidationErrors | null> {
+    const operatorId: string = (this.operatorControl?.value as OperatorDataInterface)?.id;
+    const programName: string = this.nameControl?.value;
+    if (programName && operatorId) {
+      return this.programHttp.getIsOperatorExists('NAME', programName, operatorId).pipe(
+        map(response => (response.exists ? { 'exists': true } : null)),
         catchError(() => of(null))
       );
     }

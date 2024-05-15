@@ -1,14 +1,6 @@
 import {Component, Inject, OnInit, signal, WritableSignal} from '@angular/core';
 import {catchError, Observable, of, Subject} from "rxjs";
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  ValidationErrors,
-  Validators
-} from "@angular/forms";
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators} from "@angular/forms";
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -74,33 +66,29 @@ export class UpdateProgramComponent implements OnInit {
       asyncValidators: [this.validateNameOccupation.bind(this)],
       updateOn: "blur"
     });
-    this.operatorControl = new FormControl(data.operator, { //TODO poprawic async validator
+    this.operatorControl = new FormControl(data.operator, {
       validators: [Validators.required],
-      asyncValidators: [this.validateNameOccupation.bind(this)],
-      updateOn: "change"
+      asyncValidators: [this.validateNameOccupation.bind(this)]
     });
     this.form = this.buildFormGroup();
     this.getAllOperators();
   }
 
   ngOnInit(): void {
-    this.operatorControl.valueChanges.pipe(
-      map(value => this.filterOperator(value))
-    ).subscribe(value => {
-      this.filteredOperators?.set(value);
+    this.operatorControl.valueChanges.subscribe(value => {
+      this.filterOperator(value);
     })
   }
 
-  private filterOperator(value: any): OperatorDataInterface[]{
-    console.log(value);
+  private filterOperator(value: any = ''): void {
     let filterValue: string;
     try {
       filterValue = value.toLowerCase();
-    } catch (error) {
+    } catch {
       filterValue = value.name.toLowerCase();
     }
     const filteredValues = this.operators?.filter(operator => operator.name.toLowerCase().includes(filterValue));
-    return filteredValues ? filteredValues : [];
+    this.filteredOperators.set(filteredValues ? filteredValues : []);
   }
 
   private buildFormGroup(): FormGroup {
@@ -110,15 +98,11 @@ export class UpdateProgramComponent implements OnInit {
     });
   }
 
-  protected validateNameOccupation(control: AbstractControl): Observable<ValidationErrors | null> {
-    let operatorId: string;
-    try {
-      operatorId = (this.operatorControl.value as OperatorDataInterface).id;
-    } catch (error){
-      operatorId = '';
-    }
-    if (this.nameControl?.value.trim() !== this.data.name && operatorId.length > 0) {
-      return this.programHttp.getIsOperatorExists('NAME', control.value.trim(), this.operatorControl.value).pipe(
+  protected validateNameOccupation(): Observable<ValidationErrors | null> {
+    const operatorId: string = (this.operatorControl?.value as OperatorDataInterface)?.id;
+    const programName: string = this.nameControl?.value;
+    if (programName && operatorId && (programName.trim() !== this.data.name || operatorId !== this.data.operator.id)) {
+      return this.programHttp.getIsOperatorExists('NAME', programName, operatorId).pipe(
         map(response => (response.exists ? { 'exists': true } : null)),
         catchError(() => of(null))
       );

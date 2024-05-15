@@ -202,7 +202,8 @@
         "exists": "Istnieje już program o podanej nazwie u tego operatora"
       },
       "operator": {
-        "required": "Pole operator nie może być puste"
+        "required": "Pole operator nie może być puste",
+        "exists": "Istnieje już program o podanej nazwie u tego operatora"
       }
     }
   },
@@ -233,7 +234,8 @@
         "exists": "Istnieje już program o podanej nazwie"
       },
       "operator": {
-        "required": "Pole operator nie może być puste"
+        "required": "Pole operator nie może być puste",
+        "exists": "Istnieje już program o podanej nazwie u tego operatora"
       }
     }
   }

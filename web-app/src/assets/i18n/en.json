@@ -202,7 +202,8 @@
         "exists": "A program with the provided name already exists with this operator"
       },
       "operator": {
-        "required": "Operator field cannot be empty"
+        "required": "Operator field cannot be empty",
+        "exists": "A program with the provided name already exists with this operator"
       }
     }
   },
@@ -233,7 +234,8 @@
         "exists": "A program with the provided name already exists"
       },
       "operator": {
-        "required": "Operator field cannot be empty"
+        "required": "Operator field cannot be empty",
+        "exists": "A program with the provided name already exists with this operator"
       }
     }
   }
