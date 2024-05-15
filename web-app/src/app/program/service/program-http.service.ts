@@ -25,13 +25,14 @@ export class ProgramHttpService {
     );
   }
 
-  getIsOperatorExists(idKind: string, id: string): Observable<ProgramExistsResponseInterface> {
+  getIsOperatorExists(idKind: string, id: string, operatorId: string): Observable<ProgramExistsResponseInterface> {
     return this.http.get<ProgramExistsResponseInterface>(
       SERVER_URL + 'api/program/exists',
       {
         params: new HttpParams()
           .append('kindOfId', idKind)
           .append('id', id)
+          .append('operatorId', operatorId)
       }
     );
   }

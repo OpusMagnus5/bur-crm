@@ -199,7 +199,7 @@
       "name": {
         "required": "Program name field cannot be empty",
         "pattern": "Invalid program name provided",
-        "exists": "A program with the provided name already exists"
+        "exists": "A program with the provided name already exists with this operator"
       },
       "operator": {
         "required": "Operator field cannot be empty"

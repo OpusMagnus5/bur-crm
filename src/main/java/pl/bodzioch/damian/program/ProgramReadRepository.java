@@ -29,7 +29,7 @@ class ProgramReadRepository implements IProgramReadRepository {
     public ProgramReadRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
         this.jdbcCaller = jdbcCaller;
         this.getPageProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "program_get_page");
-        this.getByNameProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "program_get_by_name");
+        this.getByNameProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "program_get_by_name_and_operator_id");
         this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "program_get_details");
     }
 
@@ -52,9 +52,10 @@ class ProgramReadRepository implements IProgramReadRepository {
 
     @Override
     @Transactional(Transactional.TxType.NOT_SUPPORTED)
-    public Optional<Program> getByName(String name) {
+    public Optional<Program> get(String name, Long operatorId) {
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("_prg_name", name);
+        properties.put("_prg_operator_id", operatorId);
         getByNameProc.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR));
         Map<String, Object> result = jdbcCaller.call(getByNameProc, properties);
         return DbCaster.fromProperties(result, Program.class).stream().findFirst();

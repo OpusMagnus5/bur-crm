@@ -15,7 +15,7 @@
              [formControl]="operatorControl"
              [matAutocomplete]="autocomplete">
       @if (operatorControl.invalid) {
-        <mat-error>{{ getValidationMessage('name', operatorControl) }}</mat-error>
+        <mat-error>{{ getValidationMessage('operator', operatorControl) }}</mat-error>
       }
       <mat-autocomplete #autocomplete="matAutocomplete" [displayWith]="displayOperatorName">
         @for (operator of filteredOperators(); track operator) {

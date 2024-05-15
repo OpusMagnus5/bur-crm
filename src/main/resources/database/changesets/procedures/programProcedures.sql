@@ -45,10 +45,11 @@ BEGIN
 
 END$$;
 
-DROP PROCEDURE IF EXISTS program_get_by_name;
-/*PROCEDURE program_get_by_name*/
-CREATE OR REPLACE PROCEDURE program_get_by_name(
+DROP PROCEDURE IF EXISTS program_get_by_name_and_operator_id;
+/*PROCEDURE program_get_by_name_and_operator_id*/
+CREATE OR REPLACE PROCEDURE program_get_by_name_and_operator_id(
     IN _prg_name program.prg_name%TYPE,
+    IN _prg_operator_id program.prg_operator_id%TYPE,
     OUT _cursor REFCURSOR
 )
 LANGUAGE plpgsql
@@ -58,7 +59,8 @@ BEGIN
     OPEN _cursor FOR
         SELECT prg_id, prg_name
         FROM program
-        WHERE lower(prg_name) = lower(_prg_name);
+        WHERE lower(prg_name) = lower(_prg_name)
+            AND prg_operator_id = _prg_operator_id;
 
 END$$;
 

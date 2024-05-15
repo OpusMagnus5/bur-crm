@@ -64,8 +64,10 @@ class ProgramController {
     @GetMapping("/exists")
     ProgramExistsResponse isProviderExists(
             @RequestParam @OperatorIdKindV String kindOfId,
-            @RequestParam String id) {
-        GetProgramByNameQuery query = new GetProgramByNameQuery(id);
+            @RequestParam String id,
+            @RequestParam String operatorId) {
+        long operator = Long.parseLong(cipher.decryptMessage(operatorId));
+        GetProgramByNameQuery query = new GetProgramByNameQuery(id, operator);
         try {
             queryExecutor.execute(query);
         } catch (AppException e) {

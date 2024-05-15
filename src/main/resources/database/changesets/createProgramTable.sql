@@ -11,4 +11,4 @@ CREATE TABLE program(
 );
 
 CREATE INDEX program_name_idx ON program USING gin (to_tsvector('simple', prg_name));
-CREATE INDEX program_operator_id ON program(prg_operator_id);
+CREATE UNIQUE INDEX program_name_operator_id ON program(prg_name, prg_operator_id);

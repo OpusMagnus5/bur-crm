@@ -199,7 +199,7 @@
       "name": {
         "required": "Pole nazwa programu nie może być puste",
         "pattern": "Podana nazwa programu jest nieprawidłowa",
-        "exists": "Istnieje już program o podanej nazwie"
+        "exists": "Istnieje już program o podanej nazwie u tego operatora"
       },
       "operator": {
         "required": "Pole operator nie może być puste"

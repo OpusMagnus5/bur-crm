@@ -74,7 +74,11 @@ export class UpdateProgramComponent implements OnInit {
       asyncValidators: [this.validateNameOccupation.bind(this)],
       updateOn: "blur"
     });
-    this.operatorControl = new FormControl(data.operator, [Validators.required]);
+    this.operatorControl = new FormControl(data.operator, { //TODO poprawic async validator
+      validators: [Validators.required],
+      asyncValidators: [this.validateNameOccupation.bind(this)],
+      updateOn: "change"
+    });
     this.form = this.buildFormGroup();
     this.getAllOperators();
   }
@@ -88,6 +92,7 @@ export class UpdateProgramComponent implements OnInit {
   }
 
   private filterOperator(value: any): OperatorDataInterface[]{
+    console.log(value);
     let filterValue: string;
     try {
       filterValue = value.toLowerCase();
@@ -106,8 +111,14 @@ export class UpdateProgramComponent implements OnInit {
   }
 
   protected validateNameOccupation(control: AbstractControl): Observable<ValidationErrors | null> {
-    if (control.value.trim() !== this.data.name) {
-      return this.programHttp.getIsOperatorExists('NAME', control.value.trim()).pipe(
+    let operatorId: string;
+    try {
+      operatorId = (this.operatorControl.value as OperatorDataInterface).id;
+    } catch (error){
+      operatorId = '';
+    }
+    if (this.nameControl?.value.trim() !== this.data.name && operatorId.length > 0) {
+      return this.programHttp.getIsOperatorExists('NAME', control.value.trim(), this.operatorControl.value).pipe(
         map(response => (response.exists ? { 'exists': true } : null)),
         catchError(() => of(null))
       );
@@ -116,7 +127,6 @@ export class UpdateProgramComponent implements OnInit {
   }
 
   protected onSubmit() {
-    console.log(this.operatorControl.value);
     this.programHttp.update(this.mapFormToRequest()).subscribe({
       next: response => {
         this.snackbar.openTopCenterSnackbar(response.message);

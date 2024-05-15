@@ -24,7 +24,7 @@ class GetProgramByNameQueryHandler implements QueryHandler<GetProgramByNameQuery
 
     @Override
     public GetProgramByNameQueryResult handle(GetProgramByNameQuery query) {
-        Program program = readRepository.getByName(query.name())
+        Program program = readRepository.get(query.name(), query.operatorId())
                 .orElseThrow(() -> buildProgramByNameNotFound(query.name()));
         return new GetProgramByNameQueryResult(new ProgramDto(program));
     }

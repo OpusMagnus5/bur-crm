@@ -62,7 +62,11 @@ export class CreateNewProgramComponent implements OnInit{
       asyncValidators: [this.validateNameOccupation.bind(this)],
       updateOn: "blur"
     });
-    this.operatorControl = new FormControl(null, [Validators.required]);
+    this.operatorControl = new FormControl(null, {
+      validators: [Validators.required],
+      asyncValidators: [this.validateNameOccupation.bind(this)],
+      updateOn: "blur"
+    });
     this.form = this.buildFormGroup();
     this.getAllOperators();
   }
@@ -75,7 +79,7 @@ export class CreateNewProgramComponent implements OnInit{
     })
   }
 
-  private filterOperator(value: any): OperatorDataInterface[]{
+  private filterOperator(value: any): OperatorDataInterface[]{ //TODO poprawic async validator
     let filterValue: string;
     try {
       filterValue = value.toLowerCase();
@@ -118,10 +122,19 @@ export class CreateNewProgramComponent implements OnInit{
   }
 
   protected validateNameOccupation(control: AbstractControl): Observable<ValidationErrors | null> {
-    return this.programHttp.getIsOperatorExists('NAME', control.value.trim()).pipe(
-      map(response => (response.exists ? { 'exists': true } : null)),
-      catchError(() => of(null))
-    );
+    let operatorId: string;
+    try {
+      operatorId = (this.operatorControl.value as OperatorDataInterface).id;
+    } catch (error){
+      operatorId = '';
+    }
+    if (operatorId.length > 0) {
+      return this.programHttp.getIsOperatorExists('NAME', control.value.trim(), operatorId).pipe(
+        map(response => (response.exists ? {'exists': true} : null)),
+        catchError(() => of(null))
+      );
+    }
+    return of(null);
   }
 
   private showPopUp(response: CreateNewProgramResponseInterface) {

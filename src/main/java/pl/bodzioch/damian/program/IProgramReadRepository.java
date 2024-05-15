@@ -11,7 +11,7 @@ interface IProgramReadRepository {
     PageQueryResult<Program> getPage(PageQuery pageQuery);
 
     @Transactional(Transactional.TxType.NOT_SUPPORTED)
-    Optional<Program> getByName(String name);
+    Optional<Program> get(String name, Long operatorId);
 
     @Transactional(Transactional.TxType.NOT_SUPPORTED)
     Optional<Program> getDetails(Long id);
