@@ -17,7 +17,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class CreateNewCustomerCommandHandler implements CommandHandler<CreateNewCustomerCommand, CreateNewCustomerCommandResult> {
+class CreateNewCustomerCommandHandler implements CommandHandler<CreateNewCustomerCommand, CreateNewCustomerCommandResult> {
 
     private final ICustomerWriteRepository writeRepository;
     private final MessageResolver messageResolver;
