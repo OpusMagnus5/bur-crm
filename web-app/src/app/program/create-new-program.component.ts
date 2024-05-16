@@ -1,7 +1,7 @@
 import {Component, OnInit, signal, WritableSignal} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators} from "@angular/forms";
 import {ValidationMessageService} from "../shared/service/validation-message.service";
-import {catchError, Observable, of} from "rxjs";
+import {catchError, Observable, of, tap} from "rxjs";
 import {map} from "rxjs/operators";
 import {ProgramHttpService} from "./service/program-http.service";
 import {CreateNewProgramResponseInterface} from "./model/create-new-program-response-interface";
@@ -52,12 +52,12 @@ export class CreateNewProgramComponent implements OnInit{
   ) {
     this.nameControl = new FormControl(null, {
       validators: [Validators.required, Validators.pattern('[a-zA-ZążęćłóńśĄŻĘĆŁÓŃŚ0-9 -/.\"\\\\]{1,150}')],
-      asyncValidators: [this.validateNameOccupation.bind(this)],
+      asyncValidators: [this.validateNameInOperatorOccupationForNameControl.bind(this)],
       updateOn: "blur"
     });
     this.operatorControl = new FormControl(null, {
       validators: [Validators.required],
-      asyncValidators: [this.validateNameOccupation.bind(this)]
+      asyncValidators: [this.validateNameInOperatorOccupationForOpeatorControl.bind(this)]
     });
     this.form = this.buildFormGroup();
     this.getAllOperators();
@@ -111,12 +111,27 @@ export class CreateNewProgramComponent implements OnInit{
     });
   }
 
-  protected validateNameOccupation(): Observable<ValidationErrors | null> {
+  protected validateNameInOperatorOccupationForNameControl(): Observable<ValidationErrors | null> {
     const operatorId: string = (this.operatorControl?.value as OperatorDataInterface)?.id;
     const programName: string = this.nameControl?.value;
     if (programName && operatorId) {
       return this.programHttp.getIsOperatorExists(programName, operatorId).pipe(
         map(response => (response.exists ? { 'exists': true } : null)),
+        catchError(() => of(null))
+      );
+    }
+    return of(null);
+  }
+
+  protected validateNameInOperatorOccupationForOpeatorControl(): Observable<ValidationErrors | null> {
+    const operatorId: string = (this.operatorControl?.value as OperatorDataInterface)?.id;
+    const programName: string = this.nameControl?.value;
+    if (programName && operatorId) {
+      return this.programHttp.getIsOperatorExists(programName, operatorId).pipe(
+        tap(validation => {
+          this.nameControl.setErrors(validation.exists ? { 'exists': true } : null)
+        }),
+        map(() => null),
         catchError(() => of(null))
       );
     }
