@@ -257,5 +257,12 @@
         "pattern": "Invalid name provided."
       }
     }
+  },
+  "customer-list": {
+    "name-header": "Name",
+    "nip-header": "NIP",
+    "no-customers": "No customers found in the database",
+    "name-search": "Name",
+    "nip-search": "NIP"
   }
 }

@@ -121,7 +121,7 @@ export class ProgramListComponent implements AfterViewInit, OnDestroy {
       });
   }
 
-  onPageChange(event: PageEvent) {
+  protected onPageChange(event: PageEvent) {
     this.pageDef.set({ pageNumber: event.pageIndex + 1, pageSize: event.pageSize });
     this.http.getProgramPage(this.filters()).subscribe(response =>{
         this.data.set(response);

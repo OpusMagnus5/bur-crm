@@ -257,5 +257,12 @@
         "pattern": "Podana nazwa jest nieprawidłowa."
       }
     }
+  },
+  "customer-list": {
+    "name-header": "Nazwa",
+    "nip-header": "NIP",
+    "no-customers": "Nie znaleziono klientów w bazie danych",
+    "name-search": "Nazwa",
+    "nip-search": "NIP"
   }
 }

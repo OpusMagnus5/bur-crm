@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -72,7 +73,7 @@ class CustomerController {
             @RequestParam(required = false) String nip){
         HashMap<CustomerFilterField, Object> filters = new HashMap<>();
         filters.put(NAME, name);
-        filters.put(NIP, Long.parseLong(nip));
+        filters.put(NIP, NumberUtils.isParsable(nip) ? Long.parseLong(nip) : null);
         GetCustomerPageQuery query = new GetCustomerPageQuery(pageNumber, pageSize, filters);
         GetCustomerPageQueryResult result = queryExecutor.execute(query);
         List<CustomerData> operatorData = result.customers().stream()

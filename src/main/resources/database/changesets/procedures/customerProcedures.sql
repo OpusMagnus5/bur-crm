@@ -49,7 +49,7 @@ BEGIN
         SELECT cst_id, cst_name, cst_nip
         FROM customer
         WHERE to_tsvector('simple', cst_name) @@ (phraseto_tsquery('simple', COALESCE(_cst_name, cst_name))::text || ':*')::tsquery
-            OR cst_nip::varchar = _cst_nip::varchar
+            AND cst_nip::varchar like '%' || COALESCE(_cst_nip, cst_nip)::varchar || '%'
         ORDER BY cst_name
         OFFSET _offset
         LIMIT _max;
@@ -58,6 +58,6 @@ BEGIN
     INTO _total_customers
     FROM customer
     WHERE to_tsvector('simple', cst_name) @@ (phraseto_tsquery('simple', COALESCE(_cst_name, cst_name))::text || ':*')::tsquery
-       OR cst_nip::varchar = _cst_nip::varchar;
+        AND cst_nip::varchar like '%' || COALESCE(_cst_nip, cst_nip)::varchar || '%';
 
 END$$;
