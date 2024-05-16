@@ -6,7 +6,8 @@
     "registry-path": "Registry",
     "service-provider-path": "Service providers",
     "operator-path": "Operators",
-    "program-path": "Programs"
+    "program-path": "Programs",
+    "customer-path": "Customers"
   },
   "not-found": {
     "message": "Sorry, the requested page was not found."
@@ -238,5 +239,9 @@
         "exists": "A program with the provided name already exists with this operator"
       }
     }
+  },
+  "customer": {
+    "new-customer": "Add customer",
+    "customer-list": "Customers list"
   }
 }

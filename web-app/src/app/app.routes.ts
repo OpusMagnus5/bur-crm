@@ -13,6 +13,7 @@ import {OperatorListComponent} from "./operator/operator-list.component";
 import {ProgramDashboardComponent} from "./program/program-dashboard.component";
 import {CreateNewProgramComponent} from "./program/create-new-program.component";
 import {ProgramListComponent} from "./program/program-list.component";
+import {CustomerDashboardComponent} from "./customer/customer-dashboard.component";
 
 export const ADMINISTRATION_PATH: string = 'administration';
 export const BASE_PATH: string = '';
@@ -29,12 +30,19 @@ export const OPERATOR_LIST_PATH: string = 'list';
 export const REGISTRY_PROGRAM_PATH: string = REGISTRY_PATH + '/program'
 export const NEW_PROGRAM_PATH: string = 'new';
 export const PROGRAM_LIST_PATH: string = 'list';
+export const REGISTRY_CUSTOMER_PATH: string = REGISTRY_PATH + '/customer'
+export const NEW_CUSTOMER_PATH: string = 'new';
+export const CUSTOMER_LIST_PATH: string = 'list';
 
 const NOT_FOUND_PATH = 'not-found';
 
 export const routes: Routes = [
   {
     path: BASE_PATH, component: HomeComponent, pathMatch: "full"
+  },
+  {
+    path: REGISTRY_CUSTOMER_PATH,
+    component: CustomerDashboardComponent
   },
   {
     path: REGISTRY_OPERATOR_PATH,

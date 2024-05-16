@@ -6,7 +6,8 @@
     "registry-path": "Rejestr",
     "service-provider-path": "Dostawcy usług",
     "operator-path": "Oparatorzy",
-    "program-path": "Programy"
+    "program-path": "Programy",
+    "customer-path": "Klienci"
   },
   "not-found": {
     "message": "Przepraszamy, szukana strona nie została znaleziona."
@@ -238,5 +239,9 @@
         "exists": "Istnieje już program o podanej nazwie u tego operatora"
       }
     }
+  },
+  "customer": {
+    "new-customer": "Dodaj klienta",
+    "customer-list": "Lista klientów"
   }
 }
