@@ -30,3 +30,34 @@ BEGIN
         FROM customer WHERE cst_nip = _cst_nip;
 
 END$$;
+
+DROP PROCEDURE IF EXISTS customer_get_page;
+/*PROCEDURE customer_get_page*/
+CREATE OR REPLACE PROCEDURE customer_get_page(
+    IN _offset NUMERIC,
+    IN _max NUMERIC,
+    IN _cst_name customer.cst_name%TYPE,
+    IN _cst_nip customer.cst_nip%TYPE,
+    OUT _cursor REFCURSOR,
+    OUT _total_customers BIGINT
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    OPEN _cursor FOR
+        SELECT cst_id, cst_name, cst_nip
+        FROM customer
+        WHERE to_tsvector('simple', cst_name) @@ (phraseto_tsquery('simple', COALESCE(_cst_name, cst_name))::text || ':*')::tsquery
+            OR cst_nip::varchar = _cst_nip::varchar
+        ORDER BY cst_name
+        OFFSET _offset
+        LIMIT _max;
+
+    SELECT count(cst_id)
+    INTO _total_customers
+    FROM customer
+    WHERE to_tsvector('simple', cst_name) @@ (phraseto_tsquery('simple', COALESCE(_cst_name, cst_name))::text || ':*')::tsquery
+       OR cst_nip::varchar = _cst_nip::varchar;
+
+END$$;

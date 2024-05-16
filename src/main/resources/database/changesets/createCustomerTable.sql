@@ -11,3 +11,4 @@ CREATE TABLE customer(
 );
 
 CREATE UNIQUE INDEX customer_nip_idx ON customer (cst_nip);
+CREATE INDEX customer_name_idx ON customer USING gin (to_tsvector('simple', cst_name))

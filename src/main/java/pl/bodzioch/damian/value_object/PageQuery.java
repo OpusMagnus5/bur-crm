@@ -27,7 +27,7 @@ public record PageQuery(
         return pageNumber * pageSize;
     }
 
-    public Map<String, Object> toDbProperties() {
+    public Map<String, Object> filtersToDbProperties() {
         HashMap<String, Object> dbProperties = new HashMap<>();
         Set<? extends FilterField> keys = new HashSet<>(filters.keySet());
         keys.forEach(key -> {

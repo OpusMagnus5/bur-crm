@@ -39,7 +39,7 @@ class ProgramReadRepository implements IProgramReadRepository {
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("_offset", pageQuery.getFirstResult());
         properties.put("_max", pageQuery.getMaxResult());
-        properties.putAll(pageQuery.toDbProperties());
+        properties.putAll(pageQuery.filtersToDbProperties());
 
         getPageProc.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR),
                 new SqlOutParameter("_total_programs", Types.BIGINT));
