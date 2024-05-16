@@ -21,3 +21,7 @@ export interface CustomerPageResponse {
   customers: CustomerData[],
   totalCustomers: number
 }
+
+export interface DeleteCustomerResponse {
+  message: string
+}

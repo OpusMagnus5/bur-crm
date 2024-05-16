@@ -9,7 +9,7 @@ import {
   ViewChild,
   WritableSignal
 } from '@angular/core';
-import {CustomerPageResponse} from "./customer-dtos";
+import {CustomerData, CustomerPageResponse} from "./customer-dtos";
 import {SubscriptionManager} from "../shared/util/subscription-manager";
 import {CustomerListDataSource} from "./customer-list-data-source";
 import {HttpQueryFiltersInterface} from "../shared/model/http-query-filters.interface";
@@ -36,6 +36,9 @@ import {MatInput} from "@angular/material/input";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {TranslateModule} from "@ngx-translate/core";
+import {DeleteRecordConfirmationComponent} from "../shared/component/delete-record-confirmation.component";
+import {SnackbarService} from "../shared/service/snackbar.service";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-customer-list',
@@ -92,7 +95,9 @@ export class CustomerListComponent implements OnDestroy, AfterViewInit {
   @ViewChild('nipFilterRef') nipFilterRef!: ElementRef;
 
   constructor(
-    private customerHttp: CustomerHttpService
+    private customerHttp: CustomerHttpService,
+    private snackbarService: SnackbarService,
+    private dialog: MatDialog
   ) {
     this.customerHttp.getCustomerPage(this.filters()).subscribe(response => {
       this.data.set(response);
@@ -127,8 +132,24 @@ export class CustomerListComponent implements OnDestroy, AfterViewInit {
     )
   }
 
-  protected onRemove(a: any): void {
+  protected onRemove(element: CustomerData): void {
+    const dialogRef = this.dialog.open(
+      DeleteRecordConfirmationComponent, {
+        data: { codeForTranslation: 'delete-customer' }
+      });
+    this.subscriptions.add(dialogRef.componentInstance.deleteConfirmation.subscribe(value => {
+      if (value) {
+        dialogRef.close();
+        this.deleteCustomer(element);
+      }
+    }));
+  }
 
+  private deleteCustomer(element: CustomerData) {
+    this.customerHttp.delete(element.id).subscribe(response => {
+      this.snackbarService.openTopCenterSnackbar(response.message);
+      this.onPageChange({ pageIndex: this.pageDef().pageNumber - 1, pageSize: this.pageDef().pageSize, previousPageIndex: 1, length: 1 })
+    })
   }
 
   protected onEdit(a: any): void {

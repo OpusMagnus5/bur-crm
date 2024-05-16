@@ -9,7 +9,7 @@ import pl.bodzioch.damian.utils.MessageResolver;
 
 @Component
 @RequiredArgsConstructor
-public class DeleteCustomerCommandHandler implements CommandHandler<DeleteCustomerCommand, DeleteCustomerCommandResult> {
+class DeleteCustomerCommandHandler implements CommandHandler<DeleteCustomerCommand, DeleteCustomerCommandResult> {
 
     private final ICustomerWriteRepository writeRepository;
     private final MessageResolver messageResolver;

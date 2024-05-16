@@ -264,5 +264,9 @@
     "no-customers": "No customers found in the database",
     "name-search": "Name",
     "nip-search": "NIP"
+  },
+  "delete-customer": {
+    "confirmation-title": "Delete customer",
+    "confirmation-content": "Are you sure you want to delete this customer?"
   }
 }

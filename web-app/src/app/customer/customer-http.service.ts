@@ -6,7 +6,8 @@ import {
   CreateNewCustomerRequest,
   CreateNewCustomerResponse,
   CustomerExistsResponse,
-  CustomerPageResponse
+  CustomerPageResponse,
+  DeleteCustomerResponse
 } from "./customer-dtos";
 import {UserExistsResponseInterface} from "../user/model/user-exists-response.interface";
 import {HttpQueryFiltersInterface} from "../shared/model/http-query-filters.interface";
@@ -40,6 +41,12 @@ export class CustomerHttpService {
       {
         params: new HttpParams().appendAll(filters)
       }
+    );
+  }
+
+  delete(id: string): Observable<DeleteCustomerResponse> {
+    return this.http.delete<DeleteCustomerResponse>(
+      SERVER_URL + 'api/customer/' + id
     );
   }
 }
