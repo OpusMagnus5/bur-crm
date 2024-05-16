@@ -20,6 +20,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {SERVICE_PROVIDER_LIST_PATH} from "../app.routes";
 import {ServiceProviderService} from "./service/service-provider.service";
 import {SnackbarService} from "../shared/service/snackbar.service";
+import {NipUtils} from "../shared/util/nip-utils";
 
 @Component({
   selector: 'app-new-service-provider',
@@ -54,7 +55,7 @@ export class NewServiceProviderComponent {
     private snackbar: SnackbarService
   ) {
     this.nipControl = new FormControl(null, {
-     validators: [Validators.required, Validators.pattern('\\d{10}'), this.service.validateNip.bind(this)],
+     validators: [Validators.required, Validators.pattern('\\d{10}'), NipUtils.validateNip.bind(this)],
      asyncValidators: [this.validateNipOccupation.bind(this)],
      updateOn: 'blur'
     });

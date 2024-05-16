@@ -1,0 +1,29 @@
+<div class="mat-elevation-z3 flex justify-center">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col p-5">
+    <mat-form-field class="w-96">
+      <mat-label>{{ 'new-customer.nip-input-label' | translate }}</mat-label>
+      <input matInput
+             [formControl]="nipControl"
+             placeholder="8237345738">
+      @if (nipControl.invalid) {
+        <mat-error>{{ getValidationMessage('nip', nipControl) }}</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{ 'new-customer.name-input-label' | translate }}</mat-label>
+      <textarea matInput
+                [formControl]="nameControl"
+                class="w-96">
+      </textarea>
+      @if (nameControl.invalid) {
+        <mat-error>{{ getValidationMessage('name', nameControl) }}</mat-error>
+      }
+    </mat-form-field>
+    <button mat-flat-button
+            color="primary"
+            [disabled]="form.invalid"
+            class="w-1/4 self-end">
+      {{ 'common.save-button' | translate }}
+    </button>
+  </form>
+</div>

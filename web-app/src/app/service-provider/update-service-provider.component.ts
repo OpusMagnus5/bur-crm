@@ -26,6 +26,7 @@ import {ServiceProviderHttpService} from "./service/service-provider-http.servic
 import {UpdateServiceProviderRequestInterface} from "./model/update-service-provider-request.interface";
 import {SnackbarService} from "../shared/service/snackbar.service";
 import {OnSubmitInterface} from "../shared/model/on-submit.interface";
+import {NipUtils} from "../shared/util/nip-utils";
 
 @Component({
   selector: 'app-update-service-provider',
@@ -65,7 +66,7 @@ export class UpdateServiceProviderComponent implements OnSubmitInterface {
     private snackbar: SnackbarService
   ) {
     this.nipControl = new FormControl(data.nip, {
-      validators: [Validators.required, Validators.pattern('\\d{10}'), this.service.validateNip.bind(this)],
+      validators: [Validators.required, Validators.pattern('\\d{10}'), NipUtils.validateNip.bind(this)],
       asyncValidators: [this.validateNipOccupationAndGetProviderName.bind(this)],
       updateOn: 'blur'
     });

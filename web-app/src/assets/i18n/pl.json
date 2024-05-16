@@ -241,5 +241,21 @@
   "customer": {
     "new-customer": "Dodaj klienta",
     "customer-list": "Lista klientów"
+  },
+  "new-customer": {
+    "nip-input-label": "NIP",
+    "name-input-label": "Nazwa klienta",
+    "validation": {
+      "nip": {
+        "required": "Pole nip nie może być puste",
+        "pattern": "Podany nip jest nieprawidłowy",
+        "incorrect": "Podany nip jest nieprawidłowy",
+        "exists": "Istnieje już klient o podanym numerze nip"
+      },
+      "name" : {
+        "required": "Pole nazwa nie może być puste",
+        "pattern": "Podana nazwa jest nieprawidłowa."
+      }
+    }
   }
 }

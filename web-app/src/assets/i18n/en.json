@@ -241,5 +241,21 @@
   "customer": {
     "new-customer": "Add customer",
     "customer-list": "Customers list"
+  },
+  "new-customer": {
+    "nip-input-label": "NIP",
+    "name-input-label": "Customer name",
+    "validation": {
+      "nip": {
+        "required": "NIP field cannot be empty",
+        "pattern": "Invalid NIP provided",
+        "incorrect": "Invalid NIP provided",
+        "exists": "A customer with the provided NIP already exists"
+      },
+      "name" : {
+        "required": "Name field cannot be empty",
+        "pattern": "Invalid name provided."
+      }
+    }
   }
 }
