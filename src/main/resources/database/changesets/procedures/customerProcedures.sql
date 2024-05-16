@@ -61,3 +61,16 @@ BEGIN
         AND cst_nip::varchar like '%' || COALESCE(_cst_nip, cst_nip)::varchar || '%';
 
 END$$;
+
+DROP PROCEDURE IF EXISTS customer_delete;
+/*PROCEDURE customer_delete*/
+CREATE OR REPLACE PROCEDURE customer_delete(
+    IN _cst_id customer.cst_id%TYPE
+)
+    LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    DELETE FROM customer WHERE cst_id = _cst_id;
+
+END$$;

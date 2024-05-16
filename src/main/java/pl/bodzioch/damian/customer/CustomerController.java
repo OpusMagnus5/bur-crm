@@ -10,14 +10,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.bodzioch.damian.customer.command_dto.CreateNewCustomerCommand;
 import pl.bodzioch.damian.customer.command_dto.CreateNewCustomerCommandResult;
+import pl.bodzioch.damian.customer.command_dto.DeleteCustomerCommand;
+import pl.bodzioch.damian.customer.command_dto.DeleteCustomerCommandResult;
 import pl.bodzioch.damian.customer.query_dto.CustomerData;
 import pl.bodzioch.damian.customer.query_dto.GetCustomerByNipQuery;
 import pl.bodzioch.damian.customer.query_dto.GetCustomerPageQuery;
 import pl.bodzioch.damian.customer.query_dto.GetCustomerPageQueryResult;
-import pl.bodzioch.damian.dto.CreateNewCustomerRequest;
-import pl.bodzioch.damian.dto.CreateNewCustomerResponse;
-import pl.bodzioch.damian.dto.CustomerExistsResponse;
-import pl.bodzioch.damian.dto.CustomerPageResponse;
+import pl.bodzioch.damian.dto.*;
 import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.infrastructure.command.CommandExecutor;
 import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
@@ -80,5 +79,14 @@ class CustomerController {
                 .map(element -> new CustomerData(element, cipher))
                 .toList();
         return new CustomerPageResponse(operatorData, result.totalCustomers());
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    DeleteCustomerResponse delete(@PathVariable String id) {
+        long customerId = Long.parseLong(cipher.decryptMessage(id));
+        DeleteCustomerCommand command = new DeleteCustomerCommand(customerId);
+        DeleteCustomerCommandResult result = commandExecutor.execute(command);
+        return new DeleteCustomerResponse(result.message());
     }
 }
