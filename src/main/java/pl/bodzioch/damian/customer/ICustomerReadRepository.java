@@ -12,4 +12,7 @@ interface ICustomerReadRepository {
 
     @Transactional(Transactional.TxType.NOT_SUPPORTED)
     PageQueryResult<Customer> getPage(PageQuery pageQuery);
+
+    @Transactional(Transactional.TxType.NOT_SUPPORTED)
+    Optional<Customer> getDetails(Long id);
 }

@@ -12,10 +12,7 @@ import pl.bodzioch.damian.customer.command_dto.CreateNewCustomerCommand;
 import pl.bodzioch.damian.customer.command_dto.CreateNewCustomerCommandResult;
 import pl.bodzioch.damian.customer.command_dto.DeleteCustomerCommand;
 import pl.bodzioch.damian.customer.command_dto.DeleteCustomerCommandResult;
-import pl.bodzioch.damian.customer.query_dto.CustomerData;
-import pl.bodzioch.damian.customer.query_dto.GetCustomerByNipQuery;
-import pl.bodzioch.damian.customer.query_dto.GetCustomerPageQuery;
-import pl.bodzioch.damian.customer.query_dto.GetCustomerPageQueryResult;
+import pl.bodzioch.damian.customer.query_dto.*;
 import pl.bodzioch.damian.dto.*;
 import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.infrastructure.command.CommandExecutor;
@@ -88,5 +85,14 @@ class CustomerController {
         DeleteCustomerCommand command = new DeleteCustomerCommand(customerId);
         DeleteCustomerCommandResult result = commandExecutor.execute(command);
         return new DeleteCustomerResponse(result.message());
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    CustomerDetailsResponse getDetails(@PathVariable String id) {
+        long customerId = Long.parseLong(cipher.decryptMessage(id));
+        GetCustomerDetailsQuery query = new GetCustomerDetailsQuery(customerId);
+        GetCustomerDetailsQueryResult result = queryExecutor.execute(query);
+        return new CustomerDetailsResponse(result.customer(), cipher);
     }
 }

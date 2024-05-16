@@ -67,10 +67,31 @@ DROP PROCEDURE IF EXISTS customer_delete;
 CREATE OR REPLACE PROCEDURE customer_delete(
     IN _cst_id customer.cst_id%TYPE
 )
-    LANGUAGE plpgsql
+LANGUAGE plpgsql
 AS $$
 BEGIN
 
     DELETE FROM customer WHERE cst_id = _cst_id;
+
+END$$;
+
+DROP PROCEDURE IF EXISTS customer_get_details;
+/*PROCEDURE customer_get_details*/
+CREATE OR REPLACE PROCEDURE customer_get_details(
+    IN _cst_id customer.cst_id%TYPE,
+    OUT _cursor REFCURSOR
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    OPEN _cursor FOR
+        SELECT cst_id, cst_version, cst_name, cst_nip, cst_created_at, cst_modified_at,
+               c.usr_first_name as creator_usr_first_name, c.usr_last_name as creator_usr_last_name,
+               m.usr_first_name as modifier_usr_first_name, m.usr_last_name as modifier_usr_last_name
+        FROM customer cst
+                 LEFT JOIN users c ON cst.cst_created_by = c.usr_id
+                 LEFT JOIN users m ON cst.cst_modified_by = m.usr_id
+        WHERE cst_id = _cst_id;
 
 END$$;
