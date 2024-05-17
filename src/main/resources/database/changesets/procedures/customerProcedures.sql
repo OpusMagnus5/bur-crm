@@ -95,3 +95,40 @@ BEGIN
         WHERE cst_id = _cst_id;
 
 END$$;
+
+DROP PROCEDURE IF EXISTS customer_update;
+/*PROCEDURE customer_update*/
+CREATE OR REPLACE PROCEDURE customer_update(
+    IN _cst_id customer.cst_id%TYPE,
+    IN _cst_version customer.cst_version%TYPE,
+    IN _cst_name customer.cst_name%TYPE,
+    IN _cst_nip customer.cst_nip%TYPE,
+    in _cst_modified_by customer.cst_modified_by%TYPE
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    _current_version INTEGER;
+BEGIN
+
+    SELECT cst_version
+    INTO _current_version
+    FROM customer
+    WHERE cst_id = _cst_id;
+
+    IF _current_version <> _cst_version THEN
+        RAISE SQLSTATE '55000' USING MESSAGE = 'The resource with ID: ' || _cst_id || ' was changed by another user',
+            TABLE = 'customer',
+            COLUMN = 'cst_version',
+            DETAIL = 'Provided version: ' || _cst_version || ', current version: ' || _current_version;
+    END IF;
+
+    UPDATE customer
+    SET cst_version = cst_version + 1,
+        cst_name = _cst_name,
+        cst_nip = _cst_nip,
+        cst_modified_by = _cst_modified_by,
+        cst_modified_at = current_timestamp
+    WHERE cst_id = _cst_id;
+
+END$$;

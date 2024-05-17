@@ -8,10 +8,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pl.bodzioch.damian.customer.command_dto.CreateNewCustomerCommand;
-import pl.bodzioch.damian.customer.command_dto.CreateNewCustomerCommandResult;
-import pl.bodzioch.damian.customer.command_dto.DeleteCustomerCommand;
-import pl.bodzioch.damian.customer.command_dto.DeleteCustomerCommandResult;
+import pl.bodzioch.damian.customer.command_dto.*;
 import pl.bodzioch.damian.customer.query_dto.*;
 import pl.bodzioch.damian.dto.*;
 import pl.bodzioch.damian.exception.AppException;
@@ -94,5 +91,13 @@ class CustomerController {
         GetCustomerDetailsQuery query = new GetCustomerDetailsQuery(customerId);
         GetCustomerDetailsQueryResult result = queryExecutor.execute(query);
         return new CustomerDetailsResponse(result.customer(), cipher);
+    }
+
+    @PatchMapping
+    @ResponseStatus(HttpStatus.OK)
+    UpdateCustomerResponse update(@Valid @RequestBody UpdateCustomerRequest request) {
+        UpdateCustomerCommand command = new UpdateCustomerCommand(request, cipher);
+        UpdateCustomerCommandResult result = commandExecutor.execute(command);
+        return new UpdateCustomerResponse(result.message());
     }
 }

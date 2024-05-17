@@ -13,7 +13,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class GetCustomerDetailsQueryHandler implements QueryHandler<GetCustomerDetailsQuery, GetCustomerDetailsQueryResult> {
+class GetCustomerDetailsQueryHandler implements QueryHandler<GetCustomerDetailsQuery, GetCustomerDetailsQueryResult> {
 
     private final ICustomerReadRepository readRepository;
 

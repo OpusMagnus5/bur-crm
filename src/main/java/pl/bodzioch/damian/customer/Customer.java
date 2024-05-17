@@ -2,6 +2,7 @@ package pl.bodzioch.damian.customer;
 
 import com.fasterxml.uuid.Generators;
 import pl.bodzioch.damian.customer.command_dto.CreateNewCustomerCommand;
+import pl.bodzioch.damian.customer.command_dto.UpdateCustomerCommand;
 import pl.bodzioch.damian.infrastructure.database.DbColumn;
 import pl.bodzioch.damian.infrastructure.database.DbConstructor;
 import pl.bodzioch.damian.infrastructure.database.DbId;
@@ -52,6 +53,22 @@ record Customer(
                 null,
                 null,
                 command.createdBy(),
+                null,
+                null
+        );
+    }
+
+    Customer(UpdateCustomerCommand command) {
+        this(
+                command.id(),
+                null,
+                command.version(),
+                command.name(),
+                command.nip(),
+                null,
+                null,
+                command.modifiedBy(),
+                null,
                 null,
                 null
         );
