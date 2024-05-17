@@ -268,5 +268,10 @@
   "delete-customer": {
     "confirmation-title": "Usuń klienta",
     "confirmation-content": "Czy na pewno chcesz usunąć tego klienta?"
+  },
+  "customer-details": {
+    "title": "Szczegóły klienta",
+    "name": "Nazwa klienta",
+    "nip": "NIP"
   }
 }

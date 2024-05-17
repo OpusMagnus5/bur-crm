@@ -39,6 +39,7 @@ import {TranslateModule} from "@ngx-translate/core";
 import {DeleteRecordConfirmationComponent} from "../shared/component/delete-record-confirmation.component";
 import {SnackbarService} from "../shared/service/snackbar.service";
 import {MatDialog} from "@angular/material/dialog";
+import {CustomerDetailsComponent} from "./customer-details.component";
 
 @Component({
   selector: 'app-customer-list',
@@ -156,7 +157,9 @@ export class CustomerListComponent implements OnDestroy, AfterViewInit {
 
   }
 
-  protected onDetails(a: any): void {
-
+  protected onDetails(element: CustomerData): void {
+    this.customerHttp.getDetails(element.id).subscribe(response => {
+      this.dialog.open(CustomerDetailsComponent, { data: response })
+    })
   }
 }

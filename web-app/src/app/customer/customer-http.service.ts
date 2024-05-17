@@ -5,6 +5,7 @@ import {SERVER_URL} from "../shared/http-config";
 import {
   CreateNewCustomerRequest,
   CreateNewCustomerResponse,
+  CustomerDetailsResponse,
   CustomerExistsResponse,
   CustomerPageResponse,
   DeleteCustomerResponse
@@ -46,6 +47,12 @@ export class CustomerHttpService {
 
   delete(id: string): Observable<DeleteCustomerResponse> {
     return this.http.delete<DeleteCustomerResponse>(
+      SERVER_URL + 'api/customer/' + id
+    );
+  }
+
+  getDetails(id: string): Observable<CustomerDetailsResponse> {
+    return this.http.get<CustomerDetailsResponse>(
       SERVER_URL + 'api/customer/' + id
     );
   }
