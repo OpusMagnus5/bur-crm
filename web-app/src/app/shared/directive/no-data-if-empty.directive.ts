@@ -1,4 +1,4 @@
-import {Directive, ElementRef, Renderer2} from "@angular/core";
+import {Directive, ElementRef, Input, Renderer2} from "@angular/core";
 import {TranslateService} from "@ngx-translate/core";
 
 @Directive({
@@ -6,6 +6,8 @@ import {TranslateService} from "@ngx-translate/core";
   standalone: true
 })
 export class NoDataIfEmptyDirective {
+
+  @Input('noDataIfEmpty') testData: any = null;
 
   constructor(
     private elementRef: ElementRef,
@@ -17,7 +19,7 @@ export class NoDataIfEmptyDirective {
 
   private checkAndSetContent() {
     const paragraph = this.elementRef.nativeElement;
-    if (paragraph.textContent.trim().length === 0) {
+    if (this.testData) {
       this.translator.get('common.no-data').subscribe(text => {
         this.renderer.setProperty(paragraph, 'textContent', text);
       })

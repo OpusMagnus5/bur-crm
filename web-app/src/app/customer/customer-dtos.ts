@@ -38,3 +38,14 @@ export interface CustomerDetailsResponse {
   modifierFirstName: string,
   modifierLastName: string
 }
+
+export interface UpdateCustomerRequest {
+  id: string,
+  version: number,
+  name: string,
+  nip: string
+}
+
+export interface UpdateCustomerResponse {
+  message: string
+}

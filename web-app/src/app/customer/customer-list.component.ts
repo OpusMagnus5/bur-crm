@@ -40,6 +40,7 @@ import {DeleteRecordConfirmationComponent} from "../shared/component/delete-reco
 import {SnackbarService} from "../shared/service/snackbar.service";
 import {MatDialog} from "@angular/material/dialog";
 import {CustomerDetailsComponent} from "./customer-details.component";
+import {UpdateCustomerComponent} from "./update-customer.component";
 
 @Component({
   selector: 'app-customer-list',
@@ -153,8 +154,25 @@ export class CustomerListComponent implements OnDestroy, AfterViewInit {
     })
   }
 
-  protected onEdit(a: any): void {
-
+  protected onEdit(element: CustomerData): void {
+    this.customerHttp.getDetails(element.id).subscribe(response => {
+      const dialogRef = this.dialog.open(
+        UpdateCustomerComponent, {
+          data: response,
+          disableClose: true
+        });
+      this.subscriptions.add(dialogRef.componentInstance.updateConfirmation.subscribe(value => {
+        if (value) {
+          dialogRef.close();
+          this.onPageChange({
+            pageIndex: this.pageDef().pageNumber - 1,
+            pageSize: this.pageDef().pageSize,
+            previousPageIndex: 1,
+            length: 1
+          });
+        }
+      }));
+    });
   }
 
   protected onDetails(element: CustomerData): void {

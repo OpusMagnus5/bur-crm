@@ -8,7 +8,9 @@ import {
   CustomerDetailsResponse,
   CustomerExistsResponse,
   CustomerPageResponse,
-  DeleteCustomerResponse
+  DeleteCustomerResponse,
+  UpdateCustomerRequest,
+  UpdateCustomerResponse
 } from "./customer-dtos";
 import {UserExistsResponseInterface} from "../user/model/user-exists-response.interface";
 import {HttpQueryFiltersInterface} from "../shared/model/http-query-filters.interface";
@@ -54,6 +56,13 @@ export class CustomerHttpService {
   getDetails(id: string): Observable<CustomerDetailsResponse> {
     return this.http.get<CustomerDetailsResponse>(
       SERVER_URL + 'api/customer/' + id
+    );
+  }
+
+  update(request: UpdateCustomerRequest): Observable<UpdateCustomerResponse> {
+    return this.http.patch<UpdateCustomerResponse>(
+      SERVER_URL + 'api/customer',
+      request
     );
   }
 }
