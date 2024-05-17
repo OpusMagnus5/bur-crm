@@ -31,7 +31,7 @@ export class ServiceProviderHttpService {
       SERVER_URL + 'api/service-provider/exists',
       {
         params: new HttpParams()
-          .append('id', nip)
+          .append('nip', nip)
       }
     );
   }

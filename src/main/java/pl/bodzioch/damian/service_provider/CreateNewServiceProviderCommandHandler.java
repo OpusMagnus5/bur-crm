@@ -5,9 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import pl.bodzioch.damian.client.bur.BurServiceProviderDto;
 import pl.bodzioch.damian.client.bur.IBurClient;
 import pl.bodzioch.damian.exception.AppException;
+import pl.bodzioch.damian.exception.HttpClientException;
 import pl.bodzioch.damian.infrastructure.command.CommandHandler;
 import pl.bodzioch.damian.service_provider.command_dto.CreateNewServiceProviderCommand;
 import pl.bodzioch.damian.service_provider.command_dto.CreateNewServiceProviderCommandResult;
@@ -15,7 +15,6 @@ import pl.bodzioch.damian.utils.MessageResolver;
 import pl.bodzioch.damian.value_object.ErrorData;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @Slf4j
@@ -33,11 +32,8 @@ class CreateNewServiceProviderCommandHandler implements CommandHandler<CreateNew
 
     @Override
     public CreateNewServiceProviderCommandResult handle(CreateNewServiceProviderCommand command) {
-        Optional<Long> burId = burClient.getServiceProvider(command.nip())
-                .onErrorComplete()
-                .blockOptional()
-                .map(BurServiceProviderDto::id);
-        ServiceProvider serviceProvider = new ServiceProvider(command, burId.orElse(null));
+        Long burId = getBurId(command.nip());
+        ServiceProvider serviceProvider = new ServiceProvider(command, burId);
         try {
             writeRepository.createNew(serviceProvider);
         } catch (DuplicateKeyException e) {
@@ -46,6 +42,14 @@ class CreateNewServiceProviderCommandHandler implements CommandHandler<CreateNew
         }
         String message = messageResolver.getMessage("serviceProvider.createNewServiceProviderSuccess");
         return new CreateNewServiceProviderCommandResult(message);
+    }
+
+    private Long getBurId(Long nip) {
+        try {
+            return burClient.getServiceProvider(nip).id();
+        } catch (HttpClientException e){
+            return null;
+        }
     }
 
     private AppException buildProviderByNipAlreadyExistsException(Long nip) {
