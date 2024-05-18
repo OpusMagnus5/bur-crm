@@ -2,6 +2,7 @@ package pl.bodzioch.damian.client.bur.configuration;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,12 +13,9 @@ import org.springframework.web.client.RestClient;
 import pl.bodzioch.damian.client.Dictionary;
 import pl.bodzioch.damian.exception.HttpClientException;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static pl.bodzioch.damian.client.Dictionary.DictionaryKey.BUR;
 
@@ -68,7 +66,7 @@ class BurClientConfig {
         return (request, body, execution) -> {
             log.info("{} {}", request.getMethod(), request.getURI());
             log.info("Headers: {}", request.getHeaders());
-            log.info("Body: {}", new String(body));
+            log.info("Body: {}", new String(body, Charset.defaultCharset()));
             return execution.execute(request, body);
         };
     }
@@ -76,16 +74,13 @@ class BurClientConfig {
     private ClientHttpRequestInterceptor logResponseInterceptor() {
         return (request, body, execution) -> {
             ClientHttpResponse response = execution.execute(request, body);
-            BufferedInputStream bufferedInputStream = new BufferedInputStream(response.getBody());
-            bufferedInputStream.mark(0); //TODO fix
-            String responseBody = new BufferedReader(new InputStreamReader(bufferedInputStream))
-                    .lines().collect(Collectors.joining("\n"));
-            bufferedInputStream.reset();
+            byte[] bodyBytes = IOUtils.toByteArray(response.getBody());
+            BufferingClientHttpResponseWrapper responseWrapper = new BufferingClientHttpResponseWrapper(response, bodyBytes);
             log.info("{} {}", request.getMethod(), request.getURI());
             log.info("Status: {}", response.getStatusCode().value());
             log.info("Headers: {}", response.getHeaders());
-            log.info("Body: {}", responseBody);
-            return response;
+            log.info("Body: {}", new String(bodyBytes, Charset.defaultCharset()));
+            return responseWrapper;
         };
     }
 
