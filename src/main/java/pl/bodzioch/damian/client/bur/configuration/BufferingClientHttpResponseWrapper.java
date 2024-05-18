@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @AllArgsConstructor
-public class BufferingClientHttpResponseWrapper implements ClientHttpResponse {
+class BufferingClientHttpResponseWrapper implements ClientHttpResponse {
 
     private final ClientHttpResponse response;
     private byte[] body;
