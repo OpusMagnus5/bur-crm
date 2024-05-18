@@ -5,7 +5,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.lang.NonNull;
-import org.springframework.util.StreamUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -37,10 +36,7 @@ class BufferingClientHttpResponseWrapper implements ClientHttpResponse {
 
     @Override
     @NonNull
-    public InputStream getBody() throws IOException {
-        if (this.body == null) {
-            this.body = StreamUtils.copyToByteArray(this.response.getBody());
-        }
+    public InputStream getBody() {
         return new ByteArrayInputStream(this.body);
     }
 
