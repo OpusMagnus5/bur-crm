@@ -13,7 +13,8 @@ export class ServerErrorHttpInterceptor implements HttpInterceptor {
     "api/service-provider/name",
     "api/user/exists",
     "api/operator/exists",
-    "api/program/exists"
+    "api/program/exists",
+    "api/coach/exists"
   ];
 
   constructor(private dialog: MatDialog) {

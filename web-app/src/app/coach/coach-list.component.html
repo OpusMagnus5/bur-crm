@@ -1,0 +1,62 @@
+<div class="mat-elevation-z8">
+  <div class="flex">
+    <mat-form-field class="w-1/3">
+      <mat-label>{{ 'coach-list.first-name-search' | translate }}</mat-label>
+      <input matInput [(ngModel)]="firstNameFilter" #firstNameFilterRef>
+    </mat-form-field>
+    <mat-form-field class="px-2 w-1/3">
+      <mat-label>{{ 'coach-list.last-name-search' | translate }}</mat-label>
+      <input matInput [(ngModel)]="lastNameFilter" #lastNameFilterRef>
+    </mat-form-field>
+  </div>
+  <table mat-table [dataSource]="dataSource">
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let coach">{{ coach.id }}</td>
+    </ng-container>
+
+    @for (column of columnsDef; track column) {
+      <ng-container matColumnDef="{{column}}">
+        <th mat-header-cell *matHeaderCellDef>{{ 'coach-list.' + column + '-header' | translate }}</th>
+        <td mat-cell *matCellDef="let element">{{ element[column] }}</td>
+      </ng-container>
+    }
+
+    <ng-container matColumnDef="options">
+      <th mat-header-cell *matHeaderCellDef class="w-8"></th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="onDetails(element)">
+            <mat-icon>open_in_new</mat-icon>
+            <span>{{ 'common.option-details' | translate }}</span>
+          </button>
+          <button mat-menu-item (click)="onEdit(element)">
+            <mat-icon>edit</mat-icon>
+            <span>{{ 'common.option-edit' | translate }}</span>
+          </button>
+          <button mat-menu-item (click)="onRemove(element)">
+            <mat-icon>delete</mat-icon>
+            <span>{{ 'common.option-delete' | translate }}</span>
+          </button>
+        </mat-menu>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="rowsDef"></tr>
+    <tr mat-row *matRowDef="let row; columns: rowsDef;"></tr>
+
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" [colSpan]="rowsDef.length">{{ 'coach-list.no-coaches' | translate }}</td>
+    </tr>
+  </table>
+
+  <mat-paginator [length]="dataSource.totalPrograms"
+                 [pageSize]="10"
+                 [pageSizeOptions]="[10, 20, 50]"
+                 (page)="onPageChange($event)">
+  </mat-paginator>
+</div>

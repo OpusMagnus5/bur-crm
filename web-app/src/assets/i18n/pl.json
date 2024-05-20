@@ -315,5 +315,13 @@
         "exists": "Istnieje już trener z podanym numerem PESEL"
       }
     }
+  },
+  "coach-list": {
+    "firstName-header": "Imię",
+    "lastName-header": "Nazwisko",
+    "pesel-header": "PESEL",
+    "no-coaches": "Nie znaleziono trenerów w bazie danych",
+    "first-name-search": "Imię",
+    "last-name-search": "Nazwisko"
   }
 }

@@ -117,7 +117,6 @@ export class CustomerListComponent implements OnDestroy, AfterViewInit {
       .pipe(debounceTime(1000))
       .subscribe({
         next: () => {
-          console.log('halo');
           this.pageDef().pageNumber = 1;
           this.customerHttp.getCustomerPage(this.filters()).subscribe(response => {
             this.data.set(response);

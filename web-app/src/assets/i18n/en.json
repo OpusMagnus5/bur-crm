@@ -315,5 +315,13 @@
         "exists": "There is already a coach with the given PESEL number"
       }
     }
+  },
+  "coach-list": {
+    "firstName-header": "First name",
+    "lastName-header": "Last name",
+    "pesel-header": "PESEL",
+    "no-coaches": "No coaches found in the database",
+    "first-name-search": "First name",
+    "last-name-search": "Last name"
   }
 }

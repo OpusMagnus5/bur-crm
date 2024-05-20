@@ -50,16 +50,16 @@ BEGIN
     OPEN _cursor FOR
         SELECT coa_id, coa_first_name, coa_last_name, coa_pesel
         FROM coach
-        WHERE coa_first_name = COALESCE(_coa_first_name, coa_first_name)
-            AND coa_last_name = COALESCE(_coa_last_name, coa_last_name)
+        WHERE LOWER(coa_first_name) like '%' || LOWER(COALESCE(_coa_first_name, coa_first_name)) || '%'
+          AND LOWER(coa_last_name) like '%' || LOWER(COALESCE(_coa_last_name, coa_last_name)) || '%'
         ORDER BY coa_last_name, coa_first_name
         OFFSET _offset
         LIMIT _max;
 
-    SELECT count(coa_id)
+    SELECT COUNT(coa_id)
     INTO _total_coaches
     FROM coach
-    WHERE coa_first_name = COALESCE(_coa_first_name, coa_first_name)
-      AND coa_last_name = COALESCE(_coa_last_name, coa_last_name);
+    WHERE LOWER(coa_first_name) like '%' || LOWER(COALESCE(_coa_first_name, coa_first_name)) || '%'
+      AND LOWER(coa_last_name) like '%' || LOWER(COALESCE(_coa_last_name, coa_last_name)) || '%';
 
 END$$;

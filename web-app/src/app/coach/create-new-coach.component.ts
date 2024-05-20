@@ -63,7 +63,7 @@ export class CreateNewCoachComponent {
   }
 
   validatePeselOccupation(control: AbstractControl): Observable<ValidationErrors | null> {
-    return this.coachHttp.checkOperatorExistance(control.value.trim()).pipe(
+    return this.coachHttp.checkOperatorExistence(control.value.trim()).pipe(
       map(response => response.exists ? { 'exists': true } : null),
       catchError(() => of(null))
     );

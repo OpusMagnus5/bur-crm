@@ -18,6 +18,7 @@ import {CreateNewCustomerComponent} from "./customer/create-new-customer.compone
 import {CustomerListComponent} from "./customer/customer-list.component";
 import {CoachDashboardComponent} from "./coach/coach-dashboard.component";
 import {CreateNewCoachComponent} from "./coach/create-new-coach.component";
+import {CoachListComponent} from "./coach/coach-list.component";
 
 export const ADMINISTRATION_PATH: string = 'administration';
 export const BASE_PATH: string = '';
@@ -54,6 +55,10 @@ export const routes: Routes = [
       {
         path: NEW_COACH_PATH,
         component: CreateNewCoachComponent
+      },
+      {
+        path: COACH_LIST_PATH,
+        component: CoachListComponent
       }
     ]
   },
