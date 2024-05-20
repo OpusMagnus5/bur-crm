@@ -63,3 +63,16 @@ BEGIN
       AND LOWER(coa_last_name) like '%' || LOWER(COALESCE(_coa_last_name, coa_last_name)) || '%';
 
 END$$;
+
+DROP PROCEDURE IF EXISTS coach_delete;
+/*PROCEDURE coach_delete*/
+CREATE OR REPLACE PROCEDURE coach_delete(
+    IN _coa_id coach.coa_id%TYPE
+)
+    LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    DELETE FROM coach WHERE coa_id = _coa_id;
+
+END$$;

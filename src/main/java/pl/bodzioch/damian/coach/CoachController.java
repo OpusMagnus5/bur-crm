@@ -10,6 +10,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.bodzioch.damian.coach.command_dto.CreateNewCoachCommand;
 import pl.bodzioch.damian.coach.command_dto.CreateNewCoachCommandResult;
+import pl.bodzioch.damian.coach.command_dto.DeleteCoachCommand;
+import pl.bodzioch.damian.coach.command_dto.DeleteCoachCommandResult;
 import pl.bodzioch.damian.coach.query_dto.GetCoachByPeselQuery;
 import pl.bodzioch.damian.coach.query_dto.GetCoachPageQuery;
 import pl.bodzioch.damian.coach.query_dto.GetCoachPageQueryResult;
@@ -73,5 +75,14 @@ class CoachController {
                 .map(element -> new CoachData(element, cipher))
                 .toList();
         return new CoachPageResponse(coachData, result.totalCoaches());
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    DeleteCoachResponse delete(@PathVariable String id) {
+        long coachId = Long.parseLong(cipher.decryptMessage(id));
+        DeleteCoachCommand command = new DeleteCoachCommand(coachId);
+        DeleteCoachCommandResult result = commandExecutor.execute(command);
+        return new DeleteCoachResponse(result.message());
     }
 }

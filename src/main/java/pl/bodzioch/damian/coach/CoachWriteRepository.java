@@ -7,6 +7,7 @@ import pl.bodzioch.damian.infrastructure.database.DbCaster;
 import pl.bodzioch.damian.infrastructure.database.IJdbcCaller;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
 import java.util.Map;
 
 @Repository
@@ -14,10 +15,12 @@ class CoachWriteRepository implements ICoachWriteRepository {
 
     private final IJdbcCaller jdbcCaller;
     private final SimpleJdbcCall createNewProc;
+    private final SimpleJdbcCall deleteProc;
 
     CoachWriteRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
         this.jdbcCaller = jdbcCaller;
         this.createNewProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "coach_create_new");
+        this.deleteProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "coach_delete");
     }
 
     @Override
@@ -25,5 +28,13 @@ class CoachWriteRepository implements ICoachWriteRepository {
     public void createNew(Coach coach) {
         Map<String, Object> properties = DbCaster.toProperties(coach);
         this.jdbcCaller.call(this.createNewProc, properties);
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.REQUIRED)
+    public void delete(Long id) {
+        HashMap<String, Object> properties = new HashMap<>();
+        properties.put("_coa_id", id);
+        this.jdbcCaller.call(this.deleteProc, properties);
     }
 }
