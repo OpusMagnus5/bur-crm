@@ -16,6 +16,7 @@ import {ProgramListComponent} from "./program/program-list.component";
 import {CustomerDashboardComponent} from "./customer/customer-dashboard.component";
 import {CreateNewCustomerComponent} from "./customer/create-new-customer.component";
 import {CustomerListComponent} from "./customer/customer-list.component";
+import {CoachDashboardComponent} from "./coach/coach-dashboard.component";
 
 export const ADMINISTRATION_PATH: string = 'administration';
 export const BASE_PATH: string = '';
@@ -35,12 +36,19 @@ export const PROGRAM_LIST_PATH: string = 'list';
 export const REGISTRY_CUSTOMER_PATH: string = REGISTRY_PATH + '/customer'
 export const NEW_CUSTOMER_PATH: string = 'new';
 export const CUSTOMER_LIST_PATH: string = 'list';
+export const REGISTRY_COACH_PATH: string = REGISTRY_PATH + '/coach';
+export const NEW_COACH_PATH: string = 'new';
+export const COACH_LIST_PATH: string = 'list';
 
 const NOT_FOUND_PATH = 'not-found';
 
 export const routes: Routes = [
   {
     path: BASE_PATH, component: HomeComponent, pathMatch: "full"
+  },
+  {
+    path: REGISTRY_COACH_PATH,
+    component: CoachDashboardComponent
   },
   {
     path: REGISTRY_CUSTOMER_PATH,

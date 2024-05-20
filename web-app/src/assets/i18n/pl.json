@@ -7,7 +7,8 @@
     "service-provider-path": "Dostawcy usług",
     "operator-path": "Oparatorzy",
     "program-path": "Programy",
-    "customer-path": "Klienci"
+    "customer-path": "Klienci",
+    "coach-path": "Trenerzy"
   },
   "not-found": {
     "message": "Przepraszamy, szukana strona nie została znaleziona."
@@ -290,5 +291,9 @@
         "pattern": "Podana nazwa jest nieprawidłowa."
       }
     }
+  },
+  "coach": {
+    "new-coach": "Dodaj trenera",
+    "coach-list": "Lista trenerów"
   }
 }

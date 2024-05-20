@@ -7,7 +7,8 @@
     "service-provider-path": "Service providers",
     "operator-path": "Operators",
     "program-path": "Programs",
-    "customer-path": "Customers"
+    "customer-path": "Customers",
+    "coach-path": "Coaches"
   },
   "not-found": {
     "message": "Sorry, the requested page was not found."
@@ -290,5 +291,9 @@
         "pattern": "Invalid name provided."
       }
     }
+  },
+  "coach": {
+    "new-coach": "Add coach",
+    "coach-list": "Coaches list"
   }
 }
