@@ -17,6 +17,7 @@ import {CustomerDashboardComponent} from "./customer/customer-dashboard.componen
 import {CreateNewCustomerComponent} from "./customer/create-new-customer.component";
 import {CustomerListComponent} from "./customer/customer-list.component";
 import {CoachDashboardComponent} from "./coach/coach-dashboard.component";
+import {CreateNewCoachComponent} from "./coach/create-new-coach.component";
 
 export const ADMINISTRATION_PATH: string = 'administration';
 export const BASE_PATH: string = '';
@@ -48,7 +49,13 @@ export const routes: Routes = [
   },
   {
     path: REGISTRY_COACH_PATH,
-    component: CoachDashboardComponent
+    component: CoachDashboardComponent,
+    children: [
+      {
+        path: NEW_COACH_PATH,
+        component: CreateNewCoachComponent
+      }
+    ]
   },
   {
     path: REGISTRY_CUSTOMER_PATH,
