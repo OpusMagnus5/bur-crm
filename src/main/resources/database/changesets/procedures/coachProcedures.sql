@@ -32,3 +32,34 @@ BEGIN
         WHERE coa_pesel = _coa_pesel;
 
 END$$;
+
+DROP PROCEDURE IF EXISTS coach_get_page;
+/*PROCEDURE coach_get_page*/
+CREATE OR REPLACE PROCEDURE coach_get_page(
+    IN _offset NUMERIC,
+    IN _max NUMERIC,
+    IN _coa_first_name coach.coa_first_name%TYPE,
+    IN _coa_last_name coach.coa_last_name%TYPE,
+    OUT _cursor REFCURSOR,
+    OUT _total_coaches BIGINT
+)
+    LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    OPEN _cursor FOR
+        SELECT coa_id, coa_first_name, coa_last_name, coa_pesel
+        FROM coach
+        WHERE coa_first_name = COALESCE(_coa_first_name, coa_first_name)
+            AND coa_last_name = COALESCE(_coa_last_name, coa_last_name)
+        ORDER BY coa_last_name, coa_first_name
+        OFFSET _offset
+        LIMIT _max;
+
+    SELECT count(coa_id)
+    INTO _total_coaches
+    FROM coach
+    WHERE coa_first_name = COALESCE(_coa_first_name, coa_first_name)
+      AND coa_last_name = COALESCE(_coa_last_name, coa_last_name);
+
+END$$;
