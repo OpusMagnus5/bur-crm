@@ -327,5 +327,11 @@
   "delete-coach": {
     "confirmation-title": "Usuń trenera",
     "confirmation-content": "Czy na pewno chcesz usunąć tego trenera?"
+  },
+  "coach-details": {
+    "title": "Szczegóły trenera",
+    "firstName": "Imię",
+    "lastName": "Nazwisko",
+    "pesel": "PESEL"
   }
 }

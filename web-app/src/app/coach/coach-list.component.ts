@@ -39,6 +39,7 @@ import {TranslateModule} from "@ngx-translate/core";
 import {DeleteRecordConfirmationComponent} from "../shared/component/delete-record-confirmation.component";
 import {MatDialog} from "@angular/material/dialog";
 import {SnackbarService} from "../shared/service/snackbar.service";
+import {CoachDetailsComponent} from "./coach-details.component";
 
 @Component({
   selector: 'app-coach-list',
@@ -155,5 +156,8 @@ export class CoachListComponent implements AfterViewInit, OnDestroy {
   }
 
   protected onDetails(element: CoachData) {
+    this.coachHttp.getDetails(element.id).subscribe(response => {
+      this.dialog.open(CoachDetailsComponent, { data: response })
+    })
   }
 }

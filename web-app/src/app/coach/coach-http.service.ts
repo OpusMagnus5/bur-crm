@@ -3,6 +3,7 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {SERVER_URL} from "../shared/http-config";
 import {
+  CoachDetailsResponse,
   CoachExistsResponse,
   CoachPageResponse,
   CreateNewCoachRequest,
@@ -45,6 +46,12 @@ export class CoachHttpService {
 
   delete(id: string): Observable<DeleteCoachResponse> {
     return this.http.delete<DeleteCoachResponse>(
+      SERVER_URL + 'api/coach/' + id
+    );
+  }
+
+  getDetails(id: string): Observable<CoachDetailsResponse> {
+    return this.http.get<CoachDetailsResponse>(
       SERVER_URL + 'api/coach/' + id
     );
   }

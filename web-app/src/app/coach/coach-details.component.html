@@ -1,0 +1,38 @@
+<h2 mat-dialog-title>{{ 'coach-details.title' | translate }}</h2>
+<mat-dialog-content class="text-black/[.87]">
+  <div class="data-container">
+    <p class="mb-0 text-sm font-bold">{{ 'coach-details.firstName' | translate }}</p>
+    <p>{{ data.firstName }}</p>
+    <p class="mb-0 text-sm font-bold">{{ 'coach-details.lastName' | translate }}</p>
+    <p>{{ data.lastName }}</p>
+    <p class="mb-0 text-sm font-bold">{{ 'coach-details.pesel' | translate }}</p>
+    <p>{{ data.pesel }}</p>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="my-1.5">
+    <div>
+      <p class="mb-0 text-sm font-bold">{{ 'common.created-at' | translate }}</p>
+      <p>{{ data.createdAt | localizedDate}}</p>
+    </div>
+    <div>
+      <p class="mb-0 text-sm font-bold">{{ 'common.creator' | translate }}</p>
+      <p>{{ data.creatorFirstName }} {{ data.creatorLastName }}</p>
+    </div>
+    <div>
+      <p class="mb-0 text-sm font-bold">{{ 'common.modified-at' | translate }}</p>
+      <p>{{ data.modifiedAt | localizedDate}}</p>
+    </div>
+    <div>
+      <p class="mb-0 text-sm font-bold">{{ 'common.modifier' | translate }}</p>
+      <p [noDataIfEmpty]="data.modifierFirstName">{{ data.modifierFirstName }} {{ data.modifierLastName }}</p>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button
+          [mat-dialog-close]="true"
+          color="primary"
+          [tabIndex]="-1">{{ 'common.close-button' | translate }}</button>
+</mat-dialog-actions>

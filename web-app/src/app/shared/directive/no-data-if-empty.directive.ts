@@ -19,7 +19,7 @@ export class NoDataIfEmptyDirective {
 
   private checkAndSetContent() {
     const paragraph = this.elementRef.nativeElement;
-    if (this.testData) {
+    if (!this.testData) {
       this.translator.get('common.no-data').subscribe(text => {
         this.renderer.setProperty(paragraph, 'textContent', text);
       })

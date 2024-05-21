@@ -27,3 +27,17 @@ export interface CoachPageResponse {
 export interface DeleteCoachResponse {
   message: string
 }
+
+export interface CoachDetailsResponse {
+  id: string,
+  version: number,
+  firstName: string,
+  lastName: string,
+  pesel: string,
+  createdAt: Date,
+  modifiedAt: Date | undefined,
+  creatorFirstName: string,
+  creatorLastName: string,
+  modifierFirstName: string | undefined,
+  modifierLastName: string | undefined
+}
