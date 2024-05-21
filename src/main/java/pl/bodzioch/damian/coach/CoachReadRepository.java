@@ -24,11 +24,13 @@ class CoachReadRepository implements ICoachReadRepository {
     private final IJdbcCaller jdbcCaller;
     private final SimpleJdbcCall getByPeselProc;
     private final SimpleJdbcCall getPageProc;
+    private final SimpleJdbcCall getDetailsProc;
 
     CoachReadRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
         this.jdbcCaller = jdbcCaller;
         this.getByPeselProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "coach_get_by_nip");
         this.getPageProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "coach_get_page");
+        this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "coach_get_details");
     }
 
     @Override
@@ -56,5 +58,15 @@ class CoachReadRepository implements ICoachReadRepository {
         Long totalPrograms = (Long) result.get("_total_coaches");
         List<Coach> serviceProviders = DbCaster.fromProperties(result, Coach.class);
         return new PageQueryResult<>(serviceProviders, totalPrograms);
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.NOT_SUPPORTED)
+    public Optional<Coach> getDetails(Long id) {
+        HashMap<String, Object> properties = new HashMap<>();
+        properties.put("_coa_id", id);
+        getDetailsProc.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR));
+        Map<String, Object> result = jdbcCaller.call(getDetailsProc, properties);
+        return DbCaster.fromProperties(result, Coach.class).stream().findFirst();
     }
 }

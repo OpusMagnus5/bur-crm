@@ -12,9 +12,7 @@ import pl.bodzioch.damian.coach.command_dto.CreateNewCoachCommand;
 import pl.bodzioch.damian.coach.command_dto.CreateNewCoachCommandResult;
 import pl.bodzioch.damian.coach.command_dto.DeleteCoachCommand;
 import pl.bodzioch.damian.coach.command_dto.DeleteCoachCommandResult;
-import pl.bodzioch.damian.coach.query_dto.GetCoachByPeselQuery;
-import pl.bodzioch.damian.coach.query_dto.GetCoachPageQuery;
-import pl.bodzioch.damian.coach.query_dto.GetCoachPageQueryResult;
+import pl.bodzioch.damian.coach.query_dto.*;
 import pl.bodzioch.damian.dto.*;
 import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.infrastructure.command.CommandExecutor;
@@ -84,5 +82,14 @@ class CoachController {
         DeleteCoachCommand command = new DeleteCoachCommand(coachId);
         DeleteCoachCommandResult result = commandExecutor.execute(command);
         return new DeleteCoachResponse(result.message());
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    CoachDetailsResponse getDetails(@PathVariable String id) {
+        long coachId = Long.parseLong(cipher.decryptMessage(id));
+        GetCoachDetailsQuery query = new GetCoachDetailsQuery(coachId);
+        GetCoachDetailsQueryResult result = queryExecutor.execute(query);
+        return new CoachDetailsResponse(result.coach(), cipher);
     }
 }

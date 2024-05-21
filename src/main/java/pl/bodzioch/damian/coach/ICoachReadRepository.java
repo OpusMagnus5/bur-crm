@@ -12,4 +12,7 @@ interface ICoachReadRepository {
 
     @Transactional(Transactional.TxType.NOT_SUPPORTED)
     PageQueryResult<Coach> getPage(PageQuery pageQuery);
+
+	@Transactional(Transactional.TxType.NOT_SUPPORTED)
+	Optional<Coach> getDetails(Long id);
 }

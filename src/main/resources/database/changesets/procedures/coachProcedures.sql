@@ -76,3 +76,24 @@ BEGIN
     DELETE FROM coach WHERE coa_id = _coa_id;
 
 END$$;
+
+DROP PROCEDURE IF EXISTS coach_get_details;
+/*PROCEDURE coach_get_details*/
+CREATE OR REPLACE PROCEDURE coach_get_details(
+    IN _coa_id coach.coa_id%TYPE,
+    OUT _cursor REFCURSOR
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    OPEN _cursor FOR
+        SELECT coa_id, coa_version, coa_first_name, coa_last_name, coa_pesel, coa_created_at, coa_modified_at,
+               c.usr_first_name as creator_usr_first_name, c.usr_last_name as creator_usr_last_name,
+               m.usr_first_name as modifier_usr_first_name, m.usr_last_name as modifier_usr_last_name
+        FROM coach coa
+        LEFT JOIN users c ON coa.coa_created_by = c.usr_id
+        LEFT JOIN users m ON coa.coa_modified_by = m.usr_id
+        WHERE coa_id = _coa_id;
+
+END$$;
