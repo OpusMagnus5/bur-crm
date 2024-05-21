@@ -327,5 +327,11 @@
   "delete-coach": {
     "confirmation-title": "Delete coach",
     "confirmation-content": "Are you sure you want to delete this coach?"
+  },
+  "coach-details": {
+    "title": "Coach's details",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "pesel": "PESEL"
   }
 }
