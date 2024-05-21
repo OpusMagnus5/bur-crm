@@ -8,4 +8,7 @@ interface ICoachWriteRepository {
 
     @Transactional(Transactional.TxType.REQUIRED)
     void delete(Long id);
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    void update(Coach operator);
 }

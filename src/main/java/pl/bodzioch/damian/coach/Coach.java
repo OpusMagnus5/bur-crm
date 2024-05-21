@@ -2,6 +2,7 @@ package pl.bodzioch.damian.coach;
 
 import com.fasterxml.uuid.Generators;
 import pl.bodzioch.damian.coach.command_dto.CreateNewCoachCommand;
+import pl.bodzioch.damian.coach.command_dto.UpdateCoachCommand;
 import pl.bodzioch.damian.infrastructure.database.DbColumn;
 import pl.bodzioch.damian.infrastructure.database.DbConstructor;
 import pl.bodzioch.damian.infrastructure.database.DbId;
@@ -57,5 +58,22 @@ record Coach(
                     null,
                     null
             );
+    }
+
+    Coach(UpdateCoachCommand command) {
+        this(
+                command.id(),
+                null,
+                command.version(),
+                command.firstName(),
+                command.lastName(),
+                command.pesel(),
+                null,
+                null,
+                command.modifiedBy(),
+                null,
+                null,
+                null
+        );
     }
 }

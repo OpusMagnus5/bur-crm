@@ -97,3 +97,42 @@ BEGIN
         WHERE coa_id = _coa_id;
 
 END$$;
+
+DROP PROCEDURE IF EXISTS coach_update;
+/*PROCEDURE coach_update*/
+CREATE OR REPLACE PROCEDURE coach_update(
+    IN _coa_id coach.coa_id%TYPE,
+    IN _coa_version coach.coa_version%TYPE,
+    IN _coa_firstName coach.coa_first_name%TYPE,
+    IN _coa_lastName coach.coa_last_name%TYPE,
+    IN _coa_pesel coach.coa_pesel%TYPE,
+    in _coa_modified_by coach.coa_modified_by%TYPE
+)
+    LANGUAGE plpgsql
+AS $$
+DECLARE
+    _current_version INTEGER;
+BEGIN
+
+    SELECT coa_version
+    INTO _current_version
+    FROM coach
+    WHERE coa_id = _coa_id;
+
+    IF _current_version <> _coa_version THEN
+        RAISE SQLSTATE '55000' USING MESSAGE = 'The resource with ID: ' || _coa_id || ' was changed by another user',
+            TABLE = 'coach',
+            COLUMN = 'coa_version',
+            DETAIL = 'Provided version: ' || _coa_version || ', current version: ' || _current_version;
+    END IF;
+
+    UPDATE coach
+    SET coa_version = coa_version + 1,
+        coa_first_name = _coa_firstName,
+        coa_last_name = _coa_lastName,
+        coa_pesel = _coa_pesel,
+        coa_modified_by = _coa_modified_by,
+        coa_modified_at = current_timestamp
+    WHERE coa_id = _coa_id;
+
+END$$;

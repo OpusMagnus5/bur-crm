@@ -8,10 +8,7 @@ import org.hibernate.validator.constraints.pl.PESEL;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pl.bodzioch.damian.coach.command_dto.CreateNewCoachCommand;
-import pl.bodzioch.damian.coach.command_dto.CreateNewCoachCommandResult;
-import pl.bodzioch.damian.coach.command_dto.DeleteCoachCommand;
-import pl.bodzioch.damian.coach.command_dto.DeleteCoachCommandResult;
+import pl.bodzioch.damian.coach.command_dto.*;
 import pl.bodzioch.damian.coach.query_dto.*;
 import pl.bodzioch.damian.dto.*;
 import pl.bodzioch.damian.exception.AppException;
@@ -91,5 +88,13 @@ class CoachController {
         GetCoachDetailsQuery query = new GetCoachDetailsQuery(coachId);
         GetCoachDetailsQueryResult result = queryExecutor.execute(query);
         return new CoachDetailsResponse(result.coach(), cipher);
+    }
+
+    @PatchMapping
+    @ResponseStatus(HttpStatus.OK)
+    UpdateCoachResponse update(@Valid @RequestBody UpdateCoachRequest request) {
+        UpdateCoachCommand command = new UpdateCoachCommand(request, cipher);
+        UpdateCoachCommandResult result = commandExecutor.execute(command);
+        return new UpdateCoachResponse(result.message());
     }
 }

@@ -16,11 +16,13 @@ class CoachWriteRepository implements ICoachWriteRepository {
     private final IJdbcCaller jdbcCaller;
     private final SimpleJdbcCall createNewProc;
     private final SimpleJdbcCall deleteProc;
+    private final SimpleJdbcCall updateProc;
 
     CoachWriteRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
         this.jdbcCaller = jdbcCaller;
         this.createNewProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "coach_create_new");
         this.deleteProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "coach_delete");
+        this.updateProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "coach_update");
     }
 
     @Override
@@ -36,5 +38,12 @@ class CoachWriteRepository implements ICoachWriteRepository {
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("_coa_id", id);
         this.jdbcCaller.call(this.deleteProc, properties);
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.REQUIRED)
+    public void update(Coach operator) {
+        Map<String, Object> properties = DbCaster.toProperties(operator);
+        this.jdbcCaller.call(this.updateProc, properties);
     }
 }
