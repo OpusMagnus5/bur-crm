@@ -36,6 +36,9 @@ import {MatInput} from "@angular/material/input";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {TranslateModule} from "@ngx-translate/core";
+import {DeleteRecordConfirmationComponent} from "../shared/component/delete-record-confirmation.component";
+import {MatDialog} from "@angular/material/dialog";
+import {SnackbarService} from "../shared/service/snackbar.service";
 
 @Component({
   selector: 'app-coach-list',
@@ -92,7 +95,9 @@ export class CoachListComponent implements AfterViewInit, OnDestroy {
   @ViewChild('lastNameFilterRef') lastNameFilterRef!: ElementRef;
 
   constructor(
-    private coachHttp: CoachHttpService
+    private coachHttp: CoachHttpService,
+    private dialog: MatDialog,
+    private snackbarService: SnackbarService
   ) {
     this.coachHttp.getCoachPage(this.filters()).subscribe(response => {
       this.data.set(response);
@@ -127,6 +132,23 @@ export class CoachListComponent implements AfterViewInit, OnDestroy {
   }
 
   protected onRemove(element: CoachData) {
+    const dialogRef = this.dialog.open(
+      DeleteRecordConfirmationComponent, {
+        data: { codeForTranslation: 'delete-coach' }
+      });
+    this.subscriptions.add(dialogRef.componentInstance.deleteConfirmation.subscribe(value => {
+      if (value) {
+        dialogRef.close();
+        this.deleteCoach(element);
+      }
+    }));
+  }
+
+  private deleteCoach(element: CoachData) {
+    this.coachHttp.delete(element.id).subscribe(response => {
+      this.snackbarService.openTopCenterSnackbar(response.message);
+      this.onPageChange({ pageIndex: this.pageDef().pageNumber - 1, pageSize: this.pageDef().pageSize, previousPageIndex: 1, length: 1 })
+    })
   }
 
   protected onEdit(element: CoachData) {

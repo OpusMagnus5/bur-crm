@@ -323,5 +323,9 @@
     "no-coaches": "No coaches found in the database",
     "first-name-search": "First name",
     "last-name-search": "Last name"
+  },
+  "delete-coach": {
+    "confirmation-title": "Delete coach",
+    "confirmation-content": "Are you sure you want to delete this coach?"
   }
 }

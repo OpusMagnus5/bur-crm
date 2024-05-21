@@ -23,3 +23,7 @@ export interface CoachPageResponse {
   coaches: CoachData[],
   totalCoaches: number
 }
+
+export interface DeleteCoachResponse {
+  message: string
+}

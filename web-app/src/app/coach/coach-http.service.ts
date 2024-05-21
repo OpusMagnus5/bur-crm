@@ -2,7 +2,13 @@ import {Injectable} from "@angular/core";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {SERVER_URL} from "../shared/http-config";
-import {CoachExistsResponse, CoachPageResponse, CreateNewCoachRequest, CreateNewCoachResponse} from "./coach-dtos";
+import {
+  CoachExistsResponse,
+  CoachPageResponse,
+  CreateNewCoachRequest,
+  CreateNewCoachResponse,
+  DeleteCoachResponse
+} from "./coach-dtos";
 import {HttpQueryFiltersInterface} from "../shared/model/http-query-filters.interface";
 
 @Injectable({providedIn: "root"})
@@ -34,6 +40,12 @@ export class CoachHttpService {
       {
         params: new HttpParams().appendAll(filters)
       }
-    )
-  };
+    );
+  }
+
+  delete(id: string): Observable<DeleteCoachResponse> {
+    return this.http.delete<DeleteCoachResponse>(
+      SERVER_URL + 'api/coach/' + id
+    );
+  }
 }

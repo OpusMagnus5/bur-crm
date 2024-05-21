@@ -323,5 +323,9 @@
     "no-coaches": "Nie znaleziono trenerów w bazie danych",
     "first-name-search": "Imię",
     "last-name-search": "Nazwisko"
+  },
+  "delete-coach": {
+    "confirmation-title": "Usuń trenera",
+    "confirmation-content": "Czy na pewno chcesz usunąć tego trenera?"
   }
 }
