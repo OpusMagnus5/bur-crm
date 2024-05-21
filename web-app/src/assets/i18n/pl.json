@@ -303,11 +303,11 @@
     "validation": {
       "firstName": {
         "required": "Pole imię trenera nie może być puste",
-        "pattern": "Podane imię trenera jest nieprawidłowy"
+        "pattern": "Podane imię trenera jest nieprawidłowe"
       },
       "lastName": {
         "required": "Pole nazwisko trenera nie może być puste",
-        "pattern": "Podane nazwisko trenera jest nieprawidłowy"
+        "pattern": "Podane nazwisko trenera jest nieprawidłowe"
       },
       "pesel": {
         "required": "Pole PESEL nie może być puste",
@@ -333,5 +333,26 @@
     "firstName": "Imię",
     "lastName": "Nazwisko",
     "pesel": "PESEL"
+  },
+  "update-coach": {
+    "title": "Edytuj trenera",
+    "first-name-input-label": "Imię trenera",
+    "last-name-input-label": "Nazwisko trenera",
+    "pesel-input-label": "PESEL",
+    "validation": {
+      "firstName": {
+        "required": "Pole imię trenera nie może być puste",
+        "pattern": "Podane imię trenera jest nieprawidłowe"
+      },
+      "lastName": {
+        "required": "Pole nazwisko trenera nie może być puste",
+        "pattern": "Podane nazwisko trenera jest nieprawidłowe"
+      },
+      "pesel": {
+        "required": "Pole PESEL nie może być puste",
+        "pattern": "Podany PESEL jest nieprawidłowy",
+        "exists": "Istnieje już trener z podanym numerem PESEL"
+      }
+    }
   }
 }

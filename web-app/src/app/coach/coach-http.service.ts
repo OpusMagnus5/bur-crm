@@ -8,7 +8,9 @@ import {
   CoachPageResponse,
   CreateNewCoachRequest,
   CreateNewCoachResponse,
-  DeleteCoachResponse
+  DeleteCoachResponse,
+  UpdateCoachRequest,
+  UpdateCoachResponse
 } from "./coach-dtos";
 import {HttpQueryFiltersInterface} from "../shared/model/http-query-filters.interface";
 
@@ -53,6 +55,13 @@ export class CoachHttpService {
   getDetails(id: string): Observable<CoachDetailsResponse> {
     return this.http.get<CoachDetailsResponse>(
       SERVER_URL + 'api/coach/' + id
+    );
+  }
+
+  update(request: UpdateCoachRequest): Observable<UpdateCoachResponse> {
+    return this.http.patch<UpdateCoachResponse>(
+      SERVER_URL + 'api/coach',
+      request
     );
   }
 }

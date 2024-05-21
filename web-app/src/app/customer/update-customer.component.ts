@@ -9,7 +9,6 @@ import {
   Validators
 } from "@angular/forms";
 import {CustomerHttpService} from "./customer-http.service";
-import {ActivatedRoute, Router} from "@angular/router";
 import {SnackbarService} from "../shared/service/snackbar.service";
 import {ValidationMessageService} from "../shared/service/validation-message.service";
 import {NipUtils} from "../shared/util/nip-utils";
@@ -57,8 +56,6 @@ export class UpdateCustomerComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) protected data: CustomerDetailsResponse,
     private customerHttp: CustomerHttpService,
-    private router: Router,
-    private activeRoute: ActivatedRoute,
     private snackbar: SnackbarService,
     private validationMessage: ValidationMessageService
   ) {

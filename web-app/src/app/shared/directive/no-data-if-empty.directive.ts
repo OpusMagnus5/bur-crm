@@ -1,19 +1,22 @@
-import {Directive, ElementRef, Input, Renderer2} from "@angular/core";
+import {AfterViewInit, Directive, ElementRef, Input, Renderer2} from "@angular/core";
 import {TranslateService} from "@ngx-translate/core";
 
 @Directive({
   selector: '[noDataIfEmpty]',
   standalone: true
 })
-export class NoDataIfEmptyDirective {
+export class NoDataIfEmptyDirective implements AfterViewInit {
 
-  @Input('noDataIfEmpty') testData: any = null;
+  @Input('noDataIfEmpty') testData: any;
 
   constructor(
     private elementRef: ElementRef,
     private renderer: Renderer2,
     private translator: TranslateService
   ) {
+  }
+
+  ngAfterViewInit(): void {
     this.checkAndSetContent();
   }
 

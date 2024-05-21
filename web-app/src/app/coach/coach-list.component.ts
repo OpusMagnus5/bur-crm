@@ -40,6 +40,7 @@ import {DeleteRecordConfirmationComponent} from "../shared/component/delete-reco
 import {MatDialog} from "@angular/material/dialog";
 import {SnackbarService} from "../shared/service/snackbar.service";
 import {CoachDetailsComponent} from "./coach-details.component";
+import {UpdateCoachComponent} from "./update-coach.component";
 
 @Component({
   selector: 'app-coach-list',
@@ -153,6 +154,24 @@ export class CoachListComponent implements AfterViewInit, OnDestroy {
   }
 
   protected onEdit(element: CoachData) {
+    this.coachHttp.getDetails(element.id).subscribe(response => {
+      const dialogRef = this.dialog.open(
+        UpdateCoachComponent, {
+          data: response,
+          disableClose: true
+        });
+      this.subscriptions.add(dialogRef.componentInstance.updateConfirmation.subscribe(value => {
+        if (value) {
+          dialogRef.close();
+          this.onPageChange({
+            pageIndex: this.pageDef().pageNumber - 1,
+            pageSize: this.pageDef().pageSize,
+            previousPageIndex: 1,
+            length: 1
+          });
+        }
+      }));
+    });
   }
 
   protected onDetails(element: CoachData) {

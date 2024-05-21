@@ -103,8 +103,8 @@ DROP PROCEDURE IF EXISTS coach_update;
 CREATE OR REPLACE PROCEDURE coach_update(
     IN _coa_id coach.coa_id%TYPE,
     IN _coa_version coach.coa_version%TYPE,
-    IN _coa_firstName coach.coa_first_name%TYPE,
-    IN _coa_lastName coach.coa_last_name%TYPE,
+    IN _coa_first_name coach.coa_first_name%TYPE,
+    IN _coa_last_name coach.coa_last_name%TYPE,
     IN _coa_pesel coach.coa_pesel%TYPE,
     in _coa_modified_by coach.coa_modified_by%TYPE
 )
@@ -128,8 +128,8 @@ BEGIN
 
     UPDATE coach
     SET coa_version = coa_version + 1,
-        coa_first_name = _coa_firstName,
-        coa_last_name = _coa_lastName,
+        coa_first_name = _coa_first_name,
+        coa_last_name = _coa_last_name,
         coa_pesel = _coa_pesel,
         coa_modified_by = _coa_modified_by,
         coa_modified_at = current_timestamp

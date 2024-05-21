@@ -333,5 +333,26 @@
     "firstName": "First name",
     "lastName": "Last name",
     "pesel": "PESEL"
+  },
+  "update-coach": {
+    "title": "Edit coach",
+    "first-name-input-label": "Coach's first name",
+    "last-name-input-label": "Coach's last name",
+    "pesel-input-label": "PESEL",
+    "validation": {
+      "firstName": {
+        "required": "Coach's first name field cannot be empty",
+        "pattern": "Invalid coach's first name provided."
+      },
+      "lastName": {
+        "required": "Coach's last name field cannot be empty",
+        "pattern": "Invalid coach's last name provided."
+      },
+      "pesel": {
+        "required": "PESEL field cannot be empty",
+        "pattern": "Invalid PESEL provided.",
+        "exists": "There is already a coach with the given PESEL number"
+      }
+    }
   }
 }

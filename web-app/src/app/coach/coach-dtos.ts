@@ -41,3 +41,15 @@ export interface CoachDetailsResponse {
   modifierFirstName: string | undefined,
   modifierLastName: string | undefined
 }
+
+export interface UpdateCoachResponse {
+  message: string
+}
+
+export interface UpdateCoachRequest {
+  id: string,
+  version: number,
+  firstName: string,
+  lastName: string,
+  pesel: string
+}
