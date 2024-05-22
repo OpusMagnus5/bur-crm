@@ -1,6 +1,7 @@
 package pl.bodzioch.damian.client.bur;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import pl.bodzioch.damian.exception.HttpClientException;
 
 import java.util.List;
 
@@ -12,8 +13,8 @@ record ServiceProviderResponse(
 
         BurServiceProviderDto mapFirst() {
                 return serviceProviders().stream()
-                        .map(provider -> new BurServiceProviderDto(provider.id().longValue(), provider.name()))
+                        .map(provider -> new BurServiceProviderDto(provider.id(), provider.name()))
                         .findFirst()
-                        .orElse(null);
+                        .orElseThrow(() -> new HttpClientException("Empty service providers in response"));
         }
 }

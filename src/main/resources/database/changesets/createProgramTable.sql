@@ -6,8 +6,8 @@ CREATE TABLE program(
     prg_operator_id BIGINT NOT NULL REFERENCES operator(opr_id),
     prg_created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
     prg_modified_at TIMESTAMP WITH TIME ZONE,
-    prg_created_by BIGINT NOT NULL,
-    prg_modified_by BIGINT
+    prg_created_by BIGINT NOT NULL REFERENCES users(usr_id),
+    prg_modified_by BIGINT REFERENCES users(usr_id)
 );
 
 CREATE INDEX program_name_idx ON program USING gin (to_tsvector('simple', prg_name));

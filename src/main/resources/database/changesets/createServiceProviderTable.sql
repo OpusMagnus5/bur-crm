@@ -7,8 +7,8 @@ CREATE TABLE service_provider (
     spr_nip BIGINT UNIQUE NOT NULL,
     spr_created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
     spr_modified_at TIMESTAMP WITH TIME ZONE,
-    spr_created_by BIGINT NOT NULL,
-    spr_modified_by BIGINT
+    spr_created_by BIGINT NOT NULL REFERENCES users(usr_id),
+    spr_modified_by BIGINT REFERENCES users(usr_id)
 );
 
 CREATE UNIQUE INDEX service_provider_nip_idx ON service_provider (spr_nip);

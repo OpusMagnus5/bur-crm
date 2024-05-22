@@ -1,5 +1,14 @@
 package pl.bodzioch.damian.service;
 
+import com.fasterxml.uuid.Generators;
+import pl.bodzioch.damian.infrastructure.database.DbColumn;
+import pl.bodzioch.damian.infrastructure.database.DbConstructor;
+import pl.bodzioch.damian.infrastructure.database.DbId;
+import pl.bodzioch.damian.infrastructure.database.DbManyToOne;
+import pl.bodzioch.damian.service.command_dto.CreateNewServiceCommand;
+import pl.bodzioch.damian.user.InnerUser;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -7,27 +16,76 @@ import java.util.UUID;
 //TODO general error handling on front which logging on db
 //TO NIE JEST KARTA TYLKO USŁUGA, KILKA FIRM MOZE SIĘ ZAPISAC
 record Service(
+		@DbId
+		@DbColumn(name = "srv_id")
+        Long id,
+		@DbColumn(name = "srv_uuid")
+        UUID uuid,
+		@DbColumn(name = "srv_bur_card_id")
+        Long burCardId,
+		@DbColumn(name = "srv_number")
+		String number,
+		@DbColumn(name = "srv_name")
+        String name,
+		@DbColumn(name = "srv_type")
+        ServiceType type,
+		@DbColumn(name = "srv_start_date")
+		LocalDate startDate,
+		@DbColumn(name = "srv_end_date")
+		LocalDate endDate,
+		@DbColumn(name = "srv_number_of_participants")
+        Integer numberOfParticipants,
+		@DbColumn(name = "srv_service_provider_id")
+		Long serviceProviderId,
+		@DbColumn(name = "srv_program_id")
+        Long programId,
+		@DbColumn(name = "srv_customer_id")
+        Long customerId,
+		@DbColumn(name = "srv_coach_ids")
+        List<Long> coachIds,
+		@DbColumn(name = "srv_intermediary_id")
+        Long intermediaryId,
+		@DbColumn(name = "srv_created_at")
+		LocalDateTime createdAt,
+		@DbColumn(name = "srv_modified_at")
+		LocalDateTime modifiedAt,
+		@DbColumn(name = "srv_created_by")
+		Long createdBy,
+		@DbColumn(name = "srv_modified_by")
+		Long modifiedBy,
 
-        Long srv_id,
-        UUID srv_uuid,
-        Long srv_service_card_bur_id,
-        String srv_name,
-        String srv_number,
-        ServiceType srv_service_type,
-        LocalDateTime srv_start_date,
-        LocalDateTime srv_end_date,
-        Long srv_service_provider_id,
-        Integer srv_number_of_participants,
-        Long srv_program_id,
-        Long srv_customer_id,
-        List<Long> srv_cst_ids,
-        Long srv_intermediary
-        /*ServiceProvider serviceProvider, //burId, Nazwa, Nip
-        Program program, // pod nim opeartor a w nim kontakt do operatora
-        Customer customer, //możeby być kilka firm które zapiszą się na tą samą kartę
-        List<Coach> coach, // moze byc kilku trenerów
-        Intermediary intermediary*/
+		@DbManyToOne(prefix = "creator")
+		InnerUser creator,
+		@DbManyToOne(prefix = "modifier")
+		InnerUser modifier
+
 ) {
+	@DbConstructor
+	Service {
+	}
 
-
+	Service(CreateNewServiceCommand command, Long burCardId) {
+		this(
+				null,
+				Generators.timeBasedEpochGenerator().generate(),
+				burCardId,
+				command.number(),
+				command.name(),
+				command.type(),
+				command.startDate(),
+				command.endDate(),
+				command.numberOfParticipants(),
+				command.serviceProviderId(),
+				command.programId(),
+				command.customerId(),
+				command.coachIds(),
+				command.intermediaryId(),
+				null,
+				null,
+				command.createdBy(),
+				null,
+				null,
+				null
+		);
+	}
 }

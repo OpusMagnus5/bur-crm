@@ -6,8 +6,8 @@ CREATE TABLE customer(
     cst_nip BIGINT UNIQUE NOT NULL,
     cst_created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
     cst_modified_at TIMESTAMP WITH TIME ZONE,
-    cst_created_by BIGINT NOT NULL,
-    cst_modified_by BIGINT
+    cst_created_by BIGINT NOT NULL REFERENCES users(usr_id),
+    cst_modified_by BIGINT REFERENCES users(usr_id)
 );
 
 CREATE UNIQUE INDEX customer_nip_idx ON customer (cst_nip);

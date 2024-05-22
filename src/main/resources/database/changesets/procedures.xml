@@ -13,5 +13,6 @@ http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
         <sqlFile path="procedures/customerProcedures.sql" relativeToChangelogFile="true"/>
         <sqlFile path="procedures/coachProcedures.sql" relativeToChangelogFile="true"/>
         <sqlFile path="procedures/intermediaryProcedures.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="procedures/serviceProcedures.sql" relativeToChangelogFile="true" splitStatements="false"/>
     </changeSet>
 </databaseChangeLog>

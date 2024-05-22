@@ -6,8 +6,8 @@ CREATE TABLE operator (
                         opr_notes VARCHAR,
                         opr_created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
                         opr_modified_at TIMESTAMP WITH TIME ZONE,
-                        opr_created_by BIGINT NOT NULL,
-                        opr_modified_by BIGINT
+                        opr_created_by BIGINT NOT NULL REFERENCES users(usr_id),
+                        opr_modified_by BIGINT REFERENCES users(usr_id)
 );
 
 CREATE INDEX operator_name_idx ON operator USING gin (to_tsvector('simple', opr_name))

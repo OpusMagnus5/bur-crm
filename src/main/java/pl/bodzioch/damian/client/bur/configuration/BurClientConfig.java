@@ -35,12 +35,14 @@ class BurClientConfig {
     private static final String AUTHORIZATION_PATH = "/autoryzacja/logowanie";
 
     private final BurCredentialsProperties burCredentials;
+    private final BurResponseErrorHandler errorHandler;
 
     @Bean("burRestClient")
     RestClient burWebClient() {
         return RestClient.builder()
                 .baseUrl(BUR_URL)
                 .requestInterceptors(interceptors -> interceptors.addAll(this.interceptors))
+                .defaultStatusHandler(errorHandler)
                 .build();
     }
 
@@ -88,6 +90,7 @@ class BurClientConfig {
         AuthorizationResponse response = RestClient.builder()
                 .baseUrl(BUR_URL + AUTHORIZATION_PATH)
                 .requestInterceptors(interceptors -> interceptors.addAll(List.of(logRequestInterceptor(), logResponseInterceptor())))
+                .defaultStatusHandler(errorHandler)
                 .build()
                 .post()
                 .body(this.burCredentials.toAuthorizationRequest())
