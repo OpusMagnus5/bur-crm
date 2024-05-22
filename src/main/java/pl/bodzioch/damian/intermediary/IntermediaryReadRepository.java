@@ -37,7 +37,7 @@ class IntermediaryReadRepository implements IIntermediaryReadRepository {
     @Transactional(Transactional.TxType.NOT_SUPPORTED)
     public Optional<Intermediary> getByNip(Long nip) {
         HashMap<String, Object> properties = new HashMap<>();
-        properties.put("_cst_nip", nip);
+        properties.put("_itr_nip", nip);
         getByNipProc.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR));
         Map<String, Object> result = jdbcCaller.call(getByNipProc, properties);
         return DbCaster.fromProperties(result, Intermediary.class).stream().findFirst();
@@ -52,7 +52,7 @@ class IntermediaryReadRepository implements IIntermediaryReadRepository {
         properties.putAll(pageQuery.filtersToDbProperties());
 
         getPageProc.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR),
-                new SqlOutParameter("_total_providers", Types.BIGINT));
+                new SqlOutParameter("_total_intermediaries", Types.BIGINT));
         Map<String, Object> result = jdbcCaller.call(getPageProc, properties);
 
         Long totalProviders = (Long) result.get("_total_intermediaries");
@@ -64,7 +64,7 @@ class IntermediaryReadRepository implements IIntermediaryReadRepository {
     @Transactional(Transactional.TxType.NOT_SUPPORTED)
     public Optional<Intermediary> getDetails(Long id) {
         HashMap<String, Object> properties = new HashMap<>();
-        properties.put("_cst_id", id);
+        properties.put("_itr_id", id);
         getDetailsProc.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR));
         Map<String, Object> result = jdbcCaller.call(getDetailsProc, properties);
         return DbCaster.fromProperties(result, Intermediary.class).stream().findFirst();

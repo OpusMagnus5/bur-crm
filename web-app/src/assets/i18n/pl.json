@@ -8,7 +8,8 @@
     "operator-path": "Oparatorzy",
     "program-path": "Programy",
     "customer-path": "Klienci",
-    "coach-path": "Trenerzy"
+    "coach-path": "Trenerzy",
+    "intermediary-path": "Pośrednicy"
   },
   "not-found": {
     "message": "Przepraszamy, szukana strona nie została znaleziona."
@@ -352,6 +353,59 @@
         "required": "Pole PESEL nie może być puste",
         "pattern": "Podany PESEL jest nieprawidłowy",
         "exists": "Istnieje już trener z podanym numerem PESEL"
+      }
+    }
+  },
+  "intermediary": {
+    "new-intermediary": "Dodaj pośrednika",
+    "intermediary-list": "Lista pośredników"
+  },
+  "new-intermediary": {
+    "nip-input-label": "NIP",
+    "name-input-label": "Nazwa pośrednika",
+    "validation": {
+      "nip": {
+        "required": "Pole nip nie może być puste",
+        "pattern": "Podany nip jest nieprawidłowy",
+        "incorrect": "Podany nip jest nieprawidłowy",
+        "exists": "Istnieje już pośrednik o podanym numerze nip"
+      },
+      "name" : {
+        "required": "Pole nazwa nie może być puste",
+        "pattern": "Podana nazwa jest nieprawidłowa."
+      }
+    }
+  },
+  "intermediary-list": {
+    "name-header": "Nazwa",
+    "nip-header": "NIP",
+    "no-intermediaries": "Nie znaleziono pośredników w bazie danych",
+    "name-search": "Nazwa",
+    "nip-search": "NIP"
+  },
+  "delete-intermediary": {
+    "confirmation-title": "Usuń pośrednika",
+    "confirmation-content": "Czy na pewno chcesz usunąć tego pośrednika?"
+  },
+  "intermediary-details": {
+    "title": "Szczegóły pośrednika",
+    "name": "Nazwa pośrednik",
+    "nip": "NIP"
+  },
+  "update-intermediary": {
+    "title": "Edytuj pośrednika",
+    "nip-input-label": "NIP",
+    "name-input-label": "Nazwa pośrednika",
+    "validation": {
+      "nip": {
+        "required": "Pole nip nie może być puste",
+        "pattern": "Podany nip jest nieprawidłowy",
+        "incorrect": "Podany nip jest nieprawidłowy",
+        "exists": "Istnieje już pośrednik o podanym numerze nip"
+      },
+      "name" : {
+        "required": "Pole nazwa nie może być puste",
+        "pattern": "Podana nazwa jest nieprawidłowa."
       }
     }
   }

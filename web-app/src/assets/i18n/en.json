@@ -8,7 +8,8 @@
     "operator-path": "Operators",
     "program-path": "Programs",
     "customer-path": "Customers",
-    "coach-path": "Coaches"
+    "coach-path": "Coaches",
+    "intermediary-path": "Intermediaries"
   },
   "not-found": {
     "message": "Sorry, the requested page was not found."
@@ -352,6 +353,59 @@
         "required": "PESEL field cannot be empty",
         "pattern": "Invalid PESEL provided.",
         "exists": "There is already a coach with the given PESEL number"
+      }
+    }
+  },
+  "intermediary": {
+    "new-intermediary": "Add intermediary",
+    "intermediary-list": "Intermediaries list"
+  },
+  "new-intermediary": {
+    "nip-input-label": "NIP",
+    "name-input-label": "Intermediary name",
+    "validation": {
+      "nip": {
+        "required": "NIP field cannot be empty",
+        "pattern": "Invalid NIP provided",
+        "incorrect": "Invalid NIP provided",
+        "exists": "A intermediary with the provided NIP already exists"
+      },
+      "name" : {
+        "required": "Name field cannot be empty",
+        "pattern": "Invalid name provided."
+      }
+    }
+  },
+  "intermediary-list": {
+    "name-header": "Name",
+    "nip-header": "NIP",
+    "no-intermediaries": "No intermediaries found in the database",
+    "name-search": "Name",
+    "nip-search": "NIP"
+  },
+  "delete-intermediary": {
+    "confirmation-title": "Delete intermediary",
+    "confirmation-content": "Are you sure you want to delete this intermediary?"
+  },
+  "intermediary-details": {
+    "title": "Intermediary details",
+    "name": "Intermediary name",
+    "nip": "NIP"
+  },
+  "update-intermediary": {
+    "title": "Edit intermediary",
+    "nip-input-label": "NIP",
+    "name-input-label": "Intermediary name",
+    "validation": {
+      "nip": {
+        "required": "NIP field cannot be empty",
+        "pattern": "Invalid NIP provided",
+        "incorrect": "Invalid NIP provided",
+        "exists": "A intermediary with the provided NIP already exists"
+      },
+      "name" : {
+        "required": "Name field cannot be empty",
+        "pattern": "Invalid name provided."
       }
     }
   }

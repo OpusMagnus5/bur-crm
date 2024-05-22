@@ -9,9 +9,10 @@ import {
   ViewChild,
   WritableSignal
 } from '@angular/core';
-import {CustomerData} from "./customer-dtos";
 import {SubscriptionManager} from "../shared/util/subscription-manager";
+import {IntermediaryListDataSource} from "./intermediary-list-data-source";
 import {HttpQueryFiltersInterface} from "../shared/model/http-query-filters.interface";
+import {IntermediaryHttpService} from "./intermediary-http.service";
 import {debounceTime, fromEvent, merge} from "rxjs";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {
@@ -37,14 +38,12 @@ import {TranslateModule} from "@ngx-translate/core";
 import {DeleteRecordConfirmationComponent} from "../shared/component/delete-record-confirmation.component";
 import {SnackbarService} from "../shared/service/snackbar.service";
 import {MatDialog} from "@angular/material/dialog";
-import {CustomerDetailsComponent} from "./customer-details.component";
-import {UpdateCustomerComponent} from "./update-customer.component";
-import {IntermediaryPageResponse} from "../intermediary/intermediary-dtos";
-import {IntermediaryListDataSource} from "../intermediary/intermediary-list-data-source";
-import {IntermediaryHttpService} from "../intermediary/intermediary-http.service";
+import {IntermediaryDetailsComponent} from "./intermediary-details.component";
+import {UpdateIntermediaryComponent} from "./update-intermediary.component";
+import {IntermediaryData, IntermediaryPageResponse} from "./intermediary-dtos";
 
 @Component({
-  selector: 'app-customer-list',
+  selector: 'app-intermediary-list',
   standalone: true,
   imports: [
     MatCell,
@@ -71,9 +70,9 @@ import {IntermediaryHttpService} from "../intermediary/intermediary-http.service
     MatMenuTrigger,
     MatNoDataRow
   ],
-  templateUrl: './customer-list.component.html'
+  templateUrl: './intermediary-list.component.html'
 })
-export class CustomerListComponent implements OnDestroy, AfterViewInit {
+export class IntermediaryListComponent implements OnDestroy, AfterViewInit {
 
   private subscriptions = new SubscriptionManager();
   private readonly data: WritableSignal<IntermediaryPageResponse> = signal({
@@ -98,11 +97,11 @@ export class CustomerListComponent implements OnDestroy, AfterViewInit {
   @ViewChild('nipFilterRef') nipFilterRef!: ElementRef;
 
   constructor(
-    private customerHttp: IntermediaryHttpService,
+    private intermediaryHttp: IntermediaryHttpService,
     private snackbarService: SnackbarService,
     private dialog: MatDialog
   ) {
-    this.customerHttp.getIntermediaryPage(this.filters()).subscribe(response => {
+    this.intermediaryHttp.getIntermediaryPage(this.filters()).subscribe(response => {
       this.data.set(response);
     });
   }
@@ -119,7 +118,7 @@ export class CustomerListComponent implements OnDestroy, AfterViewInit {
       .subscribe({
         next: () => {
           this.pageDef().pageNumber = 1;
-          this.customerHttp.getIntermediaryPage(this.filters()).subscribe(response => {
+          this.intermediaryHttp.getIntermediaryPage(this.filters()).subscribe(response => {
             this.data.set(response);
           });
         }
@@ -128,36 +127,36 @@ export class CustomerListComponent implements OnDestroy, AfterViewInit {
 
   protected onPageChange(event: PageEvent) {
     this.pageDef.set({ pageNumber: event.pageIndex + 1, pageSize: event.pageSize });
-    this.customerHttp.getIntermediaryPage(this.filters()).subscribe(response =>{
+    this.intermediaryHttp.getIntermediaryPage(this.filters()).subscribe(response =>{
         this.data.set(response);
       }
     )
   }
 
-  protected onRemove(element: CustomerData): void {
+  protected onRemove(element: IntermediaryData): void {
     const dialogRef = this.dialog.open(
       DeleteRecordConfirmationComponent, {
-        data: { codeForTranslation: 'delete-customer' }
+        data: { codeForTranslation: 'delete-intermediary' }
       });
     this.subscriptions.add(dialogRef.componentInstance.deleteConfirmation.subscribe(value => {
       if (value) {
         dialogRef.close();
-        this.deleteCustomer(element);
+        this.deleteIntermediary(element);
       }
     }));
   }
 
-  private deleteCustomer(element: CustomerData) {
-    this.customerHttp.delete(element.id).subscribe(response => {
+  private deleteIntermediary(element: IntermediaryData) {
+    this.intermediaryHttp.delete(element.id).subscribe(response => {
       this.snackbarService.openTopCenterSnackbar(response.message);
       this.onPageChange({ pageIndex: this.pageDef().pageNumber - 1, pageSize: this.pageDef().pageSize, previousPageIndex: 1, length: 1 })
     })
   }
 
-  protected onEdit(element: CustomerData): void {
-    this.customerHttp.getDetails(element.id).subscribe(response => {
+  protected onEdit(element: IntermediaryData): void {
+    this.intermediaryHttp.getDetails(element.id).subscribe(response => {
       const dialogRef = this.dialog.open(
-        UpdateCustomerComponent, {
+        UpdateIntermediaryComponent, {
           data: response,
           disableClose: true
         });
@@ -175,9 +174,9 @@ export class CustomerListComponent implements OnDestroy, AfterViewInit {
     });
   }
 
-  protected onDetails(element: CustomerData): void {
-    this.customerHttp.getDetails(element.id).subscribe(response => {
-      this.dialog.open(CustomerDetailsComponent, { data: response })
+  protected onDetails(element: IntermediaryData): void {
+    this.intermediaryHttp.getDetails(element.id).subscribe(response => {
+      this.dialog.open(IntermediaryDetailsComponent, { data: response })
     })
   }
 }

@@ -19,6 +19,9 @@ import {CustomerListComponent} from "./customer/customer-list.component";
 import {CoachDashboardComponent} from "./coach/coach-dashboard.component";
 import {CreateNewCoachComponent} from "./coach/create-new-coach.component";
 import {CoachListComponent} from "./coach/coach-list.component";
+import {IntermediaryDashboardComponent} from "./intermediary/intermediary-dashboard.component";
+import {CreateNewIntermediaryComponent} from "./intermediary/create-new-intermediary.component";
+import {IntermediaryListComponent} from "./intermediary/intermediary-list.component";
 
 export const ADMINISTRATION_PATH: string = 'administration';
 export const BASE_PATH: string = '';
@@ -41,12 +44,28 @@ export const CUSTOMER_LIST_PATH: string = 'list';
 export const REGISTRY_COACH_PATH: string = REGISTRY_PATH + '/coach';
 export const NEW_COACH_PATH: string = 'new';
 export const COACH_LIST_PATH: string = 'list';
-
+export const REGISTRY_INTERMEDIARY_PATH: string = REGISTRY_PATH + '/intermediary';
+export const NEW_INTERMEDIARY_PATH: string = 'new';
+export const INTERMEDIARY_LIST_PATH: string = 'list';
 const NOT_FOUND_PATH = 'not-found';
 
 export const routes: Routes = [
   {
     path: BASE_PATH, component: HomeComponent, pathMatch: "full"
+  },
+  {
+    path: REGISTRY_INTERMEDIARY_PATH,
+    component: IntermediaryDashboardComponent,
+    children: [
+      {
+        path: NEW_INTERMEDIARY_PATH,
+        component: CreateNewIntermediaryComponent
+      },
+      {
+        path: INTERMEDIARY_LIST_PATH,
+        component: IntermediaryListComponent
+      }
+    ]
   },
   {
     path: REGISTRY_COACH_PATH,

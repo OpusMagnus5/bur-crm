@@ -1,0 +1,18 @@
+<div class="mx-3">
+  <nav mat-tab-nav-bar
+       [tabPanel]="tabNavPanel"
+       mat-stretch-tabs="false"
+       mat-align-tabs="end"
+       animationDuration="0ms">
+    @for(link of links; track link) {
+      <a mat-tab-link
+         [routerLink]="link.path"
+         [active]="routerService.isActivePath(getFullRoutePath(link.path))">
+        {{ link.name }}
+      </a>
+    }
+  </nav>
+  <mat-tab-nav-panel #tabNavPanel>
+    <router-outlet></router-outlet>
+  </mat-tab-nav-panel>
+</div>

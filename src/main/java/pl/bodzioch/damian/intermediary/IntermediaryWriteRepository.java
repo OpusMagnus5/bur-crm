@@ -37,7 +37,7 @@ class IntermediaryWriteRepository implements IIntermediaryWriteRepository {
     @Transactional(Transactional.TxType.REQUIRED)
     public void delete(Long id) {
         HashMap<String, Object> properties = new HashMap<>();
-        properties.put("_cst_id", id);
+        properties.put("_itr_id", id);
         this.jdbcCaller.call(this.deleteProc, properties);
     }
 

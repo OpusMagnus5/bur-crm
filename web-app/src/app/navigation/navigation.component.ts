@@ -17,10 +17,12 @@ import {
   BASE_PATH,
   COACH_LIST_PATH,
   CUSTOMER_LIST_PATH,
+  INTERMEDIARY_LIST_PATH,
   OPERATOR_LIST_PATH,
   PROGRAM_LIST_PATH,
   REGISTRY_COACH_PATH,
   REGISTRY_CUSTOMER_PATH,
+  REGISTRY_INTERMEDIARY_PATH,
   REGISTRY_OPERATOR_PATH,
   REGISTRY_PATH,
   REGISTRY_PROGRAM_PATH,
@@ -70,6 +72,7 @@ export class NavigationComponent {
   protected readonly REGISTRY_PROGRAM_PATH = REGISTRY_PROGRAM_PATH + '/' + PROGRAM_LIST_PATH;
   protected readonly REGISTRY_CUSTOMER_PATH = REGISTRY_CUSTOMER_PATH + '/' + CUSTOMER_LIST_PATH;
   protected readonly REGISTRY_COACH_PATH = REGISTRY_COACH_PATH + '/' + COACH_LIST_PATH;
+  protected readonly REGISTRY_INTERMEDIARY_PATH = REGISTRY_INTERMEDIARY_PATH + '/' + INTERMEDIARY_LIST_PATH;
 
   protected isHandset$: Observable<boolean>;
 
@@ -80,4 +83,6 @@ export class NavigationComponent {
         shareReplay()
       );
   }
+
+
 }
