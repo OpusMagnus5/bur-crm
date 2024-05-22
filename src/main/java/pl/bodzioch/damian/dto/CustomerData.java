@@ -1,4 +1,4 @@
-package pl.bodzioch.damian.customer.query_dto;
+package pl.bodzioch.damian.dto;
 
 import pl.bodzioch.damian.customer.CustomerDto;
 import pl.bodzioch.damian.utils.CipherComponent;
