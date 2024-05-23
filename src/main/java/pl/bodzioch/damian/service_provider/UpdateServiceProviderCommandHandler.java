@@ -1,12 +1,14 @@
 package pl.bodzioch.damian.service_provider;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.infrastructure.command.CommandHandler;
 import pl.bodzioch.damian.service_provider.command_dto.UpdateServiceProviderCommand;
 import pl.bodzioch.damian.service_provider.command_dto.UpdateServiceProviderCommandResult;
 import pl.bodzioch.damian.utils.MessageResolver;
 
+@CacheEvict("serviceProviders")
 @Component
 @RequiredArgsConstructor
 class UpdateServiceProviderCommandHandler implements CommandHandler<UpdateServiceProviderCommand, UpdateServiceProviderCommandResult> {

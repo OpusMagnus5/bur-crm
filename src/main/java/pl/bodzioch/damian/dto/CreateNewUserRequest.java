@@ -3,7 +3,7 @@ package pl.bodzioch.damian.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
-import pl.bodzioch.damian.utils.validator.UserRoleV;
+import pl.bodzioch.damian.user.validator.UserRoleV;
 
 public record CreateNewUserRequest(
 

@@ -25,12 +25,14 @@ class ProviderReadRepository implements IProviderReadRepository {
     private final SimpleJdbcCall getByNipProc;
     private final SimpleJdbcCall getPageProc;
     private final SimpleJdbcCall getDetailsProc;
+    private final SimpleJdbcCall getAll;
 
     public ProviderReadRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
         this.jdbcCaller = jdbcCaller;
         this.getByNipProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_provider_get_by_nip");
         this.getPageProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_provider_get_page");
         this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_provider_get_details");
+        this.getAll = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_provider_get_all");
     }
 
     @Override
@@ -67,5 +69,13 @@ class ProviderReadRepository implements IProviderReadRepository {
         getDetailsProc.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR));
         Map<String, Object> result = jdbcCaller.call(getDetailsProc, properties);
         return DbCaster.fromProperties(result, ServiceProvider.class).stream().findFirst();
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.NOT_SUPPORTED)
+    public List<ServiceProvider> getAll() {
+        getAll.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR));
+        Map<String, Object> result = jdbcCaller.call(getDetailsProc, new HashMap<>());
+        return DbCaster.fromProperties(result, ServiceProvider.class);
     }
 }

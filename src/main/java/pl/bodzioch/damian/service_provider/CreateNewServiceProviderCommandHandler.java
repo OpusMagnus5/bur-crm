@@ -2,6 +2,7 @@ package pl.bodzioch.damian.service_provider;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import pl.bodzioch.damian.value_object.ErrorData;
 
 import java.util.List;
 
+@CacheEvict("serviceProviders")
 @Component
 @Slf4j
 @RequiredArgsConstructor

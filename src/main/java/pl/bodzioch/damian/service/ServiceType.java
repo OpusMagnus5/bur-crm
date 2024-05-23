@@ -10,12 +10,12 @@ import java.util.Arrays;
 @Getter
 public enum ServiceType {
 
-    TRAINING(144),
-    CONSULTING(150);
+    TRAINING(144L),
+    CONSULTING(150L);
 
-    private final int burId;
+    private final long burId;
 
-    public static ServiceType ofBurId(int burId) {
+    public static ServiceType ofBurId(Long burId) {
         return Arrays.stream(ServiceType.values())
                 .filter(serviceType -> serviceType.getBurId() == burId)
                 .findAny()

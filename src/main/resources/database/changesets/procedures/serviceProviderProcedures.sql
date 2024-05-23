@@ -128,3 +128,19 @@ BEGIN
         WHERE spr_id = _spr_id;
 
 END$$;
+
+DROP PROCEDURE IF EXISTS service_provider_get_all;
+/*PROCEDURE service_provider_get_all*/
+CREATE OR REPLACE PROCEDURE service_provider_get_all(
+    OUT _cursor REFCURSOR
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    OPEN _cursor FOR
+        SELECT spr_id, spr_uuid, spr_bur_id, spr_version, spr_name, spr_nip
+        FROM service_provider
+        ORDER BY spr_name;
+
+END$$;

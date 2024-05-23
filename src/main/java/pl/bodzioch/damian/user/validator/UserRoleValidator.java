@@ -1,4 +1,4 @@
-package pl.bodzioch.damian.utils.validator;
+package pl.bodzioch.damian.user.validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
