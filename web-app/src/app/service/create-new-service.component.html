@@ -1,0 +1,56 @@
+<div class="mat-elevation-z3">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="p-5">
+    <div class="grid grid-cols-3 justify-items-center items-center">
+      <div >
+        <mat-form-field class="w-96">
+          <mat-label>{{ 'new-service.number-input-label' | translate }}</mat-label>
+          <input type="text" matInput [formControl]="numberControl">
+          @if (numberControl.invalid) {
+            <mat-error>{{ getValidationMessage('number', numberControl) }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="w-96">
+          <mat-label>{{ 'new-service.name-input-label' | translate }}</mat-label>
+          <textarea type="text" rows="3" matInput [formControl]="nameControl"></textarea>
+          @if (nameControl.invalid) {
+            <mat-error>{{ getValidationMessage('name', nameControl) }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-radio-group [formControl]="typeControl">
+          <mat-radio-button value="1"></mat-radio-button>
+        </mat-radio-group>
+        @if (typeControl.invalid) {
+          <mat-error>{{ getValidationMessage('type', typeControl) }}</mat-error>
+        }
+      </div>
+      <div>
+        <mat-form-field class="w-96">
+          <mat-label>{{ 'new-service.start-date-input-label' | translate }}</mat-label>
+          <input type="text" matInput [matDatepicker]="startDatePicker" [formControl]="startDateControl">
+          <mat-hint>DD-MM-YYYY</mat-hint>
+          @if (startDateControl.invalid) {
+            <mat-error>{{ getValidationMessage('start-date', startDateControl) }}</mat-error>
+          }
+          <mat-datepicker-toggle matIconSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #startDatePicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="w-96">
+          <mat-label>{{ 'new-service.end-date-input-label' | translate }}</mat-label>
+          <input type="text" matInput [matDatepicker]="endDatePicker" [formControl]="endDateControl">
+          <mat-hint>DD-MM-YYYY</mat-hint>
+          @if (endDateControl.invalid) {
+            <mat-error>{{ getValidationMessage('end-date', endDateControl) }}</mat-error>
+          }
+          <mat-datepicker-toggle matIconSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #endDatePicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>

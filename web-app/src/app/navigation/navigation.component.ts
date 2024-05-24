@@ -28,6 +28,7 @@ import {
   REGISTRY_PROGRAM_PATH,
   REGISTRY_SERVICE_PROVIDER_PATH,
   SERVICE_PROVIDER_LIST_PATH,
+  SERVICES_PATH,
   USER_LIST_PATH
 } from "../app.routes";
 import {RouterService} from "../shared/service/router.service";
@@ -85,4 +86,5 @@ export class NavigationComponent {
   }
 
 
+  protected readonly SERVICES_PATH = SERVICES_PATH;
 }

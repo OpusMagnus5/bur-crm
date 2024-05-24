@@ -9,7 +9,8 @@
     "program-path": "Programy",
     "customer-path": "Klienci",
     "coach-path": "Trenerzy",
-    "intermediary-path": "Pośrednicy"
+    "intermediary-path": "Pośrednicy",
+    "service-path": "Usługi"
   },
   "not-found": {
     "message": "Przepraszamy, szukana strona nie została znaleziona."
@@ -408,5 +409,8 @@
         "pattern": "Podana nazwa jest nieprawidłowa."
       }
     }
+  },
+  "service": {
+    "new-service": "Dodaj usługę"
   }
 }

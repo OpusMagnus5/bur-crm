@@ -9,7 +9,8 @@
     "program-path": "Programs",
     "customer-path": "Customers",
     "coach-path": "Coaches",
-    "intermediary-path": "Intermediaries"
+    "intermediary-path": "Intermediaries",
+    "service-path": "Services"
   },
   "not-found": {
     "message": "Sorry, the requested page was not found."
@@ -408,5 +409,8 @@
         "pattern": "Invalid name provided."
       }
     }
+  },
+  "service": {
+    "new-service": "Add service"
   }
 }
