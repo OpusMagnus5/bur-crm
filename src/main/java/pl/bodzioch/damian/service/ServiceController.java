@@ -9,6 +9,8 @@ import pl.bodzioch.damian.dto.CreateNewServiceRequest;
 import pl.bodzioch.damian.dto.CreateNewServiceResponse;
 import pl.bodzioch.damian.infrastructure.command.CommandExecutor;
 import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
+import pl.bodzioch.damian.service.command_dto.CreateNewServiceCommand;
+import pl.bodzioch.damian.service.command_dto.CreateNewServiceCommandResult;
 import pl.bodzioch.damian.utils.CipherComponent;
 
 @RestController
@@ -24,6 +26,8 @@ class ServiceController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     CreateNewServiceResponse createNew(@Valid @RequestBody CreateNewServiceRequest request) {
-        return null; //TODO dokończyć
+        CreateNewServiceCommand command = new CreateNewServiceCommand(request, cipher);
+        CreateNewServiceCommandResult result = commandExecutor.execute(command);
+        return new CreateNewServiceResponse(result.messages());
     }
 }

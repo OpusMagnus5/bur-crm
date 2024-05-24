@@ -5,6 +5,6 @@ import pl.bodzioch.damian.infrastructure.command.CommandResult;
 import java.util.List;
 
 public record CreateNewServiceCommandResult(
-		List<String> message
+		List<String> messages
 ) implements CommandResult {
 }
