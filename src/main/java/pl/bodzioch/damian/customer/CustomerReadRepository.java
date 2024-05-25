@@ -25,12 +25,14 @@ class CustomerReadRepository implements ICustomerReadRepository {
     private final SimpleJdbcCall getByNipProc;
     private final SimpleJdbcCall getPageProc;
     private final SimpleJdbcCall getDetailsProc;
+    private final SimpleJdbcCall getAllProc;
 
     CustomerReadRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
         this.jdbcCaller = jdbcCaller;
         this.getByNipProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "customer_get_by_nip");
         this.getPageProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "customer_get_page");
         this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "customer_get_details");
+        this.getAllProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "customer_get_all");
     }
 
     @Override
@@ -68,5 +70,14 @@ class CustomerReadRepository implements ICustomerReadRepository {
         getDetailsProc.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR));
         Map<String, Object> result = jdbcCaller.call(getDetailsProc, properties);
         return DbCaster.fromProperties(result, Customer.class).stream().findFirst();
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.NOT_SUPPORTED)
+    public List<Customer> getAll() {
+        HashMap<String, Object> properties = new HashMap<>();
+        getAllProc.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR));
+        Map<String, Object> result = jdbcCaller.call(getAllProc, properties);
+        return DbCaster.fromProperties(result, Customer.class);
     }
 }

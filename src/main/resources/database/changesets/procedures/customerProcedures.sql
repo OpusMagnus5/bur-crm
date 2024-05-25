@@ -132,3 +132,18 @@ BEGIN
     WHERE cst_id = _cst_id;
 
 END$$;
+
+DROP PROCEDURE IF EXISTS customer_get_all;
+/*PROCEDURE customer_get_all*/
+CREATE OR REPLACE PROCEDURE customer_get_all(
+    OUT _cursor REFCURSOR
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    OPEN _cursor FOR
+        SELECT cst_id, cst_version, cst_name, cst_nip
+        FROM customer;
+
+END$$;

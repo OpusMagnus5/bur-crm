@@ -52,7 +52,7 @@ class CustomerController {
         return new CustomerExistsResponse(true);
     }
 
-    @GetMapping(params = {"pageNumber", "pageSize"})
+    @GetMapping(params = { "pageNumber", "pageSize" })
     @ResponseStatus(HttpStatus.OK)
     CustomerPageResponse getServiceProviders(
             @RequestParam
@@ -99,5 +99,16 @@ class CustomerController {
         UpdateCustomerCommand command = new UpdateCustomerCommand(request, cipher);
         UpdateCustomerCommandResult result = commandExecutor.execute(command);
         return new UpdateCustomerResponse(result.message());
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    GetAllCustomersResponse getAll() {
+        GetAllCustomersQuery query = new GetAllCustomersQuery();
+        GetAllCustomersQueryResult result = queryExecutor.execute(query);
+        List<CustomerData> customers = result.customers().stream()
+                .map(customer -> new CustomerData(customer, cipher))
+                .toList();
+        return new GetAllCustomersResponse(customers);
     }
 }
