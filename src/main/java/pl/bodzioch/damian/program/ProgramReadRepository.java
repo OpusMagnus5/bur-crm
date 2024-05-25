@@ -25,12 +25,14 @@ class ProgramReadRepository implements IProgramReadRepository {
     private final SimpleJdbcCall getPageProc;
     private final SimpleJdbcCall getByNameProc;
     private final SimpleJdbcCall getDetailsProc;
+    private final SimpleJdbcCall getAllProc;
 
     public ProgramReadRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
         this.jdbcCaller = jdbcCaller;
         this.getPageProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "program_get_page");
         this.getByNameProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "program_get_by_name_and_operator_id");
         this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "program_get_details");
+        this.getAllProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "program_get_all");
     }
 
     @Override
@@ -69,5 +71,14 @@ class ProgramReadRepository implements IProgramReadRepository {
         getDetailsProc.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR));
         Map<String, Object> result = jdbcCaller.call(getDetailsProc, properties);
         return DbCaster.fromProperties(result, Program.class).stream().findFirst();
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.NOT_SUPPORTED)
+    public List<Program> getAll() {
+        HashMap<String, Object> properties = new HashMap<>();
+        getAllProc.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR));
+        Map<String, Object> result = jdbcCaller.call(getAllProc, properties);
+        return DbCaster.fromProperties(result, Program.class);
     }
 }

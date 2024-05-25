@@ -136,3 +136,18 @@ BEGIN
     WHERE prg_id = _prg_id;
 
 END$$;
+
+DROP PROCEDURE IF EXISTS program_get_all;
+/*PROCEDURE program_get_all*/
+CREATE OR REPLACE PROCEDURE program_get_all(
+    OUT _cursor REFCURSOR
+)
+    LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    OPEN _cursor FOR
+        SELECT prg_id, prg_version, prg_name, prg_created_at, prg_modified_at
+        FROM program prg;
+
+END$$;

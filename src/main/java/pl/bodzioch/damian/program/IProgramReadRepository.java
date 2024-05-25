@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import pl.bodzioch.damian.value_object.PageQuery;
 import pl.bodzioch.damian.value_object.PageQueryResult;
 
+import java.util.List;
 import java.util.Optional;
 
 interface IProgramReadRepository {
@@ -15,4 +16,7 @@ interface IProgramReadRepository {
 
     @Transactional(Transactional.TxType.NOT_SUPPORTED)
     Optional<Program> getDetails(Long id);
+
+    @Transactional(Transactional.TxType.NOT_SUPPORTED)
+    List<Program> getAll();
 }

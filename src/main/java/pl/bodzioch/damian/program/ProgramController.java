@@ -38,7 +38,7 @@ class ProgramController {
         return new CreateNewProgramResponse(result.message());
     }
 
-    @GetMapping
+    @GetMapping(params = { "pageNumber", "pageSize" })
     @ResponseStatus(HttpStatus.OK)
     ProgramPageResponse getServiceProviders(
             @RequestParam
@@ -96,5 +96,16 @@ class ProgramController {
         UpdateProgramCommand command = new UpdateProgramCommand(request, cipher);
         UpdateProgramCommandResult result = commandExecutor.execute(command);
         return new UpdateProgramResponse(result.message());
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    GetAllProgramsResponse getAll() {
+        GetAllProgramsQuery query = new GetAllProgramsQuery();
+        GetAllProgramsQueryResult result = queryExecutor.execute(query);
+        List<ProgramData> programData = result.programs().stream()
+                .map(program -> new ProgramData(program, cipher))
+                .toList();
+        return new GetAllProgramsResponse(programData);
     }
 }
