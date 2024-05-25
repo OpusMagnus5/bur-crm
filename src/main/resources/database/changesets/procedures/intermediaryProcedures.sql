@@ -132,3 +132,18 @@ BEGIN
     WHERE itr_id = _itr_id;
 
 END$$;
+
+DROP PROCEDURE IF EXISTS intermediary_get_all;
+/*PROCEDURE intermediary_get_all*/
+CREATE OR REPLACE PROCEDURE intermediary_get_all(
+    OUT _cursor REFCURSOR
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    OPEN _cursor FOR
+        SELECT itr_id, itr_version, itr_name, itr_nip
+        FROM intermediary;
+
+END$$;

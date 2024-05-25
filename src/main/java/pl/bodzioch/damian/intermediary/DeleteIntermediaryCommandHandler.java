@@ -1,12 +1,14 @@
 package pl.bodzioch.damian.intermediary;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.infrastructure.command.CommandHandler;
 import pl.bodzioch.damian.intermediary.command_dto.DeleteIntermediaryCommand;
 import pl.bodzioch.damian.intermediary.command_dto.DeleteIntermediaryCommandResult;
 import pl.bodzioch.damian.utils.MessageResolver;
 
+@CacheEvict("intermediaries")
 @Component
 @RequiredArgsConstructor
 class DeleteIntermediaryCommandHandler implements CommandHandler<DeleteIntermediaryCommand, DeleteIntermediaryCommandResult> {

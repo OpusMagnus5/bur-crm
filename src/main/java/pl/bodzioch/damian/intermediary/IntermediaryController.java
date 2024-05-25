@@ -100,4 +100,15 @@ class IntermediaryController {
         UpdateIntermediaryCommandResult result = commandExecutor.execute(command);
         return new UpdateIntermediaryResponse(result.message());
     }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    GetAllIntermediariesResponse getAll() {
+        GetAllIntermediariesQuery query = new GetAllIntermediariesQuery();
+        GetAllIntermediariesQueryResult result = queryExecutor.execute(query);
+        List<IntermediaryData> intermediaries = result.intermediaries().stream()
+                .map(intermediary -> new IntermediaryData(intermediary, cipher))
+                .toList();
+        return new GetAllIntermediariesResponse(intermediaries);
+    }
 }
