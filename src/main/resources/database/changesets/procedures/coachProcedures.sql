@@ -136,3 +136,18 @@ BEGIN
     WHERE coa_id = _coa_id;
 
 END$$;
+
+DROP PROCEDURE IF EXISTS coach_get_all;
+/*PROCEDURE coach_get_all*/
+CREATE OR REPLACE PROCEDURE coach_get_all(
+    OUT _cursor REFCURSOR
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    OPEN _cursor FOR
+        SELECT coa_id, coa_version, coa_first_name, coa_last_name, coa_pesel
+        FROM coach;
+
+END$$;

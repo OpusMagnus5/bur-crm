@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import pl.bodzioch.damian.value_object.PageQuery;
 import pl.bodzioch.damian.value_object.PageQueryResult;
 
+import java.util.List;
 import java.util.Optional;
 
 interface ICoachReadRepository {
@@ -15,4 +16,7 @@ interface ICoachReadRepository {
 
 	@Transactional(Transactional.TxType.NOT_SUPPORTED)
 	Optional<Coach> getDetails(Long id);
+
+    @Transactional(Transactional.TxType.NOT_SUPPORTED)
+    List<Coach> getAll();
 }

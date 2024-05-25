@@ -25,12 +25,14 @@ class CoachReadRepository implements ICoachReadRepository {
     private final SimpleJdbcCall getByPeselProc;
     private final SimpleJdbcCall getPageProc;
     private final SimpleJdbcCall getDetailsProc;
+    private final SimpleJdbcCall getAllProc;
 
     CoachReadRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
         this.jdbcCaller = jdbcCaller;
         this.getByPeselProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "coach_get_by_nip");
         this.getPageProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "coach_get_page");
         this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "coach_get_details");
+        this.getAllProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "coach_get_all");
     }
 
     @Override
@@ -68,5 +70,14 @@ class CoachReadRepository implements ICoachReadRepository {
         getDetailsProc.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR));
         Map<String, Object> result = jdbcCaller.call(getDetailsProc, properties);
         return DbCaster.fromProperties(result, Coach.class).stream().findFirst();
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.NOT_SUPPORTED)
+    public List<Coach> getAll() {
+        HashMap<String, Object> properties = new HashMap<>();
+        getAllProc.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR));
+        Map<String, Object> result = jdbcCaller.call(getAllProc, properties);
+        return DbCaster.fromProperties(result, Coach.class);
     }
 }

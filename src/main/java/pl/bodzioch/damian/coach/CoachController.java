@@ -49,7 +49,7 @@ class CoachController {
         }
     }
 
-    @GetMapping
+    @GetMapping(params = { "pageNumber", "pageSize" })
     @ResponseStatus(HttpStatus.OK)
     CoachPageResponse getCoaches(
             @RequestParam
@@ -96,5 +96,16 @@ class CoachController {
         UpdateCoachCommand command = new UpdateCoachCommand(request, cipher);
         UpdateCoachCommandResult result = commandExecutor.execute(command);
         return new UpdateCoachResponse(result.message());
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    GetAllCoachesResponse getAll() {
+        GetAllCoachesQuery query = new GetAllCoachesQuery();
+        GetAllCoachesQueryResult result = queryExecutor.execute(query);
+        List<CoachData> coaches = result.coaches().stream()
+                .map(coach -> new CoachData(coach, cipher))
+                .toList();
+        return new GetAllCoachesResponse(coaches);
     }
 }

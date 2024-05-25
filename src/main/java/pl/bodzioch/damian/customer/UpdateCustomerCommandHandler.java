@@ -1,12 +1,14 @@
 package pl.bodzioch.damian.customer;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.customer.command_dto.UpdateCustomerCommand;
 import pl.bodzioch.damian.customer.command_dto.UpdateCustomerCommandResult;
 import pl.bodzioch.damian.infrastructure.command.CommandHandler;
 import pl.bodzioch.damian.utils.MessageResolver;
 
+@CacheEvict("customers")
 @Component
 @RequiredArgsConstructor
 class UpdateCustomerCommandHandler implements CommandHandler<UpdateCustomerCommand, UpdateCustomerCommandResult> {
