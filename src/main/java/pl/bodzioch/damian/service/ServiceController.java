@@ -6,15 +6,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pl.bodzioch.damian.dto.CreateNewServiceRequest;
-import pl.bodzioch.damian.dto.CreateNewServiceResponse;
-import pl.bodzioch.damian.dto.GetAllServiceTypesResponse;
-import pl.bodzioch.damian.dto.GetServiceFromBurResponse;
+import pl.bodzioch.damian.dto.*;
 import pl.bodzioch.damian.infrastructure.command.CommandExecutor;
 import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
 import pl.bodzioch.damian.service.command_dto.CreateNewServiceCommand;
 import pl.bodzioch.damian.service.command_dto.CreateNewServiceCommandResult;
 import pl.bodzioch.damian.utils.CipherComponent;
+import pl.bodzioch.damian.utils.MessageResolver;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,6 +27,7 @@ class ServiceController {
     private final QueryExecutor queryExecutor;
     private final CipherComponent cipher;
     private final IServiceService serviceService;
+    private final MessageResolver messageResolver;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -51,8 +50,9 @@ class ServiceController {
     @GetMapping("/types")
     @ResponseStatus(HttpStatus.OK)
     GetAllServiceTypesResponse getAllServiceTypes() {
-        List<String> typeList = Arrays.stream(ServiceType.values())
+        List<ServiceTypeData> typeList = Arrays.stream(ServiceType.values())
                 .map(ServiceType::name)
+                .map(val -> new ServiceTypeData(val, messageResolver.getMessage("service.type." + val)))
                 .toList();
         return new GetAllServiceTypesResponse(typeList);
     }

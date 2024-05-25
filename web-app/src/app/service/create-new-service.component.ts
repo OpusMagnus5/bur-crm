@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit, signal, WritableSignal} from '@angular/core';
 import {FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 import {MatError, MatFormField, MatHint, MatLabel, MatSuffix} from "@angular/material/form-field";
@@ -8,6 +8,8 @@ import {ValidationMessageService} from "../shared/service/validation-message.ser
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
 import {provideNativeDateAdapter} from "@angular/material/core";
 import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
+import {ServiceTypeData} from "./service-dtos";
+import {ServiceHttp} from "./service-http";
 
 @Component({
   selector: 'app-create-new-service',
@@ -32,7 +34,7 @@ import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
   providers: [provideNativeDateAdapter()],
   templateUrl: './create-new-service.component.html'
 })
-export class CreateNewServiceComponent {
+export class CreateNewServiceComponent implements OnInit {
 
   protected readonly form: FormGroup;
   protected readonly numberControl: FormControl<string | null>;
@@ -48,8 +50,11 @@ export class CreateNewServiceComponent {
   protected readonly coachIdsFormArray: FormArray<FormControl>;
   protected readonly intermediaryIdControl: FormControl<string | null>;
 
+  protected readonly serviceTypes: WritableSignal<ServiceTypeData[]> = signal([]);
+
   constructor(
-    private validationMessage: ValidationMessageService
+    private validationMessage: ValidationMessageService,
+    private serviceHttp: ServiceHttp
   ) {
     this.numberControl = new FormControl(null, {
       validators: [Validators.required, Validators.pattern('\\d{4}/\\d{2}/\\d{2}/\\d+/\\d+')]
@@ -84,6 +89,12 @@ export class CreateNewServiceComponent {
     this.addCoachIdControl();
     this.coachIdsFormArray = new FormArray(this.coachIdsControls);
     this.form = this.buildFormGroup();
+  }
+
+  ngOnInit(): void {
+    this.serviceHttp.getAllServiceTypes().subscribe(response => {
+      this.serviceTypes.set(response.serviceTypes);
+    });
   }
 
   private addCoachIdControl() {

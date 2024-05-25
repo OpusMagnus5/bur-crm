@@ -4,6 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 
 public record GetAllServiceTypesResponse(
-        List<String> serviceTypes
+        List<ServiceTypeData> serviceTypes
 ) implements Serializable {
 }

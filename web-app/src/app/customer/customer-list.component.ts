@@ -9,7 +9,7 @@ import {
   ViewChild,
   WritableSignal
 } from '@angular/core';
-import {CustomerData} from "./customer-dtos";
+import {CustomerData, CustomerPageResponse} from "./customer-dtos";
 import {SubscriptionManager} from "../shared/util/subscription-manager";
 import {HttpQueryFiltersInterface} from "../shared/model/http-query-filters.interface";
 import {debounceTime, fromEvent, merge} from "rxjs";
@@ -39,9 +39,8 @@ import {SnackbarService} from "../shared/service/snackbar.service";
 import {MatDialog} from "@angular/material/dialog";
 import {CustomerDetailsComponent} from "./customer-details.component";
 import {UpdateCustomerComponent} from "./update-customer.component";
-import {IntermediaryPageResponse} from "../intermediary/intermediary-dtos";
-import {IntermediaryListDataSource} from "../intermediary/intermediary-list-data-source";
-import {IntermediaryHttpService} from "../intermediary/intermediary-http.service";
+import {CustomerHttpService} from "./customer-http.service";
+import {CustomerListDataSource} from "./customer-list-data-source";
 
 @Component({
   selector: 'app-customer-list',
@@ -76,11 +75,11 @@ import {IntermediaryHttpService} from "../intermediary/intermediary-http.service
 export class CustomerListComponent implements OnDestroy, AfterViewInit {
 
   private subscriptions = new SubscriptionManager();
-  private readonly data: WritableSignal<IntermediaryPageResponse> = signal({
-    intermediaries: [],
-    totalIntermediaries: 0
+  private readonly data: WritableSignal<CustomerPageResponse> = signal({
+    customers: [],
+    totalCustomers: 0
   });
-  protected readonly dataSource: IntermediaryListDataSource = new IntermediaryListDataSource(this.data);
+  protected readonly dataSource: CustomerListDataSource = new CustomerListDataSource(this.data);
   protected readonly columnsDef: string[] = ['name', 'nip'];
   protected readonly rowsDef: string[] = ['name', 'nip', 'options'];
   protected pageDef = signal({ pageNumber: 1, pageSize: 10 });
@@ -98,11 +97,11 @@ export class CustomerListComponent implements OnDestroy, AfterViewInit {
   @ViewChild('nipFilterRef') nipFilterRef!: ElementRef;
 
   constructor(
-    private customerHttp: IntermediaryHttpService,
+    private customerHttp: CustomerHttpService,
     private snackbarService: SnackbarService,
     private dialog: MatDialog
   ) {
-    this.customerHttp.getIntermediaryPage(this.filters()).subscribe(response => {
+    this.customerHttp.getCustomerPage(this.filters()).subscribe(response => {
       this.data.set(response);
     });
   }
@@ -119,7 +118,7 @@ export class CustomerListComponent implements OnDestroy, AfterViewInit {
       .subscribe({
         next: () => {
           this.pageDef().pageNumber = 1;
-          this.customerHttp.getIntermediaryPage(this.filters()).subscribe(response => {
+          this.customerHttp.getCustomerPage(this.filters()).subscribe(response => {
             this.data.set(response);
           });
         }
@@ -128,7 +127,7 @@ export class CustomerListComponent implements OnDestroy, AfterViewInit {
 
   protected onPageChange(event: PageEvent) {
     this.pageDef.set({ pageNumber: event.pageIndex + 1, pageSize: event.pageSize });
-    this.customerHttp.getIntermediaryPage(this.filters()).subscribe(response =>{
+    this.customerHttp.getCustomerPage(this.filters()).subscribe(response =>{
         this.data.set(response);
       }
     )
