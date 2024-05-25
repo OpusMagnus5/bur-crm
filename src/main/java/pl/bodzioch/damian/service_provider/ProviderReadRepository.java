@@ -26,6 +26,7 @@ class ProviderReadRepository implements IProviderReadRepository {
     private final SimpleJdbcCall getPageProc;
     private final SimpleJdbcCall getDetailsProc;
     private final SimpleJdbcCall getAll;
+    private final SimpleJdbcCall getByBurIdProc;
 
     public ProviderReadRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
         this.jdbcCaller = jdbcCaller;
@@ -33,6 +34,7 @@ class ProviderReadRepository implements IProviderReadRepository {
         this.getPageProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_provider_get_page");
         this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_provider_get_details");
         this.getAll = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_provider_get_all");
+        this.getByBurIdProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_provider_get_by_bur_id");
     }
 
     @Override
@@ -77,5 +79,15 @@ class ProviderReadRepository implements IProviderReadRepository {
         getAll.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR));
         Map<String, Object> result = jdbcCaller.call(getDetailsProc, new HashMap<>());
         return DbCaster.fromProperties(result, ServiceProvider.class);
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.NOT_SUPPORTED)
+    public Optional<ServiceProvider> getByBurId(Long burId) {
+        HashMap<String, Object> properties = new HashMap<>();
+        properties.put("_spr_bur_id", burId);
+        getByBurIdProc.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR));
+        Map<String, Object> result = jdbcCaller.call(getByBurIdProc, properties);
+        return DbCaster.fromProperties(result, ServiceProvider.class).stream().findFirst();
     }
 }

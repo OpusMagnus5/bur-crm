@@ -19,4 +19,7 @@ interface IProviderReadRepository {
 
     @Transactional(Transactional.TxType.NOT_SUPPORTED)
     List<ServiceProvider> getAll();
+
+    @Transactional(Transactional.TxType.NOT_SUPPORTED)
+    Optional<ServiceProvider> getByBurId(Long burId);
 }

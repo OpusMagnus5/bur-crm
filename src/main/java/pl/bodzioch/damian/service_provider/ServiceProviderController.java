@@ -56,7 +56,7 @@ class ServiceProviderController {
         return new ProviderNameResponse(result.name());
     }
 
-    @GetMapping
+    @GetMapping(params = { "pageNumber", "pageSize" })
     @ResponseStatus(HttpStatus.OK)
     ServiceProviderPageResponse getServiceProviders(
             @RequestParam
@@ -104,5 +104,16 @@ class ServiceProviderController {
                 1L);
         UpdateServiceProviderCommandResult result = commandExecutor.execute(command);
         return new UpdateServiceProviderResponse(result.message());
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    GetAllServiceProviderResponse getAll() {
+        GetAllServiceProvidersQuery query = new GetAllServiceProvidersQuery();
+        GetAllServiceProvidersQueryResult result = queryExecutor.execute(query);
+        List<ServiceProviderData> providersData = result.serviceProviders().stream()
+                .map(provider -> new ServiceProviderData(provider, cipher))
+                .toList();
+        return new GetAllServiceProviderResponse(providersData);
     }
 }
