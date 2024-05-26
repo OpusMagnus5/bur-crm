@@ -1,8 +1,8 @@
 <div class="mat-elevation-z3">
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="p-5">
-    <div class="grid grid-cols-2 justify-items-center items-center">
-      <div >
-        <mat-form-field class="w-96">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="py-10 px-56">
+    <div class="grid grid-cols-2 justify-items-center items-center gap-x-40 gap-y-4">
+      <div class="w-full">
+        <mat-form-field class="w-full">
           <mat-label>{{ 'new-service.number-input-label' | translate }}</mat-label>
           <input type="text" matInput [formControl]="numberControl">
           @if (numberControl.invalid) {
@@ -11,7 +11,8 @@
         </mat-form-field>
       </div>
       <div>
-        <mat-radio-group [formControl]="typeControl">
+        <mat-label class="block">{{ 'new-service.service-type-label' | translate }}</mat-label>
+        <mat-radio-group [formControl]="typeControl" color="primary">
           @for (type of serviceTypes(); track type) {
             <mat-radio-button [value]="type.value">{{ type.name }}</mat-radio-button>
           }
@@ -20,8 +21,8 @@
           <mat-error>{{ getValidationMessage('type', typeControl) }}</mat-error>
         }
       </div>
-      <div class="col-span-2">
-        <mat-form-field class="w-96">
+      <div class="col-span-2 w-full">
+        <mat-form-field class="w-full">
           <mat-label>{{ 'new-service.name-input-label' | translate }}</mat-label>
           <input type="text" matInput [formControl]="nameControl">
           @if (nameControl.invalid) {
@@ -29,8 +30,8 @@
           }
         </mat-form-field>
       </div>
-      <div>
-        <mat-form-field class="w-96">
+      <div class="w-full">
+        <mat-form-field class="w-full">
           <mat-label>{{ 'new-service.start-date-input-label' | translate }}</mat-label>
           <input type="text" matInput [matDatepicker]="startDatePicker" [formControl]="startDateControl">
           <mat-hint>DD-MM-YYYY</mat-hint>
@@ -41,8 +42,8 @@
           <mat-datepicker #startDatePicker></mat-datepicker>
         </mat-form-field>
       </div>
-      <div>
-        <mat-form-field class="w-96">
+      <div class="w-full">
+        <mat-form-field class="w-full">
           <mat-label>{{ 'new-service.end-date-input-label' | translate }}</mat-label>
           <input type="text" matInput [matDatepicker]="endDatePicker" [formControl]="endDateControl">
           <mat-hint>DD-MM-YYYY</mat-hint>
@@ -51,6 +52,15 @@
           }
           <mat-datepicker-toggle matIconSuffix [for]="endDatePicker"></mat-datepicker-toggle>
           <mat-datepicker #endDatePicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="w-full">
+        <mat-form-field class="w-full">
+          <mat-label>{{ 'new-service.participants-input-label' | translate }}</mat-label>
+          <input type="number" matInput [formControl]="numberOfParticipantsControl">
+          @if (numberOfParticipantsControl.invalid) {
+            <mat-error>{{ getValidationMessage('participants', numberOfParticipantsControl) }}</mat-error>
+          }
         </mat-form-field>
       </div>
     </div>

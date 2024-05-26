@@ -412,5 +412,12 @@
   },
   "service": {
     "new-service": "Add service"
+  },
+  "new-service": {
+    "number-input-label": "Service number from BUR",
+    "service-type-label": "Service type",
+    "name-input-label": "Service name",
+    "start-date-input-label": "Start date",
+    "end-date-input-label": "End date"
   }
 }

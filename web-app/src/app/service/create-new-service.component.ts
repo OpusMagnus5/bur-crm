@@ -10,6 +10,8 @@ import {provideNativeDateAdapter} from "@angular/material/core";
 import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
 import {ServiceTypeData} from "./service-dtos";
 import {ServiceHttp} from "./service-http";
+import {ServiceProviderHttpService} from "../service-provider/service/service-provider-http.service";
+import {ServiceProviderDataInterface} from "../service-provider/model/service-provider-data.interface";
 
 @Component({
   selector: 'app-create-new-service',
@@ -51,10 +53,12 @@ export class CreateNewServiceComponent implements OnInit {
   protected readonly intermediaryIdControl: FormControl<string | null>;
 
   protected readonly serviceTypes: WritableSignal<ServiceTypeData[]> = signal([]);
+  protected readonly serviceProviders: WritableSignal<ServiceProviderDataInterface[]> = signal([]);
 
   constructor(
     private validationMessage: ValidationMessageService,
-    private serviceHttp: ServiceHttp
+    private serviceHttp: ServiceHttp,
+    private serviceProviderHttp: ServiceProviderHttpService
   ) {
     this.numberControl = new FormControl(null, {
       validators: [Validators.required, Validators.pattern('\\d{4}/\\d{2}/\\d{2}/\\d+/\\d+')]
@@ -95,6 +99,7 @@ export class CreateNewServiceComponent implements OnInit {
     this.serviceHttp.getAllServiceTypes().subscribe(response => {
       this.serviceTypes.set(response.serviceTypes);
     });
+    this.serviceProviderHttp.getAll()
   }
 
   private addCoachIdControl() {

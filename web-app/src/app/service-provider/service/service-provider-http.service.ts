@@ -12,6 +12,7 @@ import {DeleteServiceProviderResponseInterface} from "../model/delete-service=pr
 import {UpdateServiceProviderRequestInterface} from "../model/update-service-provider-request.interface";
 import {UpdateServiceProviderResponseInterface} from "../model/update-service-provider-response.interface";
 import {SERVER_URL} from "../../shared/http-config";
+import {GetAllServiceProviderResponse} from "../service-provider-dtos";
 
 @Injectable({ providedIn: "root" })
 export class ServiceProviderHttpService {
@@ -73,6 +74,12 @@ export class ServiceProviderHttpService {
     return this.http.patch<UpdateServiceProviderResponseInterface>(
       SERVER_URL + 'api/service-provider',
       request
+    );
+  }
+
+  getAll(): Observable<GetAllServiceProviderResponse> {
+    return this.http.get<GetAllServiceProviderResponse>(
+      SERVER_URL + 'api/service-provider'
     );
   }
 }
