@@ -77,7 +77,7 @@ class ProviderReadRepository implements IProviderReadRepository {
     @Transactional(Transactional.TxType.NOT_SUPPORTED)
     public List<ServiceProvider> getAll() {
         getAll.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR));
-        Map<String, Object> result = jdbcCaller.call(getDetailsProc, new HashMap<>());
+        Map<String, Object> result = jdbcCaller.call(getAll, new HashMap<>());
         return DbCaster.fromProperties(result, ServiceProvider.class);
     }
 

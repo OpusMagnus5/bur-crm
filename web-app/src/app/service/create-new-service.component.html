@@ -63,6 +63,24 @@
           }
         </mat-form-field>
       </div>
+      <div class="w-full">
+        <mat-form-field class="w-full">
+          <mat-label>{{ 'new-service.service-providers-input-label' | translate }}</mat-label>
+          <input type="text"
+                 matInput
+                 [formControl]="serviceProviderIdControl"
+                 [matAutocomplete]="serviceProvidersAutocomplete"
+                 (input)="onServiceProviderChange()">
+          @if (serviceProviderIdControl.invalid) {
+            <mat-error>{{ getValidationMessage('service-provider', serviceProviderIdControl) }}</mat-error>
+          }
+          <mat-autocomplete #serviceProvidersAutocomplete="matAutocomplete" [displayWith]="displayServiceProviderName">
+            @for (serviceProvider of filteredServiceProviders(); track serviceProvider) {
+              <mat-option [value]="serviceProvider">{{ serviceProvider.name }}</mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
     </div>
   </form>
 </div>

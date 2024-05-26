@@ -1,4 +1,4 @@
-import {Component, OnInit, signal, WritableSignal} from '@angular/core';
+import {Component, OnDestroy, OnInit, signal, WritableSignal} from '@angular/core';
 import {FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 import {MatError, MatFormField, MatHint, MatLabel, MatSuffix} from "@angular/material/form-field";
@@ -6,12 +6,16 @@ import {TranslateModule} from "@ngx-translate/core";
 import {MatInput} from "@angular/material/input";
 import {ValidationMessageService} from "../shared/service/validation-message.service";
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
-import {provideNativeDateAdapter} from "@angular/material/core";
+import {MatOption, provideNativeDateAdapter} from "@angular/material/core";
 import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
 import {ServiceTypeData} from "./service-dtos";
 import {ServiceHttp} from "./service-http";
 import {ServiceProviderHttpService} from "../service-provider/service/service-provider-http.service";
 import {ServiceProviderDataInterface} from "../service-provider/model/service-provider-data.interface";
+import {forkJoin} from "rxjs";
+import {map} from "rxjs/operators";
+import {SubscriptionManager} from "../shared/util/subscription-manager";
+import {MatAutocomplete, MatAutocompleteTrigger} from "@angular/material/autocomplete";
 
 @Component({
   selector: 'app-create-new-service',
@@ -31,12 +35,15 @@ import {ServiceProviderDataInterface} from "../service-provider/model/service-pr
     MatError,
     MatHint,
     MatRadioGroup,
-    MatRadioButton
+    MatRadioButton,
+    MatAutocompleteTrigger,
+    MatAutocomplete,
+    MatOption
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './create-new-service.component.html'
 })
-export class CreateNewServiceComponent implements OnInit {
+export class CreateNewServiceComponent implements OnInit, OnDestroy {
 
   protected readonly form: FormGroup;
   protected readonly numberControl: FormControl<string | null>;
@@ -53,7 +60,11 @@ export class CreateNewServiceComponent implements OnInit {
   protected readonly intermediaryIdControl: FormControl<string | null>;
 
   protected readonly serviceTypes: WritableSignal<ServiceTypeData[]> = signal([]);
-  protected readonly serviceProviders: WritableSignal<ServiceProviderDataInterface[]> = signal([]);
+  private readonly serviceProviders: WritableSignal<ServiceProviderDataInterface[]> = signal([]);
+
+  protected readonly filteredServiceProviders: WritableSignal<ServiceProviderDataInterface[]> = signal([])
+
+  private readonly subscriptions = new SubscriptionManager();
 
   constructor(
     private validationMessage: ValidationMessageService,
@@ -95,11 +106,28 @@ export class CreateNewServiceComponent implements OnInit {
     this.form = this.buildFormGroup();
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribeAll();
+  }
+
   ngOnInit(): void {
-    this.serviceHttp.getAllServiceTypes().subscribe(response => {
-      this.serviceTypes.set(response.serviceTypes);
-    });
-    this.serviceProviderHttp.getAll()
+    const serviceTypesRequest = this.serviceHttp.getAllServiceTypes();
+    const serviceProvidersRequest = this.serviceProviderHttp.getAll();
+
+  this.subscriptions.add(forkJoin([serviceTypesRequest, serviceProvidersRequest]).pipe(
+      map(([serviceTypesResponse, serviceProvidersResponse]) => {
+        return {
+          serviceTypes: serviceTypesResponse.serviceTypes,
+          serviceProviders: serviceProvidersResponse.serviceProviders
+        }
+      })
+    ).subscribe({
+      next: responses => {
+        this.serviceTypes.set(responses.serviceTypes);
+        this.serviceProviders.set(responses.serviceProviders);
+        this.filteredServiceProviders.set(responses.serviceProviders);
+      }
+    }));
   }
 
   private addCoachIdControl() {
@@ -124,12 +152,23 @@ export class CreateNewServiceComponent implements OnInit {
     });
   }
 
+  protected onServiceProviderChange() {
+    const value: string = this.serviceProviderIdControl?.value?.toLowerCase()!;
+    this.filteredServiceProviders.set(
+      this.serviceProviders().filter(provider => provider.name.toLowerCase().includes(value))
+    );
+  }
+
   protected onSubmit() {
 
   }
 
   protected getValidationMessage(fieldName: string, control: FormControl): string {
     return this.validationMessage.getMessage(control, this.getValidationMessageKey, fieldName);
+  }
+
+  protected displayServiceProviderName(serviceProvider: ServiceProviderDataInterface & string) {
+    return serviceProvider?.name ? serviceProvider.name : serviceProvider;
   }
 
   private getValidationMessageKey(fieldName: string, validation: string): string {
