@@ -11,6 +11,7 @@ import {DeleteProgramResponseInterface} from "../model/delete-program-response.i
 import {ProgramDetailsResponseInterface} from "../model/program-details-response.interface";
 import {UpdateProgramResponseInterface} from "../model/update-program-response.interface";
 import {UpdateProgramRequestInterface} from "../model/update-program-request.interface";
+import {GetAllProgramsResponse} from "../program-dtos";
 
 @Injectable({providedIn: "root"})
 export class ProgramHttpService {
@@ -62,5 +63,11 @@ export class ProgramHttpService {
       SERVER_URL + 'api/program',
       request
     );
+  }
+
+  getAll(): Observable<GetAllProgramsResponse> {
+    return this.http.get<GetAllProgramsResponse>(
+      SERVER_URL + 'api/program'
+    )
   }
 }

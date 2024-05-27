@@ -70,13 +70,51 @@
                  matInput
                  [formControl]="serviceProviderIdControl"
                  [matAutocomplete]="serviceProvidersAutocomplete"
-                 (input)="onServiceProviderChange()">
+                 (keyup)="onServiceProviderChange($event)">
           @if (serviceProviderIdControl.invalid) {
             <mat-error>{{ getValidationMessage('service-provider', serviceProviderIdControl) }}</mat-error>
           }
           <mat-autocomplete #serviceProvidersAutocomplete="matAutocomplete" [displayWith]="displayServiceProviderName">
             @for (serviceProvider of filteredServiceProviders(); track serviceProvider) {
               <mat-option [value]="serviceProvider">{{ serviceProvider.name }}</mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <div class="w-full">
+        <mat-form-field class="w-full">
+          <mat-label>{{ 'new-service.programs-input-label' | translate }}</mat-label>
+          <input type="text"
+                 matInput
+                 [formControl]="programIdControl"
+                 [matAutocomplete]="programAutocomplete"
+                 (keyup)="onProgramChange($event)">
+          @if (programIdControl.invalid) {
+            <mat-error>{{ getValidationMessage('program', programIdControl) }}</mat-error>
+          }
+          <mat-autocomplete #programAutocomplete="matAutocomplete"
+                            [displayWith]="displayProgramName"
+                            (optionSelected)="onProgramSelected($event)">
+            @for (program of filteredPrograms(); track program) {
+              <mat-option [value]="program">{{ program.name }}</mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <div class="w-full">
+        <mat-form-field class="w-full">
+          <mat-label>{{ 'new-service.operators-input-label' | translate }}</mat-label>
+          <input type="text"
+                 matInput
+                 [matAutocomplete]="operatorAutocomplete"
+                 (keyup)="onOperatorChange($event)"
+                 [disabled]="filteredOperators().length === 1 && programIdControl?.value?.id"
+                 #operatorInput>
+          <mat-autocomplete #operatorAutocomplete="matAutocomplete"
+                            [displayWith]="displayProgramName"
+                            (optionSelected)="onOperatorSelected($event)">
+            @for (operator of filteredOperators(); track operator) {
+              <mat-option [value]="operator">{{ operator.name }}</mat-option>
             }
           </mat-autocomplete>
         </mat-form-field>

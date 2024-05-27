@@ -418,6 +418,10 @@
     "service-type-label": "Service type",
     "name-input-label": "Service name",
     "start-date-input-label": "Start date",
-    "end-date-input-label": "End date"
+    "end-date-input-label": "End date",
+    "participants-input-label": "Number of participants",
+    "service-providers-input-label": "Service provider",
+    "programs-input-label": "Program",
+    "operators-input-label": "Operator"
   }
 }

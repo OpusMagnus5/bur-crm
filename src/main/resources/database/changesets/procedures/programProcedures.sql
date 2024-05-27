@@ -147,7 +147,8 @@ AS $$
 BEGIN
 
     OPEN _cursor FOR
-        SELECT prg_id, prg_version, prg_name, prg_created_at, prg_modified_at
-        FROM program prg;
+        SELECT prg_id, prg_version, prg_name, prg_created_at, prg_modified_at, opr.opr_name as operator_opr_name
+        FROM program prg
+        LEFT JOIN operator opr on prg.prg_operator_id = opr.opr_id;
 
 END$$;
