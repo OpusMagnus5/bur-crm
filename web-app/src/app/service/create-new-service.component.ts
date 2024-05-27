@@ -30,6 +30,9 @@ import {ProgramDataInterface} from "../program/model/program-data-interface";
 import {ProgramHttpService} from "../program/service/program-http.service";
 import {OperatorDataInterface} from "../operator/model/operator-data.interface";
 import {OperatorHttpService} from "../operator/service/operator-http.service";
+import {CustomerData} from "../customer/customer-dtos";
+import {CoachData} from "../coach/coach-dtos";
+import {IntermediaryData} from "../intermediary/intermediary-dtos";
 
 @Component({
   selector: 'app-create-new-service',
@@ -66,12 +69,12 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
   protected readonly startDateControl: FormControl<Date | null>;
   protected readonly endDateControl: FormControl<Date | null>;
   protected readonly numberOfParticipantsControl: FormControl<number | null>;
-  protected readonly serviceProviderIdControl: FormControl<string | null>;
-  protected readonly programIdControl: FormControl<ProgramDataInterface | null>;
-  protected readonly customerIdControl: FormControl<string | null>;
-  protected readonly coachIdsControls: FormControl<string | null>[] = [];
+  protected readonly serviceProviderIdControl: FormControl<ServiceProviderDataInterface | string | null>;
+  protected readonly programIdControl: FormControl<ProgramDataInterface | string | null>;
+  protected readonly customerIdControl: FormControl<CustomerData | string | null>;
+  protected readonly coachIdsControls: FormControl<CoachData | string | null>[] = [];
   protected readonly coachIdsFormArray: FormArray<FormControl>;
-  protected readonly intermediaryIdControl: FormControl<string | null>;
+  protected readonly intermediaryIdControl: FormControl<IntermediaryData | string | null>;
 
   protected readonly serviceTypes: WritableSignal<ServiceTypeData[]> = signal([]);
   private readonly serviceProviders: WritableSignal<ServiceProviderDataInterface[]> = signal([]);
@@ -83,8 +86,8 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
   protected readonly filteredOperators: WritableSignal<OperatorDataInterface[]> = signal([]);
 
   protected readonly operatorInputDisabled: Signal<boolean> = computed(() =>
-    (this.filteredOperators().length === 1 && this.filteredPrograms().length === 1) ?? this.programIdControl?.value?.id
-  )
+    this.isSingleFilteredOperator() && this.isSingleFilteredProgram() && this.isValidProgramControl()
+  );
   private readonly subscriptions = new SubscriptionManager();
 
   @ViewChild('operatorInput') private operatorInput!: ElementRef;
@@ -217,7 +220,7 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     const operatorName = (<ProgramDataInterface>event.option.value).operator.name;
     this.filterProgramsById(programId);
     this.filterOperatorsByName(operatorName);
-    if (this.filteredOperators().length === 1) {
+    if (this.isSingleFilteredOperator()) {
       (<HTMLInputElement>this.operatorInput.nativeElement).value = this.filteredOperators()[0].name;
     }
   }
@@ -277,5 +280,18 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
 
   private getValidationMessageKey(fieldName: string, validation: string): string {
     return 'new-service.validation.' + fieldName + '.' + validation;
+  }
+
+  private isSingleFilteredOperator(): boolean {
+    return this.filteredOperators().length === 1;
+  }
+
+  private isSingleFilteredProgram(): boolean {
+    return this.filteredPrograms().length === 1;
+  }
+
+  private isValidProgramControl(): boolean {
+    const value = this.programIdControl?.value;
+    return typeof value === 'object' && value !== null && 'id' in value;
   }
 }

@@ -108,7 +108,7 @@
                  matInput
                  [matAutocomplete]="operatorAutocomplete"
                  (keyup)="onOperatorChange($event)"
-                 [disabled]="filteredOperators().length === 1 && programIdControl?.value?.id"
+                 [disabled]="operatorInputDisabled()"
                  #operatorInput>
           <mat-autocomplete #operatorAutocomplete="matAutocomplete"
                             [displayWith]="displayProgramName"
