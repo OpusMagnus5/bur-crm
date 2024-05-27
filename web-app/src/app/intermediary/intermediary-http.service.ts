@@ -6,6 +6,7 @@ import {
   CreateNewIntermediaryRequest,
   CreateNewIntermediaryResponse,
   DeleteIntermediaryResponse,
+  GetAllIntermediariesResponse,
   IntermediaryDetailsResponse,
   IntermediaryExistsResponse,
   IntermediaryPageResponse,
@@ -64,5 +65,11 @@ export class IntermediaryHttpService {
       SERVER_URL + 'api/intermediary',
       request
     );
+  }
+
+  getAll(): Observable<GetAllIntermediariesResponse> {
+    return this.http.get<GetAllIntermediariesResponse>(
+      SERVER_URL + 'api/intermediary'
+    )
   }
 }

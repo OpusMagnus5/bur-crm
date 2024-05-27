@@ -422,6 +422,8 @@
     "participants-input-label": "Liczba uczestników",
     "service-providers-input-label": "Dostawca usługi",
     "programs-input-label": "Program",
-    "operators-input-label": "Operator"
+    "operators-input-label": "Operator",
+    "customers-input-label": "Klient",
+    "intermediaries-input-label": "Pośrednik"
   }
 }

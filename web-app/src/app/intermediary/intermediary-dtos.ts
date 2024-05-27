@@ -49,3 +49,7 @@ export interface UpdateIntermediaryRequest {
 export interface UpdateIntermediaryResponse {
   message: string
 }
+
+export interface GetAllIntermediariesResponse {
+  intermediaries: IntermediaryData[]
+}

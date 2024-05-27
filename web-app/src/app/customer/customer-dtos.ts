@@ -49,3 +49,7 @@ export interface UpdateCustomerRequest {
 export interface UpdateCustomerResponse {
   message: string
 }
+
+export interface GetAllCustomersResponse {
+  customers: CustomerData[]
+}

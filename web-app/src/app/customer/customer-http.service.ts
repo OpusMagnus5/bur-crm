@@ -9,6 +9,7 @@ import {
   CustomerExistsResponse,
   CustomerPageResponse,
   DeleteCustomerResponse,
+  GetAllCustomersResponse,
   UpdateCustomerRequest,
   UpdateCustomerResponse
 } from "./customer-dtos";
@@ -64,5 +65,11 @@ export class CustomerHttpService {
       SERVER_URL + 'api/customer',
       request
     );
+  }
+
+  getAll(): Observable<GetAllCustomersResponse> {
+    return this.http.get<GetAllCustomersResponse>(
+      SERVER_URL + 'api/customer'
+    )
   }
 }

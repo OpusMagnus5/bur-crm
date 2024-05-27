@@ -33,6 +33,8 @@ import {OperatorHttpService} from "../operator/service/operator-http.service";
 import {CustomerData} from "../customer/customer-dtos";
 import {CoachData} from "../coach/coach-dtos";
 import {IntermediaryData} from "../intermediary/intermediary-dtos";
+import {CustomerHttpService} from "../customer/customer-http.service";
+import {IntermediaryHttpService} from "../intermediary/intermediary-http.service";
 
 @Component({
   selector: 'app-create-new-service',
@@ -80,10 +82,14 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
   private readonly serviceProviders: WritableSignal<ServiceProviderDataInterface[]> = signal([]);
   private readonly programs: WritableSignal<ProgramDataInterface[]> = signal([]);
   private readonly operators: WritableSignal<OperatorDataInterface[]> = signal([]);
+  private readonly customers: WritableSignal<CustomerData[]> = signal([]);
+  private readonly intermediaries: WritableSignal<IntermediaryData[]> = signal([]);
 
   protected readonly filteredServiceProviders: WritableSignal<ServiceProviderDataInterface[]> = signal([]);
   protected readonly filteredPrograms: WritableSignal<ProgramDataInterface[]> = signal([]);
   protected readonly filteredOperators: WritableSignal<OperatorDataInterface[]> = signal([]);
+  protected readonly filteredCustomers: WritableSignal<CustomerData[]> = signal([]);
+  protected readonly filteredIntermediaries: WritableSignal<IntermediaryData[]> = signal([]);
 
   protected readonly operatorInputDisabled: Signal<boolean> = computed(() =>
     this.isSingleFilteredOperator() && this.isSingleFilteredProgram() && this.isValidProgramControl()
@@ -97,7 +103,9 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     private serviceHttp: ServiceHttp,
     private serviceProviderHttp: ServiceProviderHttpService,
     private programHttp: ProgramHttpService,
-    private operatorHttp: OperatorHttpService
+    private operatorHttp: OperatorHttpService,
+    private customerHttp: CustomerHttpService,
+    private intermediaryHttp: IntermediaryHttpService
   ) {
     this.numberControl = new FormControl(null, {
       validators: [Validators.required, Validators.pattern('\\d{4}/\\d{2}/\\d{2}/\\d+/\\d+')]
@@ -143,23 +151,31 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     const serviceProvidersRequest = this.serviceProviderHttp.getAll();
     const programsRequest = this.programHttp.getAll();
     const operatorsRequest = this.operatorHttp.getAll();
+    const customersRequest = this.customerHttp.getAll();
+    const intermediariesRequest = this.intermediaryHttp.getAll();
 
   this.subscriptions.add(forkJoin([
     serviceTypesRequest,
     serviceProvidersRequest,
     programsRequest,
-    operatorsRequest
+    operatorsRequest,
+    customersRequest,
+    intermediariesRequest
   ]).pipe(
       map(([
         serviceTypesResponse,
         serviceProvidersResponse,
         programsResponse,
-        operatorsResponse]) => {
+        operatorsResponse,
+        customersResponse,
+        intermediariesResponse]) => {
         return {
           serviceTypes: serviceTypesResponse.serviceTypes,
           serviceProviders: serviceProvidersResponse.serviceProviders,
           programs: programsResponse.programs,
-          operators: operatorsResponse.operators
+          operators: operatorsResponse.operators,
+          customers: customersResponse.customers,
+          intermediaries: intermediariesResponse.intermediaries
         }
       })
     ).subscribe({
@@ -171,6 +187,10 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
         this.filteredPrograms.set(responses.programs);
         this.operators.set(responses.operators);
         this.filteredOperators.set(responses.operators);
+        this.customers.set(responses.customers);
+        this.filteredCustomers.set(responses.customers);
+        this.intermediaries.set(responses.intermediaries);
+        this.filteredIntermediaries.set(responses.intermediaries);
       }
     }));
   }
@@ -215,6 +235,16 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     this.filterProgramsByOperatorName(name);
   }
 
+  protected onCustomerChange(event: Event) {
+    const name: string = (<HTMLInputElement>event.target).value;
+    this.filterCustomersByName(name);
+  }
+
+  protected onIntermediaryChange(event: Event) {
+    const name: string = (<HTMLInputElement>event.target).value;
+    this.filterIntermediariesByName(name);
+  }
+
   protected onProgramSelected(event: MatAutocompleteSelectedEvent) {
     const programId = (<ProgramDataInterface>event.option.value).id;
     const operatorName = (<ProgramDataInterface>event.option.value).operator.name;
@@ -230,6 +260,16 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     const name = (<OperatorDataInterface>event.option.value).name;
     this.filterOperatorsById(id);
     this.filterProgramsByOperatorName(name);
+  }
+
+  protected onCustomerSelected(event: MatAutocompleteSelectedEvent) {
+    const id = (<OperatorDataInterface>event.option.value).id;
+    this.filterCustomersById(id);
+  }
+
+  protected onIntermediarySelected(event: MatAutocompleteSelectedEvent) {
+    const id = (<IntermediaryData>event.option.value).id;
+    this.filterIntermediariesById(id);
   }
 
   private filterProgramsByName(name: string) {
@@ -262,6 +302,30 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     );
   }
 
+  private filterCustomersByName(name: string) {
+    this.filteredCustomers.set(
+      this.customers().filter(customer => customer.name.toLowerCase().includes(name.toLowerCase().trim()))
+    );
+  }
+
+  private filterCustomersById(id: string) {
+    this.filteredCustomers.set(
+      this.customers().filter(customer => customer.id === id)
+    );
+  }
+
+  private filterIntermediariesByName(name: string) {
+    this.filteredIntermediaries.set(
+      this.intermediaries().filter(intermediary => intermediary.name.toLowerCase().includes(name.toLowerCase().trim()))
+    );
+  }
+
+  private filterIntermediariesById(id: string) {
+    this.filteredIntermediaries.set(
+      this.intermediaries().filter(intermediary => intermediary.id === id)
+    );
+  }
+
   protected onSubmit() {
 
   }
@@ -276,6 +340,18 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
 
   protected displayProgramName(program: ProgramDataInterface | string): string {
     return typeof program === 'string' ? program : program?.name;
+  }
+
+  protected displayOperatorName(operator: OperatorDataInterface | string): string {
+    return typeof operator === 'string' ? operator : operator?.name;
+  }
+
+  protected displayCustomerName(customer: CustomerData | string): string {
+    return typeof customer === 'string' ? customer : customer?.name;
+  }
+
+  protected displayIntermediaryName(intermediary: IntermediaryData | string): string {
+    return typeof intermediary === 'string' ? intermediary : intermediary?.name;
   }
 
   private getValidationMessageKey(fieldName: string, validation: string): string {

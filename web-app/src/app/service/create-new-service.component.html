@@ -17,7 +17,7 @@
             <mat-radio-button [value]="type.value">{{ type.name }}</mat-radio-button>
           }
         </mat-radio-group>
-        @if (typeControl.invalid) {
+        @if (typeControl.invalid && typeControl.touched) {
           <mat-error>{{ getValidationMessage('type', typeControl) }}</mat-error>
         }
       </div>
@@ -111,10 +111,50 @@
                  [disabled]="operatorInputDisabled()"
                  #operatorInput>
           <mat-autocomplete #operatorAutocomplete="matAutocomplete"
-                            [displayWith]="displayProgramName"
+                            [displayWith]="displayOperatorName"
                             (optionSelected)="onOperatorSelected($event)">
             @for (operator of filteredOperators(); track operator) {
               <mat-option [value]="operator">{{ operator.name }}</mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <div class="w-full">
+        <mat-form-field class="w-full">
+          <mat-label>{{ 'new-service.customers-input-label' | translate }}</mat-label>
+          <input type="text"
+                 matInput
+                 [formControl]="customerIdControl"
+                 [matAutocomplete]="customerAutocomplete"
+                 (keyup)="onCustomerChange($event)">
+          @if (customerIdControl.invalid) {
+            <mat-error>{{ getValidationMessage('customer', customerIdControl) }}</mat-error>
+          }
+          <mat-autocomplete #customerAutocomplete="matAutocomplete"
+                            [displayWith]="displayCustomerName"
+                            (optionSelected)="onCustomerSelected($event)">
+            @for (customer of filteredCustomers(); track customer) {
+              <mat-option [value]="customer">{{ customer.name }}</mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <div class="w-full">
+        <mat-form-field class="w-full">
+          <mat-label>{{ 'new-service.intermediaries-input-label' | translate }}</mat-label>
+          <input type="text"
+                 matInput
+                 [formControl]="intermediaryIdControl"
+                 [matAutocomplete]="intermediaryAutocomplete"
+                 (keyup)="onIntermediaryChange($event)">
+          @if (intermediaryIdControl.invalid) {
+            <mat-error>{{ getValidationMessage('intermediary', intermediaryIdControl) }}</mat-error>
+          }
+          <mat-autocomplete #intermediaryAutocomplete="matAutocomplete"
+                            [displayWith]="displayIntermediaryName"
+                            (optionSelected)="onIntermediarySelected($event)">
+            @for (intermediary of filteredIntermediaries(); track intermediary) {
+              <mat-option [value]="intermediary">{{ intermediary.name }}</mat-option>
             }
           </mat-autocomplete>
         </mat-form-field>
