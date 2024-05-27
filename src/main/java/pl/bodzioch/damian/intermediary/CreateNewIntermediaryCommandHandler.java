@@ -15,7 +15,7 @@ import pl.bodzioch.damian.value_object.ErrorData;
 
 import java.util.List;
 
-@CacheEvict("intermediaries")
+@CacheEvict(value = "intermediaries", allEntries = true)
 @Slf4j
 @Component
 @RequiredArgsConstructor

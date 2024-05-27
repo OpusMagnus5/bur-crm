@@ -15,7 +15,7 @@ import pl.bodzioch.damian.value_object.ErrorData;
 
 import java.util.List;
 
-@CacheEvict("customers")
+@CacheEvict(value = "customers", allEntries = true)
 @Slf4j
 @Component
 @RequiredArgsConstructor

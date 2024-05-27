@@ -8,7 +8,7 @@ import pl.bodzioch.damian.operator.command_dto.DeleteOperatorCommand;
 import pl.bodzioch.damian.operator.command_dto.DeleteOperatorCommandResult;
 import pl.bodzioch.damian.utils.MessageResolver;
 
-@CacheEvict("operators")
+@CacheEvict(value = "operators", allEntries = true)
 @Component
 @RequiredArgsConstructor
 class DeleteOperatorCommandHandler implements CommandHandler<DeleteOperatorCommand, DeleteOperatorCommandResult> {

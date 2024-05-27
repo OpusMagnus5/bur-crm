@@ -15,7 +15,7 @@ import pl.bodzioch.damian.value_object.ErrorData;
 
 import java.util.List;
 
-@CacheEvict("programs")
+@CacheEvict(value = "programs", allEntries = true)
 @Slf4j
 @Component
 @RequiredArgsConstructor

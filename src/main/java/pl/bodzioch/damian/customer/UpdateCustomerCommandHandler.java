@@ -8,7 +8,7 @@ import pl.bodzioch.damian.customer.command_dto.UpdateCustomerCommandResult;
 import pl.bodzioch.damian.infrastructure.command.CommandHandler;
 import pl.bodzioch.damian.utils.MessageResolver;
 
-@CacheEvict("customers")
+@CacheEvict(value = "customers", allEntries = true)
 @Component
 @RequiredArgsConstructor
 class UpdateCustomerCommandHandler implements CommandHandler<UpdateCustomerCommand, UpdateCustomerCommandResult> {

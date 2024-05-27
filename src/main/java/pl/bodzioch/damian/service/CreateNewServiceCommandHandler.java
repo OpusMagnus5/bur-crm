@@ -68,9 +68,9 @@ class CreateNewServiceCommandHandler implements CommandHandler<CreateNewServiceC
 	}
 
 	private void validateCommand(BurServiceDto burService, CreateNewServiceCommand command) {
-		List<ErrorData> errors = new ArrayList<>();
+		List<ErrorData> errors = new ArrayList<>(); //
 		validateServiceType(burService, command).ifPresent(errors::add);
-		validateServiceProvider(burService, command).ifPresent(errors::add);
+		validateServiceProvider(burService, command).ifPresent(errors::add); //TODO Validate czy startDate jest wcześniej niż endDate
 		validateStartDate(burService, command).ifPresent(errors::add);
 		validateEndDate(burService, command).ifPresent(errors::add);
 		validateNumber(burService, command).ifPresent(errors::add);

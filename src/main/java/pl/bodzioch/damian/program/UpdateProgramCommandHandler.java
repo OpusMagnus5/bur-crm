@@ -8,7 +8,7 @@ import pl.bodzioch.damian.program.command_dto.UpdateProgramCommand;
 import pl.bodzioch.damian.program.command_dto.UpdateProgramCommandResult;
 import pl.bodzioch.damian.utils.MessageResolver;
 
-@CacheEvict("programs")
+@CacheEvict(value = "programs", allEntries = true)
 @Component
 @RequiredArgsConstructor
 class UpdateProgramCommandHandler implements CommandHandler<UpdateProgramCommand, UpdateProgramCommandResult> {

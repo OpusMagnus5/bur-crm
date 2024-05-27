@@ -8,7 +8,7 @@ import pl.bodzioch.damian.service_provider.command_dto.DeleteServiceProviderComm
 import pl.bodzioch.damian.service_provider.command_dto.DeleteServiceProviderCommandResult;
 import pl.bodzioch.damian.utils.MessageResolver;
 
-@CacheEvict("serviceProviders")
+@CacheEvict(value = "serviceProviders", allEntries = true)
 @Component
 @RequiredArgsConstructor
 class DeleteServiceProviderCommandHandler implements CommandHandler<DeleteServiceProviderCommand, DeleteServiceProviderCommandResult> {

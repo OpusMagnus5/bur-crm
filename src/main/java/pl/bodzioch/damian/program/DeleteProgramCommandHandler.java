@@ -8,7 +8,7 @@ import pl.bodzioch.damian.program.command_dto.DeleteProgramCommand;
 import pl.bodzioch.damian.program.command_dto.DeleteProgramCommandResult;
 import pl.bodzioch.damian.utils.MessageResolver;
 
-@CacheEvict("programs")
+@CacheEvict(value = "programs", allEntries = true)
 @Component
 @RequiredArgsConstructor
 class DeleteProgramCommandHandler implements CommandHandler<DeleteProgramCommand, DeleteProgramCommandResult> {
