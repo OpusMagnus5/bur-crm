@@ -15,7 +15,6 @@ import pl.bodzioch.damian.value_object.ErrorData;
 
 import java.util.List;
 
-@CacheEvict(value = "operators", allEntries = true)
 @Component
 @Slf4j
 @RequiredArgsConstructor
@@ -30,6 +29,7 @@ class CreateNewOperatorCommandHandler implements CommandHandler<CreateNewOperato
     }
 
     @Override
+    @CacheEvict(value = "operators", allEntries = true)
     public CreateNewOperatorCommandResult handle(CreateNewOperatorCommand command) {
         Operator operator = new Operator(command);
         try {

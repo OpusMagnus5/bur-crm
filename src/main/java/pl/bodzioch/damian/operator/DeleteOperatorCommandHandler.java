@@ -8,7 +8,6 @@ import pl.bodzioch.damian.operator.command_dto.DeleteOperatorCommand;
 import pl.bodzioch.damian.operator.command_dto.DeleteOperatorCommandResult;
 import pl.bodzioch.damian.utils.MessageResolver;
 
-@CacheEvict(value = "operators", allEntries = true)
 @Component
 @RequiredArgsConstructor
 class DeleteOperatorCommandHandler implements CommandHandler<DeleteOperatorCommand, DeleteOperatorCommandResult> {
@@ -22,6 +21,7 @@ class DeleteOperatorCommandHandler implements CommandHandler<DeleteOperatorComma
     }
 
     @Override
+    @CacheEvict(value = "operators", allEntries = true)
     public DeleteOperatorCommandResult handle(DeleteOperatorCommand command) {
         writeRepository.delete(command.id());
         String message = messageResolver.getMessage("operator.deleteByIdSuccess");

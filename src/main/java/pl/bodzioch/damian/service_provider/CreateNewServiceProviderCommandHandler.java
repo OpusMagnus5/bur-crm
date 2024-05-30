@@ -17,7 +17,6 @@ import pl.bodzioch.damian.value_object.ErrorData;
 
 import java.util.List;
 
-@CacheEvict(value = "serviceProviders", allEntries = true)
 @Component
 @Slf4j
 @RequiredArgsConstructor
@@ -33,6 +32,7 @@ class CreateNewServiceProviderCommandHandler implements CommandHandler<CreateNew
     }
 
     @Override
+    @CacheEvict(value = "serviceProviders", allEntries = true)
     public CreateNewServiceProviderCommandResult handle(CreateNewServiceProviderCommand command) {
         Long burId = getBurId(command.nip());
         ServiceProvider serviceProvider = new ServiceProvider(command, burId);

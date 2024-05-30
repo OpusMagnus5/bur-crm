@@ -15,7 +15,6 @@ import pl.bodzioch.damian.value_object.ErrorData;
 
 import java.util.List;
 
-@CacheEvict(value = "programs", allEntries = true)
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -30,6 +29,7 @@ class CreateNewProgramCommandHandler implements CommandHandler<CreateNewProgramC
     }
 
     @Override
+    @CacheEvict(value = "programs", allEntries = true)
     public CreateNewProgramCommandResult handle(CreateNewProgramCommand command) {
         Program program = new Program(command);
         try {

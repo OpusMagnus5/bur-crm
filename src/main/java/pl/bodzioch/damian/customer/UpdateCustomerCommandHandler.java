@@ -8,7 +8,6 @@ import pl.bodzioch.damian.customer.command_dto.UpdateCustomerCommandResult;
 import pl.bodzioch.damian.infrastructure.command.CommandHandler;
 import pl.bodzioch.damian.utils.MessageResolver;
 
-@CacheEvict(value = "customers", allEntries = true)
 @Component
 @RequiredArgsConstructor
 class UpdateCustomerCommandHandler implements CommandHandler<UpdateCustomerCommand, UpdateCustomerCommandResult> {
@@ -22,6 +21,7 @@ class UpdateCustomerCommandHandler implements CommandHandler<UpdateCustomerComma
 	}
 
 	@Override
+	@CacheEvict(value = "customers", allEntries = true)
 	public UpdateCustomerCommandResult handle(UpdateCustomerCommand command) {
 		writeRepository.update(new Customer(command));
 		String message = messageResolver.getMessage("customer.updateSuccess");

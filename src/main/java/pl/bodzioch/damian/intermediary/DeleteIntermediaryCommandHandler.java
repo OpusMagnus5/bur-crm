@@ -8,7 +8,6 @@ import pl.bodzioch.damian.intermediary.command_dto.DeleteIntermediaryCommand;
 import pl.bodzioch.damian.intermediary.command_dto.DeleteIntermediaryCommandResult;
 import pl.bodzioch.damian.utils.MessageResolver;
 
-@CacheEvict(value = "intermediaries", allEntries = true)
 @Component
 @RequiredArgsConstructor
 class DeleteIntermediaryCommandHandler implements CommandHandler<DeleteIntermediaryCommand, DeleteIntermediaryCommandResult> {
@@ -22,6 +21,7 @@ class DeleteIntermediaryCommandHandler implements CommandHandler<DeleteIntermedi
     }
 
     @Override
+    @CacheEvict(value = "intermediaries", allEntries = true)
     public DeleteIntermediaryCommandResult handle(DeleteIntermediaryCommand command) {
         writeRepository.delete(command.id());
         String message = messageResolver.getMessage("intermediary.deleteByIdSuccess");

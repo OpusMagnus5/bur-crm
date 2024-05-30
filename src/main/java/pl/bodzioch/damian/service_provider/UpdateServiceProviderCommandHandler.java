@@ -8,7 +8,6 @@ import pl.bodzioch.damian.service_provider.command_dto.UpdateServiceProviderComm
 import pl.bodzioch.damian.service_provider.command_dto.UpdateServiceProviderCommandResult;
 import pl.bodzioch.damian.utils.MessageResolver;
 
-@CacheEvict(value = "serviceProviders", allEntries = true)
 @Component
 @RequiredArgsConstructor
 class UpdateServiceProviderCommandHandler implements CommandHandler<UpdateServiceProviderCommand, UpdateServiceProviderCommandResult> {
@@ -22,6 +21,7 @@ class UpdateServiceProviderCommandHandler implements CommandHandler<UpdateServic
     }
 
     @Override
+    @CacheEvict(value = "serviceProviders", allEntries = true)
     public UpdateServiceProviderCommandResult handle(UpdateServiceProviderCommand command) {
         writeRepository.update(new ServiceProvider(command));
         String message = messageResolver.getMessage("serviceProvider.updateSuccess");

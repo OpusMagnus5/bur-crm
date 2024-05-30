@@ -8,7 +8,6 @@ import pl.bodzioch.damian.program.command_dto.UpdateProgramCommand;
 import pl.bodzioch.damian.program.command_dto.UpdateProgramCommandResult;
 import pl.bodzioch.damian.utils.MessageResolver;
 
-@CacheEvict(value = "programs", allEntries = true)
 @Component
 @RequiredArgsConstructor
 class UpdateProgramCommandHandler implements CommandHandler<UpdateProgramCommand, UpdateProgramCommandResult> {
@@ -22,6 +21,7 @@ class UpdateProgramCommandHandler implements CommandHandler<UpdateProgramCommand
 	}
 
 	@Override
+	@CacheEvict(value = "programs", allEntries = true)
 	public UpdateProgramCommandResult handle(UpdateProgramCommand command) {
 		writeRepository.update(new Program(command));
 		String message = messageResolver.getMessage("program.updateSuccess");

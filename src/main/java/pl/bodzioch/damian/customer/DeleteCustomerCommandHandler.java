@@ -8,7 +8,6 @@ import pl.bodzioch.damian.customer.command_dto.DeleteCustomerCommandResult;
 import pl.bodzioch.damian.infrastructure.command.CommandHandler;
 import pl.bodzioch.damian.utils.MessageResolver;
 
-@CacheEvict(value = "customers", allEntries = true)
 @Component
 @RequiredArgsConstructor
 class DeleteCustomerCommandHandler implements CommandHandler<DeleteCustomerCommand, DeleteCustomerCommandResult> {
@@ -22,6 +21,7 @@ class DeleteCustomerCommandHandler implements CommandHandler<DeleteCustomerComma
     }
 
     @Override
+    @CacheEvict(value = "customers", allEntries = true)
     public DeleteCustomerCommandResult handle(DeleteCustomerCommand command) {
         writeRepository.delete(command.id());
         String message = messageResolver.getMessage("customer.deleteByIdSuccess");

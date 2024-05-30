@@ -15,7 +15,6 @@ import pl.bodzioch.damian.value_object.ErrorData;
 
 import java.util.List;
 
-@CacheEvict(value = "customers", allEntries = true)
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -30,6 +29,7 @@ class CreateNewCustomerCommandHandler implements CommandHandler<CreateNewCustome
     }
 
     @Override
+    @CacheEvict(value = "customers", allEntries = true)
     public CreateNewCustomerCommandResult handle(CreateNewCustomerCommand command) {
         try {
             Customer customer = new Customer(command);

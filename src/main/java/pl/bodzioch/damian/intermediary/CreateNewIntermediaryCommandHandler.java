@@ -15,7 +15,6 @@ import pl.bodzioch.damian.value_object.ErrorData;
 
 import java.util.List;
 
-@CacheEvict(value = "intermediaries", allEntries = true) //TODO fix cache evict
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -30,6 +29,7 @@ class CreateNewIntermediaryCommandHandler implements CommandHandler<CreateNewInt
     }
 
     @Override
+    @CacheEvict(value = "intermediaries", allEntries = true)
     public CreateNewIntermediaryCommandResult handle(CreateNewIntermediaryCommand command) {
         try {
             Intermediary intermediary = new Intermediary(command);

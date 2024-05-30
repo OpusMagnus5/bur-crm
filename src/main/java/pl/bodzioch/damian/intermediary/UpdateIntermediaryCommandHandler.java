@@ -8,7 +8,6 @@ import pl.bodzioch.damian.intermediary.command_dto.UpdateIntermediaryCommand;
 import pl.bodzioch.damian.intermediary.command_dto.UpdateIntermediaryCommandResult;
 import pl.bodzioch.damian.utils.MessageResolver;
 
-@CacheEvict(value = "intermediaries", allEntries = true)
 @Component
 @RequiredArgsConstructor
 class UpdateIntermediaryCommandHandler implements CommandHandler<UpdateIntermediaryCommand, UpdateIntermediaryCommandResult> {
@@ -22,6 +21,7 @@ class UpdateIntermediaryCommandHandler implements CommandHandler<UpdateIntermedi
 	}
 
 	@Override
+	@CacheEvict(value = "intermediaries", allEntries = true)
 	public UpdateIntermediaryCommandResult handle(UpdateIntermediaryCommand command) {
 		writeRepository.update(new Intermediary(command));
 		String message = messageResolver.getMessage("intermediary.updateSuccess");

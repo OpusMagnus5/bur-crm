@@ -8,7 +8,6 @@ import pl.bodzioch.damian.service_provider.command_dto.DeleteServiceProviderComm
 import pl.bodzioch.damian.service_provider.command_dto.DeleteServiceProviderCommandResult;
 import pl.bodzioch.damian.utils.MessageResolver;
 
-@CacheEvict(value = "serviceProviders", allEntries = true)
 @Component
 @RequiredArgsConstructor
 class DeleteServiceProviderCommandHandler implements CommandHandler<DeleteServiceProviderCommand, DeleteServiceProviderCommandResult> {
@@ -22,6 +21,7 @@ class DeleteServiceProviderCommandHandler implements CommandHandler<DeleteServic
     }
 
     @Override
+    @CacheEvict(value = "serviceProviders", allEntries = true)
     public DeleteServiceProviderCommandResult handle(DeleteServiceProviderCommand command) {
         writeRepository.delete(command.id());
         String message = messageResolver.getMessage("serviceProvider.deleteByIdSuccess");
