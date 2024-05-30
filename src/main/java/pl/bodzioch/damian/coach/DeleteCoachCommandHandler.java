@@ -1,14 +1,13 @@
 package pl.bodzioch.damian.coach;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.coach.command_dto.DeleteCoachCommand;
 import pl.bodzioch.damian.coach.command_dto.DeleteCoachCommandResult;
 import pl.bodzioch.damian.infrastructure.command.CommandHandler;
 import pl.bodzioch.damian.utils.MessageResolver;
 
-@Cacheable("coaches")
 @Component
 @RequiredArgsConstructor
 class DeleteCoachCommandHandler implements CommandHandler<DeleteCoachCommand, DeleteCoachCommandResult> {
@@ -22,6 +21,7 @@ class DeleteCoachCommandHandler implements CommandHandler<DeleteCoachCommand, De
     }
 
     @Override
+    @CacheEvict(value = "coaches", allEntries = true)
     public DeleteCoachCommandResult handle(DeleteCoachCommand command) {
         writeRepository.delete(command.id());
         String message = messageResolver.getMessage("coach.deleteByIdSuccess");

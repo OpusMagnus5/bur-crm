@@ -424,6 +424,43 @@
     "programs-input-label": "Program",
     "operators-input-label": "Operator",
     "customers-input-label": "Klient",
-    "intermediaries-input-label": "Pośrednik"
+    "intermediaries-input-label": "Pośrednik",
+    "coaches-input-label": "Trenerzy",
+    "validation": {
+      "number": {
+        "required": "Pole numer usługi nie może być puste",
+        "pattern": "Podany numer usługi jest nieprawidłowy"
+      },
+      "name": {
+        "required": "Pole nazwa usługi nie może być puste",
+        "pattern": "Podana nazwa usługi jest nieprawidłowy"
+      },
+      "start-date": {
+        "required": "Pole data rozpoczęcia nie może być puste"
+      },
+      "end-date": {
+        "required": "Pole data zakończenia nie może być puste"
+      },
+      "participants": {
+        "required": "Pole liczba uczestników nie może być puste",
+        "min": "Podana liczba uczestników jest nieprawidłowa",
+        "max": "Podana liczba uczestników jest nieprawidłowa"
+      },
+      "service-provider": {
+        "required": "Pole dostawca usługi nie może być puste"
+      },
+      "program": {
+        "required": "Pole program nie może być puste"
+      },
+      "customer": {
+        "required": "Pole klient nie może być puste"
+      },
+      "intermediary": {
+        "required": "Pole pośrednik nie może być puste"
+      },
+      "coach": {
+        "required": "Pole trenerzy nie może być puste"
+      }
+    }
   }
 }

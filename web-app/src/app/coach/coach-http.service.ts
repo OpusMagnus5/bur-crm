@@ -9,6 +9,7 @@ import {
   CreateNewCoachRequest,
   CreateNewCoachResponse,
   DeleteCoachResponse,
+  GetAllCoachesResponse,
   UpdateCoachRequest,
   UpdateCoachResponse
 } from "./coach-dtos";
@@ -63,5 +64,9 @@ export class CoachHttpService {
       SERVER_URL + 'api/coach',
       request
     );
+  }
+
+  getAll(): Observable<GetAllCoachesResponse> {
+    return this.http.get<GetAllCoachesResponse>(SERVER_URL + 'api/coach');
   }
 }

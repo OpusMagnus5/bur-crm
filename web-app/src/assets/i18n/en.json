@@ -424,6 +424,43 @@
     "programs-input-label": "Program",
     "operators-input-label": "Operator",
     "customers-input-label": "Customer",
-    "intermediaries-input-label": "Intermediary"
+    "intermediaries-input-label": "Intermediary",
+    "coaches-input-label": "Coaches",
+    "validation": {
+      "number": {
+        "required": "The service number field cannot be empty",
+        "pattern": "The provided service number is invalid"
+      },
+      "name": {
+        "required": "The service name field cannot be empty",
+        "pattern": "The provided service name is invalid"
+      },
+      "start-date": {
+        "required": "The start date field cannot be empty"
+      },
+      "end-date": {
+        "required": "The end date field cannot be empty"
+      },
+      "participants": {
+        "required": "The number of participants field cannot be empty",
+        "min": "The provided number of participants is invalid",
+        "max": "The provided number of participants is invalid"
+      },
+      "service-provider": {
+        "required": "The service provider field cannot be empty"
+      },
+      "program": {
+        "required": "The program field cannot be empty"
+      },
+      "customer": {
+        "required": "The customer field cannot be empty"
+      },
+      "intermediary": {
+        "required": "The intermediary field cannot be empty"
+      },
+      "coach": {
+        "required": "The coaches field cannot be empty"
+      }
+    }
   }
 }

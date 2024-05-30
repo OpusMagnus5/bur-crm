@@ -1,14 +1,13 @@
 package pl.bodzioch.damian.coach;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.coach.command_dto.UpdateCoachCommand;
 import pl.bodzioch.damian.coach.command_dto.UpdateCoachCommandResult;
 import pl.bodzioch.damian.infrastructure.command.CommandHandler;
 import pl.bodzioch.damian.utils.MessageResolver;
 
-@Cacheable("coaches")
 @Component
 @RequiredArgsConstructor
 class UpdateCoachCommandHandler implements CommandHandler<UpdateCoachCommand, UpdateCoachCommandResult> {
@@ -22,6 +21,7 @@ class UpdateCoachCommandHandler implements CommandHandler<UpdateCoachCommand, Up
     }
 
     @Override
+    @CacheEvict(value = "coaches", allEntries = true)
     public UpdateCoachCommandResult handle(UpdateCoachCommand command) {
        writeRepository.update(new Coach(command));
         String message = messageResolver.getMessage("coach.updateSuccess");

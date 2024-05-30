@@ -6,10 +6,7 @@ import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.exception.DbCasterException;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -104,7 +101,7 @@ public class DbCaster {
             if (field.getType().isInstance(Enum.class)) {
                 return enumsToDb(List.of((Enum<?>) field.get(object)));
             } else if (List.class.isAssignableFrom(field.getType())) {
-                return mapEnumListToDb(field, object);
+                return mapListToDb(field, object);
             } else {
                 return field.get(object);
             }
@@ -113,16 +110,29 @@ public class DbCaster {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private static Object mapEnumListToDb(Field field, Object object) throws IllegalAccessException {
+    @SuppressWarnings({ "unchecked" })
+    private static Object mapListToDb(Field field, Object object) throws IllegalAccessException {
         Type genericType = field.getGenericType();
         if (genericType instanceof ParameterizedType) {
             Type[] typeArguments = ((ParameterizedType) genericType).getActualTypeArguments();
             if(typeArguments.length == 1 && typeArguments[0] instanceof Class && ((Class<?>) typeArguments[0]).isEnum()) {
                 return enumsToDb((List<? extends Enum<?>>) field.get(object));
+            } else if (typeArguments.length == 1 && typeArguments[0] instanceof Class){
+                return toPrimitiveObjectList(field, object, typeArguments);
             }
         }
         throw new DbCasterException("Not implemented type, field: " + field + " object: " + object);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private static Object toPrimitiveObjectList(Field field, Object object, Type[] typeArguments) throws IllegalAccessException {
+        List list = (List) field.get(object);
+        int size = list.size();
+        Object array = Array.newInstance((Class<?>) typeArguments[0], size);
+        for (int i = 0; i < size; i++) {
+            Array.set(array, i, list.get(i));
+        }
+        return array;
     }
 
     private static Object getObjectForField(

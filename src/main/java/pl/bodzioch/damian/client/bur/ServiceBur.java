@@ -2,7 +2,7 @@ package pl.bodzioch.damian.client.bur;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 record ServiceBur(
 		Long id,
@@ -13,9 +13,9 @@ record ServiceBur(
 		@JsonProperty("idRodzajuUslugi")
 		Long serviceTypeId,
 		@JsonProperty("dataRozpoczeciaUslugi")
-		LocalDateTime startDate,
+		ZonedDateTime startDate,
 		@JsonProperty("dataZakonczeniaUslugi")
-		LocalDateTime endDate,
+		ZonedDateTime endDate,
 		@JsonProperty("dostawcaUslug")
 		ServiceProviderBur serviceProvider
 ) {

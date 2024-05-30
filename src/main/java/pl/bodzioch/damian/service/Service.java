@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.UUID;
 
 //TODO general error handling on front which logging on db
-//TO NIE JEST KARTA TYLKO USŁUGA, KILKA FIRM MOZE SIĘ ZAPISAC
 record Service(
 		@DbId
 		@DbColumn(name = "srv_id")

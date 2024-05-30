@@ -9,7 +9,6 @@ import pl.bodzioch.damian.operator.query_dto.GetAllOperatorsQueryResult;
 
 import java.util.List;
 
-@Cacheable("operators")
 @Component
 @RequiredArgsConstructor
 class GetAllOperatorsQueryHandler implements QueryHandler<GetAllOperatorsQuery, GetAllOperatorsQueryResult> {
@@ -22,6 +21,7 @@ class GetAllOperatorsQueryHandler implements QueryHandler<GetAllOperatorsQuery, 
     }
 
     @Override
+    @Cacheable("operators")
     public GetAllOperatorsQueryResult handle(GetAllOperatorsQuery query) {
         List<OperatorDto> operators = readRepository.getAll().stream()
                 .map(OperatorDto::new)

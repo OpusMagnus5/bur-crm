@@ -10,7 +10,7 @@
          [activated]="routerService.isActivePath(BASE_PATH)">{{ 'navigation.home-path' | translate }}</a>
       <a mat-list-item
          [routerLink]="[SERVICES_PATH]"
-         [activated]="routerService.isActivePath(SERVICES_PATH)">{{ 'navigation.service-path' | translate }}</a>
+         [activated]="routerService.isPartOfActivePath(SERVICES_PATH)">{{ 'navigation.service-path' | translate }}</a>
       <a mat-list-item
          [matMenuTriggerFor]="registryMenu"
          [activated]="routerService.isPartOfActivePath(REGISTRY_PATH)">{{ 'navigation.registry-path' | translate }}</a>

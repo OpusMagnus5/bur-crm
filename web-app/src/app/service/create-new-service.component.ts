@@ -9,7 +9,7 @@ import {
   ViewChild,
   WritableSignal
 } from '@angular/core';
-import {FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 import {MatError, MatFormField, MatHint, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {TranslateModule} from "@ngx-translate/core";
@@ -18,7 +18,7 @@ import {ValidationMessageService} from "../shared/service/validation-message.ser
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
 import {MatOption, provideNativeDateAdapter} from "@angular/material/core";
 import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
-import {ServiceTypeData} from "./service-dtos";
+import {CreateNewServiceRequest, CreateNewServiceResponse, ServiceTypeData} from "./service-dtos";
 import {ServiceHttp} from "./service-http";
 import {ServiceProviderHttpService} from "../service-provider/service/service-provider-http.service";
 import {ServiceProviderDataInterface} from "../service-provider/model/service-provider-data.interface";
@@ -35,6 +35,11 @@ import {CoachData} from "../coach/coach-dtos";
 import {IntermediaryData} from "../intermediary/intermediary-dtos";
 import {CustomerHttpService} from "../customer/customer-http.service";
 import {IntermediaryHttpService} from "../intermediary/intermediary-http.service";
+import {MatChipGrid, MatChipInput, MatChipRemove, MatChipRow} from "@angular/material/chips";
+import {CoachHttpService} from "../coach/coach-http.service";
+import {MatIcon} from "@angular/material/icon";
+import {MatButton} from "@angular/material/button";
+import {SnackbarService} from "../shared/service/snackbar.service";
 
 @Component({
   selector: 'app-create-new-service',
@@ -58,6 +63,12 @@ import {IntermediaryHttpService} from "../intermediary/intermediary-http.service
     MatAutocompleteTrigger,
     MatAutocomplete,
     MatOption,
+    MatChipGrid,
+    MatChipRow,
+    MatChipRemove,
+    MatIcon,
+    MatChipInput,
+    MatButton,
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './create-new-service.component.html'
@@ -74,8 +85,7 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
   protected readonly serviceProviderIdControl: FormControl<ServiceProviderDataInterface | string | null>;
   protected readonly programIdControl: FormControl<ProgramDataInterface | string | null>;
   protected readonly customerIdControl: FormControl<CustomerData | string | null>;
-  protected readonly coachIdsControls: FormControl<CoachData | string | null>[] = [];
-  protected readonly coachIdsFormArray: FormArray<FormControl>;
+  protected readonly coachIdsControl: FormControl<CoachData[] | string[] | null>;
   protected readonly intermediaryIdControl: FormControl<IntermediaryData | string | null>;
 
   protected readonly serviceTypes: WritableSignal<ServiceTypeData[]> = signal([]);
@@ -84,12 +94,14 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
   private readonly operators: WritableSignal<OperatorDataInterface[]> = signal([]);
   private readonly customers: WritableSignal<CustomerData[]> = signal([]);
   private readonly intermediaries: WritableSignal<IntermediaryData[]> = signal([]);
+  private readonly coaches: WritableSignal<CoachData[]> = signal([]);
 
   protected readonly filteredServiceProviders: WritableSignal<ServiceProviderDataInterface[]> = signal([]);
   protected readonly filteredPrograms: WritableSignal<ProgramDataInterface[]> = signal([]);
   protected readonly filteredOperators: WritableSignal<OperatorDataInterface[]> = signal([]);
   protected readonly filteredCustomers: WritableSignal<CustomerData[]> = signal([]);
   protected readonly filteredIntermediaries: WritableSignal<IntermediaryData[]> = signal([]);
+  protected readonly filteredCoaches: WritableSignal<CoachData[]> = signal([]);
 
   protected readonly operatorInputDisabled: Signal<boolean> = computed(() =>
     this.isSingleFilteredOperator() && this.isSingleFilteredProgram() && this.isValidProgramControl()
@@ -97,6 +109,7 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
   private readonly subscriptions = new SubscriptionManager();
 
   @ViewChild('operatorInput') private operatorInput!: ElementRef;
+  @ViewChild('coachInput') private coachInput!: ElementRef;
 
   constructor(
     private validationMessage: ValidationMessageService,
@@ -105,13 +118,15 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     private programHttp: ProgramHttpService,
     private operatorHttp: OperatorHttpService,
     private customerHttp: CustomerHttpService,
-    private intermediaryHttp: IntermediaryHttpService
+    private intermediaryHttp: IntermediaryHttpService,
+    private coachHttp: CoachHttpService,
+    private snackbar: SnackbarService,
   ) {
     this.numberControl = new FormControl(null, {
       validators: [Validators.required, Validators.pattern('\\d{4}/\\d{2}/\\d{2}/\\d+/\\d+')]
     });
     this.nameControl = new FormControl(null, {
-      validators: [Validators.required, Validators.pattern('[a-zA-ZążęćłóńśĄŻĘĆŁÓŃŚ0-9 -/.\"\\\\]{1,300}')]
+      validators: [Validators.required, Validators.pattern('[a-zA-ZążęćłóńśĄŻĘĆŁÓŃŚ0-9: -/.\"\\\\]{1,300}')]
     });
     this.typeControl = new FormControl(null, {
       validators: [Validators.required]
@@ -137,8 +152,9 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     this.intermediaryIdControl = new FormControl(null, {
       validators: [Validators.required]
     });
-    this.addCoachIdControl();
-    this.coachIdsFormArray = new FormArray(this.coachIdsControls);
+    this.coachIdsControl = new FormControl([], {
+      validators: [Validators.required]
+    })
     this.form = this.buildFormGroup();
   }
 
@@ -153,6 +169,7 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     const operatorsRequest = this.operatorHttp.getAll();
     const customersRequest = this.customerHttp.getAll();
     const intermediariesRequest = this.intermediaryHttp.getAll();
+    const coachesRequest = this.coachHttp.getAll();
 
   this.subscriptions.add(forkJoin([
     serviceTypesRequest,
@@ -160,7 +177,8 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     programsRequest,
     operatorsRequest,
     customersRequest,
-    intermediariesRequest
+    intermediariesRequest,
+    coachesRequest
   ]).pipe(
       map(([
         serviceTypesResponse,
@@ -168,14 +186,16 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
         programsResponse,
         operatorsResponse,
         customersResponse,
-        intermediariesResponse]) => {
+        intermediariesResponse,
+        coachesResponse]) => {
         return {
           serviceTypes: serviceTypesResponse.serviceTypes,
           serviceProviders: serviceProvidersResponse.serviceProviders,
           programs: programsResponse.programs,
           operators: operatorsResponse.operators,
           customers: customersResponse.customers,
-          intermediaries: intermediariesResponse.intermediaries
+          intermediaries: intermediariesResponse.intermediaries,
+          coaches: coachesResponse.coaches
         }
       })
     ).subscribe({
@@ -191,13 +211,9 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
         this.filteredCustomers.set(responses.customers);
         this.intermediaries.set(responses.intermediaries);
         this.filteredIntermediaries.set(responses.intermediaries);
+        this.coaches.set(responses.coaches);
+        this.filteredCoaches.set(responses.coaches);
       }
-    }));
-  }
-
-  private addCoachIdControl() {
-    this.coachIdsControls.push(new FormControl<string | null>(null, {
-      validators: [Validators.required]
     }));
   }
 
@@ -212,9 +228,13 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
       'serviceProviderId': this.serviceProviderIdControl,
       'programId': this.programIdControl,
       'customerId': this.customerIdControl,
-      'coachIds': this.coachIdsFormArray,
+      'coachIds': this.coachIdsControl,
       'intermediaryId': this.intermediaryIdControl
     });
+  }
+
+  get coachIdsArray(): CoachData[] {
+    return this.coachIdsControl.value as CoachData[];
   }
 
   protected onServiceProviderChange(event: Event) {
@@ -245,6 +265,11 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     this.filterIntermediariesByName(name);
   }
 
+  protected onCoachChange(event: Event) {
+    const name: string = (<HTMLInputElement>event.target).value;
+    this.filterCoachesByName(name);
+  }
+
   protected onProgramSelected(event: MatAutocompleteSelectedEvent) {
     const programId = (<ProgramDataInterface>event.option.value).id;
     const operatorName = (<ProgramDataInterface>event.option.value).operator.name;
@@ -270,6 +295,15 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
   protected onIntermediarySelected(event: MatAutocompleteSelectedEvent) {
     const id = (<IntermediaryData>event.option.value).id;
     this.filterIntermediariesById(id);
+  }
+
+  protected onCoachSelected(event: MatAutocompleteSelectedEvent) {
+    const coach = (<CoachData>event.option.value);
+    (<CoachData[]>this.coachIdsControl.value).push(coach);
+    (<HTMLInputElement>this.coachInput.nativeElement).value = '';
+    this.coaches.set(this.coaches().filter(item => item.id !== coach.id))
+    this.filterCoachesByName('');
+    this.coachIdsControl.updateValueAndValidity({ onlySelf: true, emitEvent: true });
   }
 
   private filterProgramsByName(name: string) {
@@ -326,8 +360,70 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     );
   }
 
-  protected onSubmit() {
+  private filterCoachesByName(name: string) {
+    const searchName = name.toLowerCase().trim();
+    this.filteredCoaches.set(
+      this.coaches().filter(coach => coach.firstName.toLowerCase().includes(searchName)
+        || coach.lastName.toLowerCase().includes(searchName))
+    );
+  }
 
+  protected onSubmit() {
+    const request = this.mapFormToRequest();
+    this.serviceHttp.createNew(request).subscribe(response => {
+      this.showPopUp(response);
+    });
+  }
+
+  private mapFormToRequest(): CreateNewServiceRequest {
+    return {
+      number: this.numberControl.value!,
+      name: this.nameControl.value!,
+      type: this.typeControl.value!,
+      startDate: this.startDateControl.value!,
+      endDate: this.endDateControl.value!,
+      numberOfParticipants: this.numberOfParticipantsControl.value!,
+      serviceProviderId: (<ServiceProviderDataInterface>this.serviceProviderIdControl.value!).id,
+      programId: (<ProgramDataInterface>this.programIdControl.value!).id,
+      customerId: (<CustomerData>this.customerIdControl.value!).id,
+      intermediaryId: (<IntermediaryData>this.intermediaryIdControl.value!).id,
+      coachIds: (<CoachData[]>this.coachIdsControl.value!).map(coach => coach.id)
+    }
+  }
+
+  private showPopUp(response: CreateNewServiceResponse) {
+    this.snackbar.openTopCenterSnackbar(response.messages.join('\n'));
+  }
+
+  protected removeCoach(coach: CoachData) {
+    const index = (<CoachData[]>this.coachIdsControl.value).indexOf(coach);
+    if (index !== -1) {
+      (<CoachData[]>this.coachIdsControl.value).splice(index, 1);
+    }
+    this.coaches().push(coach);
+    this.filteredCoaches().push(coach);
+  }
+
+  protected onServiceNumberBlur() {
+    const value = this.numberControl.value;
+    if (value !== null) {
+      this.serviceHttp.getServiceFromBur(value.trim()).subscribe(response => {
+          this.numberControl.setValue(response.number);
+          this.nameControl.setValue(response.title);
+          this.typeControl.setValue(response.serviceType);
+          this.startDateControl.setValue(response.startDate);
+          this.endDateControl.setValue(response.endDate);
+          const serviceProvider = this.getServiceProviderByName(response.serviceProviderName);
+          if (serviceProvider) {
+            this.serviceProviderIdControl.setValue(serviceProvider);
+          }
+        }
+      )
+    }
+  }
+
+  private getServiceProviderByName(name: string) {
+    return this.serviceProviders().find(item => item.name === name)
   }
 
   protected getValidationMessage(fieldName: string, control: FormControl): string {

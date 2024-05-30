@@ -9,7 +9,6 @@ import pl.bodzioch.damian.service_provider.query_dto.GetAllServiceProvidersQuery
 
 import java.util.List;
 
-@Cacheable("serviceProviders")
 @Component
 @RequiredArgsConstructor
 class GetAllServiceProvidersQueryHandler implements QueryHandler<GetAllServiceProvidersQuery, GetAllServiceProvidersQueryResult> {
@@ -22,6 +21,7 @@ class GetAllServiceProvidersQueryHandler implements QueryHandler<GetAllServicePr
     }
 
     @Override
+    @Cacheable("serviceProviders")
     public GetAllServiceProvidersQueryResult handle(GetAllServiceProvidersQuery query) {
         List<ServiceProviderDto> providers = readRepository.getAll().stream()
                 .map(ServiceProvider::toDto)

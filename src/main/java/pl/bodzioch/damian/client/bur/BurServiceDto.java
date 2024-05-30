@@ -17,8 +17,8 @@ public record BurServiceDto(
 				service.number(),
 				service.title(),
 				service.serviceTypeId(),
-				service.startDate(),
-				service.endDate(),
+				service.startDate().toLocalDateTime(),
+				service.endDate().toLocalDateTime(),
 				new BurServiceProviderDto(service.serviceProvider())
 		);
 	}

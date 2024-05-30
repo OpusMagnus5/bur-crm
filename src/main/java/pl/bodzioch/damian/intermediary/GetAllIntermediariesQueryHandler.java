@@ -9,7 +9,6 @@ import pl.bodzioch.damian.intermediary.query_dto.GetAllIntermediariesQueryResult
 
 import java.util.List;
 
-@Cacheable("intermediaries")
 @Component
 @RequiredArgsConstructor
 class GetAllIntermediariesQueryHandler implements QueryHandler<GetAllIntermediariesQuery, GetAllIntermediariesQueryResult> {
@@ -22,6 +21,7 @@ class GetAllIntermediariesQueryHandler implements QueryHandler<GetAllIntermediar
     }
 
     @Override
+    @Cacheable("intermediaries")
     public GetAllIntermediariesQueryResult handle(GetAllIntermediariesQuery query) {
         List<IntermediaryDto> intermediaries = readRepository.getAll().stream()
                 .map(IntermediaryDto::new)

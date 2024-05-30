@@ -9,7 +9,6 @@ import pl.bodzioch.damian.infrastructure.query.QueryHandler;
 
 import java.util.List;
 
-@Cacheable("coaches")
 @Component
 @RequiredArgsConstructor
 class GetAllCoachesQueryHandler implements QueryHandler<GetAllCoachesQuery, GetAllCoachesQueryResult> {
@@ -22,6 +21,7 @@ class GetAllCoachesQueryHandler implements QueryHandler<GetAllCoachesQuery, GetA
     }
 
     @Override
+    @Cacheable("coaches")
     public GetAllCoachesQueryResult handle(GetAllCoachesQuery query) {
         List<CoachDto> coaches = readRepository.getAll().stream()
                 .map(CoachDto::new)

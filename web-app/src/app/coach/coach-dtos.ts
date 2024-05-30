@@ -53,3 +53,7 @@ export interface UpdateCoachRequest {
   lastName: string,
   pesel: string
 }
+
+export interface GetAllCoachesResponse {
+  coaches: CoachData[]
+}

@@ -12,17 +12,17 @@ public record GetServiceFromBurResponse(
         ServiceType serviceType,
         LocalDate startDate,
         LocalDate endDate,
-        String serviceProviderId
+        String serviceProviderName
 ) implements Serializable {
 
-    public GetServiceFromBurResponse(BurServiceDto burServiceDto, String serviceProviderId) {
+    public GetServiceFromBurResponse(BurServiceDto burServiceDto, String serviceProviderName) {
         this(
                 burServiceDto.number(),
                 burServiceDto.title(),
                 ServiceType.ofBurId(burServiceDto.serviceTypeId()),
                 burServiceDto.startDate().toLocalDate(),
                 burServiceDto.endDate().toLocalDate(),
-                serviceProviderId
+                serviceProviderName
         );
     }
 }

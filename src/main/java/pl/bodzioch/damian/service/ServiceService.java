@@ -13,7 +13,6 @@ import pl.bodzioch.damian.service.query_dto.GetServiceFromBurQueryResult;
 import pl.bodzioch.damian.service_provider.ServiceProviderDto;
 import pl.bodzioch.damian.service_provider.query_dto.GetServiceProviderByBurIdQuery;
 import pl.bodzioch.damian.service_provider.query_dto.GetServiceProviderByBurIdQueryResult;
-import pl.bodzioch.damian.utils.CipherComponent;
 import pl.bodzioch.damian.value_object.ErrorData;
 
 import java.util.List;
@@ -23,7 +22,6 @@ import java.util.List;
 class ServiceService implements IServiceService {
 
     private final QueryExecutor queryExecutor;
-    private final CipherComponent cipherComponent;
 
     @Override
     public GetServiceFromBurResponse getServiceFromBur(String serviceNumber) {
@@ -36,9 +34,8 @@ class ServiceService implements IServiceService {
             GetServiceProviderByBurIdQuery serviceProviderQuery = new GetServiceProviderByBurIdQuery(burServiceProviderId);
             GetServiceProviderByBurIdQueryResult serviceProviderResult = queryExecutor.execute(serviceProviderQuery);
             ServiceProviderDto serviceProviderDto = serviceProviderResult.serviceProviderDto();
-            String encryptedServiceProviderId = cipherComponent.encryptMessage(serviceProviderDto.id().toString());
 
-            return new GetServiceFromBurResponse(burServiceDto, encryptedServiceProviderId);
+            return new GetServiceFromBurResponse(burServiceDto, serviceProviderDto.name());
         } catch (ServerException e) {
             throw new AppException(
                     "Service in BUR with given service number " + serviceNumber + " not found",

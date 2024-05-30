@@ -9,7 +9,6 @@ import pl.bodzioch.damian.program.query_dto.GetAllProgramsQueryResult;
 
 import java.util.List;
 
-@Cacheable("programs")
 @Component
 @RequiredArgsConstructor
 public class GetAllProgramsQueryHandler implements QueryHandler<GetAllProgramsQuery, GetAllProgramsQueryResult> {
@@ -22,6 +21,7 @@ public class GetAllProgramsQueryHandler implements QueryHandler<GetAllProgramsQu
     }
 
     @Override
+    @Cacheable("programs")
     public GetAllProgramsQueryResult handle(GetAllProgramsQuery query) {
         List<ProgramDto> programs = readRepository.getAll().stream()
                 .map(ProgramDto::new)

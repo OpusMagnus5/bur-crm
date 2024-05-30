@@ -2,7 +2,7 @@ package pl.bodzioch.damian.coach;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,6 @@ import pl.bodzioch.damian.value_object.ErrorData;
 
 import java.util.List;
 
-@Cacheable("coaches")
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -30,6 +29,7 @@ class CreateNewCoachCommandHandler implements CommandHandler<CreateNewCoachComma
     }
 
     @Override
+    @CacheEvict(value = "coaches", allEntries = true)
     public CreateNewCoachCommandResult handle(CreateNewCoachCommand command) {
         try {
             Coach coach = new Coach(command);

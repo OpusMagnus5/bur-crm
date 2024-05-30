@@ -1,6 +1,7 @@
 package pl.bodzioch.damian.dto;
 
 import jakarta.validation.constraints.*;
+import org.hibernate.validator.constraints.UniqueElements;
 import pl.bodzioch.damian.service.validator.ServiceTypeV;
 
 import java.io.Serializable;
@@ -12,7 +13,7 @@ public record CreateNewServiceRequest(
         @Pattern(regexp = "\\d{4}/\\d{2}/\\d{2}/\\d+/\\d+", message = "error.client.service.incorrectNumber")
         String number,
         @NotEmpty(message = "error.client.service.nameEmpty")
-        @Pattern(regexp = "[a-zA-ZążęćłóńśĄŻĘĆŁÓŃŚ0-9 -/.\"\\\\]{1,300}", message = "error.client.service.incorrectName")
+        @Pattern(regexp = "[a-zA-ZążęćłóńśĄŻĘĆŁÓŃŚ0-9: -/.\"\\\\]{1,300}", message = "error.client.service.incorrectName")
         String name,
         @NotEmpty(message = "error.client.service.typeEmpty")
         @ServiceTypeV(message = "error.client.service.incorrectType")
@@ -31,6 +32,7 @@ public record CreateNewServiceRequest(
         String programId,
         @NotEmpty(message = "error.client.service.emptyCustomerId")
         String customerId,
+        @UniqueElements(message = "error.client.service.uniqueCoachesIds")
         @NotEmpty(message = "error.client.service.emptyCoachesIds")
         List<String> coachIds,
         @NotEmpty(message = "error.client.service.emptyIntermediaryId")
