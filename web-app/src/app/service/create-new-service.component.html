@@ -1,5 +1,5 @@
 <div class="mat-elevation-z3">
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="py-10 px-56">
+  <form [formGroup]="form" (ngSubmit)="onSubmit(formDirective)" class="py-10 px-56" #formDirective="ngForm">
     <div class="grid grid-cols-2 justify-items-center items-center gap-x-40 gap-y-4">
       <div class="w-full">
         <mat-form-field class="w-full">

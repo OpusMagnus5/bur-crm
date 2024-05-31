@@ -9,7 +9,7 @@ import {
   ViewChild,
   WritableSignal
 } from '@angular/core';
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormControl, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 import {MatError, MatFormField, MatHint, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {TranslateModule} from "@ngx-translate/core";
@@ -368,11 +368,18 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     );
   }
 
-  protected onSubmit() {
+  protected onSubmit(formDirective: FormGroupDirective) {
     const request = this.mapFormToRequest();
     this.serviceHttp.createNew(request).subscribe(response => {
       this.showPopUp(response);
+      this.resetForm(formDirective);
     });
+  }
+
+  private resetForm(formDirective: FormGroupDirective) {
+    formDirective.resetForm();
+    this.form.reset();
+    (<HTMLInputElement>this.operatorInput.nativeElement).value = '';
   }
 
   private mapFormToRequest(): CreateNewServiceRequest {
