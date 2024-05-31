@@ -53,9 +53,11 @@ AS $$
 BEGIN
 
     OPEN _cursor FOR
-        SELECT srv_id, srv_name, srv_number, srv_program_id, srv_start_date, srv_end_date, srv_customer_id,
+        SELECT srv_id, srv_name, srv_number, srv_program_id, srv_start_date, srv_end_date, srv_customer_id, srv_type,
+               srv_service_provider_id,
                opr.opr_id as operator_opr_id, opr.opr_name as operator_opr_name,
-               cst.cst_id as customer_cst_id, cst.cst_name as customer_cst_name
+               cst.cst_id as customer_cst_id, cst.cst_name as customer_cst_name,
+               spr.spr_id as service_provider_spr_id, spr.spr_name as service_provider_spr_name
         FROM (SELECT *
               FROM service
               WHERE srv_id = _srv_id
@@ -64,7 +66,8 @@ BEGIN
               LIMIT _max) service
         LEFT JOIN program prg ON srv_program_id = prg.prg_id
         LEFT JOIN operator opr on opr.opr_id = prg.prg_operator_id
-        LEFT JOIN customer cst ON srv_customer_id = cst.cst_id;
+        LEFT JOIN customer cst ON srv_customer_id = cst.cst_id
+        LEFT JOIN service_provider spr ON srv_service_provider_id = spr.spr_id;
 
     SELECT count(srv_id)
     INTO _total_services

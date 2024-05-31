@@ -8,6 +8,7 @@ import pl.bodzioch.damian.infrastructure.database.DbId;
 import pl.bodzioch.damian.infrastructure.database.DbManyToOne;
 import pl.bodzioch.damian.operator.InnerOperator;
 import pl.bodzioch.damian.service.command_dto.CreateNewServiceCommand;
+import pl.bodzioch.damian.service_provider.InnerServiceProvider;
 import pl.bodzioch.damian.user.InnerUser;
 
 import java.time.LocalDate;
@@ -62,7 +63,9 @@ record Service(
 		@DbManyToOne(prefix = "operator")
 		InnerOperator operator,
 		@DbManyToOne(prefix = "customer")
-		InnerCustomer customer
+		InnerCustomer customer,
+		@DbManyToOne(prefix = "service_provider")
+		InnerServiceProvider serviceProvider
 ) {
 	@DbConstructor
 	Service {
@@ -87,6 +90,7 @@ record Service(
 				null,
 				null,
 				command.createdBy(),
+				null,
 				null,
 				null,
 				null,

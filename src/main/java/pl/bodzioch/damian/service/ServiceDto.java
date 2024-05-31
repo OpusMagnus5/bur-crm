@@ -2,6 +2,7 @@ package pl.bodzioch.damian.service;
 
 import pl.bodzioch.damian.customer.InnerCustomerDto;
 import pl.bodzioch.damian.operator.InnerOperatorDto;
+import pl.bodzioch.damian.service_provider.InnerServiceProviderDto;
 import pl.bodzioch.damian.user.InnerUserDto;
 
 import java.time.LocalDate;
@@ -32,7 +33,8 @@ public record ServiceDto(
         InnerUserDto creator,
         InnerUserDto modifier,
         InnerOperatorDto operator,
-        InnerCustomerDto customer
+        InnerCustomerDto customer,
+        InnerServiceProviderDto serviceProvider
 ) {
 
     ServiceDto(Service service) {
@@ -58,7 +60,8 @@ public record ServiceDto(
                 new InnerUserDto(service.creator()),
                 new InnerUserDto(service.modifier()),
                 new InnerOperatorDto(service.operator()),
-                new InnerCustomerDto(service.customer())
+                new InnerCustomerDto(service.customer()),
+                new InnerServiceProviderDto(service.serviceProvider())
         );
     }
 }
