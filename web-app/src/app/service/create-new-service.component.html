@@ -34,7 +34,7 @@
         <mat-form-field class="w-full">
           <mat-label>{{ 'new-service.start-date-input-label' | translate }}</mat-label>
           <input type="text" matInput [matDatepicker]="startDatePicker" [formControl]="startDateControl">
-          <mat-hint>DD-MM-YYYY</mat-hint>
+          <mat-hint>{{ getDateHintFormat() }}</mat-hint>
           @if (startDateControl.invalid) {
             <mat-error>{{ getValidationMessage('start-date', startDateControl) }}</mat-error>
           }
@@ -46,7 +46,7 @@
         <mat-form-field class="w-full">
           <mat-label>{{ 'new-service.end-date-input-label' | translate }}</mat-label>
           <input type="text" matInput [matDatepicker]="endDatePicker" [formControl]="endDateControl">
-          <mat-hint>DD-MM-YYYY</mat-hint>
+          <mat-hint>{{ getDateHintFormat() }}</mat-hint>
           @if (endDateControl.invalid) {
             <mat-error>{{ getValidationMessage('end-date', endDateControl) }}</mat-error>
           }

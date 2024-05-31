@@ -16,7 +16,7 @@ import {TranslateModule} from "@ngx-translate/core";
 import {MatInput} from "@angular/material/input";
 import {ValidationMessageService} from "../shared/service/validation-message.service";
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
-import {MatOption, provideNativeDateAdapter} from "@angular/material/core";
+import {MatOption} from "@angular/material/core";
 import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
 import {CreateNewServiceRequest, CreateNewServiceResponse, ServiceTypeData} from "./service-dtos";
 import {ServiceHttp} from "./service-http";
@@ -40,6 +40,7 @@ import {CoachHttpService} from "../coach/coach-http.service";
 import {MatIcon} from "@angular/material/icon";
 import {MatButton} from "@angular/material/button";
 import {SnackbarService} from "../shared/service/snackbar.service";
+import {CustomDateAdapterService} from "../shared/service/custom-date-adapter.service";
 
 @Component({
   selector: 'app-create-new-service',
@@ -70,7 +71,6 @@ import {SnackbarService} from "../shared/service/snackbar.service";
     MatChipInput,
     MatButton,
   ],
-  providers: [provideNativeDateAdapter()],
   templateUrl: './create-new-service.component.html'
 })
 export class CreateNewServiceComponent implements OnInit, OnDestroy {
@@ -121,6 +121,7 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     private intermediaryHttp: IntermediaryHttpService,
     private coachHttp: CoachHttpService,
     private snackbar: SnackbarService,
+    private dateAdapter: CustomDateAdapterService
   ) {
     this.numberControl = new FormControl(null, {
       validators: [Validators.required, Validators.pattern('\\d{4}/\\d{2}/\\d{2}/\\d+/\\d+')]
@@ -472,5 +473,9 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
   private isValidProgramControl(): boolean {
     const value = this.programIdControl?.value;
     return typeof value === 'object' && value !== null && 'id' in value;
+  }
+
+  protected getDateHintFormat(): string {
+    return this.dateAdapter.getFormat()
   }
 }
