@@ -46,9 +46,7 @@ class UserReadRepository implements IUserReadRepository {
     @Override
     @Transactional(Transactional.TxType.NOT_SUPPORTED)
     public PageQueryResult<User> getUsers(PageQuery pageQuery) {
-        HashMap<String, Object> properties = new HashMap<>();
-        properties.put("_offset", pageQuery.getFirstResult());
-        properties.put("_max", pageQuery.getMaxResult());
+        HashMap<String, Object> properties = jdbcCaller.buildPageParams(pageQuery);
 
         getPageOfUsersProc.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR))
                 .declareParameters(new SqlOutParameter("_total_users", Types.BIGINT));

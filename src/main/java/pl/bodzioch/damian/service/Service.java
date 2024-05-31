@@ -1,10 +1,12 @@
 package pl.bodzioch.damian.service;
 
 import com.fasterxml.uuid.Generators;
+import pl.bodzioch.damian.customer.InnerCustomer;
 import pl.bodzioch.damian.infrastructure.database.DbColumn;
 import pl.bodzioch.damian.infrastructure.database.DbConstructor;
 import pl.bodzioch.damian.infrastructure.database.DbId;
 import pl.bodzioch.damian.infrastructure.database.DbManyToOne;
+import pl.bodzioch.damian.operator.InnerOperator;
 import pl.bodzioch.damian.service.command_dto.CreateNewServiceCommand;
 import pl.bodzioch.damian.user.InnerUser;
 
@@ -56,8 +58,11 @@ record Service(
 		@DbManyToOne(prefix = "creator")
 		InnerUser creator,
 		@DbManyToOne(prefix = "modifier")
-		InnerUser modifier
-
+		InnerUser modifier,
+		@DbManyToOne(prefix = "operator")
+		InnerOperator operator,
+		@DbManyToOne(prefix = "customer")
+		InnerCustomer customer
 ) {
 	@DbConstructor
 	Service {
@@ -82,6 +87,8 @@ record Service(
 				null,
 				null,
 				command.createdBy(),
+				null,
+				null,
 				null,
 				null,
 				null

@@ -11,9 +11,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StopWatch;
 import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.value_object.ErrorData;
+import pl.bodzioch.damian.value_object.PageQuery;
 
 import javax.sql.DataSource;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,6 +58,15 @@ class JdbcCaller implements IJdbcCaller {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.setResultsMapCaseInsensitive(true);
         return new SimpleJdbcCall(jdbcTemplate).withProcedureName(procedure);
+    }
+
+    @Override
+    public HashMap<String, Object> buildPageParams(PageQuery pageQuery) {
+        HashMap<String, Object> properties = new HashMap<>();
+        properties.put("_offset", pageQuery.getFirstResult());
+        properties.put("_max", pageQuery.getMaxResult());
+        properties.putAll(pageQuery.filtersToDbProperties());
+        return properties;
     }
 
     private void handleUncategorizedSQLException(UncategorizedSQLException e) {

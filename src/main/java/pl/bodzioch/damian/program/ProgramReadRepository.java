@@ -38,10 +38,7 @@ class ProgramReadRepository implements IProgramReadRepository {
     @Override
     @Transactional(Transactional.TxType.NOT_SUPPORTED)
     public PageQueryResult<Program> getPage(PageQuery pageQuery) {
-        HashMap<String, Object> properties = new HashMap<>();
-        properties.put("_offset", pageQuery.getFirstResult());
-        properties.put("_max", pageQuery.getMaxResult());
-        properties.putAll(pageQuery.filtersToDbProperties());
+        HashMap<String, Object> properties = jdbcCaller.buildPageParams(pageQuery);
 
         getPageProc.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR),
                 new SqlOutParameter("_total_programs", Types.BIGINT));
