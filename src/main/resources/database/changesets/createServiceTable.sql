@@ -20,3 +20,4 @@ CREATE TABLE service(
 );
 
 CREATE INDEX service_name_idx ON service USING gin (to_tsvector('simple', srv_name));
+CREATE UNIQUE INDEX service_number_customer_idx ON service(srv_number, srv_customer_id);
