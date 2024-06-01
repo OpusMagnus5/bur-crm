@@ -479,6 +479,10 @@
     "customer": {
       "name-header": "Klient"
     },
-    "no-services": "Nie znaleziono usług w bazie danych"
+    "no-services": "Nie znaleziono usług w bazie danych",
+    "number-search": "Numer karty",
+    "type-search": "Rodzaj usługi",
+    "service-provider-search": "Dostawca usługi",
+    "customers-search": "Klient"
   }
 }

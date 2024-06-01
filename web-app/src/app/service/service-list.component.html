@@ -1,4 +1,40 @@
 <div class="mat-elevation-z8">
+  <div class="grid grid-cols-4 gap-x-4">
+    <mat-form-field class="w-full">
+      <mat-label>{{ 'service-list.number-search' | translate }}</mat-label>
+      <input matInput [(ngModel)]="serviceNumberFilter">
+    </mat-form-field>
+    <mat-form-field class="w-full">
+      <mat-label>{{ 'service-list.type-search' | translate }}</mat-label>
+      <mat-select [ngModel]="serviceTypeFilter">
+        @for (serviceType of allServiceTypes(); track serviceType) {
+          <mat-option [value]="serviceType.value">{{ serviceType.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="w-full">
+      <mat-label>{{ 'service-list.service-provider-search' | translate }}</mat-label>
+      <mat-select [ngModel]="serviceProviderFilter">
+        @for (serviceProvider of allServiceProviders(); track serviceProvider) {
+          <mat-option [value]="serviceProvider.id">{{ serviceProvider.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="w-full">
+      <mat-label>{{ 'service-list.customers-search' | translate }}</mat-label>
+      <input type="text"
+             matInput
+             [matAutocomplete]="customerAutocomplete"
+             (keyup)="onCustomerChange($event)">
+      <mat-autocomplete #customerAutocomplete="matAutocomplete"
+                        [displayWith]="displayCustomerName"
+                        (optionSelected)="onCustomerSelected($event)">
+        @for (customer of filteredCustomers(); track customer) {
+          <mat-option [value]="customer">{{ customer.name }}</mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
   <table mat-table [dataSource]="dataSource">
 
     <ng-container matColumnDef="id">

@@ -479,6 +479,10 @@
     "customer": {
       "name-header": "Client"
     },
-    "no-services": "No services found in the database"
+    "no-services": "No services found in the database",
+    "number-search": "Numer karty",
+    "type-search": "Service type",
+    "service-provider-search": "Service provider",
+    "customers-search": "Client"
   }
 }
