@@ -411,7 +411,8 @@
     }
   },
   "service": {
-    "new-service": "Add service"
+    "new-service": "Add service",
+    "service-list": "Services list"
   },
   "new-service": {
     "number-input-label": "Service number from BUR",
@@ -462,5 +463,22 @@
         "required": "The coaches field cannot be empty"
       }
     }
+  },
+  "service-list": {
+    "number-header": "Card number",
+    "name-header": "Service name",
+    "type-header": "Service type",
+    "startDate-header": "Start date",
+    "endDate-header": "End date",
+    "serviceProvider": {
+      "name-header": "Service provider"
+    },
+    "operator": {
+      "name-header": "Operator"
+    },
+    "customer": {
+      "name-header": "Client"
+    },
+    "no-services": "No services found in the database"
   }
 }

@@ -23,7 +23,8 @@ public record OperatorData(
 
     public OperatorData(InnerOperatorDto operator, CipherComponent cipher) {
         this(
-                Optional.ofNullable(operator).map(InnerOperatorDto::id).map(id -> cipher.encryptMessage(id.toString())).orElse(null),
+                Optional.ofNullable(operator).map(InnerOperatorDto::id)
+                        .map(id -> cipher.encryptMessage(id.toString())).orElse(null),
                 Optional.ofNullable(operator).map(InnerOperatorDto::name).orElse(null),
                 null
         );

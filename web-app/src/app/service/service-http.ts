@@ -6,8 +6,10 @@ import {
   CreateNewServiceRequest,
   CreateNewServiceResponse,
   GetAllServiceTypesResponse,
-  GetServiceFromBurResponse
+  GetServiceFromBurResponse,
+  ServicePageResponse
 } from "./service-dtos";
+import {HttpQueryFiltersInterface} from "../shared/model/http-query-filters.interface";
 
 @Injectable({providedIn: "root"})
 export class ServiceHttp {
@@ -34,5 +36,14 @@ export class ServiceHttp {
     return this.http.post<CreateNewServiceResponse>(
       SERVER_URL + 'api/service', request
     )
+  }
+
+  getServicePage(filters: HttpQueryFiltersInterface): Observable<ServicePageResponse> {
+    return this.http.get<ServicePageResponse>(
+      SERVER_URL + 'api/service',
+      {
+        params: new HttpParams().appendAll(filters)
+      }
+    );
   }
 }

@@ -5,6 +5,7 @@ import pl.bodzioch.damian.customer.InnerCustomerDto;
 import pl.bodzioch.damian.utils.CipherComponent;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 public record CustomerData(
         String id,
@@ -22,8 +23,9 @@ public record CustomerData(
 
     public CustomerData(InnerCustomerDto customer, CipherComponent cipher) {
         this(
-                cipher.encryptMessage(customer.id().toString()),
-                customer.name(),
+                Optional.ofNullable(customer).map(InnerCustomerDto::id)
+                        .map(id -> cipher.encryptMessage(id.toString())).orElse(null),
+                Optional.ofNullable(customer).map(InnerCustomerDto::name).orElse(null),
                 null
         );
     }

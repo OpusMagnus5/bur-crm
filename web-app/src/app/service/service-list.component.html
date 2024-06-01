@@ -1,0 +1,54 @@
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource">
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let service">{{ service.id }}</td>
+    </ng-container>
+
+    @for (column of columnsDef; track column) {
+      <ng-container matColumnDef="{{column}}">
+        <th mat-header-cell *matHeaderCellDef>{{ 'service-list.' + column + '-header' | translate }}</th>
+        <td mat-cell
+            *matCellDef="let element"
+            [class]="getClassForColumn(column)">{{ getColumnData(element, column) }}</td>
+      </ng-container>
+    }
+
+    <ng-container matColumnDef="options">
+      <th mat-header-cell *matHeaderCellDef class="w-8"></th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="onDetails(element)">
+            <mat-icon>open_in_new</mat-icon>
+            <span>{{ 'common.option-details' | translate }}</span>
+          </button>
+          <button mat-menu-item (click)="onEdit(element)">
+            <mat-icon>edit</mat-icon>
+            <span>{{ 'common.option-edit' | translate }}</span>
+          </button>
+          <button mat-menu-item (click)="onRemove(element)">
+            <mat-icon>delete</mat-icon>
+            <span>{{ 'common.option-delete' | translate }}</span>
+          </button>
+        </mat-menu>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="rowsDef"></tr>
+    <tr mat-row *matRowDef="let row; columns: rowsDef;"></tr>
+
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" [colSpan]="rowsDef.length">{{ 'service-list.no-services' | translate }}</td>
+    </tr>
+  </table>
+
+  <mat-paginator [length]="data().totalServices"
+                 [pageSize]="10"
+                 [pageSizeOptions]="[10, 20, 50]"
+                 (page)="onPageChange($event)">
+  </mat-paginator>
+</div>

@@ -4,6 +4,8 @@ import pl.bodzioch.damian.service_provider.InnerServiceProviderDto;
 import pl.bodzioch.damian.service_provider.ServiceProviderDto;
 import pl.bodzioch.damian.utils.CipherComponent;
 
+import java.util.Optional;
+
 public record ServiceProviderData(
         String id,
         String nip,
@@ -20,9 +22,10 @@ public record ServiceProviderData(
 
     public ServiceProviderData(InnerServiceProviderDto providerDto, CipherComponent cipher) {
         this(
-                cipher.encryptMessage(providerDto.id().toString()),
+                Optional.ofNullable(providerDto).map(InnerServiceProviderDto::id)
+                        .map(id -> cipher.encryptMessage(id.toString())).orElse(null),
                 null,
-                providerDto.name()
+                Optional.ofNullable(providerDto).map(InnerServiceProviderDto::name).orElse(null)
         );
     }
 }

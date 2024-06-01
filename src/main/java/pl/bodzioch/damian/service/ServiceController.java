@@ -75,7 +75,7 @@ class ServiceController {
         GetServicePageQuery query = new GetServicePageQuery(pageNumber, pageSize, new HashMap<>());
         GetServicePageQueryResult result = queryExecutor.execute(query);
         List<ServiceData> servicesData = result.services().stream()
-                .map(element -> new ServiceData(element, cipher))
+                .map(element -> new ServiceData(element, cipher, messageResolver))
                 .toList();
         return new ServicePageResponse(servicesData, result.totalServices());
     }

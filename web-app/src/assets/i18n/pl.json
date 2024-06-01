@@ -411,7 +411,8 @@
     }
   },
   "service": {
-    "new-service": "Dodaj usługę"
+    "new-service": "Dodaj usługę",
+    "service-list": "Lista usług"
   },
   "new-service": {
     "number-input-label": "Numer usługi z BUR",
@@ -462,5 +463,22 @@
         "required": "Pole trenerzy nie może być puste"
       }
     }
+  },
+  "service-list": {
+    "number-header": "Numer karty",
+    "name-header": "Nazwa usługi",
+    "type-header": "Rodzaj usługi",
+    "startDate-header": "Data rozpoczęcia",
+    "endDate-header": "Data zakończenia",
+    "serviceProvider": {
+      "name-header": "Dostawca usługi"
+    },
+    "operator": {
+      "name-header": "Operator"
+    },
+    "customer": {
+      "name-header": "Klient"
+    },
+    "no-services": "Nie znaleziono usług w bazie danych"
   }
 }

@@ -24,6 +24,7 @@ import {CreateNewIntermediaryComponent} from "./intermediary/create-new-intermed
 import {IntermediaryListComponent} from "./intermediary/intermediary-list.component";
 import {ServiceDashboardComponent} from "./service/service-dashboard.component";
 import {CreateNewServiceComponent} from "./service/create-new-service.component";
+import {ServiceListComponent} from "./service/service-list.component";
 
 export const ADMINISTRATION_PATH: string = 'administration';
 export const BASE_PATH: string = '';
@@ -51,6 +52,7 @@ export const NEW_INTERMEDIARY_PATH: string = 'new';
 export const INTERMEDIARY_LIST_PATH: string = 'list';
 export const SERVICES_PATH: string = "services";
 export const NEW_SERVICE_PATH: string = "new"
+export const SERVICES_LIST_PATH: string = 'list';
 const NOT_FOUND_PATH = 'not-found';
 
 export const routes: Routes = [
@@ -64,6 +66,10 @@ export const routes: Routes = [
       {
         path: NEW_SERVICE_PATH,
         component: CreateNewServiceComponent
+      },
+      {
+        path: SERVICES_LIST_PATH,
+        component: ServiceListComponent
       }
     ]
   },

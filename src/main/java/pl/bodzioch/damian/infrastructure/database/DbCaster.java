@@ -47,6 +47,7 @@ public class DbCaster {
 
             return entities;
         } catch (Exception e) {
+            log.error("Error while casting entity from DB", e);
             throw AppException.getGeneralError(e);
         }
     }
@@ -152,7 +153,6 @@ public class DbCaster {
             return handleDbManyToOne(record, prefix, field, records, dbManyToOne.get());
         } else if (dbOneToMany.isPresent()) {
             return handleDbOneToMany(record, prefix, field, records, idColumnName, dbOneToMany.get());
-
         }
         throw new DbCasterException("This is not annotated field");
     }
@@ -267,7 +267,9 @@ public class DbCaster {
     private static Object castSimpleObject(Object parameter, Field field) {
         if (parameter instanceof Timestamp) {
             return ((Timestamp) parameter).toLocalDateTime();
-        } else if (field.getType().isInstance(Enum.class)) {
+        } else if (parameter instanceof java.sql.Date) {
+            return ((java.sql.Date) parameter).toLocalDate();
+        } else if (field.getType().isEnum()) {
             Class<? extends Enum> enumType = (Class<? extends Enum>) field.getType();
             return toEnum(enumType, parameter);
         } else if (List.class.isAssignableFrom(field.getType())) {
@@ -283,8 +285,7 @@ public class DbCaster {
         return (T) Enum.valueOf(clazz, enums);
     }
 
-    @SuppressWarnings({"rawtypes"})
-    private static List<? extends Enum> getList(Object parameter, Field field) {
+    private static List<?> getList(Object parameter, Field field) {
         Type genericType = field.getGenericType();
         if (genericType instanceof ParameterizedType) {
             Type[] typeArguments = ((ParameterizedType) genericType).getActualTypeArguments();
@@ -302,9 +303,11 @@ public class DbCaster {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private static List<? extends Enum> getParametrizedObject(Type[] typeArguments, Object parameter) {
+    private static List<?> getParametrizedObject(Type[] typeArguments, Object parameter) {
         if(typeArguments.length == 1 && typeArguments[0] instanceof Class && ((Class<?>) typeArguments[0]).isEnum()) {
             return toEnums(((Class<? extends Enum>) typeArguments[0]), parameter);
+        } else if (typeArguments.length == 1 && typeArguments[0] instanceof Class) {
+            return getPrimitiveObjectList(parameter);
         }
         throw new DbCasterException("Not implemented type: " + Arrays.toString(typeArguments));
     }
@@ -325,6 +328,14 @@ public class DbCaster {
         return (List<T>) Arrays.stream(enums.split(";"))
                 .map(value -> Enum.valueOf(clazz, value))
                 .toList();
+    }
+
+    private static List<?> getPrimitiveObjectList(Object parameter) {
+        Array array = castOrNull(Array.class, parameter);
+        if (array != null) {
+            return List.of(array);
+        }
+        return new ArrayList<>();
     }
 
     @SuppressWarnings("unchecked")
