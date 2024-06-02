@@ -1,4 +1,4 @@
-import {Component, computed, Signal, signal, WritableSignal} from '@angular/core';
+import {Component, computed, OnDestroy, Signal, signal, WritableSignal} from '@angular/core';
 import {ServiceHttp} from "./service-http";
 import {ServicePageResponse, ServiceTypeData} from "./service-dtos";
 import {HttpQueryFiltersInterface} from "../shared/model/http-query-filters.interface";
@@ -30,7 +30,10 @@ import {ServiceProviderHttpService} from "../service-provider/service/service-pr
 import {CustomerHttpService} from "../customer/customer-http.service";
 import {CustomerData} from "../customer/customer-dtos";
 import {MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from "@angular/material/autocomplete";
-import {OperatorDataInterface} from "../operator/model/operator-data.interface";
+import {ActivatedRoute, Router} from "@angular/router";
+import {toObservable} from "@angular/core/rxjs-interop";
+import {SubscriptionManager} from "../shared/util/subscription-manager";
+import {concat, debounceTime, forkJoin, merge, skip, tap} from "rxjs";
 
 @Component({
   selector: 'app-service-list',
@@ -67,52 +70,126 @@ import {OperatorDataInterface} from "../operator/model/operator-data.interface";
   ],
   templateUrl: './service-list.component.html'
 })
-export class ServiceListComponent {
+export class ServiceListComponent implements OnDestroy {
 
   protected readonly data: WritableSignal<ServicePageResponse> = signal({ services: [], totalServices: 0 });
   protected readonly dataSource: ServiceListDataSource = new ServiceListDataSource(this.data);
+
   protected readonly allServiceTypes: WritableSignal<ServiceTypeData[]> = signal([]);
   protected readonly allServiceProviders: WritableSignal<ServiceProviderDataInterface[]> = signal([]);
   protected readonly allCustomers: WritableSignal<CustomerData[]> = signal([]);
   protected readonly filteredCustomers: WritableSignal<CustomerData[]> = signal([]);
+
   protected columnsDef: string[] = [
     'number', 'name', 'type', 'serviceProvider.name', 'operator.name', 'customer.name', 'startDate', 'endDate'
   ];
   protected rowsDef: string[] = [...this.columnsDef, 'options'];
+
   protected readonly pageDef = signal({ pageNumber: 1, pageSize: 10 });
   protected serviceNumberFilter = signal('');
   protected serviceTypeFilter = signal('');
   protected serviceProviderFilter = signal('');
-  protected readonly customerFilter = signal('');
+  protected customerFilter: WritableSignal<CustomerData | null> = signal(null);
   private readonly filters: Signal<HttpQueryFiltersInterface> = computed(() => {
+    const customerFilter = this.customerFilter();
     return {
       'pageNumber': this.pageDef().pageNumber,
       'pageSize': this.pageDef().pageSize,
       'number': this.serviceNumberFilter(),
       'type': this.serviceTypeFilter(),
       'serviceProviderId': this.serviceProviderFilter(),
-      'customerId': this.customerFilter()
+      'customerId': customerFilter ? customerFilter.id : ''
     }
-  })
+  });
+  private readonly filtersObservable = toObservable(this.filters);
+  private readonly allFiltersObservable = merge(
+    toObservable(this.serviceNumberFilter),
+    toObservable(this.serviceTypeFilter),
+    toObservable(this.serviceProviderFilter),
+    toObservable(this.customerFilter))
+
+  private readonly subscriptionManager = new SubscriptionManager();
 
   constructor(
     private serviceHttp: ServiceHttp,
     private serviceProviderHttp: ServiceProviderHttpService,
-    private customerHttp: CustomerHttpService
+    private customerHttp: CustomerHttpService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {
-    this.serviceHttp.getServicePage(this.filters()).subscribe(response => {
-      this.data.set(response);
-    });
-    this.serviceHttp.getAllServiceTypes().subscribe(response => {
-      this.allServiceTypes.set(response.serviceTypes);
-    });
-    this.serviceProviderHttp.getAll().subscribe(response => {
-      this.allServiceProviders.set(response.serviceProviders);
-    });
-    this.customerHttp.getAll().subscribe(response => {
-      this.allCustomers.set(response.customers);
-      this.filteredCustomers.set(response.customers);
-    })
+
+    const subscription = concat(this.initFiltersData(), this.initTableData())
+      .subscribe({
+        complete: () => {
+          this.fetchDataAfterFiltersChange();
+          this.changeLinkAfterFiltersChange();
+        }
+      });
+    this.subscriptionManager.add(subscription);
+
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptionManager.unsubscribeAll();
+  }
+
+  private initFiltersFromRoute() {
+    const params = this.route.snapshot.queryParamMap;
+    const pageNumber = params.get('pageNumber');
+    const pageSize = params.get('pageSize');
+    if (pageNumber && pageSize) {
+      this.pageDef.set({pageNumber: Number(pageNumber), pageSize: Number(pageSize)});
+    }
+    const number = params.get('number');
+    this.serviceNumberFilter.set(number ? number : '');
+    const type = params.get('type');
+    this.serviceTypeFilter.set(type ? type : '');
+    const serviceProviderId = params.get('serviceProviderId');
+    this.serviceProviderFilter.set(serviceProviderId ? serviceProviderId : '');
+    const customerId = params.get('customerId');
+    this.customerFilter.set(this.getCustomerById(customerId));
+    this.filterCustomersById(customerId);
+  }
+
+  private initTableData() {
+    return this.serviceHttp.getServicePage(this.filters()).pipe(
+      tap(response => this.data.set(response)));
+  }
+
+  private initFiltersData() {
+    return forkJoin([this.serviceHttp.getAllServiceTypes(),
+      this.serviceProviderHttp.getAll(),
+      this.customerHttp.getAll()
+    ]).pipe(
+        tap(([
+        serviceTypes,
+        serviceProviders,
+        customers]) => {
+        this.allServiceTypes.set(serviceTypes.serviceTypes);
+        this.allServiceProviders.set(serviceProviders.serviceProviders);
+        this.allCustomers.set(customers.customers);
+        this.initFiltersFromRoute();
+        })
+    );
+  }
+
+  private changeLinkAfterFiltersChange() {
+    const subscription = this.filtersObservable
+      .subscribe(() => {
+          this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: this.getOnlyNotEmptyFilters()
+          });
+      });
+    this.subscriptionManager.add(subscription);
+  }
+
+  private fetchDataAfterFiltersChange() {
+    const subscription = this.allFiltersObservable.pipe(
+      debounceTime(1500),
+      skip(1)
+    ).subscribe(() => this.onPageChange({ pageIndex: 0, pageSize: 10, previousPageIndex: 0, length: 0 }));
+    this.subscriptionManager.add(subscription);
   }
 
   protected onPageChange(event: PageEvent) {
@@ -153,9 +230,9 @@ export class ServiceListComponent {
   }
 
   protected onCustomerSelected(event: MatAutocompleteSelectedEvent) {
-    const id = (<OperatorDataInterface>event.option.value).id;
+    const id = (<CustomerData>event.option.value).id;
     this.filterCustomersById(id);
-    this.customerFilter.set(id);
+    this.customerFilter.set(<CustomerData>event.option.value);
   }
 
   private filterCustomersByName(name: string) {
@@ -164,10 +241,25 @@ export class ServiceListComponent {
     );
   }
 
-  private filterCustomersById(id: string) {
-    this.filteredCustomers.set(
-      this.allCustomers().filter(customer => customer.id === id)
-    );
+  private filterCustomersById(id: string | null) {
+    if (id) {
+      this.filteredCustomers.set(
+        this.allCustomers().filter(customer => customer.id === id)
+      );
+    } else {
+      this.filteredCustomers.set(this.allCustomers());
+    }
+  }
+
+  private getCustomerById(id: string | null): CustomerData | null {
+    if (id === null) {
+      return null;
+    }
+    const customer = this.allCustomers().find(customer => customer.id === id);
+    if (customer) {
+      return customer
+    }
+    return null;
   }
 
   protected getClassForColumn(column: string): string {
@@ -177,5 +269,14 @@ export class ServiceListComponent {
       return 'whitespace-nowrap';
     }
     return '';
+  }
+
+  private getOnlyNotEmptyFilters(): HttpQueryFiltersInterface {
+    return Object.entries(this.filters())
+      .filter(([key, value]) => value !== null && value !== '')
+      .reduce((acc, [key, value]) => {
+        acc[key] = value;
+        return acc;
+      }, {} as HttpQueryFiltersInterface);
   }
 }

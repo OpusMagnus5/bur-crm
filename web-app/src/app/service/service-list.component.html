@@ -6,7 +6,7 @@
     </mat-form-field>
     <mat-form-field class="w-full">
       <mat-label>{{ 'service-list.type-search' | translate }}</mat-label>
-      <mat-select [ngModel]="serviceTypeFilter">
+      <mat-select [(value)]="serviceTypeFilter">
         @for (serviceType of allServiceTypes(); track serviceType) {
           <mat-option [value]="serviceType.value">{{ serviceType.name }}</mat-option>
         }
@@ -14,7 +14,7 @@
     </mat-form-field>
     <mat-form-field class="w-full">
       <mat-label>{{ 'service-list.service-provider-search' | translate }}</mat-label>
-      <mat-select [ngModel]="serviceProviderFilter">
+      <mat-select [(value)]="serviceProviderFilter">
         @for (serviceProvider of allServiceProviders(); track serviceProvider) {
           <mat-option [value]="serviceProvider.id">{{ serviceProvider.name }}</mat-option>
         }
@@ -25,7 +25,8 @@
       <input type="text"
              matInput
              [matAutocomplete]="customerAutocomplete"
-             (keyup)="onCustomerChange($event)">
+             (keyup)="onCustomerChange($event)"
+             [(ngModel)]="customerFilter">
       <mat-autocomplete #customerAutocomplete="matAutocomplete"
                         [displayWith]="displayCustomerName"
                         (optionSelected)="onCustomerSelected($event)">
