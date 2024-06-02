@@ -1,6 +1,9 @@
 import {OperatorDataInterface} from "../operator/model/operator-data.interface";
 import {CustomerData} from "../customer/customer-dtos";
 import {ServiceProviderDataInterface} from "../service-provider/model/service-provider-data.interface";
+import {UserListDataInterface} from "../user/model/user-list-data.interface";
+import {ProgramDataInterface} from "../program/model/program-data-interface";
+import {CoachData} from "../coach/coach-dtos";
 
 export interface ServiceTypeData {
   value: string,
@@ -43,8 +46,8 @@ export interface ServiceData {
   number: string,
   name: string,
   type: string,
-  startDate: string,
-  endDate: string,
+  startDate: Date,
+  endDate: Date,
   operator: OperatorDataInterface,
   customer: CustomerData,
   serviceProvider: ServiceProviderDataInterface
@@ -53,4 +56,22 @@ export interface ServiceData {
 export interface ServicePageResponse {
   services: ServiceData[],
   totalServices: number
+}
+
+export interface GetServiceDetailsResponse {
+  id: string,
+  version: number
+  number: string,
+  name: string,
+  type: ServiceTypeData,
+  startDate: Date,
+  endDate: Date,
+  numberOfParticipants: number,
+  creator: UserListDataInterface
+  modifier: UserListDataInterface
+  operator: OperatorDataInterface,
+  customer: CustomerData,
+  serviceProvider: ServiceProviderDataInterface,
+  program: ProgramDataInterface
+  coaches: CoachData[]
 }

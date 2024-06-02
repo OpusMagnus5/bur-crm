@@ -6,6 +6,7 @@ import {
   CreateNewServiceRequest,
   CreateNewServiceResponse,
   GetAllServiceTypesResponse,
+  GetServiceDetailsResponse,
   GetServiceFromBurResponse,
   ServicePageResponse
 } from "./service-dtos";
@@ -45,5 +46,9 @@ export class ServiceHttp {
         params: new HttpParams().appendAll(filters)
       }
     );
+  }
+
+  getDetails(id: string): Observable<GetServiceDetailsResponse> {
+    return this.http.get<GetServiceDetailsResponse>(SERVER_URL + 'api/service/' + id);
   }
 }

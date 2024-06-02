@@ -67,9 +67,9 @@ record Service(
 		InnerCustomer customer,
 		@DbManyToOne(prefix = "service_provider")
 		InnerServiceProvider serviceProvider,
-		@DbOneToMany(prefix = "program")
+		@DbManyToOne(prefix = "program")
 		InnerProgram program,
-		@DbOneToMany(prefix = "coaches")
+		@DbOneToMany(prefix = "coach")
 		List<InnerCoach> coaches
 ) {
 	@DbConstructor
