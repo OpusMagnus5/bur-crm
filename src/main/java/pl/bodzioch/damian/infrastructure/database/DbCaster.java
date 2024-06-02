@@ -148,7 +148,7 @@ public class DbCaster {
         Optional<DbManyToOne> dbManyToOne = findAnnotationType(annotations, DbManyToOne.class);
         Optional<DbOneToMany> dbOneToMany = findAnnotationType(annotations, DbOneToMany.class);
         if (dbColumn.isPresent()) {
-            return handleDbColumn(record, prefix, field, dbColumn.get());
+            return handleDbColumn(record, prefix, field, records, dbColumn.get(), idColumnName);
         } else if (dbManyToOne.isPresent()) {
             return handleDbManyToOne(record, prefix, field, records, dbManyToOne.get());
         } else if (dbOneToMany.isPresent()) {
@@ -172,9 +172,9 @@ public class DbCaster {
 
         List<Map<String, Object>> filteredRecords = records.stream()
                 .filter(el -> parentId.equals(record.get(idColumnName)))
-                .dropWhile(el -> {
+                .filter(el -> {
                     Long id = (Long) el.get(innerPrefix + PROPERTIES_PREFIX + typeIdColumnName);
-                    return !ids.add(id);
+                    return ids.add(id);
                 })
                 .toList();
         return filteredRecords.parallelStream()
@@ -238,11 +238,17 @@ public class DbCaster {
         return innerPrefix;
     }
 
-    private static Object handleDbColumn(Map<String, Object> record, String prefix, Field field, DbColumn dbColumn) {
+    private static Object handleDbColumn(
+            Map<String, Object> record,
+            String prefix, Field field,
+            List<Map<String, Object>> records,
+            DbColumn dbColumn,
+            String idColumnName
+    ) {
         String columnName = dbColumn.name();
         String paramName = StringUtils.isBlank(prefix) ? columnName : prefix + "_" + columnName;
         Object parameter = record.get(paramName);
-        return castSimpleObject(parameter, field);
+        return castSimpleObject(parameter, field, records, idColumnName, record, columnName);
     }
 
     public static String enumsToDb(List<? extends Enum<?>> enums) {
@@ -264,7 +270,14 @@ public class DbCaster {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private static Object castSimpleObject(Object parameter, Field field) {
+    private static Object castSimpleObject(
+            Object parameter,
+            Field field,
+            List<Map<String, Object>> records,
+            String idColumnName,
+            Map<String, Object> record,
+            String columnName
+    ) {
         if (parameter instanceof Timestamp) {
             return ((Timestamp) parameter).toLocalDateTime();
         } else if (parameter instanceof java.sql.Date) {
@@ -273,7 +286,7 @@ public class DbCaster {
             Class<? extends Enum> enumType = (Class<? extends Enum>) field.getType();
             return toEnum(enumType, parameter);
         } else if (List.class.isAssignableFrom(field.getType())) {
-            return getList(parameter, field);
+            return getList(parameter, field, records, idColumnName, record, columnName);
         }
         return parameter;
     }
@@ -285,11 +298,18 @@ public class DbCaster {
         return (T) Enum.valueOf(clazz, enums);
     }
 
-    private static List<?> getList(Object parameter, Field field) {
+    private static List<?> getList(
+            Object parameter,
+            Field field,
+            List<Map<String, Object>> records,
+            String idColumnName,
+            Map<String, Object> record,
+            String columnName
+    ) {
         Type genericType = field.getGenericType();
         if (genericType instanceof ParameterizedType) {
             Type[] typeArguments = ((ParameterizedType) genericType).getActualTypeArguments();
-            return getParametrizedObject(typeArguments, parameter);
+            return getParametrizedObject(typeArguments, parameter, records, idColumnName, record, columnName);
         }
         throw new DbCasterException("Not implemented type: " + field);
     }
@@ -303,11 +323,18 @@ public class DbCaster {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private static List<?> getParametrizedObject(Type[] typeArguments, Object parameter) {
+    private static List<?> getParametrizedObject(
+            Type[] typeArguments,
+            Object parameter,
+            List<Map<String, Object>> records,
+            String idColumnName,
+            Map<String, Object> record,
+            String columnName
+    ) {
         if(typeArguments.length == 1 && typeArguments[0] instanceof Class && ((Class<?>) typeArguments[0]).isEnum()) {
             return toEnums(((Class<? extends Enum>) typeArguments[0]), parameter);
         } else if (typeArguments.length == 1 && typeArguments[0] instanceof Class) {
-            return getPrimitiveObjectList(parameter);
+            return getPrimitiveObjectList(records, idColumnName, record, columnName);
         }
         throw new DbCasterException("Not implemented type: " + Arrays.toString(typeArguments));
     }
@@ -330,12 +357,18 @@ public class DbCaster {
                 .toList();
     }
 
-    private static List<?> getPrimitiveObjectList(Object parameter) {
-        Array array = castOrNull(Array.class, parameter);
-        if (array != null) {
-            return List.of(array);
-        }
-        return new ArrayList<>();
+    private static List<?> getPrimitiveObjectList(
+            List<Map<String, Object>> records,
+            String idColumnName,
+            Map<String, Object> record,
+            String columnName
+    ) {
+        Long parentId = (Long) record.get(idColumnName);
+
+        return records.stream()
+                .filter(el -> parentId.equals(el.get(idColumnName)))
+                .map(el -> el.get(columnName))
+                .toList();
     }
 
     @SuppressWarnings("unchecked")
