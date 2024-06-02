@@ -101,7 +101,8 @@ BEGIN
                operator.opr_name as operator_opr_name, operator.opr_id as operator_opr_id,
                customer.cst_name as customer_cst_name, customer.cst_id as customer_cst_id ,
                service_provider.spr_name as service_provider_spr_name, service_provider.spr_id as service_provider_spr_id,
-               coach.coa_first_name as coach_coa_first_name, coach.coa_last_name as coach_coa_last_name, coach.coa_id as coach_coa_id
+               coach.coa_first_name as coach_coa_first_name, coach.coa_last_name as coach_coa_last_name, coach.coa_id as coach_coa_id,
+               intermediary.itr_id as intermediary_itr_id, intermediary.itr_name as intermediary_itr_name
         FROM service
         LEFT JOIN service_coach coaches ON coaches.service_id = service.srv_id
         LEFT JOIN users creator ON creator.usr_id = srv_created_by
@@ -111,6 +112,7 @@ BEGIN
         LEFT JOIN customer ON customer.cst_id = service.srv_customer_id
         LEFT JOIN service_provider ON service_provider.spr_id = service.srv_service_provider_id
         LEFT JOIN coach ON coach.coa_id = coaches.coach_id
+        LEFT JOIN intermediary ON intermediary.itr_id = service.srv_intermediary_id
         WHERE srv_id = _srv_id;
 
 END$$;

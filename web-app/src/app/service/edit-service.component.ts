@@ -28,5 +28,18 @@ export class EditServiceComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    if (this.serviceData) {
+      this.createNewComponent.numberControl.setValue(this.serviceData.number);
+      this.createNewComponent.nameControl.setValue(this.serviceData.name);
+      this.createNewComponent.typeControl.setValue(this.serviceData.type.value);
+      this.createNewComponent.startDateControl.setValue(this.serviceData.startDate);
+      this.createNewComponent.endDateControl.setValue(this.serviceData.endDate);
+      this.createNewComponent.numberOfParticipantsControl.setValue(this.serviceData.numberOfParticipants);
+      this.createNewComponent.serviceProviderIdControl.setValue(this.serviceData.serviceProvider);
+      this.createNewComponent.programIdControl.setValue(this.serviceData.program);
+      this.createNewComponent.customerIdControl.setValue(this.serviceData.customer);
+      this.createNewComponent.coachIdsControl.setValue(this.serviceData.coaches);
+      this.createNewComponent.intermediaryIdControl.setValue(this.serviceData.intermediary);
+    }
   }
 }

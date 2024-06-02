@@ -75,18 +75,18 @@ import {CustomDateAdapterService} from "../shared/service/custom-date-adapter.se
 })
 export class CreateNewServiceComponent implements OnInit, OnDestroy {
 
-  protected readonly form: FormGroup;
-  protected readonly numberControl: FormControl<string | null>;
-  protected readonly nameControl: FormControl<string | null>;
-  protected readonly typeControl: FormControl<string | null>;
-  protected readonly startDateControl: FormControl<Date | null>;
-  protected readonly endDateControl: FormControl<Date | null>;
-  protected readonly numberOfParticipantsControl: FormControl<number | null>;
-  protected readonly serviceProviderIdControl: FormControl<ServiceProviderDataInterface | string | null>;
-  protected readonly programIdControl: FormControl<ProgramDataInterface | string | null>;
-  protected readonly customerIdControl: FormControl<CustomerData | string | null>;
-  protected readonly coachIdsControl: FormControl<CoachData[] | string[] | null>;
-  protected readonly intermediaryIdControl: FormControl<IntermediaryData | string | null>;
+  private readonly form: FormGroup;
+  numberControl: FormControl<string | null>;
+  nameControl: FormControl<string | null>;
+  typeControl: FormControl<string | null>;
+  startDateControl: FormControl<Date | null>;
+  endDateControl: FormControl<Date | null>;
+  numberOfParticipantsControl: FormControl<number | null>;
+  serviceProviderIdControl: FormControl<ServiceProviderDataInterface | string | null>;
+  programIdControl: FormControl<ProgramDataInterface | string | null>;
+  customerIdControl: FormControl<CustomerData | string | null>;
+  coachIdsControl: FormControl<CoachData[] | string[] | null>;
+  intermediaryIdControl: FormControl<IntermediaryData | string | null>;
 
   protected readonly serviceTypes: WritableSignal<ServiceTypeData[]> = signal([]);
   private readonly serviceProviders: WritableSignal<ServiceProviderDataInterface[]> = signal([]);

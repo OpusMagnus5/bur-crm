@@ -4,6 +4,7 @@ import com.fasterxml.uuid.Generators;
 import pl.bodzioch.damian.coach.InnerCoach;
 import pl.bodzioch.damian.customer.InnerCustomer;
 import pl.bodzioch.damian.infrastructure.database.*;
+import pl.bodzioch.damian.intermediary.InnerIntermediary;
 import pl.bodzioch.damian.operator.InnerOperator;
 import pl.bodzioch.damian.program.InnerProgram;
 import pl.bodzioch.damian.service.command_dto.CreateNewServiceCommand;
@@ -69,6 +70,8 @@ record Service(
 		InnerServiceProvider serviceProvider,
 		@DbManyToOne(prefix = "program")
 		InnerProgram program,
+		@DbManyToOne(prefix = "intermediary")
+		InnerIntermediary intermediary,
 		@DbOneToMany(prefix = "coach")
 		List<InnerCoach> coaches
 ) {
@@ -96,6 +99,7 @@ record Service(
 				null,
 				null,
 				command.createdBy(),
+				null,
 				null,
 				null,
 				null,

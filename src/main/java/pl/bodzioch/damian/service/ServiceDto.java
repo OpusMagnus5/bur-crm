@@ -2,6 +2,7 @@ package pl.bodzioch.damian.service;
 
 import pl.bodzioch.damian.coach.InnerCoachDto;
 import pl.bodzioch.damian.customer.InnerCustomerDto;
+import pl.bodzioch.damian.intermediary.InnerIntermediaryDto;
 import pl.bodzioch.damian.operator.InnerOperatorDto;
 import pl.bodzioch.damian.program.InnerProgramDto;
 import pl.bodzioch.damian.service_provider.InnerServiceProviderDto;
@@ -39,6 +40,7 @@ public record ServiceDto(
         InnerCustomerDto customer,
         InnerServiceProviderDto serviceProvider,
         InnerProgramDto program,
+        InnerIntermediaryDto intermediary,
         List<InnerCoachDto> coaches
 ) {
 
@@ -69,6 +71,7 @@ public record ServiceDto(
                 new InnerCustomerDto(service.customer()),
                 new InnerServiceProviderDto(service.serviceProvider()),
                 new InnerProgramDto(service.program()),
+                new InnerIntermediaryDto(service.intermediary()),
                 service.coaches().stream()
                         .map(InnerCoachDto::new)
                         .toList()

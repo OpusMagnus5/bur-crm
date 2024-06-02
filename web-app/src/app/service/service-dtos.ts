@@ -4,6 +4,7 @@ import {ServiceProviderDataInterface} from "../service-provider/model/service-pr
 import {UserListDataInterface} from "../user/model/user-list-data.interface";
 import {ProgramDataInterface} from "../program/model/program-data-interface";
 import {CoachData} from "../coach/coach-dtos";
+import {IntermediaryData} from "../intermediary/intermediary-dtos";
 
 export interface ServiceTypeData {
   value: string,
@@ -72,6 +73,7 @@ export interface GetServiceDetailsResponse {
   operator: OperatorDataInterface,
   customer: CustomerData,
   serviceProvider: ServiceProviderDataInterface,
-  program: ProgramDataInterface
+  program: ProgramDataInterface,
+  intermediary: IntermediaryData,
   coaches: CoachData[]
 }

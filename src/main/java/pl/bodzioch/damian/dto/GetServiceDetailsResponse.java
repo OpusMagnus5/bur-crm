@@ -22,6 +22,7 @@ public record GetServiceDetailsResponse(
         CustomerData customer,
         ServiceProviderData serviceProvider,
         ProgramData program,
+        IntermediaryData intermediary,
         List<CoachData> coaches
 ) {
     public GetServiceDetailsResponse(ServiceDto service, MessageResolver messageResolver, CipherComponent cipher) {
@@ -40,6 +41,7 @@ public record GetServiceDetailsResponse(
                 new CustomerData(service.customer(), cipher),
                 new ServiceProviderData(service.serviceProvider(), cipher),
                 new ProgramData(service.program(), cipher),
+                new IntermediaryData(service.intermediary(), cipher),
                 service.coaches().stream()
                         .map(item -> new CoachData(item, cipher))
                         .toList()
