@@ -28,6 +28,7 @@ import {
   REGISTRY_PROGRAM_PATH,
   REGISTRY_SERVICE_PROVIDER_PATH,
   SERVICE_PROVIDER_LIST_PATH,
+  SERVICES_LIST_PATH,
   SERVICES_PATH,
   USER_LIST_PATH
 } from "../app.routes";
@@ -74,8 +75,10 @@ export class NavigationComponent {
   protected readonly REGISTRY_CUSTOMER_PATH = REGISTRY_CUSTOMER_PATH + '/' + CUSTOMER_LIST_PATH;
   protected readonly REGISTRY_COACH_PATH = REGISTRY_COACH_PATH + '/' + COACH_LIST_PATH;
   protected readonly REGISTRY_INTERMEDIARY_PATH = REGISTRY_INTERMEDIARY_PATH + '/' + INTERMEDIARY_LIST_PATH;
+  protected readonly SERVICES_PATH = SERVICES_PATH + '/' + SERVICES_LIST_PATH;
 
   protected isHandset$: Observable<boolean>;
+
 
   constructor(private breakpointObserver: BreakpointObserver, protected routerService: RouterService) {
     this.isHandset$ = breakpointObserver.observe(Breakpoints.XSmall)
@@ -84,7 +87,4 @@ export class NavigationComponent {
         shareReplay()
       );
   }
-
-
-  protected readonly SERVICES_PATH = SERVICES_PATH;
 }

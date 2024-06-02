@@ -1,5 +1,5 @@
 import {Component, signal, WritableSignal} from '@angular/core';
-import {NEW_SERVICE_PATH, SERVICES_LIST_PATH, SERVICES_PATH} from "../app.routes";
+import {EDIT_SERVICE_PATH, NEW_SERVICE_PATH, SERVICES_LIST_PATH, SERVICES_PATH} from "../app.routes";
 import {RouterService} from "../shared/service/router.service";
 import {TranslateService} from "@ngx-translate/core";
 import {MatTabLink, MatTabNav, MatTabNavPanel} from "@angular/material/tabs";
@@ -29,12 +29,20 @@ export class ServiceDashboardComponent {
     }
   ]);
 
+  protected hiddenLinks: WritableSignal<{ path: string, name: string}[]> = signal([
+    {
+      path: EDIT_SERVICE_PATH,
+      name: ''
+    }
+  ]);
+
   constructor(
     protected routerService: RouterService,
     private translate: TranslateService
   ) {
     this.translate.get('service.service-list').subscribe(text => this.links()[0].name = text);
     this.translate.get('service.new-service').subscribe(text => this.links()[1].name = text);
+    this.translate.get('service.edit-service').subscribe(text => this.hiddenLinks()[0].name = text);
   }
 
   protected getFullRoutePath(path: string) {

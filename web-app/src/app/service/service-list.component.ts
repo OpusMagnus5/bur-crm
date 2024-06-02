@@ -1,6 +1,6 @@
 import {Component, computed, OnDestroy, Signal, signal, WritableSignal} from '@angular/core';
 import {ServiceHttp} from "./service-http";
-import {ServicePageResponse, ServiceTypeData} from "./service-dtos";
+import {ServiceData, ServicePageResponse, ServiceTypeData} from "./service-dtos";
 import {HttpQueryFiltersInterface} from "../shared/model/http-query-filters.interface";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {ServiceListDataSource} from "./service-list.data-source";
@@ -34,6 +34,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {toObservable} from "@angular/core/rxjs-interop";
 import {SubscriptionManager} from "../shared/util/subscription-manager";
 import {concat, debounceTime, forkJoin, merge, skip, tap} from "rxjs";
+import {EDIT_SERVICE_PATH} from "../app.routes";
 
 @Component({
   selector: 'app-service-list',
@@ -212,8 +213,11 @@ export class ServiceListComponent implements OnDestroy {
 
   }
 
-  protected onEdit(element: any) {
-
+  protected onEdit(element: ServiceData) {
+    console.log(element);
+    this.router.navigate(['../', EDIT_SERVICE_PATH, element.id], {
+      relativeTo: this.route
+    });
   }
 
   protected onRemove(element: any) {
