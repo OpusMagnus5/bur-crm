@@ -34,7 +34,7 @@ public record GetOperatorDetailsResponse(
 				operator.getModifier().map(InnerUserDto::firstName).orElse(null),
 				operator.getModifier().map(InnerUserDto::lastName).orElse(null),
 				operator.programs().stream()
-						.map(ProgramData::new)
+						.map(item -> new ProgramData(item, cipher))
 						.toList()
 		);
 	}

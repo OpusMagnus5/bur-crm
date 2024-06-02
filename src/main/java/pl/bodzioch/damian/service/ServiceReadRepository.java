@@ -14,6 +14,7 @@ import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static pl.bodzioch.damian.infrastructure.database.DbCaster.GENERAL_CURSOR_NAME;
 
@@ -22,10 +23,12 @@ class ServiceReadRepository implements IServiceReadRepository {
 
     private final IJdbcCaller jdbcCaller;
     private final SimpleJdbcCall getPageProc;
+    private final SimpleJdbcCall getDetailsProc;
 
     ServiceReadRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
         this.jdbcCaller = jdbcCaller;
         this.getPageProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_get_page");
+        this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_get_details");
     }
 
     @Override
@@ -40,5 +43,15 @@ class ServiceReadRepository implements IServiceReadRepository {
         Long totalPrograms = (Long) result.get("_total_services");
         List<Service> serviceProviders = DbCaster.fromProperties(result, Service.class);
         return new PageQueryResult<>(serviceProviders, totalPrograms);
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.NOT_SUPPORTED)
+    public Optional<Service> getDetails(Long id) {
+        HashMap<String, Object> properties = new HashMap<>();
+        properties.put("_srv_id", id);
+        getDetailsProc.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR));
+        Map<String, Object> result = jdbcCaller.call(getDetailsProc, properties);
+        return DbCaster.fromProperties(result, Service.class).stream().findFirst();
     }
 }

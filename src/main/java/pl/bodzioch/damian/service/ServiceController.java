@@ -13,6 +13,8 @@ import pl.bodzioch.damian.infrastructure.command.CommandExecutor;
 import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
 import pl.bodzioch.damian.service.command_dto.CreateNewServiceCommand;
 import pl.bodzioch.damian.service.command_dto.CreateNewServiceCommandResult;
+import pl.bodzioch.damian.service.query_dto.GetServiceDetailsQuery;
+import pl.bodzioch.damian.service.query_dto.GetServiceDetailsQueryResult;
 import pl.bodzioch.damian.service.query_dto.GetServicePageQuery;
 import pl.bodzioch.damian.service.query_dto.GetServicePageQueryResult;
 import pl.bodzioch.damian.utils.CipherComponent;
@@ -90,5 +92,14 @@ class ServiceController {
                 .map(element -> new ServiceData(element, cipher, messageResolver))
                 .toList();
         return new ServicePageResponse(servicesData, result.totalServices());
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    GetServiceDetailsResponse getDetails(@PathVariable String id) {
+        long serviceId = Long.parseLong(cipher.decryptMessage(id));
+        GetServiceDetailsQuery query = new GetServiceDetailsQuery(serviceId);
+        GetServiceDetailsQueryResult result = queryExecutor.execute(query);
+        return new GetServiceDetailsResponse(result.service(), messageResolver, cipher);
     }
 }

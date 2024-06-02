@@ -1,12 +1,11 @@
 package pl.bodzioch.damian.service;
 
 import com.fasterxml.uuid.Generators;
+import pl.bodzioch.damian.coach.InnerCoach;
 import pl.bodzioch.damian.customer.InnerCustomer;
-import pl.bodzioch.damian.infrastructure.database.DbColumn;
-import pl.bodzioch.damian.infrastructure.database.DbConstructor;
-import pl.bodzioch.damian.infrastructure.database.DbId;
-import pl.bodzioch.damian.infrastructure.database.DbManyToOne;
+import pl.bodzioch.damian.infrastructure.database.*;
 import pl.bodzioch.damian.operator.InnerOperator;
+import pl.bodzioch.damian.program.InnerProgram;
 import pl.bodzioch.damian.service.command_dto.CreateNewServiceCommand;
 import pl.bodzioch.damian.service_provider.InnerServiceProvider;
 import pl.bodzioch.damian.user.InnerUser;
@@ -23,12 +22,14 @@ record Service(
         Long id,
 		@DbColumn(name = "srv_uuid")
         UUID uuid,
+		@DbColumn(name = "srv_version")
+		Integer version,
 		@DbColumn(name = "srv_bur_card_id")
         Long burCardId,
 		@DbColumn(name = "srv_number")
 		String number,
 		@DbColumn(name = "srv_name")
-        String name,
+        String name, //TODO usunąc indeks
 		@DbColumn(name = "srv_type")
         ServiceType type,
 		@DbColumn(name = "srv_start_date") //TODO walidować czy startDate nie jest po dacie endDate
@@ -65,7 +66,11 @@ record Service(
 		@DbManyToOne(prefix = "customer")
 		InnerCustomer customer,
 		@DbManyToOne(prefix = "service_provider")
-		InnerServiceProvider serviceProvider
+		InnerServiceProvider serviceProvider,
+		@DbOneToMany(prefix = "program")
+		InnerProgram program,
+		@DbOneToMany(prefix = "coaches")
+		List<InnerCoach> coaches
 ) {
 	@DbConstructor
 	Service {
@@ -75,6 +80,7 @@ record Service(
 		this(
 				null,
 				Generators.timeBasedEpochGenerator().generate(),
+				null,
 				burCardId,
 				command.number(),
 				command.name(),
@@ -90,6 +96,8 @@ record Service(
 				null,
 				null,
 				command.createdBy(),
+				null,
+				null,
 				null,
 				null,
 				null,

@@ -13,9 +13,10 @@ public record ProgramData(
         OperatorData operator
 ) implements Serializable {
 
-    public ProgramData(InnerProgramDto program) {
+    public ProgramData(InnerProgramDto program, CipherComponent cipher) {
         this(
-                null,
+                Optional.ofNullable(program).map(InnerProgramDto::id)
+                        .map(item -> cipher.encryptMessage(item.toString())).orElse(null),
                 Optional.ofNullable(program).map(InnerProgramDto::name).orElse(null),
                 null
         );

@@ -78,3 +78,39 @@ BEGIN
     FROM service;
 
 END$$;
+
+DROP PROCEDURE IF EXISTS service_get_details;
+/*PROCEDURE program_get_details*/
+CREATE OR REPLACE PROCEDURE service_get_details(
+    IN _srv_id service.srv_id%TYPE,
+    OUT _cursor REFCURSOR
+)
+    LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    OPEN _cursor FOR
+        SELECT srv_id, srv_uuid, srv_bur_card_id, srv_number, srv_name, srv_type, srv_start_date, srv_end_date,
+               srv_number_of_participants, srv_service_provider_id, srv_customer_id, srv_program_id, srv_intermediary_id,
+               coaches.coach_id as srv_coach_ids,
+               creator.usr_first_name as creator_usr_first_name, creator.usr_last_name as creator_usr_last_name,
+               creator.usr_id as creator_usr_id,
+               modifier.usr_first_name as modifier_usr_first_name, modifier.usr_last_name as modifier_usr_last_name,
+               modifier.usr_id as modifier_usr_id,
+               program.prg_name as program_prg_name, program.prg_id as program_prg_id,
+               operator.opr_name as operator_opr_name, operator.opr_id as operator_opr_id,
+               customer.cst_name as customer_cst_name, customer.cst_id as customer_cst_id ,
+               service_provider.spr_name as service_provider_spr_name, service_provider.spr_id as service_provider_spr_id,
+               coach.coa_first_name as coach_coa_first_name, coach.coa_last_name as coach_coa_last_name, coach.coa_id as coach_coa_id
+        FROM service
+        LEFT JOIN service_coach coaches ON coaches.service_id = service.srv_id
+        LEFT JOIN users creator ON creator.usr_id = srv_created_by
+        LEFT JOIN users modifier ON modifier.usr_id = service.srv_modified_by
+        LEFT JOIN program ON program.prg_id = service.srv_program_id
+        LEFT JOIN operator ON program.prg_operator_id = operator.opr_id
+        LEFT JOIN customer ON customer.cst_id = service.srv_customer_id
+        LEFT JOIN service_provider ON service_provider.spr_id = service.srv_service_provider_id
+        LEFT JOIN coach ON coach.coa_id = coaches.coach_id
+        WHERE srv_id = _srv_id;
+
+END$$;

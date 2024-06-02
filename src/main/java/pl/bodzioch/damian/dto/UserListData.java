@@ -1,9 +1,11 @@
 package pl.bodzioch.damian.dto;
 
+import pl.bodzioch.damian.user.InnerUserDto;
 import pl.bodzioch.damian.user.UserDto;
 import pl.bodzioch.damian.utils.CipherComponent;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 public record UserListData(
 
@@ -22,6 +24,17 @@ public record UserListData(
                 userDto.firstName(),
                 userDto.lastName(),
                 userDto.roles().getLast().name()
+        );
+    }
+
+    public UserListData(InnerUserDto userDto, CipherComponent cipher) {
+        this(
+                Optional.ofNullable(userDto).map(InnerUserDto::id)
+                        .map(item -> cipher.encryptMessage(item.toString())).orElse(null),
+                null,
+                Optional.ofNullable(userDto).map(InnerUserDto::firstName).orElse(null),
+                Optional.ofNullable(userDto).map(InnerUserDto::lastName).orElse(null),
+                null
         );
     }
 }

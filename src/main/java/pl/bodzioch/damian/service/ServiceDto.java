@@ -1,7 +1,9 @@
 package pl.bodzioch.damian.service;
 
+import pl.bodzioch.damian.coach.InnerCoachDto;
 import pl.bodzioch.damian.customer.InnerCustomerDto;
 import pl.bodzioch.damian.operator.InnerOperatorDto;
+import pl.bodzioch.damian.program.InnerProgramDto;
 import pl.bodzioch.damian.service_provider.InnerServiceProviderDto;
 import pl.bodzioch.damian.user.InnerUserDto;
 
@@ -13,6 +15,7 @@ import java.util.UUID;
 public record ServiceDto(
         Long id,
         UUID uuid,
+        Integer version,
         Long burCardId,
         String number,
         String name,
@@ -34,13 +37,16 @@ public record ServiceDto(
         InnerUserDto modifier,
         InnerOperatorDto operator,
         InnerCustomerDto customer,
-        InnerServiceProviderDto serviceProvider
+        InnerServiceProviderDto serviceProvider,
+        InnerProgramDto program,
+        List<InnerCoachDto> coaches
 ) {
 
     ServiceDto(Service service) {
         this(
                 service.id(),
                 service.uuid(),
+                service.version(),
                 service.burCardId(),
                 service.number(),
                 service.name(),
@@ -61,7 +67,11 @@ public record ServiceDto(
                 new InnerUserDto(service.modifier()),
                 new InnerOperatorDto(service.operator()),
                 new InnerCustomerDto(service.customer()),
-                new InnerServiceProviderDto(service.serviceProvider())
+                new InnerServiceProviderDto(service.serviceProvider()),
+                new InnerProgramDto(service.program()),
+                service.coaches().stream()
+                        .map(InnerCoachDto::new)
+                        .toList()
         );
     }
 }
