@@ -44,6 +44,10 @@ DROP PROCEDURE IF EXISTS service_get_page;
 CREATE OR REPLACE PROCEDURE service_get_page(
     IN _offset NUMERIC,
     IN _max NUMERIC,
+    IN _srv_number service.srv_number%TYPE,
+    IN _srv_type service.srv_type%TYPE,
+    IN _srv_service_provider_id service.srv_service_provider_id%TYPE,
+    IN _srv_customer_id service.srv_customer_id%TYPE,
     OUT _cursor REFCURSOR,
     OUT _total_services BIGINT
 )
@@ -61,6 +65,10 @@ BEGIN
         LEFT JOIN operator opr on opr.opr_id = prg.prg_operator_id
         LEFT JOIN customer cst ON srv_customer_id = cst.cst_id
         LEFT JOIN service_provider spr ON srv_service_provider_id = spr.spr_id
+        WHERE srv_number LIKE '%' || COALESCE(_srv_number, srv_number) || '%'
+            AND srv_type = COALESCE(_srv_type, srv_type)
+            AND srv_service_provider_id = COALESCE(_srv_service_provider_id, srv_service_provider_id)
+            AND srv_customer_id = COALESCE(_srv_customer_id, srv_customer_id)
         ORDER BY srv_start_date, srv_name
         OFFSET _offset
         LIMIT _max;

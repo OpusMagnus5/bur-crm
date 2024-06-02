@@ -1,6 +1,7 @@
 package pl.bodzioch.damian.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.exception.AppException;
 
@@ -13,6 +14,7 @@ import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.Optional;
 
 @Component
 @Slf4j
@@ -66,6 +68,14 @@ public class CipherComponent {
             log.error("Cipher exception during decrypt message: {}", encryptedText, ex);
             throw AppException.getGeneralError(ex);
         }
+    }
+
+    public Long getDecryptedId(String id) {
+        return Optional.ofNullable(id)
+                .filter(StringUtils::isNotBlank)
+                .map(this::decryptMessage)
+                .map(Long::parseLong)
+                .orElse(null);
     }
 
     private byte[] attachIvAndGetOutput(byte[] iv, byte[] encryptedBytes) {

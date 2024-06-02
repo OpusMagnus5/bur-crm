@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import static pl.bodzioch.damian.service.ServiceFilterField.*;
+
 @RestController
 @RequestMapping("/api/service")
 @RequiredArgsConstructor
@@ -71,8 +73,18 @@ class ServiceController {
             int pageNumber,
             @Min(value = 10, message = "error.client.minPageSize")
             @Max(value = 50, message = "error.client.maxPageSize")
-            @RequestParam int pageSize){
-        GetServicePageQuery query = new GetServicePageQuery(pageNumber, pageSize, new HashMap<>());
+            @RequestParam int pageSize,
+            @RequestParam(required = false) String number,
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String serviceProviderId,
+            @RequestParam(required = false) String customerId){
+        HashMap<ServiceFilterField, Object> filters = new HashMap<>();
+        filters.put(NUMBER, number);
+        filters.put(TYPE, type);
+        filters.put(SERVICE_PROVIDER_ID, cipher.getDecryptedId(serviceProviderId));
+        filters.put(CUSTOMER_ID, cipher.getDecryptedId(customerId));
+
+        GetServicePageQuery query = new GetServicePageQuery(pageNumber, pageSize, filters);
         GetServicePageQueryResult result = queryExecutor.execute(query);
         List<ServiceData> servicesData = result.services().stream()
                 .map(element -> new ServiceData(element, cipher, messageResolver))

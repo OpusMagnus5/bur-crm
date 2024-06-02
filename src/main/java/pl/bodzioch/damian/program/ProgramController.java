@@ -40,7 +40,7 @@ class ProgramController {
 
     @GetMapping(params = { "pageNumber", "pageSize" })
     @ResponseStatus(HttpStatus.OK)
-    ProgramPageResponse getServiceProviders(
+    ProgramPageResponse getPrograms(
             @RequestParam
             @Min(value = 1, message = "error.client.minPageNumber")
             @Max(value = Integer.MAX_VALUE, message = "error.client.maxPageNumber")
@@ -61,7 +61,7 @@ class ProgramController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/exists")
-    ProgramExistsResponse isProviderExists(@RequestParam String name, @RequestParam String operatorId) {
+    ProgramExistsResponse isProgramExists(@RequestParam String name, @RequestParam String operatorId) {
         long operator = Long.parseLong(cipher.decryptMessage(operatorId));
         GetProgramByNameQuery query = new GetProgramByNameQuery(name, operator);
         try {
