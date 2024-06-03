@@ -214,7 +214,6 @@ export class ServiceListComponent implements OnDestroy {
   }
 
   protected onEdit(element: ServiceData) {
-    console.log(element);
     this.router.navigate(['../', EDIT_SERVICE_PATH, element.id], {
       relativeTo: this.route
     });

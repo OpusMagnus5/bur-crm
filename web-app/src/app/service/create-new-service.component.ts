@@ -1,14 +1,4 @@
-import {
-  Component,
-  computed,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  Signal,
-  signal,
-  ViewChild,
-  WritableSignal
-} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, signal, ViewChild, WritableSignal} from '@angular/core';
 import {FormControl, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 import {MatError, MatFormField, MatHint, MatLabel, MatSuffix} from "@angular/material/form-field";
@@ -22,7 +12,7 @@ import {CreateNewServiceRequest, CreateNewServiceResponse, ServiceTypeData} from
 import {ServiceHttp} from "./service-http";
 import {ServiceProviderHttpService} from "../service-provider/service/service-provider-http.service";
 import {ServiceProviderDataInterface} from "../service-provider/model/service-provider-data.interface";
-import {forkJoin} from "rxjs";
+import {forkJoin, merge} from "rxjs";
 import {map} from "rxjs/operators";
 import {SubscriptionManager} from "../shared/util/subscription-manager";
 import {MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from "@angular/material/autocomplete";
@@ -41,6 +31,7 @@ import {MatIcon} from "@angular/material/icon";
 import {MatButton} from "@angular/material/button";
 import {SnackbarService} from "../shared/service/snackbar.service";
 import {CustomDateAdapterService} from "../shared/service/custom-date-adapter.service";
+import {toObservable} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-create-new-service',
@@ -75,7 +66,7 @@ import {CustomDateAdapterService} from "../shared/service/custom-date-adapter.se
 })
 export class CreateNewServiceComponent implements OnInit, OnDestroy {
 
-  private readonly form: FormGroup;
+  protected readonly form: FormGroup;
   numberControl: FormControl<string | null>;
   nameControl: FormControl<string | null>;
   typeControl: FormControl<string | null>;
@@ -84,6 +75,7 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
   numberOfParticipantsControl: FormControl<number | null>;
   serviceProviderIdControl: FormControl<ServiceProviderDataInterface | string | null>;
   programIdControl: FormControl<ProgramDataInterface | string | null>;
+  operatorControl: FormControl<OperatorDataInterface | string | null>;
   customerIdControl: FormControl<CustomerData | string | null>;
   coachIdsControl: FormControl<CoachData[] | string[] | null>;
   intermediaryIdControl: FormControl<IntermediaryData | string | null>;
@@ -103,12 +95,8 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
   protected readonly filteredIntermediaries: WritableSignal<IntermediaryData[]> = signal([]);
   protected readonly filteredCoaches: WritableSignal<CoachData[]> = signal([]);
 
-  protected readonly operatorInputDisabled: Signal<boolean> = computed(() =>
-    this.isSingleFilteredOperator() && this.isSingleFilteredProgram() && this.isValidProgramControl()
-  );
   private readonly subscriptions = new SubscriptionManager();
 
-  @ViewChild('operatorInput') private operatorInput!: ElementRef;
   @ViewChild('coachInput') private coachInput!: ElementRef;
 
   constructor(
@@ -147,6 +135,7 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     this.programIdControl = new FormControl(null, {
       validators: [Validators.required]
     });
+    this.operatorControl = new FormControl(null);
     this.customerIdControl = new FormControl(null, {
       validators: [Validators.required]
     });
@@ -157,6 +146,15 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
       validators: [Validators.required]
     })
     this.form = this.buildFormGroup();
+
+    merge(toObservable(this.filteredOperators), toObservable(this.filteredPrograms)).subscribe(() => {
+      const disabled = this.isSingleFilteredOperator() && this.isSingleFilteredProgram() && this.isValidProgramControl();
+      if (disabled) {
+        this.operatorControl.disable();
+      } else {
+        this.operatorControl.enable();
+      }
+    })
   }
 
   ngOnDestroy(): void {
@@ -277,11 +275,11 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     this.filterProgramsById(programId);
     this.filterOperatorsByName(operatorName);
     if (this.isSingleFilteredOperator()) {
-      (<HTMLInputElement>this.operatorInput.nativeElement).value = this.filteredOperators()[0].name;
+      this.operatorControl.setValue(this.filteredOperators()[0]);
     }
   }
 
-  protected onOperatorSelected(event: MatAutocompleteSelectedEvent) {
+  onOperatorSelected(event: MatAutocompleteSelectedEvent) {
     const id = (<OperatorDataInterface>event.option.value).id;
     const name = (<OperatorDataInterface>event.option.value).name;
     this.filterOperatorsById(id);
@@ -380,7 +378,6 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
   private resetForm(formDirective: FormGroupDirective) {
     formDirective.resetForm();
     this.form.reset();
-    (<HTMLInputElement>this.operatorInput.nativeElement).value = '';
   }
 
   private mapFormToRequest(): CreateNewServiceRequest {

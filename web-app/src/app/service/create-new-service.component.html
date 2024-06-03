@@ -108,8 +108,7 @@
                  matInput
                  [matAutocomplete]="operatorAutocomplete"
                  (keyup)="onOperatorChange($event)"
-                 [disabled]="operatorInputDisabled()"
-                 #operatorInput>
+                 [formControl]="operatorControl">
           <mat-autocomplete #operatorAutocomplete="matAutocomplete"
                             [displayWith]="displayOperatorName"
                             (optionSelected)="onOperatorSelected($event)">

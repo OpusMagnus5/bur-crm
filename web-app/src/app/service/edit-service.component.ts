@@ -16,30 +16,33 @@ export class EditServiceComponent implements AfterViewInit {
 
   @ViewChild(CreateNewServiceComponent) private readonly createNewComponent!: CreateNewServiceComponent;
   private readonly id: string;
-  private serviceData: GetServiceDetailsResponse | null = null;
 
   constructor(
     private serviceHttp: ServiceHttp,
     private route: ActivatedRoute
   ) {
-    this.id = route.snapshot.paramMap.get('id')!;
-    this.serviceHttp.getDetails(this.id)
-      .subscribe(response => this.serviceData = response);
+    this.id = this.route.snapshot.paramMap.get('id')!;
   }
 
   ngAfterViewInit() {
-    if (this.serviceData) {
-      this.createNewComponent.numberControl.setValue(this.serviceData.number);
-      this.createNewComponent.nameControl.setValue(this.serviceData.name);
-      this.createNewComponent.typeControl.setValue(this.serviceData.type.value);
-      this.createNewComponent.startDateControl.setValue(this.serviceData.startDate);
-      this.createNewComponent.endDateControl.setValue(this.serviceData.endDate);
-      this.createNewComponent.numberOfParticipantsControl.setValue(this.serviceData.numberOfParticipants);
-      this.createNewComponent.serviceProviderIdControl.setValue(this.serviceData.serviceProvider);
-      this.createNewComponent.programIdControl.setValue(this.serviceData.program);
-      this.createNewComponent.customerIdControl.setValue(this.serviceData.customer);
-      this.createNewComponent.coachIdsControl.setValue(this.serviceData.coaches);
-      this.createNewComponent.intermediaryIdControl.setValue(this.serviceData.intermediary);
-    }
+    this.serviceHttp.getDetails(this.id).subscribe(response => {
+      this.setFormControls(response);
+    })
+  }
+
+  private setFormControls(response: GetServiceDetailsResponse) {
+    this.createNewComponent.numberControl.setValue(response.number);
+    this.createNewComponent.nameControl.setValue(response.name);
+    this.createNewComponent.typeControl.setValue(response.type.value);
+    this.createNewComponent.startDateControl.setValue(response.startDate);
+    this.createNewComponent.endDateControl.setValue(response.endDate);
+    this.createNewComponent.numberOfParticipantsControl.setValue(response.numberOfParticipants);
+    this.createNewComponent.serviceProviderIdControl.setValue(response.serviceProvider);
+    this.createNewComponent.programIdControl.setValue(response.program);
+    this.createNewComponent.customerIdControl.setValue(response.customer);
+    this.createNewComponent.coachIdsControl.setValue(response.coaches);
+    this.createNewComponent.intermediaryIdControl.setValue(response.intermediary);
+    this.createNewComponent.operatorControl.setValue(response.operator);
+    this.createNewComponent.operatorControl.disable();
   }
 }
