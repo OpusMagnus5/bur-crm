@@ -44,5 +44,6 @@ export class EditServiceComponent implements AfterViewInit {
     this.createNewComponent.intermediaryIdControl.setValue(response.intermediary);
     this.createNewComponent.operatorControl.setValue(response.operator);
     this.createNewComponent.operatorControl.disable();
+    this.createNewComponent.serviceVersion = response.version;
   }
 }

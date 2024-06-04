@@ -1,14 +1,17 @@
 package pl.bodzioch.damian.service.command_dto;
 
-import pl.bodzioch.damian.dto.CreateNewServiceRequest;
+import pl.bodzioch.damian.dto.CreateOrUpdateServiceRequest;
 import pl.bodzioch.damian.infrastructure.command.Command;
 import pl.bodzioch.damian.service.ServiceType;
 import pl.bodzioch.damian.utils.CipherComponent;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
-public record CreateNewServiceCommand(
+public record CreateOrUpdateServiceCommand(
+		Long id,
+		Integer version,
 		String number,
 		String name,
 		ServiceType type,
@@ -21,10 +24,15 @@ public record CreateNewServiceCommand(
 		List<Long> coachIds,
 		Long intermediaryId,
 		Long createdBy
-) implements Command<CreateNewServiceCommandResult> {
+) implements Command<CreateOrUpdateServiceCommandResult> {
 
-	public CreateNewServiceCommand(CreateNewServiceRequest request, CipherComponent cipher) {
+	public CreateOrUpdateServiceCommand(CreateOrUpdateServiceRequest request, CipherComponent cipher) {
 		this(
+				Optional.ofNullable(request.id())
+						.map(cipher::decryptMessage)
+						.map(Long::parseLong)
+						.orElse(null),
+				request.version(),
 				request.number(),
 				request.name(),
 				ServiceType.valueOf(request.type()),

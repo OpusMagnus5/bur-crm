@@ -17,12 +17,12 @@ class ServiceWriteRepository implements IServiceWriteRepository {
 
 	ServiceWriteRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
 		this.jdbcCaller = jdbcCaller;
-		this.createNewProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_create_new");
+		this.createNewProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_create_or_update");
 	}
 
 	@Override
 	@Transactional(Transactional.TxType.REQUIRED)
-	public void createNew(Service service) {
+	public void createOrUpdate(Service service) {
 		Map<String, Object> properties = DbCaster.toProperties(service);
 		this.jdbcCaller.call(this.createNewProc, properties);
 	}

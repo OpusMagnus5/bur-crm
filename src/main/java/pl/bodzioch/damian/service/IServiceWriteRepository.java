@@ -4,5 +4,5 @@ import jakarta.transaction.Transactional;
 
 interface IServiceWriteRepository {
 	@Transactional(Transactional.TxType.REQUIRED)
-	void createNew(Service service);
+	void createOrUpdate(Service service);
 }

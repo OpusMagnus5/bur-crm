@@ -8,10 +8,14 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-public record CreateNewServiceRequest(
+public record CreateOrUpdateServiceRequest(
+        String id,
         @NotEmpty(message = "error.client.service.numberEmpty")
         @Pattern(regexp = "\\d{4}/\\d{2}/\\d{2}/\\d+/\\d+", message = "error.client.service.incorrectNumber")
         String number,
+        @Min(value = 0, message = "error.client.service.minVersion")
+        @Max(value = Integer.MAX_VALUE, message = "error.client.service.maxVersion")
+        Integer version,
         @NotEmpty(message = "error.client.service.nameEmpty")
         @Pattern(regexp = "[a-zA-ZążęćłóńśĄŻĘĆŁÓŃŚ0-9: -/.\"\\\\]{1,300}", message = "error.client.service.incorrectName")
         String name,

@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import pl.bodzioch.damian.dto.*;
 import pl.bodzioch.damian.infrastructure.command.CommandExecutor;
 import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
-import pl.bodzioch.damian.service.command_dto.CreateNewServiceCommand;
-import pl.bodzioch.damian.service.command_dto.CreateNewServiceCommandResult;
+import pl.bodzioch.damian.service.command_dto.CreateOrUpdateServiceCommand;
+import pl.bodzioch.damian.service.command_dto.CreateOrUpdateServiceCommandResult;
 import pl.bodzioch.damian.service.query_dto.GetServiceDetailsQuery;
 import pl.bodzioch.damian.service.query_dto.GetServiceDetailsQueryResult;
 import pl.bodzioch.damian.service.query_dto.GetServicePageQuery;
@@ -40,10 +40,10 @@ class ServiceController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    CreateNewServiceResponse createNew(@Valid @RequestBody CreateNewServiceRequest request) {
-        CreateNewServiceCommand command = new CreateNewServiceCommand(request, cipher);
-        CreateNewServiceCommandResult result = commandExecutor.execute(command);
-        return new CreateNewServiceResponse(result.messages());
+    CreateOrUpdateServiceResponse createOrUpdate(@Valid @RequestBody CreateOrUpdateServiceRequest request) {
+        CreateOrUpdateServiceCommand command = new CreateOrUpdateServiceCommand(request, cipher);
+        CreateOrUpdateServiceCommandResult result = commandExecutor.execute(command);
+        return new CreateOrUpdateServiceResponse(result.messages());
     }
 
     @GetMapping(params = { "number" })

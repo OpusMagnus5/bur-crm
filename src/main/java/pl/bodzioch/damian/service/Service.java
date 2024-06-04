@@ -7,7 +7,7 @@ import pl.bodzioch.damian.infrastructure.database.*;
 import pl.bodzioch.damian.intermediary.InnerIntermediary;
 import pl.bodzioch.damian.operator.InnerOperator;
 import pl.bodzioch.damian.program.InnerProgram;
-import pl.bodzioch.damian.service.command_dto.CreateNewServiceCommand;
+import pl.bodzioch.damian.service.command_dto.CreateOrUpdateServiceCommand;
 import pl.bodzioch.damian.service_provider.InnerServiceProvider;
 import pl.bodzioch.damian.user.InnerUser;
 
@@ -79,11 +79,11 @@ record Service(
 	Service {
 	}
 
-	Service(CreateNewServiceCommand command, Long burCardId) {
+	Service(CreateOrUpdateServiceCommand command, Long burCardId) {
 		this(
-				null,
+				command.id(),
 				Generators.timeBasedEpochGenerator().generate(),
-				null,
+				command.version(),
 				burCardId,
 				command.number(),
 				command.name(),

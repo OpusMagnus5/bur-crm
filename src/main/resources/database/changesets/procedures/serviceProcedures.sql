@@ -1,6 +1,8 @@
-DROP PROCEDURE IF EXISTS service_create_new;
+DROP PROCEDURE IF EXISTS service_create_or_update;
 /*PROCEDURE service_create_new*/
-CREATE OR REPLACE PROCEDURE service_create_new(
+CREATE OR REPLACE PROCEDURE service_create_or_update(
+    IN _srv_id service.srv_id%TYPE,
+    IN _srv_version service.srv_version%TYPE,
     IN _srv_uuid service.srv_uuid%TYPE,
     IN _srv_bur_card_id service.srv_bur_card_id%TYPE,
     IN _srv_number service.srv_number%TYPE,
@@ -21,21 +23,65 @@ AS $$
 DECLARE
     _created_service_id BIGINT;
     _coach_id coach.coa_id%TYPE;
+    _current_version INTEGER;
 BEGIN
 
-    INSERT INTO service(srv_uuid, srv_bur_card_id, srv_number, srv_name, srv_type, srv_start_date, srv_end_date,
-                        srv_number_of_participants, srv_service_provider_id, srv_program_id, srv_customer_id,
-                        srv_intermediary_id, srv_created_by)
-    VALUES(_srv_uuid, _srv_bur_card_id, _srv_number, _srv_name, _srv_type, _srv_start_date, _srv_end_date,
-           _srv_number_of_participants, _srv_service_provider_id, _srv_program_id, _srv_customer_id,
-           _srv_intermediary_id, _srv_created_by)
-    RETURNING srv_id
-    INTO _created_service_id;
+    IF _srv_id IS NULL THEN
+        INSERT INTO service(srv_uuid, srv_bur_card_id, srv_number, srv_name, srv_type, srv_start_date, srv_end_date,
+                            srv_number_of_participants, srv_service_provider_id, srv_program_id, srv_customer_id,
+                            srv_intermediary_id, srv_created_by)
+        VALUES(_srv_uuid, _srv_bur_card_id, _srv_number, _srv_name, _srv_type, _srv_start_date, _srv_end_date,
+               _srv_number_of_participants, _srv_service_provider_id, _srv_program_id, _srv_customer_id,
+               _srv_intermediary_id, _srv_created_by)
+        RETURNING srv_id
+            INTO _created_service_id;
 
-    FOREACH _coach_id IN ARRAY _srv_coach_ids LOOP
-        INSERT INTO service_coach(service_id, coach_id)
-        VALUES(_created_service_id, _coach_id);
-    END LOOP;
+        FOREACH _coach_id IN ARRAY _srv_coach_ids LOOP
+                INSERT INTO service_coach(service_id, coach_id)
+                VALUES(_created_service_id, _coach_id);
+        END LOOP;
+
+    ELSE
+
+        SELECT srv_version
+        INTO _current_version
+        FROM service
+        WHERE srv_id = _srv_id;
+
+        IF _current_version <> _srv_version THEN
+            RAISE SQLSTATE '55000' USING MESSAGE = 'The resource with ID: ' || _srv_id || ' was changed by another user',
+                TABLE = 'service',
+                COLUMN = 'srv_version',
+                DETAIL = 'Provided version: ' || _srv_version || ', current version: ' || _current_version;
+        END IF;
+
+        DELETE FROM service_coach WHERE service_id = _srv_id;
+
+        UPDATE service
+        SET srv_version = srv_version + 1,
+            srv_bur_card_id = _srv_bur_card_id,
+            srv_number = _srv_number,
+            srv_name = _srv_name,
+            srv_type = _srv_type,
+            srv_start_date = _srv_start_date,
+            srv_end_date = _srv_end_date,
+            srv_number_of_participants = _srv_number_of_participants,
+            srv_service_provider_id = _srv_service_provider_id,
+            srv_program_id = _srv_program_id,
+            srv_customer_id = _srv_customer_id,
+            srv_intermediary_id = _srv_intermediary_id,
+            srv_modified_by = _srv_created_by,
+            srv_modified_at = current_timestamp
+        WHERE srv_id = _srv_id;
+
+        FOREACH _coach_id IN ARRAY _srv_coach_ids LOOP
+                INSERT INTO service_coach(service_id, coach_id)
+                VALUES(_srv_id, _coach_id);
+        END LOOP;
+
+    END IF;
+
+
 
 END$$;
 

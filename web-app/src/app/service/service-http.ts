@@ -3,8 +3,8 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {SERVER_URL} from "../shared/http-config";
 import {
-  CreateNewServiceRequest,
   CreateNewServiceResponse,
+  CreateOrUpdateServiceRequest,
   GetAllServiceTypesResponse,
   GetServiceDetailsResponse,
   GetServiceFromBurResponse,
@@ -33,7 +33,7 @@ export class ServiceHttp {
     );
   }
 
-  createNew(request: CreateNewServiceRequest): Observable<CreateNewServiceResponse> {
+  createNew(request: CreateOrUpdateServiceRequest): Observable<CreateNewServiceResponse> {
     return this.http.post<CreateNewServiceResponse>(
       SERVER_URL + 'api/service', request
     )

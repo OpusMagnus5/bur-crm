@@ -8,7 +8,7 @@ import {ValidationMessageService} from "../shared/service/validation-message.ser
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
 import {MatOption} from "@angular/material/core";
 import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
-import {CreateNewServiceRequest, CreateNewServiceResponse, ServiceTypeData} from "./service-dtos";
+import {CreateNewServiceResponse, CreateOrUpdateServiceRequest, ServiceTypeData} from "./service-dtos";
 import {ServiceHttp} from "./service-http";
 import {ServiceProviderHttpService} from "../service-provider/service/service-provider-http.service";
 import {ServiceProviderDataInterface} from "../service-provider/model/service-provider-data.interface";
@@ -32,6 +32,8 @@ import {MatButton} from "@angular/material/button";
 import {SnackbarService} from "../shared/service/snackbar.service";
 import {CustomDateAdapterService} from "../shared/service/custom-date-adapter.service";
 import {toObservable} from "@angular/core/rxjs-interop";
+import {ActivatedRoute, Router} from "@angular/router";
+import {SERVICES_LIST_PATH} from "../app.routes";
 
 @Component({
   selector: 'app-create-new-service',
@@ -96,6 +98,8 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
   protected readonly filteredCoaches: WritableSignal<CoachData[]> = signal([]);
 
   private readonly subscriptions = new SubscriptionManager();
+  serviceVersion: number | null = null;
+  private readonly serviceId: string | null;
 
   @ViewChild('coachInput') private coachInput!: ElementRef;
 
@@ -109,8 +113,11 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     private intermediaryHttp: IntermediaryHttpService,
     private coachHttp: CoachHttpService,
     private snackbar: SnackbarService,
-    private dateAdapter: CustomDateAdapterService
+    private dateAdapter: CustomDateAdapterService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {
+    this.serviceId = this.route.snapshot.paramMap.get('id');
     this.numberControl = new FormControl(null, {
       validators: [Validators.required, Validators.pattern('\\d{4}/\\d{2}/\\d{2}/\\d+/\\d+')]
     });
@@ -371,7 +378,11 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     const request = this.mapFormToRequest();
     this.serviceHttp.createNew(request).subscribe(response => {
       this.showPopUp(response);
-      this.resetForm(formDirective);
+      if (this.serviceId === null) {
+        this.resetForm(formDirective);
+      } else {
+        this.router.navigate(['../../', SERVICES_LIST_PATH], { relativeTo: this.route });
+      }
     });
   }
 
@@ -380,8 +391,10 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     this.form.reset();
   }
 
-  private mapFormToRequest(): CreateNewServiceRequest {
+  private mapFormToRequest(): CreateOrUpdateServiceRequest {
     return {
+      id: this.serviceId,
+      version: this.serviceVersion,
       number: this.numberControl.value!,
       name: this.nameControl.value!,
       type: this.typeControl.value!,

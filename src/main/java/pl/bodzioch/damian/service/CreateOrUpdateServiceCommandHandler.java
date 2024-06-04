@@ -10,8 +10,8 @@ import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.exception.HttpClientException;
 import pl.bodzioch.damian.infrastructure.command.CommandHandler;
 import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
-import pl.bodzioch.damian.service.command_dto.CreateNewServiceCommand;
-import pl.bodzioch.damian.service.command_dto.CreateNewServiceCommandResult;
+import pl.bodzioch.damian.service.command_dto.CreateOrUpdateServiceCommand;
+import pl.bodzioch.damian.service.command_dto.CreateOrUpdateServiceCommandResult;
 import pl.bodzioch.damian.service_provider.BurServiceProvider;
 import pl.bodzioch.damian.service_provider.query_dto.GetServiceProviderDetailsQuery;
 import pl.bodzioch.damian.service_provider.query_dto.GetServiceProviderDetailsQueryResult;
@@ -27,7 +27,7 @@ import java.util.Optional;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-class CreateNewServiceCommandHandler implements CommandHandler<CreateNewServiceCommand, CreateNewServiceCommandResult> {
+class CreateOrUpdateServiceCommandHandler implements CommandHandler<CreateOrUpdateServiceCommand, CreateOrUpdateServiceCommandResult> {
 
 	private final IServiceWriteRepository writeRepository;
 	private final IBurClient burClient;
@@ -35,12 +35,12 @@ class CreateNewServiceCommandHandler implements CommandHandler<CreateNewServiceC
 	private final QueryExecutor queryExecutor;
 
 	@Override
-	public Class<CreateNewServiceCommand> commandClass() {
-		return CreateNewServiceCommand.class;
+	public Class<CreateOrUpdateServiceCommand> commandClass() {
+		return CreateOrUpdateServiceCommand.class;
 	}
 
 	@Override
-	public CreateNewServiceCommandResult handle(CreateNewServiceCommand command) {
+	public CreateOrUpdateServiceCommandResult handle(CreateOrUpdateServiceCommand command) {
 		List<String> messages = new ArrayList<>();
 		BurServiceNumber burServiceNumber = new BurServiceNumber(command.number());
 		Long burServiceId = burServiceNumber.getBurServiceId();
@@ -53,9 +53,9 @@ class CreateNewServiceCommandHandler implements CommandHandler<CreateNewServiceC
 		}
 		Long cardId = burService.map(BurServiceDto::id).orElse(null);
 		Service service = new Service(command, cardId);
-		writeRepository.createNew(service);
-		messages.add(messageResolver.getMessage("service.createNewServiceSuccess"));
-		return new CreateNewServiceCommandResult(messages);
+		writeRepository.createOrUpdate(service);
+		messages.add(getMessage(command));
+		return new CreateOrUpdateServiceCommandResult(messages);
 	}
 
 	private Optional<BurServiceDto> getBurService(Long burServiceId) {
@@ -67,7 +67,7 @@ class CreateNewServiceCommandHandler implements CommandHandler<CreateNewServiceC
 		return Optional.empty();
 	}
 
-	private void validateCommand(BurServiceDto burService, CreateNewServiceCommand command) {
+	private void validateCommand(BurServiceDto burService, CreateOrUpdateServiceCommand command) {
 		List<ErrorData> errors = new ArrayList<>(); //
 		validateServiceType(burService, command).ifPresent(errors::add);
 		validateServiceProvider(burService, command).ifPresent(errors::add); //TODO Validate czy startDate jest wcześniej niż endDate
@@ -80,7 +80,7 @@ class CreateNewServiceCommandHandler implements CommandHandler<CreateNewServiceC
 		}
 	}
 
-	private Optional<ErrorData> validateServiceType(BurServiceDto burService, CreateNewServiceCommand command) {
+	private Optional<ErrorData> validateServiceType(BurServiceDto burService, CreateOrUpdateServiceCommand command) {
 		Long burServiceTypeId = burService.serviceTypeId();
 		long formServiceTypeId = command.type().getBurId();
 		if (burServiceTypeId != formServiceTypeId) {
@@ -89,7 +89,7 @@ class CreateNewServiceCommandHandler implements CommandHandler<CreateNewServiceC
 		return Optional.empty();
 	}
 
-	private Optional<ErrorData> validateServiceProvider(BurServiceDto burService, CreateNewServiceCommand command) {
+	private Optional<ErrorData> validateServiceProvider(BurServiceDto burService, CreateOrUpdateServiceCommand command) {
 		GetServiceProviderDetailsQuery query = new GetServiceProviderDetailsQuery(command.serviceProviderId());
 		GetServiceProviderDetailsQueryResult result = queryExecutor.execute(query);
 		Long serviceProviderBurId = result.serviceProvider().burId();
@@ -100,7 +100,7 @@ class CreateNewServiceCommandHandler implements CommandHandler<CreateNewServiceC
 		return Optional.empty();
 	}
 
-	private Optional<ErrorData> validateStartDate(BurServiceDto burService, CreateNewServiceCommand command) {
+	private Optional<ErrorData> validateStartDate(BurServiceDto burService, CreateOrUpdateServiceCommand command) {
 		LocalDate burStartDate = burService.startDate().toLocalDate();
 		LocalDate formStartDate = command.startDate();
 		if (!burStartDate.isEqual(formStartDate)) {
@@ -109,7 +109,7 @@ class CreateNewServiceCommandHandler implements CommandHandler<CreateNewServiceC
 		return Optional.empty();
 	}
 
-	private Optional<ErrorData> validateEndDate(BurServiceDto burService, CreateNewServiceCommand command) {
+	private Optional<ErrorData> validateEndDate(BurServiceDto burService, CreateOrUpdateServiceCommand command) {
 		LocalDate burEndDate = burService.startDate().toLocalDate();
 		LocalDate formEndDate = command.startDate();
 		if (!burEndDate.isEqual(formEndDate)) {
@@ -118,7 +118,7 @@ class CreateNewServiceCommandHandler implements CommandHandler<CreateNewServiceC
 		return Optional.empty();
 	}
 
-	private Optional<ErrorData> validateNumber(BurServiceDto burService, CreateNewServiceCommand command) {
+	private Optional<ErrorData> validateNumber(BurServiceDto burService, CreateOrUpdateServiceCommand command) {
 		String burNumber = burService.number();
 		String formNumber = command.number();
 		if (!burNumber.trim().equals(formNumber)) {
@@ -160,5 +160,12 @@ class CreateNewServiceCommandHandler implements CommandHandler<CreateNewServiceC
 	private ErrorData buildIncorrectNumberError(String burNumber, String formNumber) {
 		log.warn("Incorrect service number. Bur number: " + burNumber + ", form number: " + formNumber);
 		return new ErrorData("error.client.service.burIncorrectNumber", List.of(formNumber, burNumber));
+	}
+
+	private String getMessage(CreateOrUpdateServiceCommand command) {
+		if (command.id() != null) {
+			return messageResolver.getMessage("service.modifyNewServiceSuccess");
+		}
+		return messageResolver.getMessage("service.createNewServiceSuccess");
 	}
 }

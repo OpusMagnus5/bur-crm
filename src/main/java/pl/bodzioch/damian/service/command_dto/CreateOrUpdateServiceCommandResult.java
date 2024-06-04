@@ -4,7 +4,7 @@ import pl.bodzioch.damian.infrastructure.command.CommandResult;
 
 import java.util.List;
 
-public record CreateNewServiceCommandResult(
+public record CreateOrUpdateServiceCommandResult(
 		List<String> messages
 ) implements CommandResult {
 }

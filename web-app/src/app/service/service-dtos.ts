@@ -24,7 +24,9 @@ export interface GetServiceFromBurResponse {
   serviceProviderName: string
 }
 
-export interface CreateNewServiceRequest {
+export interface CreateOrUpdateServiceRequest {
+  id: string | null,
+  version: number | null,
   number: string,
   name: string,
   type: string,
