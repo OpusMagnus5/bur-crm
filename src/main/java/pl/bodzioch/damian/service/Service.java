@@ -39,6 +39,8 @@ record Service(
 		LocalDate endDate,
 		@DbColumn(name = "srv_number_of_participants")
         Integer numberOfParticipants,
+		@DbColumn(name = "srv_status")
+		String status,
 		@DbColumn(name = "srv_service_provider_id")
 		Long serviceProviderId,
 		@DbColumn(name = "srv_program_id")
@@ -91,6 +93,7 @@ record Service(
 				command.startDate(),
 				command.endDate(),
 				command.numberOfParticipants(),
+				command.status().name(),
 				command.serviceProviderId(),
 				command.programId(),
 				command.customerId(),

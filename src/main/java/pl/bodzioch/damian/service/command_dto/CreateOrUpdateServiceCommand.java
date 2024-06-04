@@ -2,6 +2,7 @@ package pl.bodzioch.damian.service.command_dto;
 
 import pl.bodzioch.damian.dto.CreateOrUpdateServiceRequest;
 import pl.bodzioch.damian.infrastructure.command.Command;
+import pl.bodzioch.damian.service.ServiceStatus;
 import pl.bodzioch.damian.service.ServiceType;
 import pl.bodzioch.damian.utils.CipherComponent;
 
@@ -18,6 +19,7 @@ public record CreateOrUpdateServiceCommand(
 		LocalDate startDate,
 		LocalDate endDate,
 		Integer numberOfParticipants,
+		ServiceStatus status,
 		Long serviceProviderId,
 		Long programId,
 		Long customerId,
@@ -39,6 +41,7 @@ public record CreateOrUpdateServiceCommand(
 				request.startDate(),
 				request.endDate(),
 				request.numberOfParticipants(),
+				ServiceStatus.valueOf(request.status().value()),
 				Long.parseLong(cipher.decryptMessage(request.serviceProviderId())),
 				Long.parseLong(cipher.decryptMessage(request.programId())),
 				Long.parseLong(cipher.decryptMessage(request.customerId())),

@@ -30,6 +30,8 @@ public record CreateOrUpdateServiceRequest(
         @Min(value = 1, message = "error.client.service.incorrectNumberOfParticipants")
         @Max(value = Integer.MAX_VALUE, message = "error.client.service.incorrectNumberOfParticipants")
         Integer numberOfParticipants,
+        @NotNull(message = "error.client.service.emptyOrIncorrectStatus")
+        ServiceStatusData status,
         @NotEmpty(message = "error.client.service.emptyServiceProviderId")
         String serviceProviderId,
         @NotEmpty(message = "error.client.service.emptyProgramId")

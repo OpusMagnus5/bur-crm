@@ -8,6 +8,7 @@ CREATE TABLE service(
     srv_type VARCHAR NOT NULL,
     srv_start_date DATE NOT NULL,
     srv_end_date DATE NOT NULL,
+    srv_status VARCHAR NOT NULL,
     srv_number_of_participants INTEGER NOT NULL,
     srv_service_provider_id BIGINT NOT NULL REFERENCES service_provider(spr_id),
     srv_program_id BIGINT NOT NULL REFERENCES program(prg_id),

@@ -1,5 +1,5 @@
 DROP PROCEDURE IF EXISTS service_create_or_update;
-/*PROCEDURE service_create_new*/
+/*PROCEDURE service_create_or_update*/
 CREATE OR REPLACE PROCEDURE service_create_or_update(
     IN _srv_id service.srv_id%TYPE,
     IN _srv_version service.srv_version%TYPE,
@@ -160,5 +160,22 @@ BEGIN
         LEFT JOIN coach ON coach.coa_id = coaches.coach_id
         LEFT JOIN intermediary ON intermediary.itr_id = service.srv_intermediary_id
         WHERE srv_id = _srv_id;
+
+END$$;
+
+DROP PROCEDURE IF EXISTS service_get_to_status_check;
+/*PROCEDURE service_get_to_status_check*/
+CREATE OR REPLACE PROCEDURE service_get_to_status_check(
+    OUT _cursor REFCURSOR
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    OPEN _cursor FOR
+        SELECT srv_id, srv_bur_card_id
+        FROM service
+        WHERE srv_status = 'PUBLISHED'
+        AND srv_end_date <= current_date;
 
 END$$;

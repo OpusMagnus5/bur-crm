@@ -10,6 +10,7 @@ record ServiceBur(
 		String number,
 		@JsonProperty("tytul")
 		String title,
+		BurServiceStatus status,
 		@JsonProperty("idRodzajuUslugi")
 		Long serviceTypeId,
 		@JsonProperty("dataRozpoczeciaUslugi")
