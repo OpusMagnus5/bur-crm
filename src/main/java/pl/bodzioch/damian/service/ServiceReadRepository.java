@@ -24,11 +24,13 @@ class ServiceReadRepository implements IServiceReadRepository {
     private final IJdbcCaller jdbcCaller;
     private final SimpleJdbcCall getPageProc;
     private final SimpleJdbcCall getDetailsProc;
+    private final SimpleJdbcCall gerServicesToStatusCheck;
 
     ServiceReadRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
         this.jdbcCaller = jdbcCaller;
         this.getPageProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_get_page");
         this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_get_details");
+        this.gerServicesToStatusCheck = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_get_to_status_check");
     }
 
     @Override
@@ -53,5 +55,13 @@ class ServiceReadRepository implements IServiceReadRepository {
         getDetailsProc.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR));
         Map<String, Object> result = jdbcCaller.call(getDetailsProc, properties);
         return DbCaster.fromProperties(result, Service.class).stream().findFirst();
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.NOT_SUPPORTED)
+    public List<Service> getServicesToStatusCheck() {
+        this.gerServicesToStatusCheck.declareParameters(new SqlOutParameter(GENERAL_CURSOR_NAME, Types.REF_CURSOR));
+        Map<String, Object> result = jdbcCaller.call(this.gerServicesToStatusCheck, new HashMap<>());
+        return DbCaster.fromProperties(result, Service.class);
     }
 }

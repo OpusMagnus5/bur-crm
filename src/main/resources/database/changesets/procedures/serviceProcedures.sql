@@ -176,6 +176,32 @@ BEGIN
         SELECT srv_id, srv_bur_card_id
         FROM service
         WHERE srv_status = 'PUBLISHED'
-        AND srv_end_date <= current_date;
+        AND srv_end_date <= current_date
+        AND srv_bur_card_id IS NOT NULL
+        FOR UPDATE;
+
+END$$;
+
+DROP TYPE IF EXISTS service_status_data;
+CREATE TYPE service_status_data AS (_srv_id BIGINT, _srv_status VARCHAR);
+
+DROP PROCEDURE IF EXISTS service_update_status;
+/*PROCEDURE service_update_status*/
+CREATE OR REPLACE PROCEDURE service_update_status(
+    IN _service_status_data service_status_data[]
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    _status_data service_status_data;
+BEGIN
+
+    FOREACH _status_data IN ARRAY _service_status_data LOOP
+        UPDATE service
+        SET srv_status = _status_data._srv_status,
+            srv_version = srv_version + 1,
+            srv_modified_at = current_timestamp
+        WHERE srv_id = _status_data._srv_id;
+    END LOOP;
 
 END$$;

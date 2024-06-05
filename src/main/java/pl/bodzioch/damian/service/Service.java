@@ -1,6 +1,7 @@
 package pl.bodzioch.damian.service;
 
 import com.fasterxml.uuid.Generators;
+import pl.bodzioch.damian.client.bur.BurServiceDto;
 import pl.bodzioch.damian.coach.InnerCoach;
 import pl.bodzioch.damian.customer.InnerCustomer;
 import pl.bodzioch.damian.infrastructure.database.*;
@@ -99,18 +100,20 @@ record Service(
 				command.customerId(),
 				command.coachIds(),
 				command.intermediaryId(),
-				null,
-				null,
+				null, null,
 				command.createdBy(),
-				null,
-				null,
-				null,
-				null,
-				null,
-				null,
-				null,
-				null,
-				null
+				null, null, null, null, null, null, null,
+				null, null
+		);
+	}
+
+	Service(Service service, BurServiceDto burService) {
+		this(
+				service.id(), null, null, null, null, null, null, null,
+				null, null, ServiceStatus.of(burService.status()).name(),
+				null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null,
+				null, null
 		);
 	}
 }
