@@ -9,7 +9,6 @@ import pl.bodzioch.damian.infrastructure.database.IJdbcCaller;
 import pl.bodzioch.damian.value_object.PageQuery;
 import pl.bodzioch.damian.value_object.PageQueryResult;
 
-import javax.sql.DataSource;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
@@ -28,13 +27,13 @@ class ProviderReadRepository implements IProviderReadRepository {
     private final SimpleJdbcCall getAll;
     private final SimpleJdbcCall getByBurIdProc;
 
-    public ProviderReadRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
+    public ProviderReadRepository(IJdbcCaller jdbcCaller) {
         this.jdbcCaller = jdbcCaller;
-        this.getByNipProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_provider_get_by_nip");
-        this.getPageProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_provider_get_page");
-        this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_provider_get_details");
-        this.getAll = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_provider_get_all");
-        this.getByBurIdProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_provider_get_by_bur_id");
+        this.getByNipProc = jdbcCaller.buildSimpleJdbcCall("service_provider_get_by_nip");
+        this.getPageProc = jdbcCaller.buildSimpleJdbcCall("service_provider_get_page");
+        this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall("service_provider_get_details");
+        this.getAll = jdbcCaller.buildSimpleJdbcCall("service_provider_get_all");
+        this.getByBurIdProc = jdbcCaller.buildSimpleJdbcCall("service_provider_get_by_bur_id");
     }
 
     @Override

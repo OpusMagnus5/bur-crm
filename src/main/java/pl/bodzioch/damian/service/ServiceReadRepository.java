@@ -9,7 +9,6 @@ import pl.bodzioch.damian.infrastructure.database.IJdbcCaller;
 import pl.bodzioch.damian.value_object.PageQuery;
 import pl.bodzioch.damian.value_object.PageQueryResult;
 
-import javax.sql.DataSource;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
@@ -26,11 +25,11 @@ class ServiceReadRepository implements IServiceReadRepository {
     private final SimpleJdbcCall getDetailsProc;
     private final SimpleJdbcCall gerServicesToStatusCheck;
 
-    ServiceReadRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
+    ServiceReadRepository(IJdbcCaller jdbcCaller) {
         this.jdbcCaller = jdbcCaller;
-        this.getPageProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_get_page");
-        this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_get_details");
-        this.gerServicesToStatusCheck = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_get_to_status_check");
+        this.getPageProc = jdbcCaller.buildSimpleJdbcCall("service_get_page");
+        this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall("service_get_details");
+        this.gerServicesToStatusCheck = jdbcCaller.buildSimpleJdbcCall("service_get_to_status_check");
     }
 
     @Override

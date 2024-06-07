@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import pl.bodzioch.damian.infrastructure.database.DbCaster;
 import pl.bodzioch.damian.infrastructure.database.IJdbcCaller;
 
-import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,11 +17,11 @@ class ProviderWriteRepository implements IProviderWriteRepository {
     private final SimpleJdbcCall deleteProc;
     private final SimpleJdbcCall updateProc;
 
-    ProviderWriteRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
+    ProviderWriteRepository(IJdbcCaller jdbcCaller) {
         this.jdbcCaller = jdbcCaller;
-        this.createNewProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_provider_create_new");
-        this.deleteProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_provider_delete");
-        this.updateProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "service_provider_update");
+        this.createNewProc = jdbcCaller.buildSimpleJdbcCall("service_provider_create_new");
+        this.deleteProc = jdbcCaller.buildSimpleJdbcCall("service_provider_delete");
+        this.updateProc = jdbcCaller.buildSimpleJdbcCall("service_provider_update");
     }
 
     @Override

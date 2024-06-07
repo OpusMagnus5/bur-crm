@@ -1,5 +1,6 @@
 package pl.bodzioch.damian.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -49,7 +50,8 @@ class ServiceService implements IServiceService {
         }
     }
 
-    @Scheduled(cron = "0 0 22 * * *")
+    @Scheduled(cron = "0 32 * * * *")
+    @Transactional(Transactional.TxType.REQUIRED)
     public void synchronizeServicesStatus() {
         SynchronizeServicesStatusCommand command = new SynchronizeServicesStatusCommand();
         commandExecutor.execute(command);

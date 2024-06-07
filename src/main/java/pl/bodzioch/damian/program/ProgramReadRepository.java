@@ -9,7 +9,6 @@ import pl.bodzioch.damian.infrastructure.database.IJdbcCaller;
 import pl.bodzioch.damian.value_object.PageQuery;
 import pl.bodzioch.damian.value_object.PageQueryResult;
 
-import javax.sql.DataSource;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
@@ -27,12 +26,12 @@ class ProgramReadRepository implements IProgramReadRepository {
     private final SimpleJdbcCall getDetailsProc;
     private final SimpleJdbcCall getAllProc;
 
-    public ProgramReadRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
+    public ProgramReadRepository(IJdbcCaller jdbcCaller) {
         this.jdbcCaller = jdbcCaller;
-        this.getPageProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "program_get_page");
-        this.getByNameProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "program_get_by_name_and_operator_id");
-        this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "program_get_details");
-        this.getAllProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "program_get_all");
+        this.getPageProc = jdbcCaller.buildSimpleJdbcCall("program_get_page");
+        this.getByNameProc = jdbcCaller.buildSimpleJdbcCall("program_get_by_name_and_operator_id");
+        this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall("program_get_details");
+        this.getAllProc = jdbcCaller.buildSimpleJdbcCall("program_get_all");
     }
 
     @Override

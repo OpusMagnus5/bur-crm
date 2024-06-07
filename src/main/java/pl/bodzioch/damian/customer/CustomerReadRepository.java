@@ -9,7 +9,6 @@ import pl.bodzioch.damian.infrastructure.database.IJdbcCaller;
 import pl.bodzioch.damian.value_object.PageQuery;
 import pl.bodzioch.damian.value_object.PageQueryResult;
 
-import javax.sql.DataSource;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
@@ -27,12 +26,12 @@ class CustomerReadRepository implements ICustomerReadRepository {
     private final SimpleJdbcCall getDetailsProc;
     private final SimpleJdbcCall getAllProc;
 
-    CustomerReadRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
+    CustomerReadRepository(IJdbcCaller jdbcCaller) {
         this.jdbcCaller = jdbcCaller;
-        this.getByNipProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "customer_get_by_nip");
-        this.getPageProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "customer_get_page");
-        this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "customer_get_details");
-        this.getAllProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "customer_get_all");
+        this.getByNipProc = jdbcCaller.buildSimpleJdbcCall("customer_get_by_nip");
+        this.getPageProc = jdbcCaller.buildSimpleJdbcCall("customer_get_page");
+        this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall("customer_get_details");
+        this.getAllProc = jdbcCaller.buildSimpleJdbcCall("customer_get_all");
     }
 
     @Override

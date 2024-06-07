@@ -18,6 +18,7 @@ import java.util.concurrent.Executors;
 class SynchronizeServicesStatusCommandHandler implements CommandHandler<SynchronizeServicesStatusCommand, SynchronizeServicesStatusCommandResult> {
 
     private final IServiceReadRepository readRepository;
+    private final IServiceWriteRepository writeRepository;
     private final IBurClient burClient;
 
     @Override
@@ -38,7 +39,8 @@ class SynchronizeServicesStatusCommandHandler implements CommandHandler<Synchron
                     .map(item -> new AbstractMap.SimpleImmutableEntry<>(item.getKey(), item.getValue().join()))
                     .map(item -> new Service(item.getKey(), item.getValue()))
                     .toList();
-            //TODO
+            writeRepository.updateStatus(synchronizedServices);
         }
+        return new SynchronizeServicesStatusCommandResult();
     }
 }

@@ -1,7 +1,10 @@
 package pl.bodzioch.damian.infrastructure.database;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.postgresql.util.PSQLException;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.UncategorizedSQLException;
@@ -18,13 +21,18 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Repository
+@RequiredArgsConstructor
 class JdbcCaller implements IJdbcCaller {
 
     private static final String OPTIMISTIC_LOCKING_SQL_STATE = "55000";
     private static final String FOREIGN_KEY_VIOLATION_SQL_STATE = "23503";
+    private final Map<CustomType, List<String>> customTypes = new ConcurrentHashMap<>();
+
+    private final DataSource dataSource;
 
     @Override
     public Map<String, Object> call(SimpleJdbcCall procedure, Map<String, Object> properties) {
@@ -54,7 +62,7 @@ class JdbcCaller implements IJdbcCaller {
     }
 
     @Override
-    public SimpleJdbcCall buildSimpleJdbcCall(DataSource dataSource, String procedure) {
+    public SimpleJdbcCall buildSimpleJdbcCall(String procedure) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.setResultsMapCaseInsensitive(true);
         return new SimpleJdbcCall(jdbcTemplate).withProcedureName(procedure);
@@ -67,6 +75,11 @@ class JdbcCaller implements IJdbcCaller {
         properties.put("_max", pageQuery.getMaxResult());
         properties.putAll(pageQuery.filtersToDbProperties());
         return properties;
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    private void setCustomTypesDefinition() {
+
     }
 
     private void handleUncategorizedSQLException(UncategorizedSQLException e) {

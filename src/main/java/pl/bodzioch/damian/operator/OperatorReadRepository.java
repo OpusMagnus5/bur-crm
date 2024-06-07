@@ -9,7 +9,6 @@ import pl.bodzioch.damian.infrastructure.database.IJdbcCaller;
 import pl.bodzioch.damian.value_object.PageQuery;
 import pl.bodzioch.damian.value_object.PageQueryResult;
 
-import javax.sql.DataSource;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
@@ -27,12 +26,12 @@ class OperatorReadRepository implements IOperatorReadRepository {
     private final SimpleJdbcCall getDetailsProc;
     private final SimpleJdbcCall getAllProc;
 
-    public OperatorReadRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
+    public OperatorReadRepository(IJdbcCaller jdbcCaller) {
         this.jdbcCaller = jdbcCaller;
-        this.getByNameProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "operator_get_by_name");
-        this.getPageProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "operator_get_page");
-        this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "operator_get_details");
-        this.getAllProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "operator_get_all");
+        this.getByNameProc = jdbcCaller.buildSimpleJdbcCall("operator_get_by_name");
+        this.getPageProc = jdbcCaller.buildSimpleJdbcCall("operator_get_page");
+        this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall("operator_get_details");
+        this.getAllProc = jdbcCaller.buildSimpleJdbcCall("operator_get_all");
 
     }
 

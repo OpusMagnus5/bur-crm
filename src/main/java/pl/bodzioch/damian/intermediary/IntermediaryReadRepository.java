@@ -9,7 +9,6 @@ import pl.bodzioch.damian.infrastructure.database.IJdbcCaller;
 import pl.bodzioch.damian.value_object.PageQuery;
 import pl.bodzioch.damian.value_object.PageQueryResult;
 
-import javax.sql.DataSource;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
@@ -27,12 +26,12 @@ class IntermediaryReadRepository implements IIntermediaryReadRepository {
     private final SimpleJdbcCall getDetailsProc;
     private final SimpleJdbcCall getAllProc;
 
-    IntermediaryReadRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
+    IntermediaryReadRepository(IJdbcCaller jdbcCaller) {
         this.jdbcCaller = jdbcCaller;
-        this.getByNipProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "intermediary_get_by_nip");
-        this.getPageProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "intermediary_get_page");
-        this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "intermediary_get_details");
-        this.getAllProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "intermediary_get_all");
+        this.getByNipProc = jdbcCaller.buildSimpleJdbcCall("intermediary_get_by_nip");
+        this.getPageProc = jdbcCaller.buildSimpleJdbcCall("intermediary_get_page");
+        this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall("intermediary_get_details");
+        this.getAllProc = jdbcCaller.buildSimpleJdbcCall("intermediary_get_all");
     }
 
     @Override

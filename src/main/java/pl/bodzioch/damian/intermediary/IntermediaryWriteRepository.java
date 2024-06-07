@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import pl.bodzioch.damian.infrastructure.database.DbCaster;
 import pl.bodzioch.damian.infrastructure.database.IJdbcCaller;
 
-import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,11 +17,11 @@ class IntermediaryWriteRepository implements IIntermediaryWriteRepository {
     private final SimpleJdbcCall deleteProc;
     private final SimpleJdbcCall updateProc;
 
-    IntermediaryWriteRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
+    IntermediaryWriteRepository(IJdbcCaller jdbcCaller) {
         this.jdbcCaller = jdbcCaller;
-        this.createNewProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "intermediary_create_new");
-        this.deleteProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "intermediary_delete");
-        this.updateProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "intermediary_update");
+        this.createNewProc = jdbcCaller.buildSimpleJdbcCall("intermediary_create_new");
+        this.deleteProc = jdbcCaller.buildSimpleJdbcCall("intermediary_delete");
+        this.updateProc = jdbcCaller.buildSimpleJdbcCall("intermediary_update");
 
     }
 

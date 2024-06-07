@@ -9,7 +9,6 @@ import pl.bodzioch.damian.infrastructure.database.IJdbcCaller;
 import pl.bodzioch.damian.value_object.PageQuery;
 import pl.bodzioch.damian.value_object.PageQueryResult;
 
-import javax.sql.DataSource;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
@@ -26,11 +25,11 @@ class UserReadRepository implements IUserReadRepository {
     private final SimpleJdbcCall getPageOfUsersProc;
     private final SimpleJdbcCall getDetailsProc;
 
-    UserReadRepository(DataSource dataSource, IJdbcCaller jdbcCaller) {
+    UserReadRepository(IJdbcCaller jdbcCaller) {
         this.jdbcCaller = jdbcCaller;
-        this.getByEmailProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "users_get_by_email");
-        this.getPageOfUsersProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "users_get_page_of_users");
-        this.getDetailsProc  = jdbcCaller.buildSimpleJdbcCall(dataSource, "users_get_details");
+        this.getByEmailProc = jdbcCaller.buildSimpleJdbcCall("users_get_by_email");
+        this.getPageOfUsersProc = jdbcCaller.buildSimpleJdbcCall("users_get_page_of_users");
+        this.getDetailsProc  = jdbcCaller.buildSimpleJdbcCall("users_get_details");
     }
 
     @Override

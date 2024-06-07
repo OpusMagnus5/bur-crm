@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import pl.bodzioch.damian.infrastructure.database.DbCaster;
 import pl.bodzioch.damian.infrastructure.database.IJdbcCaller;
 
-import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,10 +16,10 @@ class UserWriteRepository implements IUserWriteRepository {
     private final SimpleJdbcCall createNewProc;
     private final SimpleJdbcCall deleteProc;
 
-    UserWriteRepository(DataSource dataSource, IJdbcCaller jdbcCaller) {
+    UserWriteRepository(IJdbcCaller jdbcCaller) {
         this.jdbcCaller = jdbcCaller;
-        this.createNewProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "users_create_new");
-        this.deleteProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "users_delete");
+        this.createNewProc = jdbcCaller.buildSimpleJdbcCall("users_create_new");
+        this.deleteProc = jdbcCaller.buildSimpleJdbcCall("users_delete");
     }
 
     @Override

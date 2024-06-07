@@ -9,7 +9,6 @@ import pl.bodzioch.damian.infrastructure.database.IJdbcCaller;
 import pl.bodzioch.damian.value_object.PageQuery;
 import pl.bodzioch.damian.value_object.PageQueryResult;
 
-import javax.sql.DataSource;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
@@ -27,12 +26,12 @@ class CoachReadRepository implements ICoachReadRepository {
     private final SimpleJdbcCall getDetailsProc;
     private final SimpleJdbcCall getAllProc;
 
-    CoachReadRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
+    CoachReadRepository(IJdbcCaller jdbcCaller) {
         this.jdbcCaller = jdbcCaller;
-        this.getByPeselProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "coach_get_by_nip");
-        this.getPageProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "coach_get_page");
-        this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "coach_get_details");
-        this.getAllProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "coach_get_all");
+        this.getByPeselProc = jdbcCaller.buildSimpleJdbcCall( "coach_get_by_nip");
+        this.getPageProc = jdbcCaller.buildSimpleJdbcCall("coach_get_page");
+        this.getDetailsProc = jdbcCaller.buildSimpleJdbcCall("coach_get_details");
+        this.getAllProc = jdbcCaller.buildSimpleJdbcCall("coach_get_all");
     }
 
     @Override

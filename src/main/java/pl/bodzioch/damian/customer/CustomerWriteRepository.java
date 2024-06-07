@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import pl.bodzioch.damian.infrastructure.database.DbCaster;
 import pl.bodzioch.damian.infrastructure.database.IJdbcCaller;
 
-import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,11 +17,11 @@ class CustomerWriteRepository implements ICustomerWriteRepository {
     private final SimpleJdbcCall deleteProc;
     private final SimpleJdbcCall updateProc;
 
-    CustomerWriteRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
+    CustomerWriteRepository(IJdbcCaller jdbcCaller) {
         this.jdbcCaller = jdbcCaller;
-        this.createNewProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "customer_create_new");
-        this.deleteProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "customer_delete");
-        this.updateProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "customer_update");
+        this.createNewProc = jdbcCaller.buildSimpleJdbcCall("customer_create_new");
+        this.deleteProc = jdbcCaller.buildSimpleJdbcCall("customer_delete");
+        this.updateProc = jdbcCaller.buildSimpleJdbcCall("customer_update");
 
     }
 

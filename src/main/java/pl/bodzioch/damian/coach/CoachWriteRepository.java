@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import pl.bodzioch.damian.infrastructure.database.DbCaster;
 import pl.bodzioch.damian.infrastructure.database.IJdbcCaller;
 
-import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,11 +17,11 @@ class CoachWriteRepository implements ICoachWriteRepository {
     private final SimpleJdbcCall deleteProc;
     private final SimpleJdbcCall updateProc;
 
-    CoachWriteRepository(IJdbcCaller jdbcCaller, DataSource dataSource) {
+    CoachWriteRepository(IJdbcCaller jdbcCaller) {
         this.jdbcCaller = jdbcCaller;
-        this.createNewProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "coach_create_new");
-        this.deleteProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "coach_delete");
-        this.updateProc = jdbcCaller.buildSimpleJdbcCall(dataSource, "coach_update");
+        this.createNewProc = jdbcCaller.buildSimpleJdbcCall("coach_create_new");
+        this.deleteProc = jdbcCaller.buildSimpleJdbcCall("coach_delete");
+        this.updateProc = jdbcCaller.buildSimpleJdbcCall("coach_update");
     }
 
     @Override
