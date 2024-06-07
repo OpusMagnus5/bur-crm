@@ -30,12 +30,12 @@ public class DbCaster {
             String idColumnName = getIdColumnName(fields);
 
             List<T> entities = new ArrayList<>();
-            Set<Long> entityIds = new HashSet<>();
+            Set<Object> entityIds = new HashSet<>();
 
             Iterator<Map<String, Object>> iterator = records.iterator();
             while (iterator.hasNext()) {
                 Map<String, Object> record = iterator.next();
-                Long id = (Long) record.get(idColumnName);
+                Object id = record.get(idColumnName);
                 if (!entityIds.add(id)) {
                     iterator.remove();
                     continue;
@@ -68,6 +68,77 @@ public class DbCaster {
             properties.put(key, value);
         }
         return properties;
+    }
+
+    public static String toArrayOfCustomTypes(List<String> params, List<?> objects) {
+        try {
+            StringBuilder builder = new StringBuilder("{\"");
+
+            for(int i = 0; i < objects.size(); i++) {
+                Object object = objects.get(i);
+                writeStartObjectTag(i, builder);
+
+                for(int j = 0; j < params.size(); j++) {
+                    writeParamsSplitter(j, builder);
+                    String finalParam = getCustomTypeParamName(params, j);
+                    Field field = getFieldOfDbCasterName(object, finalParam);
+                    field.setAccessible(true);
+                    Object fieldValue = field.get(object);
+                    writeValue(fieldValue, builder);
+                }
+
+                writeEndObjectTag(builder);
+            }
+            builder.append("}");
+            return builder.toString();
+        } catch (IllegalAccessException e) {
+            log.error("Error while making array of custom types", e);
+            throw new DbCasterException("Error while making array of custom types", e);
+        }
+    }
+
+    private static void writeStartObjectTag(int i, StringBuilder builder) {
+        if (i == 0) {
+            builder.append("(");
+        } else {
+            builder.append(",\"(");
+        }
+    }
+
+    private static void writeParamsSplitter(int j, StringBuilder builder) {
+        if (j != 0) {
+            builder.append(",");
+        }
+    }
+
+    private static String getCustomTypeParamName(List<String> params, int j) {
+        String param = params.get(j);
+        if (param.startsWith(PROPERTIES_PREFIX))
+            param = param.substring(1);
+        return param;
+    }
+
+    private static Field getFieldOfDbCasterName(Object object, String finalParam) {
+        return Arrays.stream(object.getClass().getDeclaredFields())
+                .filter(item -> item.isAnnotationPresent(DbColumn.class))
+                .filter(item -> item.getDeclaredAnnotation(DbColumn.class).name().equals(finalParam))
+                .findAny()
+                .orElseThrow(() -> new DbCasterException("There should be field with @DbColumn name = " + finalParam));
+    }
+
+    private static void writeEndObjectTag(StringBuilder builder) {
+        builder.append(")\"");
+    }
+
+    private static void writeValue(Object fieldValue, StringBuilder builder) {
+        if (fieldValue instanceof String) {
+            builder.append("\\\"");
+            builder.append(fieldValue);
+            builder.append("\\\"");
+        } else if (fieldValue == null) {
+        } else {
+            builder.append(fieldValue);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -128,6 +199,9 @@ public class DbCaster {
     @SuppressWarnings("rawtypes")
     private static Object toPrimitiveObjectList(Field field, Object object, Type[] typeArguments) throws IllegalAccessException {
         List list = (List) field.get(object);
+        if (list == null) {
+            return Array.newInstance((Class<?>) typeArguments[0], 0);
+        }
         int size = list.size();
         Object array = Array.newInstance((Class<?>) typeArguments[0], size);
         for (int i = 0; i < size; i++) {
@@ -167,13 +241,13 @@ public class DbCaster {
         String innerPrefix = getInnerPrefix(prefix, dbOneToMany);
         Class<Object> listType = (Class<Object>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
         String typeIdColumnName = getIdColumnName(listType.getDeclaredFields());
-        Long parentId = (Long) record.get(idColumnName);
-        Set<Long> ids = new HashSet<>();
+        Object parentId = record.get(idColumnName);
+        Set<Object> ids = new HashSet<>();
 
         List<Map<String, Object>> filteredRecords = records.stream()
                 .filter(el -> parentId.equals(record.get(idColumnName)))
                 .filter(el -> {
-                    Long id = (Long) el.get(innerPrefix + PROPERTIES_PREFIX + typeIdColumnName);
+                    Object id = el.get(innerPrefix + PROPERTIES_PREFIX + typeIdColumnName);
                     return ids.add(id);
                 })
                 .toList();
@@ -251,7 +325,7 @@ public class DbCaster {
         return castSimpleObject(parameter, field, records, idColumnName, record, columnName);
     }
 
-    public static String enumsToDb(List<? extends Enum<?>> enums) {
+    private static String enumsToDb(List<? extends Enum<?>> enums) {
         return enums.stream()
                 .map(Enum::name)
                 .collect(Collectors.joining(";"));
@@ -294,7 +368,9 @@ public class DbCaster {
     @SuppressWarnings({"rawtypes", "unchecked"})
     private static <T extends Enum> T toEnum(Class<T> clazz, Object dbEnums) {
         String enums = castOrNull(String.class, dbEnums);
-        enums = enums == null ? "" : enums;
+        if (enums == null) {
+            return null;
+        }
         return (T) Enum.valueOf(clazz, enums);
     }
 
@@ -363,7 +439,7 @@ public class DbCaster {
             Map<String, Object> record,
             String columnName
     ) {
-        Long parentId = (Long) record.get(idColumnName);
+        Object parentId = record.get(idColumnName);
 
         return records.stream()
                 .filter(el -> parentId.equals(el.get(idColumnName)))

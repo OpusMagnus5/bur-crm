@@ -1,6 +1,15 @@
 package pl.bodzioch.damian.infrastructure.database;
 
-public enum CustomType {
+import java.util.List;
 
-    SERVICE_STATUS_DATA
+record CustomType(
+        @DbId
+        @DbColumn(name = "name")
+        String typeName,
+        @DbColumn(name = "attribute_name")
+        List<String> attributeNames
+) {
+    @DbConstructor
+    CustomType {
+    }
 }

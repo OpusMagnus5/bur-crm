@@ -1,6 +1,5 @@
 package pl.bodzioch.damian.infrastructure.database;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.postgresql.util.PSQLException;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -10,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StopWatch;
 import pl.bodzioch.damian.exception.AppException;
@@ -17,22 +17,25 @@ import pl.bodzioch.damian.value_object.ErrorData;
 import pl.bodzioch.damian.value_object.PageQuery;
 
 import javax.sql.DataSource;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Repository
-@RequiredArgsConstructor
 class JdbcCaller implements IJdbcCaller {
 
     private static final String OPTIMISTIC_LOCKING_SQL_STATE = "55000";
     private static final String FOREIGN_KEY_VIOLATION_SQL_STATE = "23503";
-    private final Map<CustomType, List<String>> customTypes = new ConcurrentHashMap<>();
+    private final Map<CustomTypes, List<String>> customTypes = new ConcurrentHashMap<>();
 
     private final DataSource dataSource;
+    private final SimpleJdbcCall getCustomTypesAttributesProc;
+
+    JdbcCaller(DataSource dataSource) {
+        this.dataSource = dataSource;
+        this.getCustomTypesAttributesProc = buildSimpleJdbcCall("util_get_custom_types_attributes");
+    }
 
     @Override
     public Map<String, Object> call(SimpleJdbcCall procedure, Map<String, Object> properties) {
@@ -49,8 +52,7 @@ class JdbcCaller implements IJdbcCaller {
             handleUncategorizedSQLException(e);
         } catch (DataIntegrityViolationException e) {
             handleDataIntegrityViolationException(e);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("Error occurred while calling procedure.", e);
             throw e;
         } finally {
@@ -63,7 +65,7 @@ class JdbcCaller implements IJdbcCaller {
 
     @Override
     public SimpleJdbcCall buildSimpleJdbcCall(String procedure) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(this.dataSource);
         jdbcTemplate.setResultsMapCaseInsensitive(true);
         return new SimpleJdbcCall(jdbcTemplate).withProcedureName(procedure);
     }
@@ -77,9 +79,22 @@ class JdbcCaller implements IJdbcCaller {
         return properties;
     }
 
-    @EventListener(ApplicationReadyEvent.class)
-    private void setCustomTypesDefinition() {
+    @Override
+    public String getArrayCustomTypesParameter(CustomTypes customType, List<?> objects) {
+        return DbCaster.toArrayOfCustomTypes(this.customTypes.get(customType), objects);
+    }
 
+    @Async
+    @EventListener(ApplicationReadyEvent.class)
+    @Override
+    public void setCustomTypesDefinition() {
+        String[] customTypeNames = Arrays.stream(CustomTypes.values()).map(Enum::name).map(String::toLowerCase).toArray(String[]::new);
+        Map<String, Object> parameters = Map.of("_custom_types", customTypeNames);
+        Map<String, Object> result = call(this.getCustomTypesAttributesProc, parameters);
+        List<CustomType> customTypes = DbCaster.fromProperties(result, CustomType.class);
+        Map<CustomTypes, List<String>> typesMap = customTypes.stream()
+                .collect(Collectors.toMap(item -> CustomTypes.valueOf(item.typeName().toUpperCase()), CustomType::attributeNames));
+        this.customTypes.putAll(typesMap);
     }
 
     private void handleUncategorizedSQLException(UncategorizedSQLException e) {

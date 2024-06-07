@@ -50,7 +50,7 @@ class ServiceService implements IServiceService {
         }
     }
 
-    @Scheduled(cron = "0 32 * * * *")
+    @Scheduled(cron = "0 0 23 * * *")
     @Transactional(Transactional.TxType.REQUIRED)
     public void synchronizeServicesStatus() {
         SynchronizeServicesStatusCommand command = new SynchronizeServicesStatusCommand();

@@ -11,6 +11,8 @@ import java.sql.Types;
 import java.util.List;
 import java.util.Map;
 
+import static pl.bodzioch.damian.infrastructure.database.CustomTypes.SERVICE_STATUS_DATA;
+
 @Repository
 class ServiceWriteRepository implements IServiceWriteRepository {
 
@@ -34,8 +36,9 @@ class ServiceWriteRepository implements IServiceWriteRepository {
 	@Override
 	@Transactional(Transactional.TxType.REQUIRED)
 	public void updateStatus(List<Service> services) {
-		Map<String, Object> properties = Map.of("_service_status_data", "{\"(1,CACY)\",\"(3,CACY)\"}");
-		this.updateStatus.declareParameters(new SqlParameter("_service_status_data", Types.OTHER));
+		String customTypesParameter = jdbcCaller.getArrayCustomTypesParameter(SERVICE_STATUS_DATA, services);
+		Map<String, Object> properties = Map.of(SERVICE_STATUS_DATA.asParamName(), customTypesParameter);
+		this.updateStatus.declareParameters(new SqlParameter(SERVICE_STATUS_DATA.asParamName(), Types.OTHER));
 		this.jdbcCaller.call(this.updateStatus, properties);
 	}
 }

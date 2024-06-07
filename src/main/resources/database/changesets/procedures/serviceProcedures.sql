@@ -182,10 +182,9 @@ BEGIN
 
 END$$;
 
+DROP PROCEDURE IF EXISTS service_update_status;
 DROP TYPE IF EXISTS service_status_data;
 CREATE TYPE service_status_data AS (_srv_id BIGINT, _srv_status VARCHAR);
-
-DROP PROCEDURE IF EXISTS service_update_status;
 /*PROCEDURE service_update_status*/
 CREATE OR REPLACE PROCEDURE service_update_status(
     IN _service_status_data service_status_data[]
