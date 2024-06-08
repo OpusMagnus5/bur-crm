@@ -42,7 +42,9 @@ public record ServiceDto(
         InnerServiceProviderDto serviceProvider,
         InnerProgramDto program,
         InnerIntermediaryDto intermediary,
-        List<InnerCoachDto> coaches
+        List<InnerCoachDto> coaches,
+
+        List<BadgeMessageType> badgeMessages
 ) {
 
     ServiceDto(Service service) {
@@ -76,7 +78,8 @@ public record ServiceDto(
                 new InnerIntermediaryDto(service.intermediary()),
                 service.coaches().stream()
                         .map(InnerCoachDto::new)
-                        .toList()
+                        .toList(),
+                service.getBadgeMessages()
         );
     }
 }

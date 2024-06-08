@@ -6,6 +6,7 @@ import pl.bodzioch.damian.utils.MessageResolver;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 public record ServiceData(
         String id,
@@ -16,7 +17,8 @@ public record ServiceData(
         LocalDate endDate,
         OperatorData operator,
         CustomerData customer,
-        ServiceProviderData serviceProvider
+        ServiceProviderData serviceProvider,
+        List<BadgeMessageData> badgeMessages
 ) implements Serializable {
 
     public ServiceData(ServiceDto serviceDto, CipherComponent cipher, MessageResolver messageResolver) {
@@ -29,7 +31,10 @@ public record ServiceData(
                 serviceDto.endDate(),
                 new OperatorData(serviceDto.operator(), cipher),
                 new CustomerData(serviceDto.customer(), cipher),
-                new ServiceProviderData(serviceDto.serviceProvider(), cipher)
+                new ServiceProviderData(serviceDto.serviceProvider(), cipher),
+                serviceDto.badgeMessages().stream()
+                        .map(item -> new BadgeMessageData(item, messageResolver))
+                        .toList()
         );
     }
 }

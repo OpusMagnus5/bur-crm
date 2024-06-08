@@ -14,8 +14,12 @@ import pl.bodzioch.damian.user.InnerUser;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static pl.bodzioch.damian.service.BadgeMessageType.NOT_COMPLETE_SERVICE;
+import static pl.bodzioch.damian.service.ServiceStatus.PUBLISHED;
 
 //TODO general error handling on front which logging on db
 record Service(
@@ -115,5 +119,17 @@ record Service(
 				null, null, null, null, null, null, null, null,
 				null, null
 		);
+	}
+
+	List<BadgeMessageType> getBadgeMessages() {
+		ArrayList<BadgeMessageType> messages = new ArrayList<>();
+		if (hasNotCompleteStatusInBurAfterEndDate()) {
+			messages.add(NOT_COMPLETE_SERVICE);
+		}
+		return messages;
+	}
+
+	private boolean hasNotCompleteStatusInBurAfterEndDate() {
+		return this.status == PUBLISHED && LocalDate.now().isAfter(this.endDate);
 	}
 }

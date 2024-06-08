@@ -16,6 +16,11 @@ export interface ServiceStatusData {
   name: string
 }
 
+export interface BadgeMessageData {
+  type: string,
+  message: string
+}
+
 export interface GetAllServiceTypesResponse {
   serviceTypes: ServiceTypeData[]
 }
@@ -60,7 +65,8 @@ export interface ServiceData {
   endDate: Date,
   operator: OperatorDataInterface,
   customer: CustomerData,
-  serviceProvider: ServiceProviderDataInterface
+  serviceProvider: ServiceProviderDataInterface,
+  badgeMessages: BadgeMessageData[]
 }
 
 export interface ServicePageResponse {

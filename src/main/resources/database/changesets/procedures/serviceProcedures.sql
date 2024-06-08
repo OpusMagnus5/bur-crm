@@ -178,7 +178,7 @@ BEGIN
         SELECT srv_id, srv_bur_card_id
         FROM service
         WHERE srv_status = 'PUBLISHED'
-        AND srv_end_date <= current_date
+        AND srv_end_date < current_date
         AND srv_bur_card_id IS NOT NULL
         FOR UPDATE;
 
