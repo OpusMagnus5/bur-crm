@@ -180,7 +180,7 @@ class CreateOrUpdateServiceCommandHandler implements CommandHandler<CreateOrUpda
 				"Service with bur number: " + number + " and client id: " + customerId.toString() + " already exists",
 				HttpStatus.BAD_REQUEST,
 				List.of(new ErrorData(
-						"error.client.operator.serviceAlreadyExists",
+                        "error.client.service.serviceAlreadyExists",
 						List.of(number)
 				))
 		);

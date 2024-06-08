@@ -5,8 +5,6 @@ CREATE TABLE document(
     doc_service_id BIGINT NOT NULL REFERENCES service(srv_id),
     doc_coach_id BIGINT REFERENCES coach(coa_id),
     doc_type VARCHAR NOT NULL,
-    doc_file_name VARCHAR NOT NULL,
-    doc_file_path VARCHAR NOT NULL,
     doc_file_extension VARCHAR NOT NULL,
     doc_created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
     doc_modified_at TIMESTAMP WITH TIME ZONE,
