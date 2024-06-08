@@ -9,8 +9,7 @@ import {
   ViewChild,
   WritableSignal
 } from '@angular/core';
-import {MatPaginator, MatPaginatorIntl, PageEvent} from "@angular/material/paginator";
-import {PaginatorLocalizerService} from "../shared/service/paginator-localizer.service";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {debounceTime, fromEvent, Subject} from "rxjs";
 import {TranslateModule} from "@ngx-translate/core";
 import {OperatorHttpService} from "./service/operator-http.service";
@@ -70,9 +69,6 @@ import {DeleteRecordConfirmationComponent} from "../shared/component/delete-reco
     MatInput,
     MatLabel,
     FormsModule
-  ],
-  providers: [
-    { provide: MatPaginatorIntl, useClass: PaginatorLocalizerService }
   ],
   templateUrl: './operator-list.component.html',
   styleUrl: './operator-list.component.css'

@@ -12,7 +12,7 @@ import {
   MatRowDef,
   MatTable
 } from "@angular/material/table";
-import {MatPaginatorIntl, MatPaginatorModule, PageEvent} from "@angular/material/paginator";
+import {MatPaginatorModule, PageEvent} from "@angular/material/paginator";
 import {TranslateModule} from "@ngx-translate/core";
 import {UserListDataSource} from "./service/user-list.data-source";
 import {UserHttpService} from "./service/user-http.service";
@@ -24,7 +24,6 @@ import {MatDialog} from "@angular/material/dialog";
 import {UserDetailsComponent} from "./user-details.component";
 import {Subject} from "rxjs";
 import {UserListResponseInterface} from "./model/user-list-response.interface";
-import {PaginatorLocalizerService} from "../shared/service/paginator-localizer.service";
 import {SnackbarService} from "../shared/service/snackbar.service";
 import {SubscriptionManager} from "../shared/util/subscription-manager";
 import {DeleteRecordConfirmationComponent} from "../shared/component/delete-record-confirmation.component";
@@ -51,9 +50,6 @@ import {DeleteRecordConfirmationComponent} from "../shared/component/delete-reco
     MatMenu,
     MatMenuItem,
     MatNoDataRow,
-  ],
-  providers: [
-    { provide: MatPaginatorIntl, useClass: PaginatorLocalizerService },
   ],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.css'

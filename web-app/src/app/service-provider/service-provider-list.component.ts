@@ -16,7 +16,7 @@ import {ServiceProviderListDataSource} from "./model/service-provider-list-data-
 import {Subject} from "rxjs";
 import {ServiceProviderListResponseInterface} from "./model/service-provider-list-response.interface";
 import {ServiceProviderHttpService} from "./service/service-provider-http.service";
-import {MatPaginatorIntl, MatPaginatorModule, PageEvent} from "@angular/material/paginator";
+import {MatPaginatorModule, PageEvent} from "@angular/material/paginator";
 import {TranslateModule} from "@ngx-translate/core";
 import {MatIcon} from "@angular/material/icon";
 import {MatIconButton} from "@angular/material/button";
@@ -25,7 +25,6 @@ import {MatDialog} from "@angular/material/dialog";
 import {ServiceProviderDetailsComponent} from "./service-provider-details.component";
 import {ServiceProviderDataInterface} from "./model/service-provider-data.interface";
 import {UpdateServiceProviderComponent} from "./update-service-provider.component";
-import {PaginatorLocalizerService} from "../shared/service/paginator-localizer.service";
 import {SnackbarService} from "../shared/service/snackbar.service";
 import {DeleteRecordConfirmationComponent} from "../shared/component/delete-record-confirmation.component";
 import {SubscriptionManager} from "../shared/util/subscription-manager";
@@ -52,9 +51,6 @@ import {SubscriptionManager} from "../shared/util/subscription-manager";
     MatMenuTrigger,
     MatNoDataRow,
     MatPaginatorModule
-  ],
-  providers: [
-    { provide: MatPaginatorIntl, useClass: PaginatorLocalizerService }
   ],
   templateUrl: './service-provider-list.component.html',
   styleUrl: './service-provider-list.component.css'

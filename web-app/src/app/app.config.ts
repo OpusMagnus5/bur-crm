@@ -12,6 +12,8 @@ import localeEn from '@angular/common/locales/en'
 import {httpInterceptors} from "./shared/interceptor/http-interceptors";
 import {DateAdapter, MAT_DATE_FORMATS} from "@angular/material/core";
 import {CustomDateAdapterService, matDateFormats} from "./shared/service/custom-date-adapter.service";
+import {MatPaginatorIntl} from "@angular/material/paginator";
+import {PaginatorLocalizerService} from "./shared/service/paginator-localizer.service";
 
 registerLocaleData(localePl, 'pl');
 registerLocaleData(localeEn, 'en');
@@ -37,6 +39,7 @@ export const appConfig: ApplicationConfig = {
     ),
     httpInterceptors,
     { provide: DateAdapter, useClass: CustomDateAdapterService },
-    { provide: MAT_DATE_FORMATS, useValue: matDateFormats }
+    { provide: MAT_DATE_FORMATS, useValue: matDateFormats },
+    { provide: MatPaginatorIntl, useClass: PaginatorLocalizerService }
   ]
 };
