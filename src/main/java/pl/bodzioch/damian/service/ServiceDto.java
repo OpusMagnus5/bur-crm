@@ -33,6 +33,7 @@ public record ServiceDto(
         LocalDateTime modifiedAt,
         Long createdBy,
         Long modifiedBy,
+        ServiceStatus status,
 
         InnerUserDto creator,
         InnerUserDto modifier,
@@ -65,6 +66,7 @@ public record ServiceDto(
                 service.modifiedAt(),
                 service.createdBy(),
                 service.modifiedBy(),
+                service.status(),
                 new InnerUserDto(service.creator()),
                 new InnerUserDto(service.modifier()),
                 new InnerOperatorDto(service.operator()),

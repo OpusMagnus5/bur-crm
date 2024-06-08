@@ -186,6 +186,26 @@
           </mat-autocomplete>
         </mat-form-field>
       </div>
+      <div class="w-full">
+        <mat-form-field class="w-full">
+          <mat-label>{{ 'new-service.status-input-label' | translate }}</mat-label>
+          <input type="text"
+                 matInput
+                 [formControl]="statusControl"
+                 [matAutocomplete]="statusAutocomplete"
+                 (keyup)="onStatusChange($event)">
+          @if (statusControl.invalid) {
+            <mat-error>{{ getValidationMessage('status', statusControl) }}</mat-error>
+          }
+          <mat-autocomplete #statusAutocomplete="matAutocomplete"
+                            [displayWith]="displayStatusName"
+                            (optionSelected)="onStatusSelected($event)">
+            @for (status of filteredStatuses(); track status) {
+              <mat-option [value]="status">{{ status.name }}</mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
     </div>
     <div class="flex justify-end">
       <button class="w-24 self-end"

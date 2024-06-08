@@ -428,6 +428,7 @@
     "customers-input-label": "Klient",
     "intermediaries-input-label": "Pośrednik",
     "coaches-input-label": "Trenerzy",
+    "status-input-label": "Status",
     "validation": {
       "number": {
         "required": "Pole numer usługi nie może być puste",
@@ -462,6 +463,9 @@
       },
       "coach": {
         "required": "Pole trenerzy nie może być puste"
+      },
+      "status": {
+        "required": "Pole status nie może być puste"
       }
     }
   },

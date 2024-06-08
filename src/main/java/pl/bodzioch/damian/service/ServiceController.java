@@ -102,4 +102,14 @@ class ServiceController {
         GetServiceDetailsQueryResult result = queryExecutor.execute(query);
         return new GetServiceDetailsResponse(result.service(), messageResolver, cipher);
     }
+
+    @GetMapping("/statuses")
+    @ResponseStatus(HttpStatus.OK)
+    GetAllServiceStatusesResponse getAllServiceStatuses() {
+        List<ServiceStatusData> typeList = Arrays.stream(ServiceStatus.values())
+                .map(Enum::name)
+                .map(val -> new ServiceStatusData(val, messageResolver.getMessage("service.status." + val)))
+                .toList();
+        return new GetAllServiceStatusesResponse(typeList);
+    }
 }

@@ -41,7 +41,7 @@ public record CreateOrUpdateServiceCommand(
 				request.startDate(),
 				request.endDate(),
 				request.numberOfParticipants(),
-				ServiceStatus.valueOf(request.status().value()),
+				ServiceStatus.valueOf(request.status()),
 				Long.parseLong(cipher.decryptMessage(request.serviceProviderId())),
 				Long.parseLong(cipher.decryptMessage(request.programId())),
 				Long.parseLong(cipher.decryptMessage(request.customerId())),

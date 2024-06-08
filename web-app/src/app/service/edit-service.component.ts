@@ -45,5 +45,6 @@ export class EditServiceComponent implements AfterViewInit {
     this.createNewComponent.operatorControl.setValue(response.operator);
     this.createNewComponent.operatorControl.disable();
     this.createNewComponent.serviceVersion = response.version;
+    this.createNewComponent.statusControl.setValue(response.status);
   }
 }

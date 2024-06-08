@@ -11,6 +11,11 @@ export interface ServiceTypeData {
   name: string
 }
 
+export interface ServiceStatusData {
+  value: string,
+  name: string
+}
+
 export interface GetAllServiceTypesResponse {
   serviceTypes: ServiceTypeData[]
 }
@@ -22,6 +27,7 @@ export interface GetServiceFromBurResponse {
   startDate: Date,
   endDate: Date,
   serviceProviderName: string
+  status: ServiceStatusData
 }
 
 export interface CreateOrUpdateServiceRequest {
@@ -37,7 +43,8 @@ export interface CreateOrUpdateServiceRequest {
   programId: string,
   customerId: string,
   coachIds: string[],
-  intermediaryId: string
+  intermediaryId: string,
+  status: string
 }
 
 export interface CreateNewServiceResponse {
@@ -77,5 +84,10 @@ export interface GetServiceDetailsResponse {
   serviceProvider: ServiceProviderDataInterface,
   program: ProgramDataInterface,
   intermediary: IntermediaryData,
-  coaches: CoachData[]
+  coaches: CoachData[],
+  status: ServiceStatusData
+}
+
+export interface GetAllServiceStatusesResponse {
+  statuses: ServiceStatusData[]
 }

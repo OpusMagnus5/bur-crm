@@ -428,6 +428,7 @@
     "customers-input-label": "Customer",
     "intermediaries-input-label": "Intermediary",
     "coaches-input-label": "Coaches",
+    "status-input-label": "Status",
     "validation": {
       "number": {
         "required": "The service number field cannot be empty",
@@ -462,6 +463,9 @@
       },
       "coach": {
         "required": "The coaches field cannot be empty"
+      },
+      "status": {
+        "required": "The status field cannot be empty"
       }
     }
   },

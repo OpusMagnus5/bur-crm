@@ -2,6 +2,7 @@ package pl.bodzioch.damian.dto;
 
 import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.UniqueElements;
+import pl.bodzioch.damian.service.validator.ServiceStatusV;
 import pl.bodzioch.damian.service.validator.ServiceTypeV;
 
 import java.io.Serializable;
@@ -30,8 +31,9 @@ public record CreateOrUpdateServiceRequest(
         @Min(value = 1, message = "error.client.service.incorrectNumberOfParticipants")
         @Max(value = Integer.MAX_VALUE, message = "error.client.service.incorrectNumberOfParticipants")
         Integer numberOfParticipants,
-        @NotNull(message = "error.client.service.emptyOrIncorrectStatus")
-        ServiceStatusData status,
+        @NotEmpty(message = "error.client.service.emptyStatus")
+        @ServiceStatusV(message = "error.client.service.incorrectStatus")
+        String status,
         @NotEmpty(message = "error.client.service.emptyServiceProviderId")
         String serviceProviderId,
         @NotEmpty(message = "error.client.service.emptyProgramId")

@@ -16,7 +16,8 @@ CREATE OR REPLACE PROCEDURE service_create_or_update(
     IN _srv_customer_id service.srv_customer_id%TYPE,
     IN _srv_intermediary_id service.srv_intermediary_id%TYPE,
     IN _srv_created_by service.srv_created_by%TYPE,
-    IN _srv_coach_ids BIGINT[]
+    IN _srv_coach_ids BIGINT[],
+    IN _srv_status service.srv_status%TYPE
 )
 LANGUAGE plpgsql
 AS $$
@@ -29,10 +30,10 @@ BEGIN
     IF _srv_id IS NULL THEN
         INSERT INTO service(srv_uuid, srv_bur_card_id, srv_number, srv_name, srv_type, srv_start_date, srv_end_date,
                             srv_number_of_participants, srv_service_provider_id, srv_program_id, srv_customer_id,
-                            srv_intermediary_id, srv_created_by)
+                            srv_intermediary_id, srv_created_by, srv_status)
         VALUES(_srv_uuid, _srv_bur_card_id, _srv_number, _srv_name, _srv_type, _srv_start_date, _srv_end_date,
                _srv_number_of_participants, _srv_service_provider_id, _srv_program_id, _srv_customer_id,
-               _srv_intermediary_id, _srv_created_by)
+               _srv_intermediary_id, _srv_created_by, _srv_status)
         RETURNING srv_id
             INTO _created_service_id;
 
@@ -71,7 +72,8 @@ BEGIN
             srv_customer_id = _srv_customer_id,
             srv_intermediary_id = _srv_intermediary_id,
             srv_modified_by = _srv_created_by,
-            srv_modified_at = current_timestamp
+            srv_modified_at = current_timestamp,
+            srv_status = _srv_status
         WHERE srv_id = _srv_id;
 
         FOREACH _coach_id IN ARRAY _srv_coach_ids LOOP
@@ -102,7 +104,7 @@ AS $$
 BEGIN
 
     OPEN _cursor FOR
-        SELECT srv_id, srv_name, srv_number, srv_start_date, srv_end_date, srv_type,
+        SELECT srv_id, srv_name, srv_number, srv_start_date, srv_end_date, srv_type, srv_status,
                opr.opr_name as operator_opr_name,
                cst.cst_name as customer_cst_name,
                spr.spr_name as service_provider_spr_name
@@ -136,7 +138,7 @@ AS $$
 BEGIN
 
     OPEN _cursor FOR
-        SELECT srv_id, srv_uuid, srv_bur_card_id, srv_number, srv_name, srv_type, srv_start_date, srv_end_date,
+        SELECT srv_id, srv_uuid, srv_bur_card_id, srv_number, srv_name, srv_type, srv_start_date, srv_end_date, srv_status,
                srv_number_of_participants, srv_service_provider_id, srv_customer_id, srv_program_id, srv_intermediary_id,
                coaches.coach_id as srv_coach_ids,
                creator.usr_first_name as creator_usr_first_name, creator.usr_last_name as creator_usr_last_name,

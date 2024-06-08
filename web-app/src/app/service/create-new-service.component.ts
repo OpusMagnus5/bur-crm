@@ -8,7 +8,12 @@ import {ValidationMessageService} from "../shared/service/validation-message.ser
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
 import {MatOption} from "@angular/material/core";
 import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
-import {CreateNewServiceResponse, CreateOrUpdateServiceRequest, ServiceTypeData} from "./service-dtos";
+import {
+  CreateNewServiceResponse,
+  CreateOrUpdateServiceRequest,
+  ServiceStatusData,
+  ServiceTypeData
+} from "./service-dtos";
 import {ServiceHttp} from "./service-http";
 import {ServiceProviderHttpService} from "../service-provider/service/service-provider-http.service";
 import {ServiceProviderDataInterface} from "../service-provider/model/service-provider-data.interface";
@@ -81,6 +86,7 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
   customerIdControl: FormControl<CustomerData | string | null>;
   coachIdsControl: FormControl<CoachData[] | string[] | null>;
   intermediaryIdControl: FormControl<IntermediaryData | string | null>;
+  statusControl: FormControl<ServiceStatusData | string | null>
 
   protected readonly serviceTypes: WritableSignal<ServiceTypeData[]> = signal([]);
   private readonly serviceProviders: WritableSignal<ServiceProviderDataInterface[]> = signal([]);
@@ -89,6 +95,7 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
   private readonly customers: WritableSignal<CustomerData[]> = signal([]);
   private readonly intermediaries: WritableSignal<IntermediaryData[]> = signal([]);
   private readonly coaches: WritableSignal<CoachData[]> = signal([]);
+  private readonly statuses: WritableSignal<ServiceStatusData[]> = signal([]);
 
   protected readonly filteredServiceProviders: WritableSignal<ServiceProviderDataInterface[]> = signal([]);
   protected readonly filteredPrograms: WritableSignal<ProgramDataInterface[]> = signal([]);
@@ -96,6 +103,7 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
   protected readonly filteredCustomers: WritableSignal<CustomerData[]> = signal([]);
   protected readonly filteredIntermediaries: WritableSignal<IntermediaryData[]> = signal([]);
   protected readonly filteredCoaches: WritableSignal<CoachData[]> = signal([]);
+  protected readonly filteredStatuses: WritableSignal<ServiceStatusData[]> = signal([]);
 
   private readonly subscriptions = new SubscriptionManager();
   serviceVersion: number | null = null;
@@ -152,6 +160,9 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     this.coachIdsControl = new FormControl([], {
       validators: [Validators.required]
     })
+    this.statusControl = new FormControl(null, {
+      validators: [Validators.required]
+    })
     this.form = this.buildFormGroup();
 
     merge(toObservable(this.filteredOperators), toObservable(this.filteredPrograms)).subscribe(() => {
@@ -176,6 +187,7 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     const customersRequest = this.customerHttp.getAll();
     const intermediariesRequest = this.intermediaryHttp.getAll();
     const coachesRequest = this.coachHttp.getAll();
+    const statusesRequest = this.serviceHttp.getAllStatuses();
 
   this.subscriptions.add(forkJoin([
     serviceTypesRequest,
@@ -184,7 +196,8 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     operatorsRequest,
     customersRequest,
     intermediariesRequest,
-    coachesRequest
+    coachesRequest,
+    statusesRequest
   ]).pipe(
       map(([
         serviceTypesResponse,
@@ -193,7 +206,8 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
         operatorsResponse,
         customersResponse,
         intermediariesResponse,
-        coachesResponse]) => {
+        coachesResponse,
+        statusesResponse]) => {
         return {
           serviceTypes: serviceTypesResponse.serviceTypes,
           serviceProviders: serviceProvidersResponse.serviceProviders,
@@ -201,7 +215,8 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
           operators: operatorsResponse.operators,
           customers: customersResponse.customers,
           intermediaries: intermediariesResponse.intermediaries,
-          coaches: coachesResponse.coaches
+          coaches: coachesResponse.coaches,
+          statuses: statusesResponse.statuses
         }
       })
     ).subscribe({
@@ -219,6 +234,8 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
         this.filteredIntermediaries.set(responses.intermediaries);
         this.coaches.set(responses.coaches);
         this.filteredCoaches.set(responses.coaches);
+        this.statuses.set(responses.statuses);
+        this.filteredStatuses.set(responses.statuses);
       }
     }));
   }
@@ -235,7 +252,8 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
       'programId': this.programIdControl,
       'customerId': this.customerIdControl,
       'coachIds': this.coachIdsControl,
-      'intermediaryId': this.intermediaryIdControl
+      'intermediaryId': this.intermediaryIdControl,
+      'status': this.statusControl
     });
   }
 
@@ -276,6 +294,11 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     this.filterCoachesByName(name);
   }
 
+  protected onStatusChange(event: Event) {
+    const value: string = (<HTMLInputElement>event.target).value;
+    this.filterStatusesByValue(value);
+  }
+
   protected onProgramSelected(event: MatAutocompleteSelectedEvent) {
     const programId = (<ProgramDataInterface>event.option.value).id;
     const operatorName = (<ProgramDataInterface>event.option.value).operator.name;
@@ -310,6 +333,11 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     this.coaches.set(this.coaches().filter(item => item.id !== coach.id))
     this.filterCoachesByName('');
     this.coachIdsControl.updateValueAndValidity({ onlySelf: true, emitEvent: true });
+  }
+
+  protected onStatusSelected(event: MatAutocompleteSelectedEvent) {
+    const value = (<ServiceStatusData>event.option.value).value;
+    this.filterStatusesByValue(value);
   }
 
   private filterProgramsByName(name: string) {
@@ -374,6 +402,13 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     );
   }
 
+  private filterStatusesByValue(value: string) {
+    const searchValue = value.toLowerCase().trim();
+    this.filteredStatuses.set(
+      this.statuses().filter(status => status.value.toLowerCase().includes(searchValue)
+    ));
+  }
+
   protected onSubmit(formDirective: FormGroupDirective) {
     const request = this.mapFormToRequest();
     this.serviceHttp.createNew(request).subscribe(response => {
@@ -405,7 +440,8 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
       programId: (<ProgramDataInterface>this.programIdControl.value!).id,
       customerId: (<CustomerData>this.customerIdControl.value!).id,
       intermediaryId: (<IntermediaryData>this.intermediaryIdControl.value!).id,
-      coachIds: (<CoachData[]>this.coachIdsControl.value!).map(coach => coach.id)
+      coachIds: (<CoachData[]>this.coachIdsControl.value!).map(coach => coach.id),
+      status: (<ServiceStatusData>this.statusControl.value!).value
     }
   }
 
@@ -435,6 +471,7 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
           if (serviceProvider) {
             this.serviceProviderIdControl.setValue(serviceProvider);
           }
+          this.statusControl.setValue(response.status);
         }
       )
     }
@@ -466,6 +503,10 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
 
   protected displayIntermediaryName(intermediary: IntermediaryData | string): string {
     return typeof intermediary === 'string' ? intermediary : intermediary?.name;
+  }
+
+  protected displayStatusName(status: ServiceStatusData | string): string {
+    return typeof status === 'string' ? status : status?.name;
   }
 
   private getValidationMessageKey(fieldName: string, validation: string): string {

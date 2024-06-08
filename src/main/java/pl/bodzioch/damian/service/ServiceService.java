@@ -17,6 +17,7 @@ import pl.bodzioch.damian.service.query_dto.GetServiceFromBurQueryResult;
 import pl.bodzioch.damian.service_provider.ServiceProviderDto;
 import pl.bodzioch.damian.service_provider.query_dto.GetServiceProviderByBurIdQuery;
 import pl.bodzioch.damian.service_provider.query_dto.GetServiceProviderByBurIdQueryResult;
+import pl.bodzioch.damian.utils.MessageResolver;
 import pl.bodzioch.damian.value_object.ErrorData;
 
 import java.util.List;
@@ -27,6 +28,7 @@ class ServiceService implements IServiceService {
 
     private final QueryExecutor queryExecutor;
     private final CommandExecutor commandExecutor;
+    private final MessageResolver messageResolver;
 
     @Override
     public GetServiceFromBurResponse getServiceFromBur(String serviceNumber) {
@@ -40,7 +42,7 @@ class ServiceService implements IServiceService {
             GetServiceProviderByBurIdQueryResult serviceProviderResult = queryExecutor.execute(serviceProviderQuery);
             ServiceProviderDto serviceProviderDto = serviceProviderResult.serviceProviderDto();
 
-            return new GetServiceFromBurResponse(burServiceDto, serviceProviderDto.name());
+            return new GetServiceFromBurResponse(burServiceDto, serviceProviderDto.name(), messageResolver);
         } catch (ServerException e) {
             throw new AppException(
                     "Service in BUR with given service number " + serviceNumber + " not found",

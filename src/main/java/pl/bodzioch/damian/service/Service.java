@@ -41,7 +41,7 @@ record Service(
 		@DbColumn(name = "srv_number_of_participants")
         Integer numberOfParticipants,
 		@DbColumn(name = "srv_status")
-		String status,
+		ServiceStatus status,
 		@DbColumn(name = "srv_service_provider_id")
 		Long serviceProviderId,
 		@DbColumn(name = "srv_program_id")
@@ -94,7 +94,7 @@ record Service(
 				command.startDate(),
 				command.endDate(),
 				command.numberOfParticipants(),
-				command.status().name(),
+				command.status(),
 				command.serviceProviderId(),
 				command.programId(),
 				command.customerId(),
@@ -110,7 +110,7 @@ record Service(
 	Service(Service service, BurServiceDto burService) {
 		this(
 				service.id(), null, null, null, null, null, null, null,
-				null, null, ServiceStatus.of(burService.status()).name(),
+				null, null, ServiceStatus.of(burService.status()),
 				null, null, null, null, null, null, null,
 				null, null, null, null, null, null, null, null,
 				null, null

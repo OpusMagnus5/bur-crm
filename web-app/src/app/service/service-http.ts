@@ -5,6 +5,7 @@ import {SERVER_URL} from "../shared/http-config";
 import {
   CreateNewServiceResponse,
   CreateOrUpdateServiceRequest,
+  GetAllServiceStatusesResponse,
   GetAllServiceTypesResponse,
   GetServiceDetailsResponse,
   GetServiceFromBurResponse,
@@ -50,5 +51,9 @@ export class ServiceHttp {
 
   getDetails(id: string): Observable<GetServiceDetailsResponse> {
     return this.http.get<GetServiceDetailsResponse>(SERVER_URL + 'api/service/' + id);
+  }
+
+  getAllStatuses(): Observable<GetAllServiceStatusesResponse> {
+    return this.http.get<GetAllServiceStatusesResponse>(SERVER_URL + 'api/service/statuses')
   }
 }

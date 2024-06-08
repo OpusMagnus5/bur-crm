@@ -2,6 +2,7 @@ package pl.bodzioch.damian.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.client.bur.BurServiceDto;
@@ -53,7 +54,12 @@ class CreateOrUpdateServiceCommandHandler implements CommandHandler<CreateOrUpda
 		}
 		Long cardId = burService.map(BurServiceDto::id).orElse(null);
 		Service service = new Service(command, cardId);
-		writeRepository.createOrUpdate(service);
+		try {
+			writeRepository.createOrUpdate(service);
+		} catch (DuplicateKeyException e) {
+			log.warn("Service with bur number: {} and client id: {} already exists", command.number(), command.customerId(), e);
+			throw buildServiceWithCustomerAlreadyExistsException(command.number(), command.customerId());
+		}
 		messages.add(getMessage(command));
 		return new CreateOrUpdateServiceCommandResult(messages);
 	}
@@ -167,5 +173,16 @@ class CreateOrUpdateServiceCommandHandler implements CommandHandler<CreateOrUpda
 			return messageResolver.getMessage("service.modifyNewServiceSuccess");
 		}
 		return messageResolver.getMessage("service.createNewServiceSuccess");
+	}
+
+	private AppException buildServiceWithCustomerAlreadyExistsException(String number, Long customerId) {
+		return new AppException(
+				"Service with bur number: " + number + " and client id: " + customerId.toString() + " already exists",
+				HttpStatus.BAD_REQUEST,
+				List.of(new ErrorData(
+						"error.client.operator.serviceAlreadyExists",
+						List.of(number)
+				))
+		);
 	}
 }
