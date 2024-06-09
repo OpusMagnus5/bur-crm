@@ -9,7 +9,9 @@ public record InnerService(
         @DbColumn(name = "srv_id")
         Long id,
         @DbColumn(name = "srv_type")
-        ServiceType type
+        ServiceType type,
+        @DbColumn(name = "srv_number_of_participants")
+        Integer numberOfParticipants
 ) {
     @DbConstructor
     public InnerService {

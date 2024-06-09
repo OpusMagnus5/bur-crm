@@ -80,7 +80,7 @@ record Service(
 		@DbManyToOne(prefix = "intermediary")
 		InnerIntermediary intermediary,
 		@DbOneToMany(prefix = "coach")
-		List<InnerCoach> coaches
+		List<InnerCoach> coaches //TODO dodać walidacje min 2 trenerów na usługę
 ) {
 	@DbConstructor
 	Service {

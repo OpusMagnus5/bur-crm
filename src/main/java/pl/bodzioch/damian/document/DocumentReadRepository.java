@@ -22,9 +22,18 @@ class DocumentReadRepository implements IDocumentReadRepository {
 
     @Override
     @Transactional(Transactional.TxType.NOT_SUPPORTED)
-    public List<Document> getServiceDocuments(Long serviceId) {
-        Map<String, Object> properties = Map.of("_doc_service_id", serviceId);
+    public List<Document> getServiceDocuments(Long serviceId, DocumentType documentType, Long coachId) {
+        Map<String, Object> properties = Map.of(
+                "_doc_service_id", serviceId,
+                "_doc_type", documentType.name(),
+                "_doc_coach_id", coachId
+        );
         Map<String, Object> result = this.jdbcCaller.call(this.getAllForServiceProc, properties);
-        return DbCaster.fromProperties(result, Document.class);
+        List<Document> documents = DbCaster.fromProperties(result, Document.class);
+        return documents.stream()
+                .filter(item -> item.type() != null)
+                .findAny()
+                .map(List::of)
+                .orElse(List.of(documents.getFirst()));
     }
 }

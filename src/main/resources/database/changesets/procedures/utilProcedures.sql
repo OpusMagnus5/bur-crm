@@ -13,6 +13,7 @@ BEGIN
         FROM pg_class class
         LEFT JOIN pg_attribute attribute ON class.oid = attribute.attrelid
         WHERE relname = ANY (_custom_types)
+        AND attnum > 0
         ORDER BY class.relname, attribute.attnum;
 
 END$$;
