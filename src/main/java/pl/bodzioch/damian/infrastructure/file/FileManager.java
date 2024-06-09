@@ -14,19 +14,32 @@ class FileManager implements IFileManager {
 
     private static final String APPLICATION_PATH = System.getProperty("user.dir");
     private static final String DOCUMENTS_PATH = APPLICATION_PATH + File.separator + "documents";
+    private static final String GZ_FILE_EXTENSION = ".gz";
 
     @Override
     public Void saveOnDisc(String path, String fileName, byte[] data) {
         File servicePath = new File(DOCUMENTS_PATH + File.separator + path);
         if (!servicePath.exists()) {
-            boolean directoryCreated = servicePath.mkdirs();
-            if (!directoryCreated) {
+            if (!servicePath.mkdirs()) {
                 throw new FileManagerException("Failed to create directory: " + servicePath);
             }
         }
 
-        String completePath = servicePath + File.separator + fileName + ".gz";
+        String completePath = servicePath + File.separator + fileName + GZ_FILE_EXTENSION;
         zipAndSaveFile(completePath, data);
+        return null;
+    }
+
+    @Override
+    public Void deleteFile(String path, String fileName) {
+        File file = new File(DOCUMENTS_PATH + File.separator + path + File.separator + fileName + GZ_FILE_EXTENSION);
+        if (file.exists()) {
+            if (!file.delete()) {
+                throw new FileManagerException("Failed to delete file: " + file);
+            }
+        } else {
+            throw new FileManagerException("File not exists: " + file);
+        }
         return null;
     }
 

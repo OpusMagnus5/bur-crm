@@ -1,6 +1,7 @@
 package pl.bodzioch.damian.document;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.document.command_dto.AddNewDocumentsCommand;
 import pl.bodzioch.damian.document.command_dto.AddNewDocumentsCommandData;
@@ -15,6 +16,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 class AddNewDocumentsCommandHandler implements CommandHandler<AddNewDocumentsCommand, AddNewDocumentsCommandResult> {
@@ -38,9 +40,15 @@ class AddNewDocumentsCommandHandler implements CommandHandler<AddNewDocumentsCom
 
         List<Document> serviceDocuments = readRepository.getServiceDocuments(serviceId, documentType, coachId);
         List<Document> documents = Document.newDocuments(documentsToAdd, serviceDocuments);
+        UUID serviceUuid = serviceDocuments.getFirst().uuid();
+        saveOnDisc(documents, serviceUuid);
 
-        saveOnDisc(documents, serviceDocuments.getFirst().uuid());
-        writeRepository.addNewDocuments(documents);
+        try {
+            writeRepository.addNewDocuments(documents);
+        } catch (Exception e) {
+            log.error("An error occurred while saving the files in db", e);
+            deleteAddedFiles(documents, serviceUuid);
+        }
 
         String message = messageResolver.getMessage("document.addNewDocumentsSuccess");
         return new AddNewDocumentsCommandResult(message);
@@ -51,11 +59,37 @@ class AddNewDocumentsCommandHandler implements CommandHandler<AddNewDocumentsCom
             documents.stream()
                     .map(item -> save(serviceUuid, item, executor))
                     .forEach(CompletableFuture::join);
+        } catch (Exception e) {
+            log.error("An error occurred while saving the file for service uuid: " + serviceUuid, e);
+            deleteAddedFiles(documents, serviceUuid);
+        }
+    }
+
+    private void deleteAddedFiles(List<Document> documents, UUID serviceUuid) {
+        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()){
+            documents.stream()
+                    .map(item -> delete(serviceUuid, item.uuid(), executor))
+                    .forEach(CompletableFuture::join);
+        } catch (Exception e) {
+            log.error("An error occurred while deleting the file for service uuid: " + serviceUuid, e);
+            deleteAddedFiles(documents, serviceUuid);
         }
     }
 
     private CompletableFuture<Void> save(UUID serviceUuid, Document item, ExecutorService executor) {
         return CompletableFuture.supplyAsync(
                 () -> fileManager.saveOnDisc(serviceUuid.toString(), item.uuid().toString(), item.fileData()), executor);
+    }
+
+    private CompletableFuture<Void> delete(UUID serviceUuid, UUID documentUuid, ExecutorService executor) {
+        return CompletableFuture.supplyAsync(
+                () -> {
+                    try {
+                        return fileManager.deleteFile(serviceUuid.toString(), documentUuid.toString());
+                    } catch (Exception e) {
+                        log.warn("An error occurred while deleting the file for service uuid: " + serviceUuid, e);
+                        return null;
+                    }
+                }, executor);
     }
 }
