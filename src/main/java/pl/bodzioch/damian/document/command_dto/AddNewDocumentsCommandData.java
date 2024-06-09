@@ -8,6 +8,7 @@ public record AddNewDocumentsCommandData(
         String fileExtension,
         Long serviceId,
         Long coachId,
+        byte[] fileData,
         Long creatorId //TODO poprawić
 ) {
 }

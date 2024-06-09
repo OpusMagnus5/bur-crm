@@ -42,6 +42,7 @@ record Document(
         Long createdBy,
         @DbColumn(name = "doc_modified_by")
         Long modifiedBy,
+        byte[] fileData,
 
         @DbManyToOne(prefix = "service")
         InnerService service
@@ -54,7 +55,7 @@ record Document(
                 this(
                         null, Generators.timeBasedEpochGenerator().generate(), null, command.serviceId(),
                         command.coachId(), command.type(), command.fileName(), command.fileExtension(), null,
-                        null, command.creatorId(), null, null
+                        null, command.creatorId(), null, command.fileData(), null
                 );
         }
 

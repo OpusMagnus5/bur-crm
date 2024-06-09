@@ -33,7 +33,8 @@ BEGIN
         WITH Documents AS (
             SELECT ROW_NUMBER() OVER (ORDER BY service.srv_id) AS row_num, doc_id, doc_type, doc_coach_id,
                    service.srv_id as service_srv_id, service.srv_type as service_srv_type,
-                   service.srv_number_of_participants as service_srv_number_of_participants
+                   service.srv_number_of_participants as service_srv_number_of_participants,
+                   service.srv_uuid as service_srv_uuid
             FROM document
             RIGHT JOIN service ON doc_service_id = service.srv_id
             WHERE service.srv_id = _doc_service_id
@@ -41,7 +42,7 @@ BEGIN
               AND (_doc_coach_id IS NULL OR doc_coach_id IS NULL OR doc_coach_id = _doc_coach_id)
         )
         SELECT COALESCE(doc_id, row_num) as doc_id, doc_type, doc_coach_id, service_srv_id, service_srv_type,
-               service_srv_number_of_participants
+               service_srv_number_of_participants, service_srv_uuid
         FROM Documents;
 
 
