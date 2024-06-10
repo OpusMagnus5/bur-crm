@@ -34,7 +34,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {toObservable} from "@angular/core/rxjs-interop";
 import {SubscriptionManager} from "../shared/util/subscription-manager";
 import {concat, debounceTime, forkJoin, merge, skip, tap} from "rxjs";
-import {EDIT_SERVICE_PATH} from "../app.routes";
+import {EDIT_SERVICE_PATH, SERVICE_DETAILS_PATH} from "../app.routes";
 
 @Component({
   selector: 'app-service-list',
@@ -210,7 +210,9 @@ export class ServiceListComponent implements OnDestroy {
   }
 
   protected onDetails(element: any) {
-
+    this.router.navigate(['../', SERVICE_DETAILS_PATH, element.id], {
+      relativeTo: this.route
+    });
   }
 
   protected onEdit(element: ServiceData) {

@@ -55,7 +55,7 @@ record Service(
 		@DbColumn(name = "srv_coach_ids")
         List<Long> coachIds,
 		@DbColumn(name = "srv_intermediary_id")
-        Long intermediaryId,
+        Long intermediaryId, //TODO poprawić pośrednik nie jest wymagany
 		@DbColumn(name = "srv_created_at")
 		LocalDateTime createdAt,
 		@DbColumn(name = "srv_modified_at")

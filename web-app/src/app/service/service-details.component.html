@@ -1,0 +1,87 @@
+<div class="mat-elevation-z8">
+  <div class="grid grid-cols-2 divide-y divide-gray-300 px-20 py-6">
+    <div class="col-span-2">
+      <div class="py-6">
+        <h3 class="font-semibold leading-7 text-gray-800 text-lg">{{ 'service-details.title' | translate }}</h3>
+      </div>
+    </div>
+    <div>
+      <div class="py-6 pr-10">
+        <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.number' | translate }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().number }}</p>
+      </div>
+    </div>
+    <div>
+      <div class="py-6 pl-10">
+        <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.type' | translate }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().type.name }}</p>
+      </div>
+    </div>
+    <div>
+      <div class="py-6 pr-10">
+        <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.name' | translate }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().name }}</p>
+      </div>
+    </div>
+    <div>
+      <div class="py-6 pl-10">
+        <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.service-provider' | translate }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().serviceProvider.name }}</p>
+      </div>
+    </div>
+    <div>
+      <div class="py-6 pr-10">
+        <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.start-date' | translate }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().startDate | localizedDate: 'fullDate' }}</p>
+      </div>
+    </div>
+    <div>
+      <div class="py-6 pl-10">
+        <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.end-date' | translate }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().endDate | localizedDate: 'fullDate' }}</p>
+      </div>
+    </div>
+    <div>
+      <div class="py-6 pr-10">
+        <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.customer' | translate }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().customer.name }}</p>
+      </div>
+    </div>
+    <div>
+      <div class="py-6 pl-10">
+        <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.number-of-participants' | translate }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().numberOfParticipants }}</p>
+      </div>
+    </div>
+    <div>
+      <div class="py-6 pr-10">
+        <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.operator' | translate }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().operator.name }}</p>
+      </div>
+    </div>
+    <div>
+      <div class="py-6 pl-10">
+        <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.program' | translate }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().program.name }}</p>
+      </div>
+    </div>
+    <div>
+      <div class="py-6 pr-10">
+        <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.coaches' | translate }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ getCoachesNames() }}</p>
+      </div>
+    </div>
+    <div>
+      <div class="py-6 pl-10">
+        <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.intermediary' | translate }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().intermediary.name }}</p>
+      </div>
+    </div>
+    <div class="col-span-2">
+      <div class="py-6">
+        <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.status' | translate }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().status.name }}</p>
+      </div>
+    </div>
+  </div>
+</div>

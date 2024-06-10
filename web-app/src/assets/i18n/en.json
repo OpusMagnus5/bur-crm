@@ -413,7 +413,8 @@
   "service": {
     "new-service": "Add service",
     "service-list": "Services list",
-    "edit-service": "Edit service"
+    "edit-service": "Edit service",
+    "service-details": "Service details"
   },
   "new-service": {
     "number-input-label": "Service number from BUR",

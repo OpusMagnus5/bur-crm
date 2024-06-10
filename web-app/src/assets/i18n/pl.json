@@ -413,7 +413,8 @@
   "service": {
     "new-service": "Dodaj usługę",
     "service-list": "Lista usług",
-    "edit-service": "Edytuj usługę"
+    "edit-service": "Edytuj usługę",
+    "service-details": "Szczegóły usługi"
   },
   "new-service": {
     "number-input-label": "Numer usługi z BUR",
@@ -489,5 +490,21 @@
     "type-search": "Rodzaj usługi",
     "service-provider-search": "Dostawca usługi",
     "customers-search": "Klient"
+  },
+  "service-details": {
+    "title": "Szczegóły usługi",
+    "number": "Numer usługi w BUR",
+    "type": "Rodzaj usługi",
+    "name": "Nazwa usługi",
+    "service-provider": "Dostawca usługi",
+    "start-date": "Data rozpoczęcia",
+    "end-date": "Data zakończenia",
+    "program": "Program",
+    "operator": "Operator",
+    "customer": "Klient",
+    "number-of-participants": "Liczba uczestników",
+    "intermediary": "Pośrednik",
+    "coaches": "Trenerzy",
+    "status": "Status usługi"
   }
 }

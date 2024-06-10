@@ -26,6 +26,7 @@ import {ServiceDashboardComponent} from "./service/service-dashboard.component";
 import {CreateNewServiceComponent} from "./service/create-new-service.component";
 import {ServiceListComponent} from "./service/service-list.component";
 import {EditServiceComponent} from "./service/edit-service.component";
+import {ServiceDetailsComponent} from "./service/service-details.component";
 
 export const ADMINISTRATION_PATH: string = 'administration';
 export const BASE_PATH: string = '';
@@ -55,6 +56,7 @@ export const SERVICES_PATH: string = "services";
 export const NEW_SERVICE_PATH: string = "new"
 export const SERVICES_LIST_PATH: string = 'list';
 export const EDIT_SERVICE_PATH: string = 'edit';
+export const SERVICE_DETAILS_PATH: string = 'details';
 const NOT_FOUND_PATH = 'not-found';
 
 export const routes: Routes = [
@@ -76,6 +78,10 @@ export const routes: Routes = [
       {
         path: EDIT_SERVICE_PATH + '/:id',
         component: EditServiceComponent
+      },
+      {
+        path: SERVICE_DETAILS_PATH + '/:id',
+        component: ServiceDetailsComponent
       }
     ]
   },
