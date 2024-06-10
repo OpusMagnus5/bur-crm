@@ -5,6 +5,7 @@ import {UserListDataInterface} from "../user/model/user-list-data.interface";
 import {ProgramDataInterface} from "../program/model/program-data-interface";
 import {CoachData} from "../coach/coach-dtos";
 import {IntermediaryData} from "../intermediary/intermediary-dtos";
+import {DocumentData} from "../document/document-dtos";
 
 export interface ServiceTypeData {
   value: string,
@@ -91,7 +92,8 @@ export interface GetServiceDetailsResponse {
   program: ProgramDataInterface,
   intermediary: IntermediaryData,
   coaches: CoachData[],
-  status: ServiceStatusData
+  status: ServiceStatusData,
+  documents: DocumentData[]
 }
 
 export interface GetAllServiceStatusesResponse {

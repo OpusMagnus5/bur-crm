@@ -4,6 +4,7 @@ import {GetServiceDetailsResponse} from "./service-dtos";
 import {ActivatedRoute} from "@angular/router";
 import {TranslateModule} from "@ngx-translate/core";
 import {LocalizedDatePipe} from "../shared/pipe/localized-date.pipe";
+import {DocumentData} from "../document/document-dtos";
 
 @Component({
   selector: 'app-service-details',
@@ -18,6 +19,7 @@ import {LocalizedDatePipe} from "../shared/pipe/localized-date.pipe";
 export class ServiceDetailsComponent {
 
   protected serviceDetails: WritableSignal<GetServiceDetailsResponse> = signal({} as any);
+  protected documents: WritableSignal<{ [type: string]: DocumentData[] }> = signal({})
 
   constructor(
     private serviceHttp: ServiceHttp,
@@ -25,6 +27,7 @@ export class ServiceDetailsComponent {
   ) {
     const id: string = this.route.snapshot.paramMap.get('id')!;
     this.serviceHttp.getDetails(id).subscribe(item => this.serviceDetails = signal(item))
+
   }
 
   protected getCoachesNames(): string {

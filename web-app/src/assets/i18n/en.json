@@ -490,5 +490,21 @@
     "type-search": "Service type",
     "service-provider-search": "Service provider",
     "customers-search": "Client"
+  },
+  "service-details": {
+    "title": "Service details",
+    "number": "BUR service number",
+    "type": "Service type",
+    "name": "Service name",
+    "service-provider": "Service provider",
+    "start-date": "Start date",
+    "end-date": "End date",
+    "program": "Program",
+    "operator": "Operator",
+    "customer": "Customer",
+    "number-of-participants": "Number of participants",
+    "intermediary": "Intermediary",
+    "coaches": "Coaches",
+    "status": "Service status"
   }
 }
