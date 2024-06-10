@@ -9,6 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.bodzioch.damian.document.command_dto.AddNewDocumentsCommand;
 import pl.bodzioch.damian.document.command_dto.AddNewDocumentsCommandData;
 import pl.bodzioch.damian.document.command_dto.AddNewDocumentsCommandResult;
+import pl.bodzioch.damian.document.validator.DocumentTypeV;
+import pl.bodzioch.damian.document.validator.FileListExtensionV;
 import pl.bodzioch.damian.dto.AddNewFilesResponse;
 import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.infrastructure.command.CommandExecutor;
@@ -32,9 +34,11 @@ class DocumentController {
     @ResponseStatus(HttpStatus.CREATED)
     AddNewFilesResponse addNewFiles(@RequestParam
                                     @NotEmpty(message = "error.client.document.filesEmpty") //TODO walidator rozszerzenia i typu pliku
+                                    @FileListExtensionV(extensions = { "pdf" }, message = "error.client.document.incorrectFileExtension")
                                     List<MultipartFile> files,
                                     @RequestParam
                                     @NotEmpty(message = "error.client.document.fileTypeEmpty")
+                                    @DocumentTypeV(message = "error.client.document.incorrectFileType")
                                     String fileType,
                                     @RequestParam
                                     @NotEmpty(message = "error.client.document.serviceIdEmpty")
