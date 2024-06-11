@@ -24,7 +24,8 @@ public record GetServiceDetailsResponse(
         ProgramData program,
         IntermediaryData intermediary,
         List<CoachData> coaches,
-        ServiceStatusData status
+        ServiceStatusData status,
+        List<DocumentData> documents
 ) {
     public GetServiceDetailsResponse(ServiceDto service, MessageResolver messageResolver, CipherComponent cipher) {
         this(
@@ -46,7 +47,10 @@ public record GetServiceDetailsResponse(
                 service.coaches().stream()
                         .map(item -> new CoachData(item, cipher))
                         .toList(),
-                new ServiceStatusData(service.status().name(), messageResolver.getMessage("service.status." + service.status().name()))
+                new ServiceStatusData(service.status().name(), messageResolver.getMessage("service.status." + service.status().name())),
+                service.documents().stream()
+                        .map(item -> new DocumentData(item, cipher, messageResolver))
+                        .toList()
         );
     }
 }

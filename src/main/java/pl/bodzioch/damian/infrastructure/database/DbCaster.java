@@ -248,7 +248,7 @@ public class DbCaster {
                 .filter(el -> parentId.equals(record.get(idColumnName)))
                 .filter(el -> {
                     Object id = el.get(innerPrefix + PROPERTIES_PREFIX + typeIdColumnName);
-                    return ids.add(id);
+                    return id != null && ids.add(id);
                 })
                 .toList();
         return filteredRecords.parallelStream()

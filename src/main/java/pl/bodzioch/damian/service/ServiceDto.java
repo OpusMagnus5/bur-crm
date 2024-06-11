@@ -2,6 +2,7 @@ package pl.bodzioch.damian.service;
 
 import pl.bodzioch.damian.coach.InnerCoachDto;
 import pl.bodzioch.damian.customer.InnerCustomerDto;
+import pl.bodzioch.damian.document.InnerDocumentDto;
 import pl.bodzioch.damian.intermediary.InnerIntermediaryDto;
 import pl.bodzioch.damian.operator.InnerOperatorDto;
 import pl.bodzioch.damian.program.InnerProgramDto;
@@ -43,7 +44,7 @@ public record ServiceDto(
         InnerProgramDto program,
         InnerIntermediaryDto intermediary,
         List<InnerCoachDto> coaches,
-
+        List<InnerDocumentDto> documents,
         List<BadgeMessageType> badgeMessages
 ) {
 
@@ -78,6 +79,9 @@ public record ServiceDto(
                 new InnerIntermediaryDto(service.intermediary()),
                 service.coaches().stream()
                         .map(InnerCoachDto::new)
+                        .toList(),
+                service.documents().stream()
+                        .map(InnerDocumentDto::new)
                         .toList(),
                 service.getBadgeMessages()
         );
