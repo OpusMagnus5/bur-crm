@@ -14,6 +14,8 @@ import {
   MatExpansionPanelTitle
 } from "@angular/material/expansion";
 import {MatIcon} from "@angular/material/icon";
+import {MatSelectionList} from "@angular/material/list";
+import {MatButton} from "@angular/material/button";
 
 @Component({
   selector: 'app-service-details',
@@ -26,7 +28,9 @@ import {MatIcon} from "@angular/material/icon";
     MatExpansionPanelTitle,
     MatExpansionPanelHeader,
     MatIcon,
-    MatExpansionPanelDescription
+    MatExpansionPanelDescription,
+    MatSelectionList,
+    MatButton
   ],
   templateUrl: './service-details.component.html',
   styleUrl: './service-details.component.css'
@@ -43,9 +47,10 @@ export class ServiceDetailsComponent {
     private route: ActivatedRoute
   ) {
     const id: string = this.route.snapshot.paramMap.get('id')!;
-    this.serviceHttp.getDetails(id).subscribe(item =>
-      this.serviceDetails = signal(item)
-    );
+    this.serviceHttp.getDetails(id).subscribe(item => {
+      this.serviceDetails = signal(item);
+      this.setDocuments();
+    });
     this.documentHttp.getAllDocumentTypes().subscribe(item =>
       this.documentTypes.set(item.types)
     );
@@ -54,5 +59,11 @@ export class ServiceDetailsComponent {
   protected getCoachesNames(): string {
     return this.serviceDetails().coaches?.map(item => item.firstName + ' ' + item.lastName)
       .join(', ')
+  }
+
+  private setDocuments(): void {
+    const documents: { [type: string]: DocumentData[] } = {};
+    this.documentTypes().forEach(item => documents[item.value] = [])
+    this.serviceDetails().documents.map(item => documents[item.type.value].push(item))
   }
 }

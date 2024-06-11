@@ -8,7 +8,7 @@ export interface DocumentData {
   id: string,
   name: string
   extension: string
-  type: string
+  type: DocumentTypeData
 }
 
 export interface GetAllDocumentTypesResponse {
