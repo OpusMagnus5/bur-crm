@@ -1,6 +1,7 @@
 export interface DocumentTypeData {
   value: string,
   name: string
+  opened?: boolean
 }
 
 export interface DocumentData {
@@ -8,4 +9,8 @@ export interface DocumentData {
   name: string
   extension: string
   type: string
+}
+
+export interface GetAllDocumentTypesResponse {
+  types: DocumentTypeData[]
 }

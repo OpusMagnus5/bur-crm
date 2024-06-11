@@ -505,6 +505,7 @@
     "number-of-participants": "Number of participants",
     "intermediary": "Intermediary",
     "coaches": "Coaches",
-    "status": "Service status"
+    "status": "Service status",
+    "documents": "Documents"
   }
 }

@@ -83,5 +83,28 @@
         <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().status.name }}</p>
       </div>
     </div>
+    <div class="col-span-2">
+      <div class="py-6">
+        <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.documents' | translate }}</p>
+      </div>
+        <div>
+          <mat-accordion>
+            @for (documentType of documentTypes(); track documentType) {
+              <mat-expansion-panel (opened)="documentType.opened = true" (closed)="documentType.opened = false">
+                <mat-expansion-panel-header>
+                  <mat-panel-title class="text-gray-700">
+                    @if (documentType.opened) {
+                      <mat-icon fontIcon="folder_open" class="text-gray-500 pr-10"></mat-icon>
+                    } @else {
+                      <mat-icon fontIcon="folder" class="text-gray-500 pr-10"></mat-icon>
+                    }
+                    {{ documentType.name }}
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+              </mat-expansion-panel>
+            }
+          </mat-accordion>
+        </div>
+    </div>
   </div>
 </div>

@@ -12,12 +12,16 @@ import pl.bodzioch.damian.document.command_dto.AddNewDocumentsCommandResult;
 import pl.bodzioch.damian.document.validator.DocumentTypeV;
 import pl.bodzioch.damian.document.validator.FileListExtensionV;
 import pl.bodzioch.damian.dto.AddNewFilesResponse;
+import pl.bodzioch.damian.dto.DocumentTypeData;
+import pl.bodzioch.damian.dto.GetAllDocumentTypesResponse;
 import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.infrastructure.command.CommandExecutor;
 import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
 import pl.bodzioch.damian.utils.CipherComponent;
+import pl.bodzioch.damian.utils.MessageResolver;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -29,11 +33,12 @@ class DocumentController {
     private final CommandExecutor commandExecutor;
     private final QueryExecutor queryExecutor;
     private final CipherComponent cipher;
+    private final MessageResolver messageResolver;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     AddNewFilesResponse addNewFiles(@RequestParam
-                                    @NotEmpty(message = "error.client.document.filesEmpty") //TODO walidator rozszerzenia i typu pliku
+                                    @NotEmpty(message = "error.client.document.filesEmpty")
                                     @FileListExtensionV(extensions = { "pdf" }, message = "error.client.document.incorrectFileExtension")
                                     List<MultipartFile> files,
                                     @RequestParam
@@ -52,6 +57,15 @@ class DocumentController {
         AddNewDocumentsCommand command = new AddNewDocumentsCommand(commandData);
         AddNewDocumentsCommandResult result = commandExecutor.execute(command);
         return new AddNewFilesResponse(result.message());
+    }
+
+    @GetMapping("/types")
+    @ResponseStatus(HttpStatus.OK)
+    GetAllDocumentTypesResponse getAllTypes() {
+        List<DocumentTypeData> documentTypeData = Arrays.stream(DocumentType.values())
+                .map(item -> new DocumentTypeData(item, messageResolver))
+                .toList();
+        return new GetAllDocumentTypesResponse(documentTypeData);
     }
 
     private AddNewDocumentsCommandData buildCommandData(String fileType, String serviceId, String coachId, MultipartFile item) {
