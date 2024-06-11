@@ -52,7 +52,7 @@ export class ServiceDetailsComponent {
   }
 
   protected getCoachesNames(): string {
-    return this.serviceDetails().coaches.map(item => item.firstName + ' ' + item.lastName)
+    return this.serviceDetails().coaches?.map(item => item.firstName + ' ' + item.lastName)
       .join(', ')
   }
 }

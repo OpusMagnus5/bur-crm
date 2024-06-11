@@ -4,6 +4,7 @@ import com.fasterxml.uuid.Generators;
 import pl.bodzioch.damian.client.bur.BurServiceDto;
 import pl.bodzioch.damian.coach.InnerCoach;
 import pl.bodzioch.damian.customer.InnerCustomer;
+import pl.bodzioch.damian.document.InnerDocument;
 import pl.bodzioch.damian.infrastructure.database.*;
 import pl.bodzioch.damian.intermediary.InnerIntermediary;
 import pl.bodzioch.damian.operator.InnerOperator;
@@ -80,7 +81,9 @@ record Service(
 		@DbManyToOne(prefix = "intermediary")
 		InnerIntermediary intermediary,
 		@DbOneToMany(prefix = "coach")
-		List<InnerCoach> coaches //TODO dodać walidacje min 2 trenerów na usługę
+		List<InnerCoach> coaches, //TODO dodać walidacje min 2 trenerów na usługę
+		@DbOneToMany(prefix = "document")
+		List<InnerDocument> documents
 ) {
 	@DbConstructor
 	Service {
@@ -107,7 +110,7 @@ record Service(
 				null, null,
 				command.createdBy(),
 				null, null, null, null, null, null, null,
-				null, null
+				null, null, null
 		);
 	}
 
@@ -117,7 +120,7 @@ record Service(
 				null, null, ServiceStatus.of(burService.status()),
 				null, null, null, null, null, null, null,
 				null, null, null, null, null, null, null, null,
-				null, null
+				null, null, null
 		);
 	}
 

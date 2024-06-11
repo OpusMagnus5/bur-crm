@@ -14,7 +14,7 @@
     <div>
       <div class="py-6 pl-10">
         <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.type' | translate }}</p>
-        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().type.name }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().type?.name }}</p>
       </div>
     </div>
     <div>
@@ -26,7 +26,7 @@
     <div>
       <div class="py-6 pl-10">
         <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.service-provider' | translate }}</p>
-        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().serviceProvider.name }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().serviceProvider?.name }}</p>
       </div>
     </div>
     <div>
@@ -44,7 +44,7 @@
     <div>
       <div class="py-6 pr-10">
         <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.customer' | translate }}</p>
-        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().customer.name }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().customer?.name }}</p>
       </div>
     </div>
     <div>
@@ -56,13 +56,13 @@
     <div>
       <div class="py-6 pr-10">
         <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.operator' | translate }}</p>
-        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().operator.name }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().operator?.name }}</p>
       </div>
     </div>
     <div>
       <div class="py-6 pl-10">
         <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.program' | translate }}</p>
-        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().program.name }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().program?.name }}</p>
       </div>
     </div>
     <div>
@@ -74,13 +74,13 @@
     <div>
       <div class="py-6 pl-10">
         <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.intermediary' | translate }}</p>
-        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().intermediary.name }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().intermediary?.name }}</p>
       </div>
     </div>
     <div class="col-span-2">
       <div class="py-6">
         <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.status' | translate }}</p>
-        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().status.name }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().status?.name }}</p>
       </div>
     </div>
     <div class="col-span-2">
