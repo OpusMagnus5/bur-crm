@@ -509,6 +509,7 @@
     "documents": "Documents",
     "no-file-chosen": "No files selected",
     "add-files": "Add files",
-    "files-chosen": "Number of files: {{filesNumber}}"
+    "files-chosen": "Number of files: {{filesNumber}}",
+    "invalid-extension": "The file must be in pdf format"
   }
 }

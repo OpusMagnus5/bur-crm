@@ -17,7 +17,7 @@ import {MatIcon} from "@angular/material/icon";
 import {MatSelectionList} from "@angular/material/list";
 import {MatButton} from "@angular/material/button";
 import {Observable} from "rxjs";
-import {AsyncPipe} from "@angular/common";
+import {AsyncPipe, NgClass} from "@angular/common";
 
 @Component({
   selector: 'app-service-details',
@@ -33,7 +33,8 @@ import {AsyncPipe} from "@angular/common";
     MatExpansionPanelDescription,
     MatSelectionList,
     MatButton,
-    AsyncPipe
+    AsyncPipe,
+    NgClass
   ],
   templateUrl: './service-details.component.html',
   styleUrl: './service-details.component.css'
@@ -54,7 +55,10 @@ export class ServiceDetailsComponent {
       this.serviceDetails = signal(item);
     });
     this.documentHttp.getAllDocumentTypes().subscribe(item => {
-      const documentViewData = item.types.map(item => <DocumentViewData>{opened: false, ...item});
+      const documentViewData = item.types.map(item => <DocumentViewData>{
+        opened: false,
+        ...item
+      });
       this.documentTypes.set(documentViewData);
     });
   }
@@ -70,14 +74,29 @@ export class ServiceDetailsComponent {
 
   protected getChosenFilesLabel(documentType: DocumentViewData): Observable<string> {
     const files = documentType.files;
-    if (files && files.length > 0) {
-      return this.translator.get('service-details.files-chosen', { filesNumber: files.length});
+    if (files && files.length > 0 && this.validateFiles(documentType)) {
+      return this.translator.get('service-details.files-chosen', { filesNumber: files.length });
+    } else if (!this.validateFiles(documentType)) {
+      return this.translator.get('service-details.invalid-extension');
     }
     return this.translator.get('service-details.no-file-chosen');
   }
 
   protected disableSendFilesButton(documentType: DocumentViewData): boolean {
     const files = documentType.files;
-    return files == null || files.length < 0;
+    return files == null || files.length < 1 || !this.validateFiles(documentType);
+  }
+
+  protected validateFiles(documentType: DocumentViewData): boolean {
+    const files = documentType.files;
+    if (!files) {
+      return true;
+    }
+    for (let i = 0; i < files.length; i++) {
+      if (!files.item(i)?.name?.includes('.pdf')){
+        return false;
+      }
+    }
+    return true;
   }
 }

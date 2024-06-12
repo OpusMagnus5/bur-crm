@@ -14,11 +14,9 @@ export interface GetAllDocumentTypesResponse {
   types: DocumentTypeData[]
 }
 
-
-
 export interface DocumentViewData {
   value: string,
   name: string,
-  opened?: boolean
+  opened?: boolean,
   files: FileList | null
 }

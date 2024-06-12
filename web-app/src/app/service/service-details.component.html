@@ -108,12 +108,14 @@
                         <mat-icon fontIcon="upload"></mat-icon>
                         <span>{{ 'common.send-button' | translate }}</span>
                       </button>
-                      <input type="file" class="hidden" multiple #uploadFile (change)="onFilesSelected(documentType, $event)">
+                      <input type="file" accept="application/pdf" class="hidden" multiple #uploadFile (change)="onFilesSelected(documentType, $event)">
                       <button mat-raised-button class="px-6 py-3 ml-5" (click)="uploadFile.click()">
                         <mat-icon class="text-blue-800" fontIcon="attach_file"></mat-icon>
                         <span class="text-blue-800">{{ 'service-details.add-files' | translate }}</span>
                       </button>
-                      <p class="ml-5">{{ getChosenFilesLabel(documentType) | async }}</p>
+                      <p class="ml-5" [ngClass]="validateFiles(documentType) ? 'text-black' : 'text-red-800 font-semibold'">
+                        {{ getChosenFilesLabel(documentType) | async }}
+                      </p>
                     </div>
                   </div>
                 </div>
