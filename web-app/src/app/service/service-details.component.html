@@ -8,61 +8,61 @@
     <div>
       <div class="py-6 pr-10">
         <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.number' | translate }}</p>
-        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().number }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails()?.number }}</p>
       </div>
     </div>
     <div>
       <div class="py-6 pl-10">
         <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.type' | translate }}</p>
-        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().type?.name }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails()?.type?.name }}</p>
       </div>
     </div>
     <div>
       <div class="py-6 pr-10">
         <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.name' | translate }}</p>
-        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().name }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails()?.name }}</p>
       </div>
     </div>
     <div>
       <div class="py-6 pl-10">
         <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.service-provider' | translate }}</p>
-        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().serviceProvider?.name }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails()?.serviceProvider?.name }}</p>
       </div>
     </div>
     <div>
       <div class="py-6 pr-10">
         <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.start-date' | translate }}</p>
-        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().startDate | localizedDate: 'fullDate' }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails()?.startDate | localizedDate: 'fullDate' }}</p>
       </div>
     </div>
     <div>
       <div class="py-6 pl-10">
         <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.end-date' | translate }}</p>
-        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().endDate | localizedDate: 'fullDate' }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails()?.endDate | localizedDate: 'fullDate' }}</p>
       </div>
     </div>
     <div>
       <div class="py-6 pr-10">
         <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.customer' | translate }}</p>
-        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().customer?.name }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails()?.customer?.name }}</p>
       </div>
     </div>
     <div>
       <div class="py-6 pl-10">
         <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.number-of-participants' | translate }}</p>
-        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().numberOfParticipants }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails()?.numberOfParticipants }}</p>
       </div>
     </div>
     <div>
       <div class="py-6 pr-10">
         <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.operator' | translate }}</p>
-        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().operator?.name }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails()?.operator?.name }}</p>
       </div>
     </div>
     <div>
       <div class="py-6 pl-10">
         <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.program' | translate }}</p>
-        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().program?.name }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails()?.program?.name }}</p>
       </div>
     </div>
     <div>
@@ -74,13 +74,13 @@
     <div>
       <div class="py-6 pl-10">
         <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.intermediary' | translate }}</p>
-        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().intermediary?.name }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails()?.intermediary?.name }}</p>
       </div>
     </div>
     <div class="col-span-2">
       <div class="py-6">
         <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.status' | translate }}</p>
-        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails().status?.name }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails()?.status?.name }}</p>
       </div>
     </div>
     <div class="col-span-2">
@@ -102,11 +102,19 @@
                   </mat-panel-title>
                 </mat-expansion-panel-header>
                 <div>
-                  <div>
-                    <button mat-raised-button color="primary" class="px-6 py-3">
-                      <mat-icon fontIcon="file_upload"></mat-icon>
-                      <span>Add</span>
-                    </button>
+                  <div class="grid grid-cols-2">
+                    <div class="flex items-center">
+                      <button mat-raised-button color="primary" class="px-6 py-3" [disabled]="disableSendFilesButton(documentType)">
+                        <mat-icon fontIcon="upload"></mat-icon>
+                        <span>{{ 'common.send-button' | translate }}</span>
+                      </button>
+                      <input type="file" class="hidden" multiple #uploadFile (change)="onFilesSelected(documentType, $event)">
+                      <button mat-raised-button class="px-6 py-3 ml-5" (click)="uploadFile.click()">
+                        <mat-icon class="text-blue-800" fontIcon="attach_file"></mat-icon>
+                        <span class="text-blue-800">{{ 'service-details.add-files' | translate }}</span>
+                      </button>
+                      <p class="ml-5">{{ getChosenFilesLabel(documentType) | async }}</p>
+                    </div>
                   </div>
                 </div>
               </mat-expansion-panel>
