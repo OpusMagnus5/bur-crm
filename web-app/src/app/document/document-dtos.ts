@@ -1,3 +1,5 @@
+import {UserListDataInterface} from "../user/model/user-list-data.interface";
+
 export interface DocumentTypeData {
   value: string,
   name: string
@@ -5,9 +7,12 @@ export interface DocumentTypeData {
 
 export interface DocumentData {
   id: string,
-  name: string,
-  extension: string,
+  coachId: string,
   type: DocumentTypeData
+  fileName: string,
+  fileExtension: string,
+  createdAt: Date,
+  creator: UserListDataInterface
 }
 
 export interface GetAllDocumentTypesResponse {
@@ -19,6 +24,7 @@ export interface DocumentViewData {
   name: string,
   opened?: boolean,
   files: FileList | null
+  documents: DocumentData[]
 }
 
 export enum DocumentType {

@@ -1,4 +1,4 @@
-import {Component, signal, WritableSignal} from '@angular/core';
+import {Component, OnDestroy, signal, WritableSignal} from '@angular/core';
 import {ServiceHttp} from "./service-http";
 import {GetServiceDetailsResponse} from "./service-dtos";
 import {ActivatedRoute} from "@angular/router";
@@ -14,14 +14,18 @@ import {
   MatExpansionPanelTitle
 } from "@angular/material/expansion";
 import {MatIcon} from "@angular/material/icon";
-import {MatSelectionList} from "@angular/material/list";
-import {MatButton} from "@angular/material/button";
-import {Observable} from "rxjs";
+import {MatListOption, MatSelectionList} from "@angular/material/list";
+import {MatButton, MatMiniFabButton} from "@angular/material/button";
+import {forkJoin, Observable} from "rxjs";
 import {AsyncPipe, NgClass} from "@angular/common";
 import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
-import {FormControl, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ValidationMessageService} from "../shared/service/validation-message.service";
+import {SubscriptionManager} from "../shared/util/subscription-manager";
+import {map} from "rxjs/operators";
+import {MatCheckbox} from "@angular/material/checkbox";
+import {MatDivider} from "@angular/material/divider";
 
 @Component({
   selector: 'app-service-details',
@@ -44,17 +48,24 @@ import {ValidationMessageService} from "../shared/service/validation-message.ser
     MatOption,
     ReactiveFormsModule,
     MatLabel,
-    MatError
+    MatError,
+    MatListOption,
+    MatCheckbox,
+    FormsModule,
+    MatDivider,
+    MatMiniFabButton
   ],
   templateUrl: './service-details.component.html',
   styleUrl: './service-details.component.css'
 })
-export class ServiceDetailsComponent {
+export class ServiceDetailsComponent implements OnDestroy {
 
   protected readonly DocumentType = DocumentType;
   protected serviceDetails: WritableSignal<GetServiceDetailsResponse | null> = signal(null);
   protected documentTypes: WritableSignal<DocumentViewData[]> = signal([]);
-  protected coachInvoiceController: FormControl<string | null> = new FormControl<string| null>(null, [Validators.required])
+  protected coachInvoiceController: FormControl<string | null> = new FormControl<string| null>(null, [Validators.required]);
+
+  private readonly subscriptions = new SubscriptionManager();
 
   constructor(
     private serviceHttp: ServiceHttp,
@@ -64,16 +75,38 @@ export class ServiceDetailsComponent {
     private validationMessage: ValidationMessageService
   ) {
     const id: string = this.route.snapshot.paramMap.get('id')!;
-    this.serviceHttp.getDetails(id).subscribe(item => {
-      this.serviceDetails = signal(item);
+
+    const detailsRequest = this.serviceHttp.getDetails(id);
+    const allDocumentTypesRequest = this.documentHttp.getAllDocumentTypes();
+
+    forkJoin(([
+      detailsRequest,
+      allDocumentTypesRequest
+    ])).pipe(
+      map(([
+        detailsResponse,
+        allDocumentTypesResponse
+      ]) => {
+        return {
+          details: detailsResponse,
+          allDocumentTypes: allDocumentTypesResponse
+        }
+      })
+    ).subscribe({
+      next: responses => {
+        this.serviceDetails = signal(responses.details);
+        const documentViewData = responses.allDocumentTypes.types.map(item => <DocumentViewData>{
+          opened: false,
+          documents: responses.details.documents.filter(doc => doc.type.value === item.value),
+          ...item
+        });
+        this.documentTypes.set(documentViewData);
+      }
     });
-    this.documentHttp.getAllDocumentTypes().subscribe(item => {
-      const documentViewData = item.types.map(item => <DocumentViewData>{
-        opened: false,
-        ...item
-      });
-      this.documentTypes.set(documentViewData);
-    });
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribeAll();
   }
 
   protected getCoachesNames(): string | undefined {
