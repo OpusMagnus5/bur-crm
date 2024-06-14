@@ -40,7 +40,7 @@ class AddNewDocumentsCommandHandler implements CommandHandler<AddNewDocumentsCom
 
         List<Document> serviceDocuments = readRepository.getServiceDocuments(serviceId, documentType, coachId);
         List<Document> documents = Document.newDocuments(documentsToAdd, serviceDocuments);
-        UUID serviceUuid = serviceDocuments.getFirst().uuid();
+        UUID serviceUuid = serviceDocuments.getFirst().service().uuid();
         saveOnDisc(documents, serviceUuid);
 
         try {
@@ -48,6 +48,7 @@ class AddNewDocumentsCommandHandler implements CommandHandler<AddNewDocumentsCom
         } catch (Exception e) {
             log.error("An error occurred while saving the files in db", e);
             deleteAddedFiles(documents, serviceUuid);
+            throw e;
         }
 
         String message = messageResolver.getMessage("document.addNewDocumentsSuccess");
@@ -62,6 +63,7 @@ class AddNewDocumentsCommandHandler implements CommandHandler<AddNewDocumentsCom
         } catch (Exception e) {
             log.error("An error occurred while saving the file for service uuid: " + serviceUuid, e);
             deleteAddedFiles(documents, serviceUuid);
+            throw e;
         }
     }
 
@@ -72,7 +74,7 @@ class AddNewDocumentsCommandHandler implements CommandHandler<AddNewDocumentsCom
                     .forEach(CompletableFuture::join);
         } catch (Exception e) {
             log.error("An error occurred while deleting the file for service uuid: " + serviceUuid, e);
-            deleteAddedFiles(documents, serviceUuid);
+            throw e;
         }
     }
 

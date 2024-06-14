@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import pl.bodzioch.damian.infrastructure.database.DbCaster;
 import pl.bodzioch.damian.infrastructure.database.IJdbcCaller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,11 +24,11 @@ class DocumentReadRepository implements IDocumentReadRepository {
     @Override
     @Transactional(Transactional.TxType.NOT_SUPPORTED)
     public List<Document> getServiceDocuments(Long serviceId, DocumentType documentType, Long coachId) {
-        Map<String, Object> properties = Map.of(
-                "_doc_service_id", serviceId,
-                "_doc_type", documentType.name(),
-                "_doc_coach_id", coachId
-        );
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("_doc_service_id", serviceId);
+        properties.put("_doc_type", documentType.name());
+        properties.put("_doc_coach_id", coachId);
+
         Map<String, Object> result = this.jdbcCaller.call(this.getAllForServiceProc, properties);
         List<Document> documents = DbCaster.fromProperties(result, Document.class);
         return documents.stream()

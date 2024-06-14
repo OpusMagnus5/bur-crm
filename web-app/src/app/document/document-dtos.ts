@@ -20,3 +20,11 @@ export interface DocumentViewData {
   opened?: boolean,
   files: FileList | null
 }
+
+export enum DocumentType {
+  COACH_INVOICE = 'COACH_INVOICE'
+}
+
+export interface AddNewFilesResponse {
+  message: string
+}

@@ -228,7 +228,7 @@ public class DbCaster {
         } else if (dbOneToMany.isPresent()) {
             return handleDbOneToMany(record, prefix, field, records, idColumnName, dbOneToMany.get());
         }
-        throw new DbCasterException("This is not annotated field");
+        return null;
     }
 
     @SuppressWarnings("unchecked")

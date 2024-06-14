@@ -32,7 +32,7 @@ BEGIN
     OPEN _cursor FOR
         WITH Documents AS (
             SELECT ROW_NUMBER() OVER (ORDER BY service.srv_id) AS row_num, doc_id, doc_type, doc_coach_id,
-                   service.srv_id as service_srv_id, service.srv_type as service_srv_type,
+                   service.srv_id as service_srv_id,  service.srv_type as service_srv_type,
                    service.srv_number_of_participants as service_srv_number_of_participants,
                    service.srv_uuid as service_srv_uuid
             FROM document

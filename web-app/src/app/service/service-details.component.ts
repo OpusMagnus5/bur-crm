@@ -4,7 +4,7 @@ import {GetServiceDetailsResponse} from "./service-dtos";
 import {ActivatedRoute} from "@angular/router";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {LocalizedDatePipe} from "../shared/pipe/localized-date.pipe";
-import {DocumentViewData} from "../document/document-dtos";
+import {DocumentType, DocumentViewData} from "../document/document-dtos";
 import {DocumentHttpService} from "../document/document-http.service";
 import {
   MatAccordion,
@@ -18,6 +18,10 @@ import {MatSelectionList} from "@angular/material/list";
 import {MatButton} from "@angular/material/button";
 import {Observable} from "rxjs";
 import {AsyncPipe, NgClass} from "@angular/common";
+import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
+import {MatOption, MatSelect} from "@angular/material/select";
+import {FormControl, ReactiveFormsModule, Validators} from "@angular/forms";
+import {ValidationMessageService} from "../shared/service/validation-message.service";
 
 @Component({
   selector: 'app-service-details',
@@ -34,21 +38,30 @@ import {AsyncPipe, NgClass} from "@angular/common";
     MatSelectionList,
     MatButton,
     AsyncPipe,
-    NgClass
+    NgClass,
+    MatFormField,
+    MatSelect,
+    MatOption,
+    ReactiveFormsModule,
+    MatLabel,
+    MatError
   ],
   templateUrl: './service-details.component.html',
   styleUrl: './service-details.component.css'
 })
 export class ServiceDetailsComponent {
 
+  protected readonly DocumentType = DocumentType;
   protected serviceDetails: WritableSignal<GetServiceDetailsResponse | null> = signal(null);
   protected documentTypes: WritableSignal<DocumentViewData[]> = signal([]);
+  protected coachInvoiceController: FormControl<string | null> = new FormControl<string| null>(null, [Validators.required])
 
   constructor(
     private serviceHttp: ServiceHttp,
     private documentHttp: DocumentHttpService,
     private translator: TranslateService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private validationMessage: ValidationMessageService
   ) {
     const id: string = this.route.snapshot.paramMap.get('id')!;
     this.serviceHttp.getDetails(id).subscribe(item => {
@@ -84,7 +97,8 @@ export class ServiceDetailsComponent {
 
   protected disableSendFilesButton(documentType: DocumentViewData): boolean {
     const files = documentType.files;
-    return files == null || files.length < 1 || !this.validateFiles(documentType);
+    return files == null || files.length < 1 || !this.validateFiles(documentType) ||
+      (documentType.value === DocumentType.COACH_INVOICE && !this.coachInvoiceController.value);
   }
 
   protected validateFiles(documentType: DocumentViewData): boolean {
@@ -98,5 +112,17 @@ export class ServiceDetailsComponent {
       }
     }
     return true;
+  }
+
+  protected uploadFiles(documentType: DocumentViewData) {
+    this.documentHttp.addNewFiles(documentType.files!, documentType.value, this.serviceDetails()?.id!, this.coachInvoiceController.value).subscribe()
+  }
+
+  protected getValidationMessage(fieldName: string, control: FormControl): string {
+    return this.validationMessage.getMessage(control, this.getValidationMessageKey, fieldName);
+  }
+
+  private getValidationMessageKey(fieldName: string, validation: string): string {
+    return 'service-details.validation.' + fieldName + '.' + validation;
   }
 }

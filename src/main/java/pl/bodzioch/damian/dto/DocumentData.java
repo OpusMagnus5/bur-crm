@@ -5,6 +5,7 @@ import pl.bodzioch.damian.utils.CipherComponent;
 import pl.bodzioch.damian.utils.MessageResolver;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public record DocumentData(
         String id,
@@ -19,7 +20,7 @@ public record DocumentData(
     public DocumentData(InnerDocumentDto document, CipherComponent cipher, MessageResolver messageResolver) {
         this(
                 cipher.encryptMessage(document.id().toString()),
-                cipher.encryptMessage(document.coachId().toString()),
+                Optional.ofNullable(document.coachId()).map(String::valueOf).map(cipher::encryptMessage).orElse(null),
                 new DocumentTypeData(document.type(), messageResolver),
                 document.fileName(),
                 document.fileExtension(),
