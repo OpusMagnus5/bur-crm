@@ -15,16 +15,28 @@ export interface DocumentData {
   creator: UserListDataInterface
 }
 
+export interface DocumentViewData {
+  id: string,
+  coachId: string,
+  type: DocumentTypeData
+  fileName: string,
+  fileExtension: string,
+  createdAt: Date,
+  creator: UserListDataInterface,
+  checked?: boolean
+}
+
 export interface GetAllDocumentTypesResponse {
   types: DocumentTypeData[]
 }
 
-export interface DocumentViewData {
+export interface DocumentTypeViewData {
   value: string,
   name: string,
   opened?: boolean,
   files: FileList | null
-  documents: DocumentData[]
+  documents: DocumentViewData[],
+  checkedAll: boolean
 }
 
 export enum DocumentType {

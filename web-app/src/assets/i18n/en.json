@@ -513,6 +513,8 @@
     "invalid-extension": "The file must be in pdf format",
     "coach-selector-for-file": "Coach",
     "select-all-files": "Select all",
+    "download-selected": "Download selected",
+    "remove-selected": "Delete selected",
     "validation": {
       "coach": {
         "required": "The coach field cannot be empty"

@@ -131,19 +131,29 @@
                         {{ getChosenFilesLabel(documentType) | async }}
                       </p>
                     </div>
+                    <div class="col-span-1 flex items-center">
+                      <button mat-raised-button class="px-6 py-3" color="primary" [disabled]="isAllFileNotChecked(documentType)">
+                        {{ 'service-details.download-selected' | translate }}
+                      </button>
+                      <button mat-raised-button class="px-6 py-3 ml-5" color="warn" [disabled]="isAllFileNotChecked(documentType)">
+                        {{ 'service-details.remove-selected' | translate }}
+                      </button>
+                    </div>
                   </div>
                   <mat-divider class="mt-5"></mat-divider>
                   <!--file list-->
                   <div class="mt-5">
                     @if (documentType?.documents?.length) {
                       <div class="flex items-center">
-                        <mat-checkbox color="primary" class="text-gray-700">{{ 'service-details.select-all-files' | translate }}</mat-checkbox>
+                        <mat-checkbox color="primary" class="text-gray-700" (change)="onCheckAllDocuments(documentType, $event)">
+                          {{ 'service-details.select-all-files' | translate }}
+                        </mat-checkbox>
                       </div>
                     }
                     <div class="grid auto-cols-max">
                       @for (document of documentType?.documents; track document) {
                         <div class="col-start-1">
-                          <mat-checkbox color="primary" class="text-gray-700">
+                          <mat-checkbox color="primary" class="text-gray-700" [(ngModel)]="document.checked">
                             <div class="flex items-center">
                               <mat-icon fontIcon="description" class="text-gray-500 mr-3"></mat-icon>
                               <p>{{ document.fileName }}</p>

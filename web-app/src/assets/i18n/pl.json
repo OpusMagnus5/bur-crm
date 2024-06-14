@@ -513,6 +513,8 @@
     "invalid-extension": "Plik musi być w formacie pdf",
     "coach-selector-for-file": "Trener",
     "select-all-files": "Zaznacz wszystkie",
+    "download-selected": "Pobierz zaznaczone",
+    "remove-selected": "Usuń zaznaczone",
     "validation": {
       "coach": {
         "required": "Pole trener nie może być puste"

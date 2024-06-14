@@ -4,7 +4,7 @@ import {GetServiceDetailsResponse} from "./service-dtos";
 import {ActivatedRoute} from "@angular/router";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {LocalizedDatePipe} from "../shared/pipe/localized-date.pipe";
-import {DocumentType, DocumentViewData} from "../document/document-dtos";
+import {DocumentType, DocumentTypeViewData, DocumentViewData} from "../document/document-dtos";
 import {DocumentHttpService} from "../document/document-http.service";
 import {
   MatAccordion,
@@ -24,7 +24,7 @@ import {FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angula
 import {ValidationMessageService} from "../shared/service/validation-message.service";
 import {SubscriptionManager} from "../shared/util/subscription-manager";
 import {map} from "rxjs/operators";
-import {MatCheckbox} from "@angular/material/checkbox";
+import {MatCheckbox, MatCheckboxChange} from "@angular/material/checkbox";
 import {MatDivider} from "@angular/material/divider";
 
 @Component({
@@ -62,7 +62,7 @@ export class ServiceDetailsComponent implements OnDestroy {
 
   protected readonly DocumentType = DocumentType;
   protected serviceDetails: WritableSignal<GetServiceDetailsResponse | null> = signal(null);
-  protected documentTypes: WritableSignal<DocumentViewData[]> = signal([]);
+  protected documentTypes: WritableSignal<DocumentTypeViewData[]> = signal([]);
   protected coachInvoiceController: FormControl<string | null> = new FormControl<string| null>(null, [Validators.required]);
 
   private readonly subscriptions = new SubscriptionManager();
@@ -95,12 +95,15 @@ export class ServiceDetailsComponent implements OnDestroy {
     ).subscribe({
       next: responses => {
         this.serviceDetails = signal(responses.details);
-        const documentViewData = responses.allDocumentTypes.types.map(item => <DocumentViewData>{
+        const typeViewData = responses.allDocumentTypes.types.map(item => <DocumentTypeViewData>{
           opened: false,
-          documents: responses.details.documents.filter(doc => doc.type.value === item.value),
-          ...item
+          documents: responses.details.documents
+            .filter(doc => doc.type.value === item.value)
+            .map(doc => <DocumentViewData>{...doc, checked: false}),
+          ...item,
+          checkedAll: false
         });
-        this.documentTypes.set(documentViewData);
+        this.documentTypes.set(typeViewData);
       }
     });
   }
@@ -114,11 +117,11 @@ export class ServiceDetailsComponent implements OnDestroy {
       .join(', ')
   }
 
-  protected onFilesSelected(documentType: DocumentViewData, event: Event): void {
+  protected onFilesSelected(documentType: DocumentTypeViewData, event: Event): void {
     documentType.files = (<HTMLInputElement>event.target).files
   }
 
-  protected getChosenFilesLabel(documentType: DocumentViewData): Observable<string> {
+  protected getChosenFilesLabel(documentType: DocumentTypeViewData): Observable<string> {
     const files = documentType.files;
     if (files && files.length > 0 && this.validateFiles(documentType)) {
       return this.translator.get('service-details.files-chosen', { filesNumber: files.length });
@@ -128,13 +131,13 @@ export class ServiceDetailsComponent implements OnDestroy {
     return this.translator.get('service-details.no-file-chosen');
   }
 
-  protected disableSendFilesButton(documentType: DocumentViewData): boolean {
+  protected disableSendFilesButton(documentType: DocumentTypeViewData): boolean {
     const files = documentType.files;
     return files == null || files.length < 1 || !this.validateFiles(documentType) ||
       (documentType.value === DocumentType.COACH_INVOICE && !this.coachInvoiceController.value);
   }
 
-  protected validateFiles(documentType: DocumentViewData): boolean {
+  protected validateFiles(documentType: DocumentTypeViewData): boolean {
     const files = documentType.files;
     if (!files) {
       return true;
@@ -147,12 +150,21 @@ export class ServiceDetailsComponent implements OnDestroy {
     return true;
   }
 
-  protected uploadFiles(documentType: DocumentViewData) {
+  protected uploadFiles(documentType: DocumentTypeViewData) {
     this.documentHttp.addNewFiles(documentType.files!, documentType.value, this.serviceDetails()?.id!, this.coachInvoiceController.value).subscribe()
   }
 
   protected getValidationMessage(fieldName: string, control: FormControl): string {
     return this.validationMessage.getMessage(control, this.getValidationMessageKey, fieldName);
+  }
+
+  protected onCheckAllDocuments(documentType: DocumentTypeViewData, event: MatCheckboxChange): void {
+    documentType.checkedAll = event.checked;
+    documentType.documents.forEach(item => item.checked = event.checked);
+  }
+
+  protected isAllFileNotChecked(documentType: DocumentTypeViewData): boolean {
+    return documentType?.documents?.every(item => !item.checked);
   }
 
   private getValidationMessageKey(fieldName: string, validation: string): string {
