@@ -159,7 +159,8 @@ export class ServiceDetailsComponent implements OnDestroy {
   }
 
   protected uploadFiles(documentType: DocumentTypeViewData) {
-    this.documentHttp.addNewFiles(documentType.files!, documentType.value, this.serviceDetails()?.id!, this.coachInvoiceController.value).subscribe()
+    const coachId = this.coachInvoiceController.value === this.DEFAULT_COACH ? null : this.coachInvoiceController.value;
+    this.documentHttp.addNewFiles(documentType.files!, documentType.value, this.serviceDetails()?.id!, coachId).subscribe()
   }
 
   protected getValidationMessage(fieldName: string, control: FormControl): string {
