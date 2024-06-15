@@ -245,7 +245,7 @@ public class DbCaster {
         Set<Object> ids = new HashSet<>();
 
         List<Map<String, Object>> filteredRecords = records.stream()
-                .filter(el -> parentId.equals(record.get(idColumnName)))
+                .filter(el -> parentId.equals(el.get(idColumnName)))
                 .filter(el -> {
                     Object id = el.get(innerPrefix + PROPERTIES_PREFIX + typeIdColumnName);
                     return id != null && ids.add(id);
