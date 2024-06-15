@@ -32,7 +32,7 @@ class AddNewDocumentsCommandHandler implements CommandHandler<AddNewDocumentsCom
     }
 
     @Override
-    public AddNewDocumentsCommandResult handle(AddNewDocumentsCommand command) { //TODO nullowac trenera jesli nie jest to faktura dla niego
+    public AddNewDocumentsCommandResult handle(AddNewDocumentsCommand command) {
         List<AddNewDocumentsCommandData> documentsToAdd = command.documents();
         Long serviceId = documentsToAdd.getFirst().serviceId();
         DocumentType documentType = documentsToAdd.getFirst().type();
