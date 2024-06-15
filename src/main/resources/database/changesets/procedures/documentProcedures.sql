@@ -30,21 +30,23 @@ AS $$
 BEGIN
 
     OPEN _cursor FOR
-        WITH Documents AS (
-            SELECT ROW_NUMBER() OVER (ORDER BY service.srv_id) AS row_num, doc_id, doc_type, doc_coach_id,
-                   service.srv_id as service_srv_id,  service.srv_type as service_srv_type,
-                   service.srv_number_of_participants as service_srv_number_of_participants,
-                   service.srv_uuid as service_srv_uuid
+        WITH _services AS (
+            SELECT srv_id, srv_type, srv_number_of_participants, srv_uuid
+            FROM service
+            WHERE srv_id = _doc_service_id
+        ),
+        _filtered_documents AS (
+            SELECT doc_id, doc_type, doc_coach_id, doc_service_id
             FROM document
-            RIGHT JOIN service ON doc_service_id = service.srv_id
-            WHERE service.srv_id = _doc_service_id
+            WHERE doc_service_id = _doc_service_id
               AND (doc_type IS NULL OR doc_type = _doc_type)
               AND (_doc_coach_id IS NULL OR doc_coach_id IS NULL OR doc_coach_id = _doc_coach_id)
         )
-        SELECT COALESCE(doc_id, row_num) as doc_id, doc_type, doc_coach_id, service_srv_id, service_srv_type,
-               service_srv_number_of_participants, service_srv_uuid
-        FROM Documents;
-
-
+        SELECT COALESCE(docs.doc_id, row_number() over (ORDER BY _services.srv_id)) as doc_id,
+               doc_type, doc_coach_id, _services.srv_id as service_srv_id, _services.srv_type as service_srv_type,
+               _services.srv_number_of_participants as service_srv_number_of_participants,
+               _services.srv_uuid as service_srv_uuid
+        FROM _services
+        LEFT JOIN _filtered_documents docs ON _services.srv_id = docs.doc_service_id;
 
 END$$;
