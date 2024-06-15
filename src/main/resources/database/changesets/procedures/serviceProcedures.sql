@@ -104,22 +104,33 @@ AS $$
 BEGIN
 
     OPEN _cursor FOR
-        SELECT srv_id, srv_name, srv_number, srv_start_date, srv_end_date, srv_type, srv_status,
-               opr.opr_name as operator_opr_name,
-               cst.cst_name as customer_cst_name,
-               spr.spr_name as service_provider_spr_name
-        FROM service
-        LEFT JOIN program prg ON srv_program_id = prg.prg_id
-        LEFT JOIN operator opr on opr.opr_id = prg.prg_operator_id
-        LEFT JOIN customer cst ON srv_customer_id = cst.cst_id
-        LEFT JOIN service_provider spr ON srv_service_provider_id = spr.spr_id
-        WHERE srv_number LIKE '%' || COALESCE(_srv_number, srv_number) || '%'
-            AND srv_type = COALESCE(_srv_type, srv_type)
-            AND srv_service_provider_id = COALESCE(_srv_service_provider_id, srv_service_provider_id)
-            AND srv_customer_id = COALESCE(_srv_customer_id, srv_customer_id)
-        ORDER BY srv_start_date, srv_name
-        OFFSET _offset
-        LIMIT _max;
+        WITH _service_page AS (
+            SELECT srv_id, srv_name, srv_number, srv_start_date, srv_end_date, srv_type, srv_status, srv_number_of_participants,
+                   opr.opr_name as operator_opr_name,
+                   cst.cst_name as customer_cst_name,
+                   spr.spr_name as service_provider_spr_name
+            FROM service
+            LEFT JOIN program prg ON srv_program_id = prg.prg_id
+            LEFT JOIN operator opr on opr.opr_id = prg.prg_operator_id
+            LEFT JOIN customer cst ON srv_customer_id = cst.cst_id
+            LEFT JOIN service_provider spr ON srv_service_provider_id = spr.spr_id
+            WHERE srv_number LIKE '%' || COALESCE(_srv_number, srv_number) || '%'
+                AND srv_type = COALESCE(_srv_type, srv_type)
+                AND srv_service_provider_id = COALESCE(_srv_service_provider_id, srv_service_provider_id)
+                AND srv_customer_id = COALESCE(_srv_customer_id, srv_customer_id)
+            ORDER BY srv_start_date, srv_name
+            OFFSET _offset
+            LIMIT _max
+        )
+        SELECT srv_id, srv_name, srv_number, srv_start_date, srv_end_date, srv_type, srv_status, srv_number_of_participants,
+               operator_opr_name,
+               customer_cst_name, service_provider_spr_name,
+               coach.coa_first_name as coach_coa_first_name, coach.coa_last_name as coach_coa_last_name, coach.coa_id as coach_coa_id,
+               document.doc_id as document_doc_id, document.doc_coach_id as document_doc_coach_id, document.doc_type as document_doc_type
+        FROM _service_page
+        LEFT JOIN service_coach ON service_coach.service_id = _service_page.srv_id
+        LEFT JOIN coach ON coach.coa_id = service_coach.coach_id
+        LEFT JOIN document ON document.doc_service_id = _service_page.srv_id;
 
     SELECT count(srv_id)
     INTO _total_services

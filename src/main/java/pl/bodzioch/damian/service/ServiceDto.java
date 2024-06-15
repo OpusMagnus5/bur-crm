@@ -45,7 +45,7 @@ public record ServiceDto(
         InnerIntermediaryDto intermediary,
         List<InnerCoachDto> coaches,
         List<InnerDocumentDto> documents,
-        List<BadgeMessageType> badgeMessages
+        List<BadgeMessage> badgeMessages
 ) {
 
     ServiceDto(Service service) {

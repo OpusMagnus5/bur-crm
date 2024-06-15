@@ -41,9 +41,9 @@ class ServiceReadRepository implements IServiceReadRepository {
                 new SqlOutParameter("_total_services", Types.BIGINT));
         Map<String, Object> result = jdbcCaller.call(getPageProc, properties);
 
-        Long totalPrograms = (Long) result.get("_total_services");
-        List<Service> serviceProviders = DbCaster.fromProperties(result, Service.class);
-        return new PageQueryResult<>(serviceProviders, totalPrograms);
+        Long totalServices = (Long) result.get("_total_services");
+        List<Service> services = DbCaster.fromProperties(result, Service.class);
+        return new PageQueryResult<>(services, totalServices);
     }
 
     @Override
