@@ -1,6 +1,6 @@
 import {Component, OnDestroy, signal, WritableSignal} from '@angular/core';
 import {ServiceHttp} from "./service-http";
-import {BadgeMessageData, GetServiceDetailsResponse} from "./service-dtos";
+import {BadgeMessageData, GetServiceDetailsResponse, ServiceType, ServiceTypeData} from "./service-dtos";
 import {ActivatedRoute} from "@angular/router";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {LocalizedDatePipe} from "../shared/pipe/localized-date.pipe";
@@ -107,7 +107,9 @@ export class ServiceDetailsComponent implements OnDestroy {
     ).subscribe({
       next: responses => {
         this.serviceDetails = signal(responses.details);
-        const typeViewData = responses.allDocumentTypes.types.map(docType => <DocumentTypeViewData>{
+        const typeViewData = responses.allDocumentTypes.types
+          .filter(docType => this.isDocumentTypeForServiceType(docType, responses.details.type))
+          .map(docType => <DocumentTypeViewData>{
           opened: false,
           documents: responses.details.documents
             .filter(doc => doc.type.value === docType.value)
@@ -222,6 +224,13 @@ export class ServiceDetailsComponent implements OnDestroy {
       return true;
     }
     return false;
+  }
+
+  private isDocumentTypeForServiceType(documentType: DocumentTypeData, serviceType: ServiceTypeData): boolean {
+    if (documentType.value === DocumentType.REPORT && serviceType.value != ServiceType.CONSULTING) {
+      return false;
+    }
+    return true;
   }
 
   private getValidationMessageKey(fieldName: string, validation: string): string {

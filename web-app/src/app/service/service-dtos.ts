@@ -100,3 +100,8 @@ export interface GetServiceDetailsResponse {
 export interface GetAllServiceStatusesResponse {
   statuses: ServiceStatusData[]
 }
+
+export enum ServiceType {
+  TRAINING = 'TRAINING',
+  CONSULTING = 'CONSULTING'
+}
