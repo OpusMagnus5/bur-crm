@@ -54,7 +54,8 @@ record Document(
         Document(AddNewDocumentsCommandData command) {
                 this(
                         null, Generators.timeBasedEpochGenerator().generate(), null, command.serviceId(),
-                        command.coachId(), command.type(), command.fileName(), command.fileExtension(), null,
+                        command.type() != DocumentType.COACH_INVOICE ? null : command.coachId(),
+                        command.type(), command.fileName(), command.fileExtension(), null,
                         null, command.creatorId(), null, command.fileData(), null
                 );
         }
