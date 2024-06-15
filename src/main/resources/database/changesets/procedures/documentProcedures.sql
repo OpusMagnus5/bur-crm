@@ -50,3 +50,22 @@ BEGIN
         LEFT JOIN _filtered_documents docs ON _services.srv_id = docs.doc_service_id;
 
 END$$;
+
+DROP PROCEDURE IF EXISTS document_get_by_ids;
+/*PROCEDURE document_get_by_ids*/
+CREATE OR REPLACE PROCEDURE document_get_by_ids(
+    IN _doc_ids BIGINT[],
+    OUT _cursor REFCURSOR
+)
+    LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    OPEN _cursor FOR
+        SELECT doc_id, doc_service_id, doc_file_extension, doc_file_name, doc_uuid,
+               service.srv_id as service_srv_id, service.srv_number as service_srv_number
+        FROM document
+        LEFT JOIN service ON document.doc_service_id = service.srv_id
+        WHERE doc_id = ANY(_doc_ids);
+
+END$$;

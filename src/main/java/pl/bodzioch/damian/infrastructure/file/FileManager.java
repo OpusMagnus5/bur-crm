@@ -3,11 +3,13 @@ package pl.bodzioch.damian.infrastructure.file;
 import com.google.common.io.ByteStreams;
 import org.springframework.stereotype.Component;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.util.AbstractMap;
+import java.util.List;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Component
 class FileManager implements IFileManager {
@@ -43,6 +45,21 @@ class FileManager implements IFileManager {
         return null;
     }
 
+    @Override
+    public byte[] getFiles(List<FileData> files) {
+        List<AbstractMap.SimpleEntry<FileData, File>> filesData = files.stream()
+                .map(item -> new AbstractMap.SimpleEntry<>(item, new File(
+                        DOCUMENTS_PATH +
+                                File.separator +
+                                item.path() +
+                                File.separator +
+                                item.name() +
+                                GZ_FILE_EXTENSION))
+                ).toList();
+
+        return getFilesAsZip(filesData);
+    }
+
     private void zipAndSaveFile(String path, byte[] data) {
         try (FileOutputStream fileOutputStream = new FileOutputStream(path);
              GZIPOutputStream gzipOutputStream = new GZIPOutputStream(fileOutputStream);
@@ -51,5 +68,23 @@ class FileManager implements IFileManager {
         } catch (IOException e) {
             throw new FileManagerException("An error occurred while saving the file", e);
         }
+    }
+
+    private byte[] getFilesAsZip(List<AbstractMap.SimpleEntry<FileData, File>> filesData) {
+        ByteArrayOutputStream zipByteArrayOutputStream = new ByteArrayOutputStream();
+        ZipOutputStream zipOut = new ZipOutputStream(zipByteArrayOutputStream);
+        for (AbstractMap.SimpleEntry<FileData, File> fileData : filesData) {
+            try (FileInputStream fileInputStream = new FileInputStream(fileData.getValue());
+                 GZIPInputStream gzipInputStream = new GZIPInputStream(fileInputStream)) {
+
+                ZipEntry zipEntry = new ZipEntry(fileData.getKey().nameInZip());
+                zipOut.putNextEntry(zipEntry);
+                ByteStreams.copy(gzipInputStream, zipOut);
+
+            } catch (IOException e) {
+                throw new FileManagerException("An error occurred while get files as zip", e);
+            }
+        }
+        return zipByteArrayOutputStream.toByteArray();
     }
 }

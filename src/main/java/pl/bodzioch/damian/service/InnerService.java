@@ -12,6 +12,8 @@ public record InnerService(
         Long id,
         @DbColumn(name = "srv_uuid")
         UUID uuid,
+        @DbColumn(name = "srv_number")
+        String number,
         @DbColumn(name = "srv_type")
         ServiceType type,
         @DbColumn(name = "srv_number_of_participants")
