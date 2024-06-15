@@ -9,7 +9,8 @@ import {
   DocumentType,
   DocumentTypeData,
   DocumentTypeViewData,
-  DocumentViewData
+  DocumentViewData,
+  GetAllDocumentTypesResponse
 } from "../document/document-dtos";
 import {DocumentHttpService} from "../document/document-http.service";
 import {
@@ -72,7 +73,7 @@ export class ServiceDetailsComponent implements OnDestroy {
 
   protected readonly DocumentType = DocumentType;
   protected serviceDetails: WritableSignal<GetServiceDetailsResponse | null> = signal(null);
-  protected documentTypes: WritableSignal<DocumentTypeViewData[]> = signal([]);
+  protected documentTypeViewData: WritableSignal<DocumentTypeViewData[]> = signal([]);
   protected coachInvoiceController: FormControl<string | null> =
     new FormControl<string>(this.DEFAULT_COACH, [this.validateCoach.bind(this)]);
   protected badgeMessageForServiceStatus: WritableSignal<string> = signal('');
@@ -87,7 +88,10 @@ export class ServiceDetailsComponent implements OnDestroy {
     private validationMessage: ValidationMessageService
   ) {
     const id: string = this.route.snapshot.paramMap.get('id')!;
+    this.getDataFromServer(id);
+  }
 
+  private getDataFromServer(id: string) {
     const detailsRequest = this.serviceHttp.getDetails(id);
     const allDocumentTypesRequest = this.documentHttp.getAllDocumentTypes();
 
@@ -96,9 +100,9 @@ export class ServiceDetailsComponent implements OnDestroy {
       allDocumentTypesRequest
     ])).pipe(
       map(([
-        detailsResponse,
-        allDocumentTypesResponse
-      ]) => {
+             detailsResponse,
+             allDocumentTypesResponse
+           ]) => {
         return {
           details: detailsResponse,
           allDocumentTypes: allDocumentTypesResponse
@@ -107,26 +111,30 @@ export class ServiceDetailsComponent implements OnDestroy {
     ).subscribe({
       next: responses => {
         this.serviceDetails = signal(responses.details);
-        const typeViewData = responses.allDocumentTypes.types
-          .filter(docType => this.isDocumentTypeForServiceType(docType, responses.details.type))
-          .map(docType => <DocumentTypeViewData>{
-          opened: false,
-          documents: responses.details.documents
-            .filter(doc => doc.type.value === docType.value)
-            .map(doc => <DocumentViewData>{...doc, checked: false}),
-          ...docType,
-          checkedAll: false,
-          badgeMessages: responses.details.badgeMessages
-            .filter(badge => this.isBadgeMessageForDocumentType(badge, docType))
-            .map(badge => badge.message)
-            .join('\n')
-        });
-        this.documentTypes.set(typeViewData);
+        const typeViewData = this.buildDocumentTypeViewData(responses);
+        this.documentTypeViewData.set(typeViewData);
         this.badgeMessageForServiceStatus.set(responses.details.badgeMessages.filter(statBadge =>
           statBadge.type === BadgeMessageType.NOT_COMPLETE_SERVICE
         ).map(statBadge => statBadge.message).join('\n'));
       }
     });
+  }
+
+  private buildDocumentTypeViewData(responses: { allDocumentTypes: GetAllDocumentTypesResponse; details: GetServiceDetailsResponse }) {
+    return responses.allDocumentTypes.types
+      .filter(docType => this.isDocumentTypeForServiceType(docType, responses.details.type))
+      .map(docType => <DocumentTypeViewData>{
+        opened: false,
+        documents: responses.details.documents
+          .filter(doc => doc.type.value === docType.value)
+          .map(doc => <DocumentViewData>{...doc, checked: false}),
+        ...docType,
+        checkedAll: false,
+        badgeMessages: responses.details.badgeMessages
+          .filter(badge => this.isBadgeMessageForDocumentType(badge, docType))
+          .map(badge => badge.message)
+          .join('\n')
+      });
   }
 
   ngOnDestroy(): void {

@@ -106,7 +106,7 @@
       </div>
         <div>
           <mat-accordion>
-            @for (documentType of documentTypes(); track documentType) {
+            @for (documentType of documentTypeViewData(); track documentType) {
               <mat-expansion-panel (opened)="documentType.opened = true" (closed)="documentType.opened = false">
                 <mat-expansion-panel-header>
                   <mat-panel-title class="text-gray-700">
