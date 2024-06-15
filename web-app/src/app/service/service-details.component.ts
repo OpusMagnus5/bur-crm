@@ -1,10 +1,16 @@
 import {Component, OnDestroy, signal, WritableSignal} from '@angular/core';
 import {ServiceHttp} from "./service-http";
-import {GetServiceDetailsResponse} from "./service-dtos";
+import {BadgeMessageData, GetServiceDetailsResponse} from "./service-dtos";
 import {ActivatedRoute} from "@angular/router";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {LocalizedDatePipe} from "../shared/pipe/localized-date.pipe";
-import {DocumentType, DocumentTypeViewData, DocumentViewData} from "../document/document-dtos";
+import {
+  BadgeMessageType,
+  DocumentType,
+  DocumentTypeData,
+  DocumentTypeViewData,
+  DocumentViewData
+} from "../document/document-dtos";
 import {DocumentHttpService} from "../document/document-http.service";
 import {
   MatAccordion,
@@ -26,6 +32,7 @@ import {SubscriptionManager} from "../shared/util/subscription-manager";
 import {map} from "rxjs/operators";
 import {MatCheckbox, MatCheckboxChange} from "@angular/material/checkbox";
 import {MatDivider} from "@angular/material/divider";
+import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-service-details',
@@ -53,7 +60,8 @@ import {MatDivider} from "@angular/material/divider";
     MatCheckbox,
     FormsModule,
     MatDivider,
-    MatMiniFabButton
+    MatMiniFabButton,
+    MatTooltip
   ],
   templateUrl: './service-details.component.html',
   styleUrl: './service-details.component.css'
@@ -67,6 +75,7 @@ export class ServiceDetailsComponent implements OnDestroy {
   protected documentTypes: WritableSignal<DocumentTypeViewData[]> = signal([]);
   protected coachInvoiceController: FormControl<string | null> =
     new FormControl<string>(this.DEFAULT_COACH, [this.validateCoach.bind(this)]);
+  protected badgeMessageForServiceStatus: WritableSignal<string> = signal('');
 
   private readonly subscriptions = new SubscriptionManager();
 
@@ -98,15 +107,22 @@ export class ServiceDetailsComponent implements OnDestroy {
     ).subscribe({
       next: responses => {
         this.serviceDetails = signal(responses.details);
-        const typeViewData = responses.allDocumentTypes.types.map(item => <DocumentTypeViewData>{
+        const typeViewData = responses.allDocumentTypes.types.map(docType => <DocumentTypeViewData>{
           opened: false,
           documents: responses.details.documents
-            .filter(doc => doc.type.value === item.value)
+            .filter(doc => doc.type.value === docType.value)
             .map(doc => <DocumentViewData>{...doc, checked: false}),
-          ...item,
-          checkedAll: false
+          ...docType,
+          checkedAll: false,
+          badgeMessages: responses.details.badgeMessages
+            .filter(badge => this.isBadgeMessageForDocumentType(badge, docType))
+            .map(badge => badge.message)
+            .join('\n')
         });
         this.documentTypes.set(typeViewData);
+        this.badgeMessageForServiceStatus.set(responses.details.badgeMessages.filter(statBadge =>
+          statBadge.type === BadgeMessageType.NOT_COMPLETE_SERVICE
+        ).map(statBadge => statBadge.message).join('\n'));
       }
     });
   }
@@ -181,6 +197,31 @@ export class ServiceDetailsComponent implements OnDestroy {
       return { 'required': true };
     }
     return null;
+  }
+
+  private isBadgeMessageForDocumentType(badgeMessage: BadgeMessageData, documentType: DocumentTypeData): boolean {
+    if (badgeMessage.type === BadgeMessageType.MISSING_REPORT && documentType.value === DocumentType.REPORT) {
+      return true;
+    } else if (badgeMessage.type === BadgeMessageType.NOT_ENOUGH_CONSENTS && documentType.value === DocumentType.CONSENT) {
+      return true;
+    } else if (badgeMessage.type === BadgeMessageType.MISSING_COACH_INVOICE && documentType.value === DocumentType.COACH_INVOICE) {
+      return true;
+    } else if (badgeMessage.type === BadgeMessageType.MISSING_PROVIDER_INVOICE && documentType.value === DocumentType.PROVIDER_INVOICE) {
+      return true;
+    } else if (badgeMessage.type === BadgeMessageType.MISSING_INTERMEDIARY_INVOICE && documentType.value === DocumentType.INTERMEDIARY_INVOICE) {
+      return true;
+    } else if (badgeMessage.type === BadgeMessageType.NOT_ENOUGH_PARTICIPANT_BUR_QUESTIONNAIRES && documentType.value === DocumentType.PARTICIPANT_BUR_QUESTIONNAIRE) {
+      return true;
+    } else if (badgeMessage.type === BadgeMessageType.MISSING_CUSTOMER_BUR_QUESTIONNAIRE && documentType.value === DocumentType.CUSTOMER_BUR_QUESTIONNAIRE) {
+      return true;
+    } else if (badgeMessage.type === BadgeMessageType.NOT_ENOUGH_PARTICIPANT_PROVIDER_QUESTIONNAIRE && documentType.value === DocumentType.PARTICIPANT_PROVIDER_QUESTIONNAIRE) {
+      return true;
+    } else if (badgeMessage.type === BadgeMessageType.MISSING_ATTENDANCE_LIST && documentType.value === DocumentType.ATTENDANCE_LIST) {
+      return true;
+    } else if (badgeMessage.type === BadgeMessageType.MISSING_PRESENTATION && documentType.value === DocumentType.PRESENTATION) {
+      return true;
+    }
+    return false;
   }
 
   private getValidationMessageKey(fieldName: string, validation: string): string {

@@ -25,7 +25,8 @@ public record GetServiceDetailsResponse(
         IntermediaryData intermediary,
         List<CoachData> coaches,
         ServiceStatusData status,
-        List<DocumentData> documents
+        List<DocumentData> documents,
+        List<BadgeMessageData> badgeMessages
 ) {
     public GetServiceDetailsResponse(ServiceDto service, MessageResolver messageResolver, CipherComponent cipher) {
         this(
@@ -50,6 +51,9 @@ public record GetServiceDetailsResponse(
                 new ServiceStatusData(service.status().name(), messageResolver.getMessage("service.status." + service.status().name())),
                 service.documents().stream()
                         .map(item -> new DocumentData(item, cipher, messageResolver))
+                        .toList(),
+                service.badgeMessages().stream()
+                        .map(item -> new BadgeMessageData(item, messageResolver))
                         .toList()
         );
     }

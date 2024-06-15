@@ -93,7 +93,8 @@ export interface GetServiceDetailsResponse {
   intermediary: IntermediaryData,
   coaches: CoachData[],
   status: ServiceStatusData,
-  documents: DocumentData[]
+  documents: DocumentData[],
+  badgeMessages: BadgeMessageData[]
 }
 
 export interface GetAllServiceStatusesResponse {

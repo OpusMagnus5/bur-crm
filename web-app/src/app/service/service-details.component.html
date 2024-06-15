@@ -1,8 +1,14 @@
 <div class="mat-elevation-z8">
   <div class="grid grid-cols-2 divide-y divide-gray-300 px-20 py-6">
     <div class="col-span-2">
-      <div class="py-6">
+      <div class="py-6 flex items-center">
         <h3 class="font-semibold leading-7 text-gray-800 text-lg">{{ 'service-details.title' | translate }}</h3>
+        @if (serviceDetails()?.badgeMessages?.length) {
+          <mat-icon fontIcon="error_outline"
+                    color="warn"
+                    class="ml-5">
+          </mat-icon>
+        }
       </div>
     </div>
     <div>
@@ -80,7 +86,18 @@
     <div class="col-span-2">
       <div class="py-6">
         <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.status' | translate }}</p>
-        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails()?.status?.name }}</p>
+        <div class="flex items-center">
+          <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails()?.status?.name }}</p>
+          @if (badgeMessageForServiceStatus()) {
+            <mat-icon fontIcon="error_outline"
+                      color="warn"
+                      [matTooltip]="badgeMessageForServiceStatus()"
+                      matTooltipPosition="above"
+                      matTooltipClass="whitespace-pre-line"
+                      class="ml-5">
+            </mat-icon>
+          }
+        </div>
       </div>
     </div>
     <div class="col-span-2">
@@ -99,6 +116,15 @@
                       <mat-icon fontIcon="folder" class="text-gray-500 pr-10"></mat-icon>
                     }
                     {{ documentType.name }}
+                    @if (documentType?.badgeMessages) {
+                      <mat-icon fontIcon="error_outline"
+                                color="warn"
+                                [matTooltip]="documentType.badgeMessages"
+                                matTooltipPosition="above"
+                                matTooltipClass="whitespace-pre-line"
+                                class="ml-5">
+                      </mat-icon>
+                    }
                   </mat-panel-title>
                 </mat-expansion-panel-header>
                 <div>
