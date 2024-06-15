@@ -34,6 +34,7 @@ import {map} from "rxjs/operators";
 import {MatCheckbox, MatCheckboxChange} from "@angular/material/checkbox";
 import {MatDivider} from "@angular/material/divider";
 import {MatTooltip} from "@angular/material/tooltip";
+import {SnackbarService} from "../shared/service/snackbar.service";
 
 @Component({
   selector: 'app-service-details',
@@ -70,6 +71,7 @@ import {MatTooltip} from "@angular/material/tooltip";
 export class ServiceDetailsComponent implements OnDestroy {
 
   protected readonly DEFAULT_COACH = 'defaultCoach';
+  private readonly serviceId: string;
 
   protected readonly DocumentType = DocumentType;
   protected serviceDetails: WritableSignal<GetServiceDetailsResponse | null> = signal(null);
@@ -85,14 +87,15 @@ export class ServiceDetailsComponent implements OnDestroy {
     private documentHttp: DocumentHttpService,
     private translator: TranslateService,
     private route: ActivatedRoute,
-    private validationMessage: ValidationMessageService
+    private validationMessage: ValidationMessageService,
+    private snackBarService: SnackbarService
   ) {
-    const id: string = this.route.snapshot.paramMap.get('id')!;
-    this.getDataFromServer(id);
+    this.serviceId = this.route.snapshot.paramMap.get('id')!;
+    this.getDataFromServer();
   }
 
-  private getDataFromServer(id: string) {
-    const detailsRequest = this.serviceHttp.getDetails(id);
+  private getDataFromServer() {
+    const detailsRequest = this.serviceHttp.getDetails(this.serviceId);
     const allDocumentTypesRequest = this.documentHttp.getAllDocumentTypes();
 
     forkJoin(([
@@ -186,7 +189,11 @@ export class ServiceDetailsComponent implements OnDestroy {
 
   protected uploadFiles(documentType: DocumentTypeViewData) {
     const coachId = this.coachInvoiceController.value === this.DEFAULT_COACH ? null : this.coachInvoiceController.value;
-    this.documentHttp.addNewFiles(documentType.files!, documentType.value, this.serviceDetails()?.id!, coachId).subscribe()
+    this.documentHttp.addNewFiles(documentType.files!, documentType.value, this.serviceDetails()?.id!, coachId)
+      .subscribe(item => {
+        this.snackBarService.openTopCenterSnackbar(item.message);
+        this.getDataFromServer();
+      });
   }
 
   protected getValidationMessage(fieldName: string, control: FormControl): string {
