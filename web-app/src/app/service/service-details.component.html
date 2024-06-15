@@ -110,17 +110,12 @@
                         <span>{{ 'common.send-button' | translate }}</span>
                       </button>
                       @if (documentType.value === DocumentType.COACH_INVOICE) {
-                        <mat-form-field class="ml-5 ">
-                          <mat-label>{{ 'service-details.coach-selector-for-file' | translate }}</mat-label>
-                          <mat-select [formControl]="coachInvoiceController">
-                            @for (coach of serviceDetails()?.coaches; track coach) {
-                              <mat-option [value]="coach.id">{{ coach.firstName + ' ' + coach.lastName}}</mat-option>
-                            }
-                          </mat-select>
-                          @if (coachInvoiceController.invalid){
-                            <mat-error>{{ getValidationMessage('coach', coachInvoiceController) }}</mat-error>
+                        <select class="ml-5 px-2 py-2 border border-gray-800 rounded" [formControl]="coachInvoiceController">
+                          <option [value]="DEFAULT_COACH" selected>{{ 'service-details.coach-selector-for-file' | translate }}</option>
+                          @for (coach of serviceDetails()?.coaches; track coach) {
+                            <option [value]="coach.id">{{ coach.firstName + ' ' + coach.lastName}}</option>
                           }
-                        </mat-form-field>
+                        </select>
                       }
                       <input type="file" accept="application/pdf" class="hidden" multiple #uploadFile (change)="onFilesSelected(documentType, $event)">
                       <button mat-raised-button class="px-6 py-3 ml-5" (click)="uploadFile.click()">

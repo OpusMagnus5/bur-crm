@@ -16,11 +16,11 @@ import {
 import {MatIcon} from "@angular/material/icon";
 import {MatListOption, MatSelectionList} from "@angular/material/list";
 import {MatButton, MatMiniFabButton} from "@angular/material/button";
-import {forkJoin, Observable} from "rxjs";
+import {forkJoin, Observable, of} from "rxjs";
 import {AsyncPipe, NgClass} from "@angular/common";
 import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
-import {FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {AbstractControl, FormControl, FormsModule, ReactiveFormsModule, ValidationErrors} from "@angular/forms";
 import {ValidationMessageService} from "../shared/service/validation-message.service";
 import {SubscriptionManager} from "../shared/util/subscription-manager";
 import {map} from "rxjs/operators";
@@ -60,10 +60,13 @@ import {MatDivider} from "@angular/material/divider";
 })
 export class ServiceDetailsComponent implements OnDestroy {
 
+  protected readonly DEFAULT_COACH = 'defaultCoach';
+
   protected readonly DocumentType = DocumentType;
   protected serviceDetails: WritableSignal<GetServiceDetailsResponse | null> = signal(null);
   protected documentTypes: WritableSignal<DocumentTypeViewData[]> = signal([]);
-  protected coachInvoiceController: FormControl<string | null> = new FormControl<string| null>(null, [Validators.required]);
+  protected coachInvoiceController: FormControl<string | null> =
+    new FormControl<string>(this.DEFAULT_COACH, [this.validateCoach.bind(this)]);
 
   private readonly subscriptions = new SubscriptionManager();
 
@@ -122,19 +125,24 @@ export class ServiceDetailsComponent implements OnDestroy {
   }
 
   protected getChosenFilesLabel(documentType: DocumentTypeViewData): Observable<string> {
+    const invalidCoach = this.coachInvoiceController.invalid;
     const files = documentType.files;
-    if (files && files.length > 0 && this.validateFiles(documentType)) {
-      return this.translator.get('service-details.files-chosen', { filesNumber: files.length });
+
+    if (invalidCoach && documentType.value === DocumentType.COACH_INVOICE) {
+      return of(this.getValidationMessage('coach', this.coachInvoiceController));
     } else if (!this.validateFiles(documentType)) {
       return this.translator.get('service-details.invalid-extension');
+    } else if (files && files.length > 0 && this.validateFiles(documentType)) {
+      return this.translator.get('service-details.files-chosen', { filesNumber: files.length });
     }
+
     return this.translator.get('service-details.no-file-chosen');
   }
 
   protected disableSendFilesButton(documentType: DocumentTypeViewData): boolean {
     const files = documentType.files;
     return files == null || files.length < 1 || !this.validateFiles(documentType) ||
-      (documentType.value === DocumentType.COACH_INVOICE && !this.coachInvoiceController.value);
+      (documentType.value === DocumentType.COACH_INVOICE && this.coachInvoiceController.invalid);
   }
 
   protected validateFiles(documentType: DocumentTypeViewData): boolean {
@@ -165,6 +173,13 @@ export class ServiceDetailsComponent implements OnDestroy {
 
   protected isAllFileNotChecked(documentType: DocumentTypeViewData): boolean {
     return documentType?.documents?.every(item => !item.checked);
+  }
+
+  private validateCoach(control: AbstractControl): ValidationErrors | null {
+    if (control.value === this.DEFAULT_COACH) {
+      return { 'required': true };
+    }
+    return null;
   }
 
   private getValidationMessageKey(fieldName: string, validation: string): string {
