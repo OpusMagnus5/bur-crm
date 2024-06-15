@@ -6,7 +6,6 @@
        animationDuration="0ms">
     @for(link of hiddenLinks(); track link) {
       <a mat-tab-link
-         [routerLink]="link.path"
          [active]="routerService.isPartOfActivePath(getFullRoutePath(link.path))"
          [hidden]="!routerService.isPartOfActivePath(getFullRoutePath(link.path))">
         {{ link.name }}
