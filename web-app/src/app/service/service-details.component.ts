@@ -35,6 +35,8 @@ import {MatCheckbox, MatCheckboxChange} from "@angular/material/checkbox";
 import {MatDivider} from "@angular/material/divider";
 import {MatTooltip} from "@angular/material/tooltip";
 import {SnackbarService} from "../shared/service/snackbar.service";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {DeleteRecordConfirmationComponent} from "../shared/component/delete-record-confirmation.component";
 
 @Component({
   selector: 'app-service-details',
@@ -89,7 +91,8 @@ export class ServiceDetailsComponent implements OnDestroy {
     private translator: TranslateService,
     private route: ActivatedRoute,
     private validationMessage: ValidationMessageService,
-    private snackBarService: SnackbarService
+    private snackBarService: SnackbarService,
+    private dialog: MatDialog,
   ) {
     this.serviceId = this.route.snapshot.paramMap.get('id')!;
     this.getDataFromServer();
@@ -232,18 +235,12 @@ export class ServiceDetailsComponent implements OnDestroy {
       .filter(item => item.checked)
       .map(item => item.id);
 
-    this.documentHttp.deleteDocuments(documentIds).subscribe(response => {
-      this.snackBarService.openTopCenterSnackbar(response.message);
-      this.getDataFromServer();
-    })
+    this.deleteDocumentsByIds(documentIds);
   }
 
   protected deleteDocument(document: DocumentViewData) {
     const documentIds: string[] = [document.id]
-    this.documentHttp.deleteDocuments(documentIds).subscribe(response => {
-      this.snackBarService.openTopCenterSnackbar(response.message);
-      this.getDataFromServer();
-    })
+    this.deleteDocumentsByIds(documentIds);
   }
 
   protected downloadAllServiceDocuments() {
@@ -278,6 +275,29 @@ export class ServiceDetailsComponent implements OnDestroy {
       return true;
     }
     return false;
+  }
+
+  private deleteDocumentsByIds(documentIds: string[]) {
+    const codeToTranslate: string = documentIds.length > 1 ? 'delete-files' : 'delete-file';
+    const dialogRef = this.openDeleteFileConfirmation(codeToTranslate);
+    this.subscriptions.add(dialogRef.componentInstance.deleteConfirmation.subscribe(value => {
+      if (value) {
+        dialogRef.close();
+        this.documentHttp.deleteDocuments(documentIds).subscribe(response => {
+          this.snackBarService.openTopCenterSnackbar(response.message);
+          this.getDataFromServer();
+        });
+      }
+    }));
+  }
+
+  private openDeleteFileConfirmation(codeForTranslation: string): MatDialogRef<DeleteRecordConfirmationComponent> {
+    return this.dialog.open(
+      DeleteRecordConfirmationComponent, {
+        data: {
+          codeForTranslation: codeForTranslation
+        }
+      });
   }
 
   private validateCoach(control: AbstractControl): ValidationErrors | null {

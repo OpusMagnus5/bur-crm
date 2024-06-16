@@ -523,5 +523,13 @@
         "required": "Pole trener nie może być puste"
       }
     }
+  },
+  "delete-file": {
+    "confirmation-title": "Usuń dokument",
+    "confirmation-content": "Jesteś pewien, że chcesz usunąć ten dokument?"
+  },
+  "delete-files": {
+    "confirmation-title": "Usuń dokumenty",
+    "confirmation-content": "Jesteś pewien, że chcesz usunąć te dokumenty?"
   }
 }
