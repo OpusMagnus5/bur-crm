@@ -10,4 +10,7 @@ interface IDocumentReadRepository {
 
     @Transactional(Transactional.TxType.NOT_SUPPORTED)
     List<Document> getDocuments(List<Long> documentIds);
+
+    @Transactional(Transactional.TxType.NOT_SUPPORTED)
+    List<Document> getServiceDocuments(Long serviceId);
 }

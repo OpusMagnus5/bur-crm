@@ -240,6 +240,10 @@ export class ServiceDetailsComponent implements OnDestroy {
     })
   }
 
+  protected downloadAllServiceDocuments() {
+    this.documentHttp.getServiceDocuments(this.serviceId);
+  }
+
   private validateCoach(control: AbstractControl): ValidationErrors | null {
     if (control.value === this.DEFAULT_COACH) {
       return { 'required': true };

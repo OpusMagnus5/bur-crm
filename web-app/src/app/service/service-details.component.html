@@ -101,112 +101,124 @@
       </div>
     </div>
     <div class="col-span-2">
-      <div class="py-6">
+      <div class="py-6 flex items-center">
         <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.documents' | translate }}</p>
+        <button mat-raised-button color="primary" class="px-6 py-3 ml-5" (click)="downloadAllServiceDocuments()">
+          {{ 'service-details.download-all-service-documents' | translate }}
+        </button>
       </div>
-        <div>
-          <mat-accordion>
-            @for (documentType of documentTypeViewData(); track documentType) {
-              <mat-expansion-panel (opened)="documentType.opened = true" (closed)="documentType.opened = false">
-                <mat-expansion-panel-header>
-                  <mat-panel-title class="text-gray-700">
-                    @if (documentType.opened) {
-                      <mat-icon fontIcon="folder_open" class="text-gray-500 pr-10"></mat-icon>
-                    } @else {
-                      <mat-icon fontIcon="folder" class="text-gray-500 pr-10"></mat-icon>
-                    }
-                    {{ documentType.name }}
-                    @if (documentType?.badgeMessages) {
-                      <mat-icon fontIcon="error_outline"
-                                color="warn"
-                                [matTooltip]="documentType.badgeMessages"
-                                matTooltipPosition="above"
-                                matTooltipClass="whitespace-pre-line"
-                                class="ml-5">
-                      </mat-icon>
-                    }
-                  </mat-panel-title>
-                </mat-expansion-panel-header>
-                <div>
-                  <!--file list header-->
-                  <div class="grid grid-cols-3">
-                    <div class="col-span-2 flex items-center">
-                      <button mat-raised-button color="primary" class="px-6 py-3" [disabled]="disableSendFilesButton(documentType)" (click)="uploadFiles(documentType)">
-                        <mat-icon fontIcon="upload"></mat-icon>
-                        <span>{{ 'common.send-button' | translate }}</span>
-                      </button>
-                      @if (documentType.value === DocumentType.COACH_INVOICE) {
-                        <select class="ml-5 px-2 py-2 border border-gray-800 rounded" [formControl]="coachInvoiceController">
-                          <option [value]="DEFAULT_COACH" selected>{{ 'service-details.coach-selector-for-file' | translate }}</option>
-                          @for (coach of serviceDetails()?.coaches; track coach) {
-                            <option [value]="coach.id">{{ coach.firstName + ' ' + coach.lastName}}</option>
-                          }
-                        </select>
-                      }
-                      <input type="file" accept="application/pdf" class="hidden" multiple #uploadFile (change)="onFilesSelected(documentType, $event)">
-                      <button mat-raised-button class="px-6 py-3 ml-5" (click)="uploadFile.click()">
-                        <mat-icon class="text-blue-800" fontIcon="attach_file"></mat-icon>
-                        <span class="text-blue-800">{{ 'service-details.add-files' | translate }}</span>
-                      </button>
-                      <p class="ml-5" [ngClass]="validateFiles(documentType) ? 'text-black' : 'text-red-800 font-semibold'">
-                        {{ getChosenFilesLabel(documentType) | async }}
-                      </p>
-                    </div>
-                    <div class="col-span-1 flex items-center">
-                      <button mat-raised-button
-                              class="px-6 py-3"
-                              color="primary"
-                              [disabled]="isAllFileNotChecked(documentType)"
-                              (click)="downloadDocuments(documentType)">
-                        {{ 'service-details.download-selected' | translate }}
-                      </button>
-                      <button mat-raised-button
-                              class="px-6 py-3 ml-5"
+      <div>
+        <mat-accordion>
+          @for (documentType of documentTypeViewData(); track documentType) {
+            <mat-expansion-panel (opened)="documentType.opened = true" (closed)="documentType.opened = false">
+              <mat-expansion-panel-header>
+                <mat-panel-title class="text-gray-700">
+                  @if (documentType.opened) {
+                    <mat-icon fontIcon="folder_open" class="text-gray-500 pr-10"></mat-icon>
+                  } @else {
+                    <mat-icon fontIcon="folder" class="text-gray-500 pr-10"></mat-icon>
+                  }
+                  {{ documentType.name }}
+                  @if (documentType?.badgeMessages) {
+                    <mat-icon fontIcon="error_outline"
                               color="warn"
-                              [disabled]="isAllFileNotChecked(documentType)"
-                              (click)="deleteDocuments(documentType)">
-                        {{ 'service-details.remove-selected' | translate }}
-                      </button>
-                    </div>
-                  </div>
-                  <mat-divider class="mt-5"></mat-divider>
-                  <!--file list-->
-                  <div class="mt-5">
-                    @if (documentType?.documents?.length) {
-                      <div class="flex items-center">
-                        <mat-checkbox color="primary" class="text-gray-700" (change)="onCheckAllDocuments(documentType, $event)">
-                          {{ 'service-details.select-all-files' | translate }}
-                        </mat-checkbox>
-                      </div>
+                              [matTooltip]="documentType.badgeMessages"
+                              matTooltipPosition="above"
+                              matTooltipClass="whitespace-pre-line"
+                              class="ml-5">
+                    </mat-icon>
+                  }
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div>
+                <!--file list header-->
+                <div class="grid grid-cols-3">
+                  <div class="col-span-2 flex items-center">
+                    <button mat-raised-button color="primary" class="px-6 py-3"
+                            [disabled]="disableSendFilesButton(documentType)" (click)="uploadFiles(documentType)">
+                      <mat-icon fontIcon="upload"></mat-icon>
+                      <span>{{ 'common.send-button' | translate }}</span>
+                    </button>
+                    @if (documentType.value === DocumentType.COACH_INVOICE) {
+                      <select class="ml-5 px-2 py-2 border border-gray-800 rounded"
+                              [formControl]="coachInvoiceController">
+                        <option [value]="DEFAULT_COACH"
+                                selected>{{ 'service-details.coach-selector-for-file' | translate }}
+                        </option>
+                        @for (coach of serviceDetails()?.coaches; track coach) {
+                          <option [value]="coach.id">{{ coach.firstName + ' ' + coach.lastName }}</option>
+                        }
+                      </select>
                     }
-                    <div class="grid auto-cols-max">
-                      @for (document of documentType?.documents; track document) {
-                        <div class="col-start-1">
-                          <mat-checkbox color="primary" class="text-gray-700" [(ngModel)]="document.checked">
-                            <div class="flex items-center">
-                              <mat-icon fontIcon="description" class="text-gray-500 mr-3"></mat-icon>
-                              <p>{{ document.fileName }}</p>
-                            </div>
-                          </mat-checkbox>
-                        </div>
-                        <div class="col-start-2">
-                          <div class="flex items-center">
-                            <button mat-mini-fab class="ml-5 scale-75 bg-blue-800 text-white" (click)="downloadDocument(document)">
-                              <mat-icon fontIcon="download"></mat-icon>
-                            </button>
-                            <button mat-mini-fab class="ml-5 scale-75 bg-red-800 text-white" (click)="deleteDocument(document)">
-                              <mat-icon fontIcon="clear"></mat-icon>
-                            </button>
-                          </div>
-                        </div>
-                      }
-                    </div>
+                    <input type="file" accept="application/pdf" class="hidden" multiple #uploadFile
+                           (change)="onFilesSelected(documentType, $event)">
+                    <button mat-raised-button class="px-6 py-3 ml-5" (click)="uploadFile.click()">
+                      <mat-icon class="text-blue-800" fontIcon="attach_file"></mat-icon>
+                      <span class="text-blue-800">{{ 'service-details.add-files' | translate }}</span>
+                    </button>
+                    <p class="ml-5"
+                       [ngClass]="validateFiles(documentType) ? 'text-black' : 'text-red-800 font-semibold'">
+                      {{ getChosenFilesLabel(documentType) | async }}
+                    </p>
+                  </div>
+                  <div class="col-span-1 flex items-center">
+                    <button mat-raised-button
+                            class="px-6 py-3"
+                            color="primary"
+                            [disabled]="isAllFileNotChecked(documentType)"
+                            (click)="downloadDocuments(documentType)">
+                      {{ 'service-details.download-selected' | translate }}
+                    </button>
+                    <button mat-raised-button
+                            class="px-6 py-3 ml-5"
+                            color="warn"
+                            [disabled]="isAllFileNotChecked(documentType)"
+                            (click)="deleteDocuments(documentType)">
+                      {{ 'service-details.remove-selected' | translate }}
+                    </button>
                   </div>
                 </div>
-              </mat-expansion-panel>
-            }
-          </mat-accordion>
-        </div>
+                <mat-divider class="mt-5"></mat-divider>
+                <!--file list-->
+                <div class="mt-5">
+                  @if (documentType?.documents?.length) {
+                    <div class="flex items-center">
+                      <mat-checkbox color="primary" class="text-gray-700"
+                                    (change)="onCheckAllDocuments(documentType, $event)">
+                        {{ 'service-details.select-all-files' | translate }}
+                      </mat-checkbox>
+                    </div>
+                  }
+                  <div class="grid auto-cols-max">
+                    @for (document of documentType?.documents; track document) {
+                      <div class="col-start-1">
+                        <mat-checkbox color="primary" class="text-gray-700" [(ngModel)]="document.checked">
+                          <div class="flex items-center">
+                            <mat-icon fontIcon="description" class="text-gray-500 mr-3"></mat-icon>
+                            <p>{{ document.fileName }}</p>
+                          </div>
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-start-2">
+                        <div class="flex items-center">
+                          <button mat-mini-fab class="ml-5 scale-75 bg-blue-800 text-white"
+                                  (click)="downloadDocument(document)">
+                            <mat-icon fontIcon="download"></mat-icon>
+                          </button>
+                          <button mat-mini-fab class="ml-5 scale-75 bg-red-800 text-white"
+                                  (click)="deleteDocument(document)">
+                            <mat-icon fontIcon="clear"></mat-icon>
+                          </button>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          }
+        </mat-accordion>
+      </div>
     </div>
   </div>
 </div>

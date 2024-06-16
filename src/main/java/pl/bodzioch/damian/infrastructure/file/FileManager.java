@@ -60,6 +60,32 @@ class FileManager implements IFileManager {
         return getFilesAsZip(filesData);
     }
 
+    @Override
+    public byte[] getFilesByFolders(List<FolderData> foldersData) {
+        try (ByteArrayOutputStream zipByteArrayOutputStream = new ByteArrayOutputStream();
+             ZipOutputStream zipOut = new ZipOutputStream(zipByteArrayOutputStream)) {
+            for (FolderData folder: foldersData) {
+                for (FileData fileData : folder.fileData()) {
+                    File file = new File(DOCUMENTS_PATH + File.separator + fileData.path() + File.separator + fileData.name() + GZ_FILE_EXTENSION);
+                    try (FileInputStream fileInputStream = new FileInputStream(file);
+                         GZIPInputStream gzipInputStream = new GZIPInputStream(fileInputStream)) {
+
+                        ZipEntry zipEntry = new ZipEntry(folder.folderInZip() + File.separator + fileData.nameInZip());
+                        zipOut.putNextEntry(zipEntry);
+                        ByteStreams.copy(gzipInputStream, zipOut);
+                        zipOut.closeEntry();
+                    } catch (IOException e) {
+                        throw new FileManagerException("An error occurred while get files as zip", e);
+                    }
+                }
+            }
+            zipOut.finish();
+            return zipByteArrayOutputStream.toByteArray();
+        } catch (IOException e) {
+            throw new FileManagerException("An error occurred while creating zip output stream", e);
+        }
+    }
+
     private void zipAndSaveFile(String path, byte[] data) {
         try (FileOutputStream fileOutputStream = new FileOutputStream(path);
              GZIPOutputStream gzipOutputStream = new GZIPOutputStream(fileOutputStream);

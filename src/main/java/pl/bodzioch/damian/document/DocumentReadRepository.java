@@ -16,11 +16,13 @@ class DocumentReadRepository implements IDocumentReadRepository {
     private final IJdbcCaller jdbcCaller;
     private final SimpleJdbcCall getAllForServiceProc;
     private final SimpleJdbcCall getDocumentsByIdsProc;
+    private final SimpleJdbcCall getAllServiceDocumentsProc;
 
     DocumentReadRepository(IJdbcCaller jdbcCaller) {
         this.jdbcCaller = jdbcCaller;
         this.getAllForServiceProc = this.jdbcCaller.buildSimpleJdbcCall("document_get_all_for_service");
         this.getDocumentsByIdsProc = this.jdbcCaller.buildSimpleJdbcCall("document_get_by_ids");
+        this.getAllServiceDocumentsProc = this.jdbcCaller.buildSimpleJdbcCall("document_get_all_service_documents");
     }
 
     @Override
@@ -47,6 +49,16 @@ class DocumentReadRepository implements IDocumentReadRepository {
         properties.put("_doc_ids", documentIds.toArray(Long[]::new));
 
         Map<String, Object> result = this.jdbcCaller.call(this.getDocumentsByIdsProc, properties);
+        return DbCaster.fromProperties(result, Document.class);
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.NOT_SUPPORTED)
+    public List<Document> getServiceDocuments(Long serviceId) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("_doc_service_id", serviceId);
+
+        Map<String, Object> result = this.jdbcCaller.call(this.getAllServiceDocumentsProc, properties);
         return DbCaster.fromProperties(result, Document.class);
     }
 }

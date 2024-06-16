@@ -12,6 +12,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.bodzioch.damian.document.command_dto.*;
+import pl.bodzioch.damian.document.query_dto.GetAllServiceDocumentsQuery;
+import pl.bodzioch.damian.document.query_dto.GetAllServiceDocumentsQueryResult;
 import pl.bodzioch.damian.document.query_dto.GetDocumentsQuery;
 import pl.bodzioch.damian.document.query_dto.GetDocumentsQueryResult;
 import pl.bodzioch.damian.document.validator.DocumentTypeV;
@@ -110,6 +112,26 @@ class DocumentController {
         DeleteDocumentsCommandResult result = commandExecutor.execute(command);
         return new DeleteDocumentsResponse(result.message());
     }
+
+    @GetMapping(value = "/service", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    ResponseEntity<Resource> getDocuments(@RequestParam
+                                          @NotEmpty(message = "error.client.document.serviceIdEmpty")
+                                          String serviceId
+    ) {
+        long parsedServiceId = Long.parseLong(cipher.decryptMessage(serviceId));
+        GetAllServiceDocumentsQuery query = new GetAllServiceDocumentsQuery(parsedServiceId);
+        GetAllServiceDocumentsQueryResult result = queryExecutor.execute(query);
+
+        ByteArrayResource byteArrayResource = new ByteArrayResource(result.zipData());
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + result.fileName());
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .headers(httpHeaders)
+                .body(byteArrayResource);
+    }
+
 
     private AddNewDocumentsCommandData buildCommandData(String fileType, String serviceId, String coachId, MultipartFile item) {
         try {

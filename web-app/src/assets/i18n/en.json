@@ -515,6 +515,7 @@
     "select-all-files": "Select all",
     "download-selected": "Download selected",
     "remove-selected": "Delete selected",
+    "download-all-service-documents": "Download all",
     "validation": {
       "coach": {
         "required": "The coach field cannot be empty"

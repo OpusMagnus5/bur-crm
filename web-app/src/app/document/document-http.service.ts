@@ -54,4 +54,14 @@ export class DocumentHttpService {
 
     return this.http.delete<DeleteDocumentsResponse>(SERVER_URL + 'api/document', { params: params });
   }
+
+  getServiceDocuments(serviceId: string): void {
+    const observable = this.http.get<Blob>(SERVER_URL + 'api/document/service', {
+      params: new HttpParams().append('serviceId', serviceId),
+      observe: 'response',
+      responseType: 'blob' as 'json'
+    });
+
+    this.fileDownloadService.downloadDocuments(observable);
+  }
 }

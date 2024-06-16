@@ -34,6 +34,6 @@ class GetDocumentsQueryHandler implements QueryHandler<GetDocumentsQuery, GetDoc
         DocumentType documentType = documents.getFirst().type();
         String fileType = messageResolver.getMessage("document.type.file." + documentType.name());
         String serviceNumber = documents.getFirst().service().number().replaceAll("/", "-");
-        return new GetDocumentsQueryResult(zippedFiles, fileType + "_" + serviceNumber + ".zip");
+        return new GetDocumentsQueryResult(zippedFiles, fileType + "_" + serviceNumber + IFileManager.ZIP_FILE_EXTENSION);
     }
 }

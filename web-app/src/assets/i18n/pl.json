@@ -515,6 +515,7 @@
     "select-all-files": "Zaznacz wszystkie",
     "download-selected": "Pobierz zaznaczone",
     "remove-selected": "Usuń zaznaczone",
+    "download-all-service-documents": "Pobierz wszystskie",
     "validation": {
       "coach": {
         "required": "Pole trener nie może być puste"
