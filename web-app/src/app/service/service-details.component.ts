@@ -214,6 +214,13 @@ export class ServiceDetailsComponent implements OnDestroy {
     this.documentHttp.getDocuments(documentIds);
   }
 
+  protected downloadDocuments(document: DocumentTypeViewData) {
+    const documentIds = document.documents
+      .filter(item => item.checked)
+      .map(item => item.id);
+    this.documentHttp.getDocuments(documentIds);
+  }
+
   private validateCoach(control: AbstractControl): ValidationErrors | null {
     if (control.value === this.DEFAULT_COACH) {
       return { 'required': true };

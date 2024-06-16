@@ -153,7 +153,11 @@
                       </p>
                     </div>
                     <div class="col-span-1 flex items-center">
-                      <button mat-raised-button class="px-6 py-3" color="primary" [disabled]="isAllFileNotChecked(documentType)">
+                      <button mat-raised-button
+                              class="px-6 py-3"
+                              color="primary"
+                              [disabled]="isAllFileNotChecked(documentType)"
+                              (click)="downloadDocuments(documentType)">
                         {{ 'service-details.download-selected' | translate }}
                       </button>
                       <button mat-raised-button class="px-6 py-3 ml-5" color="warn" [disabled]="isAllFileNotChecked(documentType)">
