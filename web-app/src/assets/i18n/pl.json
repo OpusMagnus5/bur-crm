@@ -516,6 +516,8 @@
     "download-selected": "Pobierz zaznaczone",
     "remove-selected": "Usuń zaznaczone",
     "download-all-service-documents": "Pobierz wszystskie",
+    "to-much-files-for-type": "Wybrano zbyt wiele plików",
+    "to-large-files": "Wybrane pliki przekraczają rozmiar 50 Mb",
     "validation": {
       "coach": {
         "required": "Pole trener nie może być puste"

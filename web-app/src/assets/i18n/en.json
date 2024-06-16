@@ -516,6 +516,8 @@
     "download-selected": "Download selected",
     "remove-selected": "Delete selected",
     "download-all-service-documents": "Download all",
+    "to-much-files-for-type": "Too many files selected",
+    "to-large-files": "Selected files exceed 50 Mb in size",
     "validation": {
       "coach": {
         "required": "The coach field cannot be empty"

@@ -34,7 +34,7 @@ export interface DocumentTypeViewData {
   value: string,
   name: string,
   opened?: boolean,
-  files: FileList | null
+  filesToSend: FileList | null
   documents: DocumentViewData[],
   checkedAll: boolean,
   badgeMessages: string

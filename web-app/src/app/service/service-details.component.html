@@ -103,7 +103,11 @@
     <div class="col-span-2">
       <div class="py-6 flex items-center">
         <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.documents' | translate }}</p>
-        <button mat-raised-button color="primary" class="px-6 py-3 ml-5" (click)="downloadAllServiceDocuments()">
+        <button mat-raised-button
+                color="primary"
+                class="px-6 py-3 ml-5"
+                (click)="downloadAllServiceDocuments()"
+                [disabled]="!serviceDetails()?.documents?.length">
           {{ 'service-details.download-all-service-documents' | translate }}
         </button>
       </div>
@@ -152,7 +156,10 @@
                     }
                     <input type="file" accept="application/pdf" class="hidden" multiple #uploadFile
                            (change)="onFilesSelected(documentType, $event)">
-                    <button mat-raised-button class="px-6 py-3 ml-5" (click)="uploadFile.click()">
+                    <button mat-raised-button
+                            class="px-6 py-3 ml-5"
+                            (click)="uploadFile.click()"
+                            [disabled]="isUploadFileButtonDisabled(documentType)">
                       <mat-icon class="text-blue-800" fontIcon="attach_file"></mat-icon>
                       <span class="text-blue-800">{{ 'service-details.add-files' | translate }}</span>
                     </button>

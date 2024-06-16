@@ -71,6 +71,7 @@ import {SnackbarService} from "../shared/service/snackbar.service";
 export class ServiceDetailsComponent implements OnDestroy {
 
   protected readonly DEFAULT_COACH = 'defaultCoach';
+  private readonly MB_50_SIZE = 52428800;
   private readonly serviceId: string;
 
   protected readonly DocumentType = DocumentType;
@@ -150,32 +151,37 @@ export class ServiceDetailsComponent implements OnDestroy {
   }
 
   protected onFilesSelected(documentType: DocumentTypeViewData, event: Event): void {
-    documentType.files = (<HTMLInputElement>event.target).files
+    documentType.filesToSend = (<HTMLInputElement>event.target).files
   }
 
   protected getChosenFilesLabel(documentType: DocumentTypeViewData): Observable<string> {
     const invalidCoach = this.coachInvoiceController.invalid;
-    const files = documentType.files;
+    const files = documentType.filesToSend;
 
     if (invalidCoach && documentType.value === DocumentType.COACH_INVOICE) {
       return of(this.getValidationMessage('coach', this.coachInvoiceController));
+    } else if (this.isIncorrectQuantityDocumentsToAdd(documentType, files?.length)) {
+      return this.translator.get('service-details.to-much-files-for-type');
+    } else if (!this.isCorrectSizeOfFiles(files)) {
+      return this.translator.get('service-details.to-large-files');
     } else if (!this.validateFiles(documentType)) {
       return this.translator.get('service-details.invalid-extension');
     } else if (files && files.length > 0 && this.validateFiles(documentType)) {
       return this.translator.get('service-details.files-chosen', { filesNumber: files.length });
     }
-
     return this.translator.get('service-details.no-file-chosen');
   }
 
   protected disableSendFilesButton(documentType: DocumentTypeViewData): boolean {
-    const files = documentType.files;
+    const files = documentType.filesToSend;
     return files == null || files.length < 1 || !this.validateFiles(documentType) ||
-      (documentType.value === DocumentType.COACH_INVOICE && this.coachInvoiceController.invalid);
+      (documentType.value === DocumentType.COACH_INVOICE && this.coachInvoiceController.invalid)
+      || this.isIncorrectQuantityDocumentsToAdd(documentType, files?.length)
+      || !this.isCorrectSizeOfFiles(files);
   }
 
   protected validateFiles(documentType: DocumentTypeViewData): boolean {
-    const files = documentType.files;
+    const files = documentType.filesToSend;
     if (!files) {
       return true;
     }
@@ -189,7 +195,7 @@ export class ServiceDetailsComponent implements OnDestroy {
 
   protected uploadFiles(documentType: DocumentTypeViewData) {
     const coachId = this.coachInvoiceController.value === this.DEFAULT_COACH ? null : this.coachInvoiceController.value;
-    this.documentHttp.addNewFiles(documentType.files!, documentType.value, this.serviceDetails()?.id!, coachId)
+    this.documentHttp.addNewFiles(documentType.filesToSend!, documentType.value, this.serviceDetails()?.id!, coachId)
       .subscribe(item => {
         this.snackBarService.openTopCenterSnackbar(item.message);
         this.getDataFromServer();
@@ -244,6 +250,36 @@ export class ServiceDetailsComponent implements OnDestroy {
     this.documentHttp.getServiceDocuments(this.serviceId);
   }
 
+  protected isUploadFileButtonDisabled(documentType: DocumentTypeViewData) {
+    if (this.serviceDetails() === undefined || this.serviceDetails() === null) {
+      return false;
+    }
+    const numberOfParticipants = this.serviceDetails()!.numberOfParticipants;
+    const coaches = this.serviceDetails()!.coaches.length;
+    const documents = documentType.documents.length;
+
+    if (documents >= 1 && documentType.value === DocumentType.REPORT) {
+      return true;
+    } else if (documents >= numberOfParticipants  && documentType.value === DocumentType.CONSENT) {
+      return true;
+    } else if (documents >= coaches && documentType.value === DocumentType.COACH_INVOICE) {
+      return true;
+    } else if (documents >= 1 && documentType.value === DocumentType.PROVIDER_INVOICE) {
+      return true;
+    } else if (documents >= 1 && documentType.value === DocumentType.INTERMEDIARY_INVOICE) {
+      return true;
+    } else if (documents >= numberOfParticipants && documentType.value === DocumentType.PARTICIPANT_BUR_QUESTIONNAIRE) {
+      return true;
+    } else if (documents >= 1 && documentType.value === DocumentType.CUSTOMER_BUR_QUESTIONNAIRE) {
+      return true;
+    } else if (documents >= numberOfParticipants && documentType.value === DocumentType.PARTICIPANT_PROVIDER_QUESTIONNAIRE) {
+      return true;
+    } else if (documents >= 1 && documentType.value === DocumentType.ATTENDANCE_LIST) {
+      return true;
+    }
+    return false;
+  }
+
   private validateCoach(control: AbstractControl): ValidationErrors | null {
     if (control.value === this.DEFAULT_COACH) {
       return { 'required': true };
@@ -285,5 +321,46 @@ export class ServiceDetailsComponent implements OnDestroy {
 
   private getValidationMessageKey(fieldName: string, validation: string): string {
     return 'service-details.validation.' + fieldName + '.' + validation;
+  }
+
+  private isIncorrectQuantityDocumentsToAdd(documentType: DocumentTypeViewData, docToAdd: number = 0) {
+    if (this.serviceDetails() === undefined || this.serviceDetails() === null) {
+      return false;
+    }
+    const numberOfParticipants = this.serviceDetails()!.numberOfParticipants;
+    const coaches = this.serviceDetails()!.coaches.length;
+    const documents = documentType.documents.length + docToAdd;
+
+    if (documents > 1 && documentType.value === DocumentType.REPORT) {
+      return true;
+    } else if (documents > numberOfParticipants  && documentType.value === DocumentType.CONSENT) {
+      return true;
+    } else if (documents > coaches && documentType.value === DocumentType.COACH_INVOICE) {
+      return true;
+    } else if (documents > 1 && documentType.value === DocumentType.PROVIDER_INVOICE) {
+      return true;
+    } else if (documents > 1 && documentType.value === DocumentType.INTERMEDIARY_INVOICE) {
+      return true;
+    } else if (documents > numberOfParticipants && documentType.value === DocumentType.PARTICIPANT_BUR_QUESTIONNAIRE) {
+      return true;
+    } else if (documents > 1 && documentType.value === DocumentType.CUSTOMER_BUR_QUESTIONNAIRE) {
+      return true;
+    } else if (documents > numberOfParticipants && documentType.value === DocumentType.PARTICIPANT_PROVIDER_QUESTIONNAIRE) {
+      return true;
+    } else if (documents > 1 && documentType.value === DocumentType.ATTENDANCE_LIST) {
+      return true;
+    }
+    return false;
+  }
+
+  private isCorrectSizeOfFiles(files: FileList | null): boolean {
+    if (!files) {
+      return true;
+    }
+    let sum = 0;
+    for(let i = 0; i < files.length; i++) {
+      sum += files[i].size;
+    }
+    return this.MB_50_SIZE > sum
   }
 }
