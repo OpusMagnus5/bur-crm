@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {SERVER_URL} from "../shared/http-config";
-import {AddNewFilesResponse, GetAllDocumentTypesResponse} from "./document-dtos";
+import {AddNewFilesResponse, DeleteDocumentsResponse, GetAllDocumentTypesResponse} from "./document-dtos";
 import {FileDownloadService} from "../shared/service/file-download.service";
 
 @Injectable({providedIn: "root"})
@@ -46,5 +46,12 @@ export class DocumentHttpService {
     });
 
     this.fileDownloadService.downloadDocuments(observable);
+  }
+
+  deleteDocuments(documentIds: string[]): Observable<DeleteDocumentsResponse> {
+    let params = new HttpParams();
+    documentIds.forEach(item => params = params.append('ids', item));
+
+    return this.http.delete<DeleteDocumentsResponse>(SERVER_URL + 'api/document', { params: params });
   }
 }

@@ -70,3 +70,7 @@ export enum BadgeMessageType {
 export interface AddNewFilesResponse {
   message: string
 }
+
+export interface DeleteDocumentsResponse {
+  message: string
+}

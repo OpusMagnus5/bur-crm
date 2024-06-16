@@ -17,10 +17,12 @@ class DocumentWriteRepository implements IDocumentWriteRepository {
 
     private final IJdbcCaller jdbcCaller;
     private final SimpleJdbcCall addNewDocumentsProc;
+    private final SimpleJdbcCall deleteDocumentsProc;
 
     DocumentWriteRepository(IJdbcCaller jdbcCaller) {
         this.jdbcCaller = jdbcCaller;
         this.addNewDocumentsProc = this.jdbcCaller.buildSimpleJdbcCall("document_add_new");
+        this.deleteDocumentsProc = this.jdbcCaller.buildSimpleJdbcCall("document_delete_documents");
     }
 
     @Override
@@ -30,5 +32,12 @@ class DocumentWriteRepository implements IDocumentWriteRepository {
         Map<String, Object> properties = Map.of(DOCUMENT.asArrayParamName(), customTypesParameter);
         this.addNewDocumentsProc.declareParameters(new SqlParameter(DOCUMENT.asArrayParamName(), Types.OTHER));
         this.jdbcCaller.call(this.addNewDocumentsProc, properties);
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.REQUIRED)
+    public void deleteDocuments(List<Long> documents) {
+        Map<String, Object> properties = Map.of("_doc_ids", documents.toArray(Long[]::new));
+        this.jdbcCaller.call(this.deleteDocumentsProc, properties);
     }
 }

@@ -221,6 +221,25 @@ export class ServiceDetailsComponent implements OnDestroy {
     this.documentHttp.getDocuments(documentIds);
   }
 
+  protected deleteDocuments(document: DocumentTypeViewData) {
+    const documentIds = document.documents
+      .filter(item => item.checked)
+      .map(item => item.id);
+
+    this.documentHttp.deleteDocuments(documentIds).subscribe(response => {
+      this.snackBarService.openTopCenterSnackbar(response.message);
+      this.getDataFromServer();
+    })
+  }
+
+  protected deleteDocument(document: DocumentViewData) {
+    const documentIds: string[] = [document.id]
+    this.documentHttp.deleteDocuments(documentIds).subscribe(response => {
+      this.snackBarService.openTopCenterSnackbar(response.message);
+      this.getDataFromServer();
+    })
+  }
+
   private validateCoach(control: AbstractControl): ValidationErrors | null {
     if (control.value === this.DEFAULT_COACH) {
       return { 'required': true };

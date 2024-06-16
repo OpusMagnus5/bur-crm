@@ -160,7 +160,11 @@
                               (click)="downloadDocuments(documentType)">
                         {{ 'service-details.download-selected' | translate }}
                       </button>
-                      <button mat-raised-button class="px-6 py-3 ml-5" color="warn" [disabled]="isAllFileNotChecked(documentType)">
+                      <button mat-raised-button
+                              class="px-6 py-3 ml-5"
+                              color="warn"
+                              [disabled]="isAllFileNotChecked(documentType)"
+                              (click)="deleteDocuments(documentType)">
                         {{ 'service-details.remove-selected' | translate }}
                       </button>
                     </div>
@@ -190,7 +194,7 @@
                             <button mat-mini-fab class="ml-5 scale-75 bg-blue-800 text-white" (click)="downloadDocument(document)">
                               <mat-icon fontIcon="download"></mat-icon>
                             </button>
-                            <button mat-mini-fab class="ml-5 scale-75 bg-red-800 text-white">
+                            <button mat-mini-fab class="ml-5 scale-75 bg-red-800 text-white" (click)="deleteDocument(document)">
                               <mat-icon fontIcon="clear"></mat-icon>
                             </button>
                           </div>

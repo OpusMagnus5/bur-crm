@@ -11,14 +11,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import pl.bodzioch.damian.document.command_dto.AddNewDocumentsCommand;
-import pl.bodzioch.damian.document.command_dto.AddNewDocumentsCommandData;
-import pl.bodzioch.damian.document.command_dto.AddNewDocumentsCommandResult;
+import pl.bodzioch.damian.document.command_dto.*;
 import pl.bodzioch.damian.document.query_dto.GetDocumentsQuery;
 import pl.bodzioch.damian.document.query_dto.GetDocumentsQueryResult;
 import pl.bodzioch.damian.document.validator.DocumentTypeV;
 import pl.bodzioch.damian.document.validator.FileListExtensionV;
 import pl.bodzioch.damian.dto.AddNewFilesResponse;
+import pl.bodzioch.damian.dto.DeleteDocumentsResponse;
 import pl.bodzioch.damian.dto.DocumentTypeData;
 import pl.bodzioch.damian.dto.GetAllDocumentTypesResponse;
 import pl.bodzioch.damian.exception.AppException;
@@ -78,7 +77,7 @@ class DocumentController {
 
     @GetMapping(produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     ResponseEntity<Resource> getDocuments(@RequestParam
-                                          @NotEmpty
+                                          @NotEmpty(message = "error.client.document.idsListEmpty")
                                           List<String> ids
     ) {
         List<Long> documentIds = ids.stream()
@@ -95,6 +94,21 @@ class DocumentController {
                 .status(HttpStatus.OK)
                 .headers(httpHeaders)
                 .body(byteArrayResource);
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    DeleteDocumentsResponse deleteDocuments(@RequestParam
+                                            @NotEmpty(message = "error.client.document.idsListEmpty")
+                                            List<String> ids
+    ) {
+        List<Long> documentIds = ids.stream()
+                .map(cipher::decryptMessage)
+                .map(Long::parseLong)
+                .toList();
+        DeleteDocumentsCommand command = new DeleteDocumentsCommand(documentIds);
+        DeleteDocumentsCommandResult result = commandExecutor.execute(command);
+        return new DeleteDocumentsResponse(result.message());
     }
 
     private AddNewDocumentsCommandData buildCommandData(String fileType, String serviceId, String coachId, MultipartFile item) {

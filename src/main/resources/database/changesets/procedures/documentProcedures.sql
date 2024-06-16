@@ -57,7 +57,7 @@ CREATE OR REPLACE PROCEDURE document_get_by_ids(
     IN _doc_ids BIGINT[],
     OUT _cursor REFCURSOR
 )
-    LANGUAGE plpgsql
+LANGUAGE plpgsql
 AS $$
 BEGIN
 
@@ -67,5 +67,22 @@ BEGIN
         FROM document
         LEFT JOIN service ON document.doc_service_id = service.srv_id
         WHERE doc_id = ANY(_doc_ids);
+
+END$$;
+
+DROP PROCEDURE IF EXISTS document_delete_documents;
+/*PROCEDURE document_delete_documents*/
+CREATE OR REPLACE PROCEDURE document_delete_documents(
+    IN _doc_ids BIGINT[]
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    _doc_id BIGINT;
+BEGIN
+
+    FOREACH _doc_id IN ARRAY _doc_ids LOOP
+        DELETE FROM document WHERE doc_id = _doc_id;
+    END LOOP;
 
 END$$;
