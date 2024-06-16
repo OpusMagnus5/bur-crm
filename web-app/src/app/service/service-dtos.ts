@@ -105,3 +105,7 @@ export enum ServiceType {
   TRAINING = 'TRAINING',
   CONSULTING = 'CONSULTING'
 }
+
+export interface DeleteServiceResponse {
+  message: string
+}

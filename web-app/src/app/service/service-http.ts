@@ -5,6 +5,7 @@ import {SERVER_URL} from "../shared/http-config";
 import {
   CreateNewServiceResponse,
   CreateOrUpdateServiceRequest,
+  DeleteServiceResponse,
   GetAllServiceStatusesResponse,
   GetAllServiceTypesResponse,
   GetServiceDetailsResponse,
@@ -55,5 +56,9 @@ export class ServiceHttp {
 
   getAllStatuses(): Observable<GetAllServiceStatusesResponse> {
     return this.http.get<GetAllServiceStatusesResponse>(SERVER_URL + 'api/service/statuses')
+  }
+
+  delete(id: string): Observable<DeleteServiceResponse> {
+    return this.http.delete<DeleteServiceResponse>(SERVER_URL + 'api/service/' + id)
   }
 }

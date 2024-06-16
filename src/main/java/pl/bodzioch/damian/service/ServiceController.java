@@ -3,6 +3,7 @@ package pl.bodzioch.damian.service;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,8 @@ import pl.bodzioch.damian.infrastructure.command.CommandExecutor;
 import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
 import pl.bodzioch.damian.service.command_dto.CreateOrUpdateServiceCommand;
 import pl.bodzioch.damian.service.command_dto.CreateOrUpdateServiceCommandResult;
+import pl.bodzioch.damian.service.command_dto.DeleteServiceCommand;
+import pl.bodzioch.damian.service.command_dto.DeleteServiceCommandResult;
 import pl.bodzioch.damian.service.query_dto.GetServiceDetailsQuery;
 import pl.bodzioch.damian.service.query_dto.GetServiceDetailsQueryResult;
 import pl.bodzioch.damian.service.query_dto.GetServicePageQuery;
@@ -111,5 +114,17 @@ class ServiceController {
                 .map(val -> new ServiceStatusData(val, messageResolver.getMessage("service.status." + val)))
                 .toList();
         return new GetAllServiceStatusesResponse(typeList);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    DeleteServiceResponse deleteService(@PathVariable
+                                        @NotEmpty(message = "error.client.service.emptyServiceId")
+                                        String id
+    ) {
+        long serviceId = Long.parseLong(cipher.decryptMessage(id));
+        DeleteServiceCommand command = new DeleteServiceCommand(serviceId);
+        DeleteServiceCommandResult result = commandExecutor.execute(command);
+        return new DeleteServiceResponse(result.message());
     }
 }

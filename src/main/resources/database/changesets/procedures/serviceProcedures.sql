@@ -223,3 +223,17 @@ BEGIN
     END LOOP;
 
 END$$;
+
+DROP PROCEDURE IF EXISTS service_delete;
+/*PROCEDURE service_delete*/
+CREATE OR REPLACE PROCEDURE service_delete(
+    IN _srv_id service.srv_id%TYPE
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    DELETE FROM service_coach WHERE service_id = _srv_id;
+    DELETE FROM service WHERE srv_id = _srv_id;
+
+END$$;

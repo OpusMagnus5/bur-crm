@@ -531,5 +531,9 @@
   "delete-files": {
     "confirmation-title": "Usuń dokumenty",
     "confirmation-content": "Jesteś pewien, że chcesz usunąć te dokumenty?"
+  },
+  "delete-service": {
+    "confirmation-title": "Usuń usługę",
+    "confirmation-content": "Jesteś pewien, że chcesz usunąć tą usługę?"
   }
 }

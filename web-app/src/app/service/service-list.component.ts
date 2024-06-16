@@ -35,6 +35,10 @@ import {toObservable} from "@angular/core/rxjs-interop";
 import {SubscriptionManager} from "../shared/util/subscription-manager";
 import {concat, debounceTime, forkJoin, merge, skip, tap} from "rxjs";
 import {EDIT_SERVICE_PATH, SERVICE_DETAILS_PATH} from "../app.routes";
+import {DeleteRecordConfirmationComponent} from "../shared/component/delete-record-confirmation.component";
+import {MatDialog} from "@angular/material/dialog";
+import {ProgramDataInterface} from "../program/model/program-data-interface";
+import {SnackbarService} from "../shared/service/snackbar.service";
 
 @Component({
   selector: 'app-service-list',
@@ -116,7 +120,9 @@ export class ServiceListComponent implements OnDestroy {
     private serviceProviderHttp: ServiceProviderHttpService,
     private customerHttp: CustomerHttpService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog,
+    private snackBarService: SnackbarService
   ) {
 
     const subscription = concat(this.initFiltersData(), this.initTableData())
@@ -222,7 +228,25 @@ export class ServiceListComponent implements OnDestroy {
   }
 
   protected onRemove(element: any) {
+    const dialogRef = this.dialog.open(
+      DeleteRecordConfirmationComponent, {
+        data: {
+          codeForTranslation: 'delete-service'
+        }
+      });
+    this.subscriptionManager.add(dialogRef.componentInstance.deleteConfirmation.subscribe(value => {
+      if (value) {
+        dialogRef.close();
+        this.deleteOperator(element);
+      }
+    }));
+  }
 
+  private deleteOperator(element: ProgramDataInterface) {
+    this.serviceHttp.delete(element.id).subscribe(response => {
+      this.snackBarService.openTopCenterSnackbar(response.message);
+      this.onPageChange({ pageIndex: this.pageDef().pageNumber - 1, pageSize: this.pageDef().pageSize, previousPageIndex: 1, length: 1 })
+    })
   }
 
   protected onCustomerChange(event: Event) {

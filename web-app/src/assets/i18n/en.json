@@ -531,5 +531,9 @@
   "delete-files": {
     "confirmation-title": "Delete documents",
     "confirmation-content": "Are you sure you want to delete these documents?"
+  },
+  "delete-service": {
+    "confirmation-title": "Delete service",
+    "confirmation-content": "Are you sure you want to delete this service?"
   }
 }

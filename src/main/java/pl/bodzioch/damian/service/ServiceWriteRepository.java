@@ -19,11 +19,13 @@ class ServiceWriteRepository implements IServiceWriteRepository {
 	private final IJdbcCaller jdbcCaller;
 	private final SimpleJdbcCall createNewProc;
 	private final SimpleJdbcCall updateStatus;
+	private final SimpleJdbcCall serviceDeleteProc;
 
 	ServiceWriteRepository(IJdbcCaller jdbcCaller) {
 		this.jdbcCaller = jdbcCaller;
 		this.createNewProc = jdbcCaller.buildSimpleJdbcCall("service_create_or_update");
 		this.updateStatus = jdbcCaller.buildSimpleJdbcCall("service_update_status");
+		this.serviceDeleteProc = jdbcCaller.buildSimpleJdbcCall("service_delete");
 	}
 
 	@Override
@@ -40,5 +42,12 @@ class ServiceWriteRepository implements IServiceWriteRepository {
 		Map<String, Object> properties = Map.of(SERVICE_STATUS_DATA.asParamName(), customTypesParameter);
 		this.updateStatus.declareParameters(new SqlParameter(SERVICE_STATUS_DATA.asParamName(), Types.OTHER));
 		this.jdbcCaller.call(this.updateStatus, properties);
+	}
+
+	@Override
+	@Transactional(Transactional.TxType.REQUIRED)
+	public void delete(Long id) {
+		Map<String, Object> properties = Map.of("_srv_id", id);
+		this.jdbcCaller.call(this.serviceDeleteProc, properties);
 	}
 }
