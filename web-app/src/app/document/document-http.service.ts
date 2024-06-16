@@ -1,14 +1,16 @@
 import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {SERVER_URL} from "../shared/http-config";
 import {AddNewFilesResponse, GetAllDocumentTypesResponse} from "./document-dtos";
+import {FileDownloadService} from "../shared/service/file-download.service";
 
 @Injectable({providedIn: "root"})
 export class DocumentHttpService {
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private fileDownloadService: FileDownloadService
   ) {
   }
 
@@ -31,5 +33,18 @@ export class DocumentHttpService {
     return this.http.post<AddNewFilesResponse>(
       SERVER_URL + 'api/document', formData
     )
+  }
+
+  getDocuments(documentIds: string[]): void {
+    let params = new HttpParams();
+    documentIds.forEach(item => params = params.append('ids', item));
+
+    const observable = this.http.get<Blob>(SERVER_URL + 'api/document', {
+      params: params,
+      observe: 'response',
+      responseType: 'blob' as 'json'
+    });
+
+    this.fileDownloadService.downloadDocuments(observable);
   }
 }

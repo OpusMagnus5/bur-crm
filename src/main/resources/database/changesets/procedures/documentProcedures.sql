@@ -62,8 +62,8 @@ AS $$
 BEGIN
 
     OPEN _cursor FOR
-        SELECT doc_id, doc_service_id, doc_file_extension, doc_file_name, doc_uuid,
-               service.srv_id as service_srv_id, service.srv_number as service_srv_number
+        SELECT doc_id, doc_service_id, doc_file_extension, doc_file_name, doc_uuid, doc_type,
+               service.srv_id as service_srv_id, service.srv_number as service_srv_number, service.srv_uuid as service_srv_uuid
         FROM document
         LEFT JOIN service ON document.doc_service_id = service.srv_id
         WHERE doc_id = ANY(_doc_ids);

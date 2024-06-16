@@ -2,13 +2,20 @@ package pl.bodzioch.damian.document;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.bodzioch.damian.document.command_dto.AddNewDocumentsCommand;
 import pl.bodzioch.damian.document.command_dto.AddNewDocumentsCommandData;
 import pl.bodzioch.damian.document.command_dto.AddNewDocumentsCommandResult;
+import pl.bodzioch.damian.document.query_dto.GetDocumentsQuery;
+import pl.bodzioch.damian.document.query_dto.GetDocumentsQueryResult;
 import pl.bodzioch.damian.document.validator.DocumentTypeV;
 import pl.bodzioch.damian.document.validator.FileListExtensionV;
 import pl.bodzioch.damian.dto.AddNewFilesResponse;
@@ -28,6 +35,7 @@ import java.util.List;
 @RequestMapping("/api/document")
 @RequiredArgsConstructor
 @Validated
+@CrossOrigin(origins = "*", exposedHeaders = "Content-Disposition")
 class DocumentController {
 
     private final CommandExecutor commandExecutor;
@@ -66,6 +74,27 @@ class DocumentController {
                 .map(item -> new DocumentTypeData(item, messageResolver))
                 .toList();
         return new GetAllDocumentTypesResponse(documentTypeData);
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    ResponseEntity<Resource> getDocuments(@RequestParam
+                                          @NotEmpty
+                                          List<String> ids
+    ) {
+        List<Long> documentIds = ids.stream()
+                .map(cipher::decryptMessage)
+                .map(Long::parseLong)
+                .toList();
+        GetDocumentsQuery query = new GetDocumentsQuery(documentIds);
+        GetDocumentsQueryResult result = queryExecutor.execute(query);
+        ByteArrayResource byteArrayResource = new ByteArrayResource(result.zipFileData());
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + result.name());
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .headers(httpHeaders)
+                .body(byteArrayResource);
     }
 
     private AddNewDocumentsCommandData buildCommandData(String fileType, String serviceId, String coachId, MultipartFile item) {

@@ -71,20 +71,25 @@ class FileManager implements IFileManager {
     }
 
     private byte[] getFilesAsZip(List<AbstractMap.SimpleEntry<FileData, File>> filesData) {
-        ByteArrayOutputStream zipByteArrayOutputStream = new ByteArrayOutputStream();
-        ZipOutputStream zipOut = new ZipOutputStream(zipByteArrayOutputStream);
-        for (AbstractMap.SimpleEntry<FileData, File> fileData : filesData) {
-            try (FileInputStream fileInputStream = new FileInputStream(fileData.getValue());
-                 GZIPInputStream gzipInputStream = new GZIPInputStream(fileInputStream)) {
+        try (ByteArrayOutputStream zipByteArrayOutputStream = new ByteArrayOutputStream();
+             ZipOutputStream zipOut = new ZipOutputStream(zipByteArrayOutputStream)) {
+            for (AbstractMap.SimpleEntry<FileData, File> fileData : filesData) {
+                try (FileInputStream fileInputStream = new FileInputStream(fileData.getValue());
+                     GZIPInputStream gzipInputStream = new GZIPInputStream(fileInputStream)) {
 
-                ZipEntry zipEntry = new ZipEntry(fileData.getKey().nameInZip());
-                zipOut.putNextEntry(zipEntry);
-                ByteStreams.copy(gzipInputStream, zipOut);
+                    ZipEntry zipEntry = new ZipEntry(fileData.getKey().nameInZip());
+                    zipOut.putNextEntry(zipEntry);
+                    ByteStreams.copy(gzipInputStream, zipOut);
+                    zipOut.closeEntry();
 
-            } catch (IOException e) {
-                throw new FileManagerException("An error occurred while get files as zip", e);
+                } catch (IOException e) {
+                    throw new FileManagerException("An error occurred while get files as zip", e);
+                }
             }
+            zipOut.finish();
+            return zipByteArrayOutputStream.toByteArray();
+        } catch (IOException e) {
+            throw new FileManagerException("An error occurred while creating zip output stream", e);
         }
-        return zipByteArrayOutputStream.toByteArray();
     }
 }

@@ -28,11 +28,12 @@ class GetDocumentsQueryHandler implements QueryHandler<GetDocumentsQuery, GetDoc
     public GetDocumentsQueryResult handle(GetDocumentsQuery query) {
         List<Document> documents = readRepository.getDocuments(query.ids());
         List<FileData> filesData = documents.stream()
-                .map(item -> new FileData(item.serviceId().toString(), item.uuid().toString(), item.fileName()))
+                .map(item -> new FileData(item.service().uuid().toString(), item.uuid().toString(), item.fileName()))
                 .toList();
         byte[] zippedFiles = fileManager.getFiles(filesData);
-        String fileType = messageResolver.getMessage("document.type.file." + query.documentType().name());
+        DocumentType documentType = documents.getFirst().type();
+        String fileType = messageResolver.getMessage("document.type.file." + documentType.name());
         String serviceNumber = documents.getFirst().service().number().replaceAll("/", "-");
-        return new GetDocumentsQueryResult(zippedFiles, fileType + "_" + serviceNumber);
+        return new GetDocumentsQueryResult(zippedFiles, fileType + "_" + serviceNumber + ".zip");
     }
 }
