@@ -55,7 +55,8 @@
   },
   "user-dashboard": {
     "new-user-tab": "Dodaj użytkownika",
-    "users-list-tab": "Lista użytkowników"
+    "users-list-tab": "Lista użytkowników",
+    "users-edit-tab": "Edytuj użytkownka"
   },
   "user-details": {
     "title": "Szczegóły użytkowika",

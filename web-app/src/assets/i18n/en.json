@@ -55,7 +55,8 @@
   },
   "user-dashboard": {
     "new-user-tab": "Add user",
-    "users-list-tab": "Users list"
+    "users-list-tab": "Users list",
+    "users-edit-tab": "Edit user"
   },
   "user-details": {
     "title": "User Details",

@@ -40,11 +40,13 @@ import {USER_LIST_PATH} from "../app.routes";
 })
 export class NewUserComponent {
 
+  private readonly id: string;
+
   protected readonly form: FormGroup;
-  protected readonly emailControl: FormControl;
-  protected readonly firstNameControl: FormControl;
-  protected readonly lastNameControl: FormControl;
-  protected readonly roleControl: FormControl;
+  emailControl: FormControl;
+  firstNameControl: FormControl;
+  lastNameControl: FormControl;
+  roleControl: FormControl;
 
   protected roles: {name: string, value: string}[] = [];
 
@@ -55,6 +57,8 @@ export class NewUserComponent {
     private router: Router,
     private activeRoute: ActivatedRoute
   ) {
+    this.id = this.activeRoute.snapshot.paramMap.get('id')!;
+
     this.emailControl = new FormControl(null, {
       validators: [Validators.required, Validators.email],
       asyncValidators: [this.validateEmailOccupation.bind(this)],
@@ -85,7 +89,10 @@ export class NewUserComponent {
     );
   }
 
-  validateEmailOccupation(control: AbstractControl): Observable<ValidationErrors | null> {
+  protected validateEmailOccupation(control: AbstractControl): Observable<ValidationErrors | null> {
+    if (this.id) {
+      return of(null);
+    }
     return this.httpService.getIsUserExists(control.value.trim()).pipe(
       map(response => (response.exists ? { 'exists': true } : null)),
       catchError(() => of(null))

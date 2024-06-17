@@ -9,6 +9,7 @@ import pl.bodzioch.damian.user.command_dto.GetAllRolesCommandResult;
 import pl.bodzioch.damian.utils.MessageResolver;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 @Component
@@ -26,6 +27,7 @@ class GetAllRolesCommandHandler implements CommandHandler<GetAllRolesCommand, Ge
 	@Override
 	public GetAllRolesCommandResult handle(GetAllRolesCommand command) {
 		List<RoleDto> rolesList = Arrays.stream(UserRole.values())
+				.sorted(Comparator.comparing(UserRole::getHierarchy))
 				.map(Enum::name)
 				.map(role -> new RoleDto(
 						role,

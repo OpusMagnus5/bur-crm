@@ -27,6 +27,8 @@ import {UserListResponseInterface} from "./model/user-list-response.interface";
 import {SnackbarService} from "../shared/service/snackbar.service";
 import {SubscriptionManager} from "../shared/util/subscription-manager";
 import {DeleteRecordConfirmationComponent} from "../shared/component/delete-record-confirmation.component";
+import {USER_EDIT_PATH} from "../app.routes";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-users-list',
@@ -67,6 +69,8 @@ export class UsersListComponent implements OnDestroy {
     private http: UserHttpService,
     private dialog: MatDialog,
     private snackbar: SnackbarService,
+    private router: Router,
+    private route: ActivatedRoute,
   ) {
     this.http.getUserPage(1, 10).subscribe(response =>
       this.data.next(response)
@@ -105,6 +109,12 @@ export class UsersListComponent implements OnDestroy {
         this.deleteUser(element.id);
       }
     }));
+  }
+
+  protected onEdit(element: UserListDataInterface) {
+    this.router.navigate(['../', USER_EDIT_PATH, element.id], {
+      relativeTo: this.route
+    });
   }
 
   private deleteUser(id: string) {

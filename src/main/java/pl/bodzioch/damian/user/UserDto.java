@@ -4,6 +4,7 @@ import pl.bodzioch.damian.dto.RoleDto;
 import pl.bodzioch.damian.utils.MessageResolver;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,6 +34,7 @@ public record UserDto(
                 user.firstName(),
                 user.lastName(),
                 user.roles().stream()
+                        .sorted(Comparator.comparing(UserRole::getHierarchy))
                         .map(UserRole::name)
                         .map(role -> new RoleDto(role, messageResolver.getMessage("user.role." + role)))
                         .toList(),
