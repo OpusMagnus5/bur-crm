@@ -27,7 +27,7 @@ class CreateNewUserCommandHandler implements CommandHandler<CreateNewUserCommand
     }
 
     @Override
-    @Transactional //TODO dopisać walidacje roli zakładającego konto
+    @Transactional //TODO dopisać walidacje roli zakładającego konto czy moze dac takie uprawnienia
     public CreateNewUserCommandResult handle(CreateNewUserCommand command) {
         String firstPassword = User.generateFirstPassword();
         User user = new User(command, firstPassword);

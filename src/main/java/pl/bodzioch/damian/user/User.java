@@ -1,7 +1,6 @@
 package pl.bodzioch.damian.user;
 
 import com.fasterxml.uuid.Generators;
-import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.infrastructure.database.DbColumn;
 import pl.bodzioch.damian.infrastructure.database.DbConstructor;
 import pl.bodzioch.damian.infrastructure.database.DbId;
@@ -87,17 +86,16 @@ record User (
     private static List<UserRole> resolveRoles(String role) {
         UserRole userRole = UserRole.valueOf(role);
         switch (userRole) {
-            case USER -> {
-                return List.of(UserRole.USER);
-            }
             case MANAGER -> {
                 return List.of(UserRole.USER, UserRole.MANAGER);
             }
             case ADMIN -> {
                 return List.of(UserRole.USER, UserRole.MANAGER, UserRole.ADMIN);
             }
+            default -> {
+                return List.of(userRole);
+            }
         }
-        throw AppException.getGeneralError();
     }
 }
 

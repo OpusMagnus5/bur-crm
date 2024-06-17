@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum UserRole {
 
+    BLOCKED_USER(0),
     USER(1),
     MANAGER(2),
     ADMIN(3);
