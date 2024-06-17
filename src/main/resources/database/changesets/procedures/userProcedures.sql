@@ -1,6 +1,8 @@
-DROP PROCEDURE IF EXISTS users_create_new;
-/*PROCEDURE users_create_new*/
-CREATE OR REPLACE PROCEDURE users_create_new(
+DROP PROCEDURE IF EXISTS users_create_new_or_update;
+/*PROCEDURE users_create_new_or_update*/
+CREATE OR REPLACE PROCEDURE users_create_new_or_update(
+    IN _usr_id users.usr_id%TYPE,
+    IN _usr_version users.usr_version%TYPE,
     IN _usr_uuid users.usr_uuid%TYPE,
     IN _usr_password users.usr_password%TYPE,
     IN _usr_email users.usr_email%TYPE,
@@ -11,12 +13,42 @@ CREATE OR REPLACE PROCEDURE users_create_new(
 )
 LANGUAGE plpgsql
 AS $$
+DECLARE
+    _current_version INTEGER;
 BEGIN
 
-    INSERT INTO users (usr_uuid, usr_password, usr_email, usr_first_name, usr_last_name, usr_roles, usr_last_login,
-                       usr_modified_at, usr_created_by, usr_modified_by)
-    VALUES (_usr_uuid, _usr_password, _usr_email, _usr_first_name, _usr_last_name,
-            _usr_roles, null, null, _usr_created_by, null);
+    IF _usr_id IS NULL THEN
+        INSERT INTO users (usr_uuid, usr_password, usr_email, usr_first_name, usr_last_name, usr_roles, usr_last_login,
+                           usr_modified_at, usr_created_by, usr_modified_by)
+        VALUES (_usr_uuid, _usr_password, _usr_email, _usr_first_name, _usr_last_name,
+                _usr_roles, null, null, _usr_created_by, null);
+
+    ELSE
+
+        SELECT usr_version
+        INTO _current_version
+        FROM users
+        WHERE usr_id = _usr_id;
+
+        IF _current_version <> _usr_version THEN
+            RAISE SQLSTATE '55000' USING MESSAGE = 'The resource with ID: ' || _usr_id || ' was changed by another user',
+                TABLE = 'users',
+                COLUMN = 'usr_version',
+                DETAIL = 'Provided version: ' || _usr_version || ', current version: ' || _current_version;
+        END IF;
+
+        UPDATE users
+        SET usr_version = usr_version + 1,
+            usr_email = _usr_email,
+            usr_first_name = _usr_first_name,
+            usr_last_name = _usr_last_name,
+            usr_roles = _usr_roles,
+            usr_modified_by = _usr_created_by,
+            usr_modified_at = current_timestamp
+        WHERE usr_id = _usr_id;
+
+    END IF;
+
 
 END$$;
 

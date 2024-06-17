@@ -1,6 +1,7 @@
 export interface GetUseDetailsResponseInterface {
 
   id: string,
+  version: number,
   email: string,
   firstName: string,
   lastName: string,

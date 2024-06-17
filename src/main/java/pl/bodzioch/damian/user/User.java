@@ -5,7 +5,7 @@ import pl.bodzioch.damian.infrastructure.database.DbColumn;
 import pl.bodzioch.damian.infrastructure.database.DbConstructor;
 import pl.bodzioch.damian.infrastructure.database.DbId;
 import pl.bodzioch.damian.infrastructure.database.DbManyToOne;
-import pl.bodzioch.damian.user.command_dto.CreateNewUserCommand;
+import pl.bodzioch.damian.user.command_dto.CreateNewOrUpdateUserCommand;
 import pl.bodzioch.damian.utils.Encoder;
 
 import java.security.SecureRandom;
@@ -51,11 +51,11 @@ record User (
     User {
     }
 
-    User(CreateNewUserCommand command, String firstPassword) {
+    User(CreateNewOrUpdateUserCommand command, String firstPassword) {
         this (
-                null,
+                command.id(),
                 Generators.timeBasedEpochGenerator().generate(),
-                null,
+                command.version(),
                 command.email(),
                 Encoder.encodePassword(firstPassword),
                 command.firstName(),

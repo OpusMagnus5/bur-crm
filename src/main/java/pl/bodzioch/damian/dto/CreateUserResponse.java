@@ -5,7 +5,8 @@ import java.io.Serializable;
 public record CreateUserResponse(
 
         String login,
-        String password
+        String password,
+        String message
 
 ) implements Serializable {
 }

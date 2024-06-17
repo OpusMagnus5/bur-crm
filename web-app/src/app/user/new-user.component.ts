@@ -23,6 +23,7 @@ import {CreateNewUserResponseInterface} from "./model/create-new-user-response.i
 import {CreateNewUserRequestInterface} from "./model/create-new-user-request.interface";
 import {ActivatedRoute, Router} from "@angular/router";
 import {USER_LIST_PATH} from "../app.routes";
+import {SnackbarService} from "../shared/service/snackbar.service";
 
 @Component({
   selector: 'new-user',
@@ -41,6 +42,7 @@ import {USER_LIST_PATH} from "../app.routes";
 export class NewUserComponent {
 
   private readonly id: string;
+  userVersion: number | null = null;
 
   protected readonly form: FormGroup;
   emailControl: FormControl;
@@ -55,7 +57,9 @@ export class NewUserComponent {
     private validationMessage: ValidationMessageService,
     private dialog: MatDialog,
     private router: Router,
-    private activeRoute: ActivatedRoute
+    private activeRoute: ActivatedRoute,
+    private snackbarService: SnackbarService,
+    private route: ActivatedRoute
   ) {
     this.id = this.activeRoute.snapshot.paramMap.get('id')!;
 
@@ -100,9 +104,23 @@ export class NewUserComponent {
   }
 
   protected onSubmit() {
-    this.httpService.createNew(this.form.value as CreateNewUserRequestInterface).subscribe({
-      next: response => this.openDialog(response)
+    this.httpService.createNew(this.mapFormToRequest()).subscribe({
+      next: response => {
+        if (response.message) {
+          this.snackbarService.openTopCenterSnackbar(response.message);
+          this.router.navigate(['../../', USER_LIST_PATH], { relativeTo: this.route });
+        } else {
+          this.openDialog(response)
+        }
+      }
     });
+  }
+
+  private mapFormToRequest(): CreateNewUserRequestInterface {
+    const request = <CreateNewUserRequestInterface>this.form.value;
+    request.id = this.id;
+    request.version = this.userVersion;
+    return request;
   }
 
   private openDialog(response: CreateNewUserResponseInterface) {

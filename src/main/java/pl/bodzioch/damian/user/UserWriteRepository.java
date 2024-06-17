@@ -18,7 +18,7 @@ class UserWriteRepository implements IUserWriteRepository {
 
     UserWriteRepository(IJdbcCaller jdbcCaller) {
         this.jdbcCaller = jdbcCaller;
-        this.createNewProc = jdbcCaller.buildSimpleJdbcCall("users_create_new");
+        this.createNewProc = jdbcCaller.buildSimpleJdbcCall("users_create_new_or_update");
         this.deleteProc = jdbcCaller.buildSimpleJdbcCall("users_delete");
     }
 

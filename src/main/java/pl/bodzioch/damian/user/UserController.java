@@ -29,12 +29,10 @@ class UserController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    CreateUserResponse createNewUser(@Valid @RequestBody CreateNewUserRequest request) {
-        CreateNewUserCommand command = new CreateNewUserCommand( //TODO dopisać creatora
-                request.email(), request.firstName(), request.lastName(), 1L, request.role()
-        );
-        CreateNewUserCommandResult result = commandExecutor.execute(command);
-        return new CreateUserResponse(result.login(), result.password());
+    CreateUserResponse createNewUser(@Valid @RequestBody CreateNewOrUpdateUserRequest request) {
+        CreateNewOrUpdateUserCommand command = new CreateNewOrUpdateUserCommand(request, cipher);
+        CreateNewOrUpdateUserCommandResult result = commandExecutor.execute(command);
+        return new CreateUserResponse(result.login(), result.password(), result.message());
     }
 
     @ResponseStatus(HttpStatus.OK)

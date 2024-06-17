@@ -29,6 +29,7 @@ export class EditUserComponent implements AfterViewInit {
       this.newUserComponent.roleControl.setValue(response.roles[response.roles.length - 1].role);
       this.newUserComponent.firstNameControl.setValue(response.firstName);
       this.newUserComponent.lastNameControl.setValue(response.lastName);
+      this.newUserComponent.userVersion = response.version;
     })
   }
 

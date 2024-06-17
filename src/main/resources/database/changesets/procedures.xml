@@ -6,7 +6,7 @@
 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <changeSet id="procedures" author="Damian Bodzioch" runOrder="last" runAlways="true">
-        <sqlFile path="procedures/userProcedures.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="procedures/userProcedures.sql" relativeToChangelogFile="true" splitStatements="false"/>
         <sqlFile path="procedures/serviceProviderProcedures.sql" relativeToChangelogFile="true"/>
         <sqlFile path="procedures/operatorProcedures.sql" relativeToChangelogFile="true"/>
         <sqlFile path="procedures/programProcedures.sql" relativeToChangelogFile="true"/>

@@ -8,8 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.infrastructure.command.CommandHandler;
-import pl.bodzioch.damian.user.command_dto.CreateNewUserCommand;
-import pl.bodzioch.damian.user.command_dto.CreateNewUserCommandResult;
+import pl.bodzioch.damian.user.command_dto.CreateNewOrUpdateUserCommand;
+import pl.bodzioch.damian.user.command_dto.CreateNewOrUpdateUserCommandResult;
+import pl.bodzioch.damian.utils.MessageResolver;
 import pl.bodzioch.damian.value_object.ErrorData;
 
 import java.util.List;
@@ -17,28 +18,33 @@ import java.util.List;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-class CreateNewUserCommandHandler implements CommandHandler<CreateNewUserCommand, CreateNewUserCommandResult> {
+class CreateNewOrUpdateUserCommandHandler implements CommandHandler<CreateNewOrUpdateUserCommand, CreateNewOrUpdateUserCommandResult> {
 
     private final IUserWriteRepository writeRepository;
+    private final MessageResolver messageResolver;
 
     @Override
-    public Class<CreateNewUserCommand> commandClass() {
-        return CreateNewUserCommand.class;
+    public Class<CreateNewOrUpdateUserCommand> commandClass() {
+        return CreateNewOrUpdateUserCommand.class;
     }
 
     @Override
     @Transactional //TODO dopisać walidacje roli zakładającego konto czy moze dac takie uprawnienia
-    public CreateNewUserCommandResult handle(CreateNewUserCommand command) {
+    public CreateNewOrUpdateUserCommandResult handle(CreateNewOrUpdateUserCommand command) {
         String firstPassword = User.generateFirstPassword();
         User user = new User(command, firstPassword);
-        CreateNewUserCommandResult result = new CreateNewUserCommandResult(user.email(), firstPassword);
         try {
             writeRepository.createNew(user);
         } catch (DuplicateKeyException e) {
             log.warn("User with email: {} already exists", command.email(), e);
             throw buildUserByEmailAlreadyExistsException(command.email());
         }
-        return result;
+
+        String message = null;
+        if (user.id() != null) {
+            message = messageResolver.getMessage("user.updateSuccess");
+        }
+        return new CreateNewOrUpdateUserCommandResult(user.email(), firstPassword, message);
     }
 
     private AppException buildUserByEmailAlreadyExistsException(String email) {
