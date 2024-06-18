@@ -9,4 +9,7 @@ interface IUserWriteRepository {
 
     @Transactional(Transactional.TxType.REQUIRED)
     void delete(Long id);
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    void changePassword(User user);
 }

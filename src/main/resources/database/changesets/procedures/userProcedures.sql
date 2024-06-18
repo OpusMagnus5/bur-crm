@@ -89,7 +89,7 @@ CREATE OR REPLACE PROCEDURE users_get_details(
     OUT _cursor REFCURSOR
 
 )
-    LANGUAGE plpgsql
+LANGUAGE plpgsql
 AS $$
 BEGIN
 
@@ -115,7 +115,7 @@ CREATE OR REPLACE PROCEDURE users_get_page_of_users(
     OUT _cursor REFCURSOR,
     OUT _total_users BIGINT
 )
-    LANGUAGE plpgsql
+LANGUAGE plpgsql
 AS $$
 BEGIN
 
@@ -130,5 +130,40 @@ BEGIN
     SELECT count(usr_id)
     INTO _total_users
     FROM users;
+
+END$$;
+
+DROP PROCEDURE IF EXISTS users_change_password;
+/*PROCEDURE users_change_password*/
+CREATE OR REPLACE PROCEDURE users_change_password(
+    IN _usr_id users.usr_id%TYPE,
+    IN _usr_version users.usr_version%TYPE,
+    IN _usr_password users.usr_password%TYPE,
+    IN _usr_modified_by users.usr_id%TYPE
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    _current_version INTEGER;
+BEGIN
+
+    SELECT usr_version
+    INTO _current_version
+    FROM users
+    WHERE usr_id = _usr_id;
+
+    IF _current_version <> _usr_version THEN
+        RAISE SQLSTATE '55000' USING MESSAGE = 'The resource with ID: ' || _usr_id || ' was changed by another user',
+            TABLE = 'users',
+            COLUMN = 'usr_version',
+            DETAIL = 'Provided version: ' || _usr_version || ', current version: ' || _current_version;
+    END IF;
+
+    UPDATE users
+    SET usr_version = usr_version + 1,
+        usr_password = _usr_password,
+        usr_modified_at = current_timestamp,
+        usr_modified_by = _usr_modified_by
+    WHERE usr_id = _usr_id;
 
 END$$;

@@ -6,6 +6,7 @@ import pl.bodzioch.damian.infrastructure.database.DbConstructor;
 import pl.bodzioch.damian.infrastructure.database.DbId;
 import pl.bodzioch.damian.infrastructure.database.DbManyToOne;
 import pl.bodzioch.damian.user.command_dto.CreateNewOrUpdateUserCommand;
+import pl.bodzioch.damian.user.command_dto.ResetUserPasswordCommand;
 import pl.bodzioch.damian.utils.Encoder;
 
 import java.security.SecureRandom;
@@ -71,7 +72,15 @@ record User (
         );
     }
 
-    static String generateFirstPassword() {
+    User(ResetUserPasswordCommand command, String newPassword) {
+        this(
+                command.id(), null, command.userVersion(), null, Encoder.encodePassword(newPassword),
+                null, null, null, null, null, null, command.modifierId(),
+                null, null, null
+        );
+    }
+
+    static String generateNewPassword() {
         String passwordCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
         int passwordLength = 12;
         SecureRandom secureRandom = new SecureRandom();

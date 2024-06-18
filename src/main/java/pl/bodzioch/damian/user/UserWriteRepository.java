@@ -15,11 +15,13 @@ class UserWriteRepository implements IUserWriteRepository {
     private final IJdbcCaller jdbcCaller;
     private final SimpleJdbcCall createNewProc;
     private final SimpleJdbcCall deleteProc;
+    private final SimpleJdbcCall changePasswordProc;
 
     UserWriteRepository(IJdbcCaller jdbcCaller) {
         this.jdbcCaller = jdbcCaller;
         this.createNewProc = jdbcCaller.buildSimpleJdbcCall("users_create_new_or_update");
         this.deleteProc = jdbcCaller.buildSimpleJdbcCall("users_delete");
+        this.changePasswordProc = jdbcCaller.buildSimpleJdbcCall("users_change_password");
     }
 
     @Override
@@ -35,5 +37,12 @@ class UserWriteRepository implements IUserWriteRepository {
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("_usr_id", id);
         this.jdbcCaller.call(this.deleteProc, properties);
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.REQUIRED)
+    public void changePassword(User user) {
+        Map<String, Object> properties = DbCaster.toProperties(user);
+        this.jdbcCaller.call(this.changePasswordProc, properties);
     }
 }

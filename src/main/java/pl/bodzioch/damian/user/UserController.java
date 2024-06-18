@@ -96,4 +96,12 @@ class UserController {
         DeleteUserByIdCommandResult result = commandExecutor.execute(command);
         return new DeleteUserByIdResponse(result.message());
     }
+
+    @PatchMapping("/reset-password")
+    @ResponseStatus(HttpStatus.OK)
+    ResetUserPasswordResponse resetPassword(@Valid @RequestBody ResetUserPasswordRequest request) {
+        ResetUserPasswordCommand command = new ResetUserPasswordCommand(request, cipher, 1L);// TODO poprawic
+        ResetUserPasswordCommandResult result = commandExecutor.execute(command);
+        return new ResetUserPasswordResponse(result.newPassword());
+    }
 }
