@@ -84,6 +84,8 @@ export interface GetServiceDetailsResponse {
   startDate: Date,
   endDate: Date,
   numberOfParticipants: number,
+  createdAt: Date,
+  modifiedAt: Date,
   creator: UserListDataInterface
   modifier: UserListDataInterface
   operator: OperatorDataInterface,

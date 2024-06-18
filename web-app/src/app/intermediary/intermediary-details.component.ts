@@ -9,7 +9,7 @@ import {
 import {LocalizedDatePipe} from "../shared/pipe/localized-date.pipe";
 import {MatButton} from "@angular/material/button";
 import {MatDivider} from "@angular/material/divider";
-import {NoDataIfEmptyDirective} from "../shared/directive/no-data-if-empty.directive";
+import {ShowNoDataDirective} from "../shared/directive/show-no-data.directive";
 import {TranslateModule} from "@ngx-translate/core";
 import {IntermediaryDetailsResponse} from "./intermediary-dtos";
 
@@ -23,7 +23,7 @@ import {IntermediaryDetailsResponse} from "./intermediary-dtos";
     MatDialogContent,
     MatDialogTitle,
     MatDivider,
-    NoDataIfEmptyDirective,
+    ShowNoDataDirective,
     TranslateModule,
     MatDialogClose
   ],

@@ -4,7 +4,7 @@
     <p class="label-title">{{ 'operator-details.name' | translate }}</p>
     <p>{{ data.name }}</p>
     <p class="label-title">{{ 'operator-details.notes' | translate }}</p>
-    <p [noDataIfEmpty]="data.notes" class="whitespace-pre-line">{{ data.notes }}</p>
+    <p [showNoData]="!data.notes" [data]="data.notes" class="whitespace-pre-line"></p>
   </div>
   @if (data.programs.length > 0) {
     <mat-list class="programs-list">
@@ -37,7 +37,7 @@
     </div>
     <div>
       <p class="label-title">{{ 'common.modifier' | translate }}</p>
-      <p [noDataIfEmpty]="data.modifierFirstName">{{ data.modifierFirstName }} {{ data.modifierLastName }}</p>
+      <p [showNoData]="!data.modifierFirstName" [data]="data.modifierFirstName + ' ' + data.modifierLastName"></p>
     </div>
   </div>
 </mat-dialog-content>

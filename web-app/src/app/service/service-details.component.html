@@ -80,7 +80,10 @@
     <div>
       <div class="py-6 pl-10">
         <p class="font-semibold text-gray-900 leading-6">{{ 'service-details.intermediary' | translate }}</p>
-        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails()?.intermediary?.name }}</p>
+        <p class="leading-6 mt-2 text-gray-700"
+           [showNoData]="!serviceDetails()?.intermediary?.name"
+           [data]="serviceDetails()?.intermediary?.name">
+        </p>
       </div>
     </div>
     <div class="col-span-2">
@@ -98,6 +101,36 @@
             </mat-icon>
           }
         </div>
+      </div>
+    </div>
+    <div>
+      <div class="py-6 pr-10">
+        <p class="font-semibold text-gray-900 leading-6">{{ 'common.creator' | translate }}</p>
+        <p class="leading-6 mt-2 text-gray-700"
+           [showNoData]="!serviceDetails()?.creator?.firstName"
+           [data]="serviceDetails()?.creator?.firstName + ' ' + serviceDetails()?.creator?.lastName">
+        </p>
+      </div>
+    </div>
+    <div>
+      <div class="py-6 pl-10">
+        <p class="font-semibold text-gray-900 leading-6">{{ 'common.created-at' | translate }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails()?.createdAt | localizedDate }}</p>
+      </div>
+    </div>
+    <div>
+      <div class="py-6 pr-10">
+        <p class="font-semibold text-gray-900 leading-6">{{ 'common.modifier' | translate }}</p>
+        <p class="leading-6 mt-2 text-gray-700"
+           [showNoData]="!serviceDetails()?.modifier?.firstName"
+           [data]="serviceDetails()?.modifier?.firstName + ' ' + serviceDetails()?.modifier?.lastName">
+        </p>
+      </div>
+    </div>
+    <div>
+      <div class="py-6 pl-10">
+        <p class="font-semibold text-gray-900 leading-6">{{ 'common.modified-at' | translate }}</p>
+        <p class="leading-6 mt-2 text-gray-700">{{ serviceDetails()?.modifiedAt | localizedDate }}</p>
       </div>
     </div>
     <div class="col-span-2">

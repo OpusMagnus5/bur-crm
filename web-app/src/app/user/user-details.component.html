@@ -40,7 +40,7 @@
     </div>
     <div>
       <p class="label-title">{{ 'common.modifier' | translate }}</p>
-      <p [noDataIfEmpty]="data.modifierFirstName">{{ data.modifierFirstName }} {{ data.modifierLastName }}</p>
+      <p [showNoData]="!data.modifierFirstName" [data]="data.modifierFirstName + ' ' + data.modifierLastName"></p>
     </div>
     <div>
       <p class="label-title">{{ 'user-details.last-login' | translate }}</p>

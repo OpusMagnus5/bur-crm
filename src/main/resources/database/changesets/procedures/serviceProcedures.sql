@@ -151,6 +151,7 @@ BEGIN
     OPEN _cursor FOR
         SELECT srv_id, srv_uuid, srv_bur_card_id, srv_number, srv_name, srv_type, srv_start_date, srv_end_date, srv_status,
                srv_number_of_participants, srv_service_provider_id, srv_customer_id, srv_program_id, srv_intermediary_id,
+               srv_created_at, srv_modified_at,
                coaches.coach_id as srv_coach_ids,
                creator.usr_first_name as creator_usr_first_name, creator.usr_last_name as creator_usr_last_name,
                creator.usr_id as creator_usr_id,
@@ -164,8 +165,7 @@ BEGIN
                intermediary.itr_id as intermediary_itr_id, intermediary.itr_name as intermediary_itr_name,
                document.doc_id as document_doc_id, document.doc_coach_id as document_doc_coach_id, document.doc_type as document_doc_type,
                document.doc_file_name as document_doc_file_name, document.doc_file_extension as document_doc_file_extension,
-               document.doc_created_at as document_doc_created_at, doc_creator.usr_first_name as document_creator_usr_first_name,
-               doc_creator.usr_last_name as document_creator_usr_last_name
+               document.doc_created_at as document_doc_created_at
         FROM service
         LEFT JOIN service_coach coaches ON coaches.service_id = service.srv_id
         LEFT JOIN users creator ON creator.usr_id = srv_created_by
@@ -177,7 +177,6 @@ BEGIN
         LEFT JOIN coach ON coach.coa_id = coaches.coach_id
         LEFT JOIN intermediary ON intermediary.itr_id = service.srv_intermediary_id
         LEFT JOIN document On document.doc_service_id = service.srv_id
-        LEFT JOIN users doc_creator ON doc_creator.usr_id = document.doc_created_by
         WHERE srv_id = _srv_id;
 
 END$$;

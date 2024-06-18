@@ -10,7 +10,7 @@ import {ProgramDetailsResponseInterface} from "./model/program-details-response.
 import {TranslateModule} from "@ngx-translate/core";
 import {MatDivider} from "@angular/material/divider";
 import {LocalizedDatePipe} from "../shared/pipe/localized-date.pipe";
-import {NoDataIfEmptyDirective} from "../shared/directive/no-data-if-empty.directive";
+import {ShowNoDataDirective} from "../shared/directive/show-no-data.directive";
 import {MatButton} from "@angular/material/button";
 
 @Component({
@@ -22,7 +22,7 @@ import {MatButton} from "@angular/material/button";
     MatDialogTitle,
     MatDivider,
     LocalizedDatePipe,
-    NoDataIfEmptyDirective,
+    ShowNoDataDirective,
     MatDialogActions,
     MatButton,
     MatDialogClose

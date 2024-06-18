@@ -37,6 +37,7 @@ import {MatTooltip} from "@angular/material/tooltip";
 import {SnackbarService} from "../shared/service/snackbar.service";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {DeleteRecordConfirmationComponent} from "../shared/component/delete-record-confirmation.component";
+import {ShowNoDataDirective} from "../shared/directive/show-no-data.directive";
 
 @Component({
   selector: 'app-service-details',
@@ -65,7 +66,8 @@ import {DeleteRecordConfirmationComponent} from "../shared/component/delete-reco
     FormsModule,
     MatDivider,
     MatMiniFabButton,
-    MatTooltip
+    MatTooltip,
+    ShowNoDataDirective
   ],
   templateUrl: './service-details.component.html',
   styleUrl: './service-details.component.css'

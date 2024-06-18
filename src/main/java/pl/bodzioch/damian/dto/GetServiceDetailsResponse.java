@@ -5,6 +5,7 @@ import pl.bodzioch.damian.utils.CipherComponent;
 import pl.bodzioch.damian.utils.MessageResolver;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public record GetServiceDetailsResponse(
@@ -16,6 +17,8 @@ public record GetServiceDetailsResponse(
         LocalDate startDate,
         LocalDate endDate,
         Integer numberOfParticipants,
+        LocalDateTime createdAt,
+        LocalDateTime modifiedAt,
         UserListData creator,
         UserListData modifier,
         OperatorData operator,
@@ -38,6 +41,8 @@ public record GetServiceDetailsResponse(
                 service.startDate(),
                 service.endDate(),
                 service.numberOfParticipants(),
+                service.createdAt(),
+                service.modifiedAt(),
                 new UserListData(service.creator(), cipher),
                 new UserListData(service.modifier(), cipher),
                 new OperatorData(service.operator(), cipher),
