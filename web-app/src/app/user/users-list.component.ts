@@ -21,13 +21,12 @@ import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {MatIcon} from "@angular/material/icon";
 import {UserListDataInterface} from "./model/user-list-data.interface";
 import {MatDialog} from "@angular/material/dialog";
-import {UserDetailsComponent} from "./user-details.component";
 import {Subject} from "rxjs";
 import {UserListResponseInterface} from "./model/user-list-response.interface";
 import {SnackbarService} from "../shared/service/snackbar.service";
 import {SubscriptionManager} from "../shared/util/subscription-manager";
 import {DeleteRecordConfirmationComponent} from "../shared/component/delete-record-confirmation.component";
-import {USER_EDIT_PATH} from "../app.routes";
+import {USER_DETAILS_PATH, USER_EDIT_PATH} from "../app.routes";
 import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
@@ -90,9 +89,9 @@ export class UsersListComponent implements OnDestroy {
   }
 
   onDetails(element: UserListDataInterface) {
-    this.http.getUserDetails(element.id).subscribe(response => {
-      this.dialog.open(UserDetailsComponent, { data: response, disableClose: true })
-    })
+    this.router.navigate(['../', USER_DETAILS_PATH, element.id], {
+      relativeTo: this.route
+    });
   }
 
   onRemove(element: UserListDataInterface) {

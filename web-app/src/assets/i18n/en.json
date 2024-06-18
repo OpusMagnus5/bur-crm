@@ -56,7 +56,8 @@
   "user-dashboard": {
     "new-user-tab": "Add user",
     "users-list-tab": "Users list",
-    "users-edit-tab": "Edit user"
+    "users-edit-tab": "Edit user",
+    "users-details-tab": "User details"
   },
   "user-details": {
     "title": "User Details",
@@ -64,7 +65,10 @@
     "first-name": "First Name",
     "last-name": "Last Name",
     "roles": "Roles",
-    "last-login": "Last Logged In"
+    "last-login": "Last Logged In",
+    "options": {
+      "change-password": "Change password"
+    }
   },
   "delete-user": {
     "confirmation-title": "Delete user",

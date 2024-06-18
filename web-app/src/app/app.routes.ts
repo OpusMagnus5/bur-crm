@@ -28,6 +28,7 @@ import {ServiceListComponent} from "./service/service-list.component";
 import {EditServiceComponent} from "./service/edit-service.component";
 import {ServiceDetailsComponent} from "./service/service-details.component";
 import {EditUserComponent} from "./user/edit-user.component";
+import {UserDetailsComponent} from "./user/user-details.component";
 
 export const ADMINISTRATION_PATH: string = 'administration';
 export const BASE_PATH: string = '';
@@ -35,6 +36,7 @@ export const ADMINISTRATION_USERS_PATH: string = ADMINISTRATION_PATH + '/users';
 export const NEW_USER_PATH: string = 'new';
 export const USER_LIST_PATH: string = 'list';
 export const USER_EDIT_PATH: string = 'edit';
+export const USER_DETAILS_PATH: string = 'details'
 export const REGISTRY_PATH: string = 'registry'
 export const REGISTRY_SERVICE_PROVIDER_PATH: string = REGISTRY_PATH + '/service-provider'
 export const NEW_SERVICE_PROVIDER_PATH: string = 'new';
@@ -184,6 +186,10 @@ export const routes: Routes = [
       {
         path: USER_EDIT_PATH + '/:id',
         component: EditUserComponent
+      },
+      {
+        path: USER_DETAILS_PATH + '/:id',
+        component: UserDetailsComponent
       }
     ]
   },
