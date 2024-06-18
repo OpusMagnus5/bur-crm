@@ -37,7 +37,7 @@ import {SnackbarService} from "../shared/service/snackbar.service";
 import {MatDialog} from "@angular/material/dialog";
 import {ProgramHttpService} from "./service/program-http.service";
 import {debounceTime, fromEvent} from "rxjs";
-import {DeleteRecordConfirmationComponent} from "../shared/component/delete-record-confirmation.component";
+import {ConfirmationDialogComponent} from "../shared/component/confirmation-dialog.component";
 import {SubscriptionManager} from "../shared/util/subscription-manager";
 import {ProgramDataInterface} from "./model/program-data-interface";
 import {ProgramDetailsComponent} from "./program-details.component";
@@ -131,7 +131,7 @@ export class ProgramListComponent implements AfterViewInit, OnDestroy {
 
   protected onRemove(element: ProgramDataInterface) {
     const dialogRef = this.dialog.open(
-      DeleteRecordConfirmationComponent, {
+      ConfirmationDialogComponent, {
         data: {
           codeForTranslation: 'delete-program'
         }

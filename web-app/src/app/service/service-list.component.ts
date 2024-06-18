@@ -35,7 +35,7 @@ import {toObservable} from "@angular/core/rxjs-interop";
 import {SubscriptionManager} from "../shared/util/subscription-manager";
 import {concat, debounceTime, forkJoin, merge, skip, tap} from "rxjs";
 import {EDIT_SERVICE_PATH, SERVICE_DETAILS_PATH} from "../app.routes";
-import {DeleteRecordConfirmationComponent} from "../shared/component/delete-record-confirmation.component";
+import {ConfirmationDialogComponent} from "../shared/component/confirmation-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {ProgramDataInterface} from "../program/model/program-data-interface";
 import {SnackbarService} from "../shared/service/snackbar.service";
@@ -229,7 +229,7 @@ export class ServiceListComponent implements OnDestroy {
 
   protected onRemove(element: any) {
     const dialogRef = this.dialog.open(
-      DeleteRecordConfirmationComponent, {
+      ConfirmationDialogComponent, {
         data: {
           codeForTranslation: 'delete-service'
         }

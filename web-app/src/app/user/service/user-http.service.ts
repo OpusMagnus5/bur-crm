@@ -9,6 +9,7 @@ import {UserListResponseInterface} from "../model/user-list-response.interface";
 import {GetUseDetailsResponseInterface} from "../model/get-use-details-response.interface";
 import {DeleteUserByIdResponseInterface} from "../model/delete-user-by-id-response.interface";
 import {SERVER_URL} from "../../shared/http-config";
+import {ResetUserPasswordRequest, ResetUserPasswordResponse} from "../model/user-dtos";
 
 @Injectable({
   providedIn: 'root'
@@ -61,6 +62,12 @@ export class UserHttpService {
   deleteUser(userId: string): Observable<DeleteUserByIdResponseInterface> {
     return this.http.delete<DeleteUserByIdResponseInterface>(
       SERVER_URL + 'api/user/' + userId
+    );
+  }
+
+  resetPassword(request: ResetUserPasswordRequest): Observable<ResetUserPasswordResponse> {
+    return this.http.patch<ResetUserPasswordResponse>(
+      SERVER_URL + 'api/user/reset-password', request
     );
   }
 }

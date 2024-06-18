@@ -36,7 +36,7 @@ import {MatDivider} from "@angular/material/divider";
 import {MatTooltip} from "@angular/material/tooltip";
 import {SnackbarService} from "../shared/service/snackbar.service";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {DeleteRecordConfirmationComponent} from "../shared/component/delete-record-confirmation.component";
+import {ConfirmationDialogComponent} from "../shared/component/confirmation-dialog.component";
 import {ShowNoDataDirective} from "../shared/directive/show-no-data.directive";
 
 @Component({
@@ -293,9 +293,9 @@ export class ServiceDetailsComponent implements OnDestroy {
     }));
   }
 
-  private openDeleteFileConfirmation(codeForTranslation: string): MatDialogRef<DeleteRecordConfirmationComponent> {
+  private openDeleteFileConfirmation(codeForTranslation: string): MatDialogRef<ConfirmationDialogComponent> {
     return this.dialog.open(
-      DeleteRecordConfirmationComponent, {
+      ConfirmationDialogComponent, {
         data: {
           codeForTranslation: codeForTranslation
         }

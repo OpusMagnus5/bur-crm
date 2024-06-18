@@ -25,7 +25,7 @@ import {Subject} from "rxjs";
 import {UserListResponseInterface} from "./model/user-list-response.interface";
 import {SnackbarService} from "../shared/service/snackbar.service";
 import {SubscriptionManager} from "../shared/util/subscription-manager";
-import {DeleteRecordConfirmationComponent} from "../shared/component/delete-record-confirmation.component";
+import {ConfirmationDialogComponent} from "../shared/component/confirmation-dialog.component";
 import {USER_DETAILS_PATH, USER_EDIT_PATH} from "../app.routes";
 import {ActivatedRoute, Router} from "@angular/router";
 
@@ -96,7 +96,7 @@ export class UsersListComponent implements OnDestroy {
 
   onRemove(element: UserListDataInterface) {
     const dialogRef = this.dialog.open(
-      DeleteRecordConfirmationComponent, {
+      ConfirmationDialogComponent, {
         data: {
           codeForTranslation: 'delete-user'
         }

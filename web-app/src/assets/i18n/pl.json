@@ -67,12 +67,20 @@
     "roles": "Role",
     "last-login": "Ostatnio zalogowany",
     "options": {
-      "change-password": "Zmień hasło"
+      "reset-password": "Zresetuj hasło"
     }
   },
   "delete-user": {
     "confirmation-title": "Usuń użytkownika",
     "confirmation-content" : "Czy napewno chcesz usunąć tego użytkownika?"
+  },
+  "reset-user-password": {
+    "confirmation-title": "Zresetuj hasło",
+    "confirmation-content" : "Czy napewno chcesz zresetować hasło użytkownikowi?"
+  },
+  "reset-password-dialog": {
+    "title": "Hasło zostało zresetowane",
+    "content": "Nowe hasło"
   },
   "common": {
     "no-data": "Brak danych",

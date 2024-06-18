@@ -67,12 +67,16 @@
     "roles": "Roles",
     "last-login": "Last Logged In",
     "options": {
-      "change-password": "Change password"
+      "reset-password": "Reset password"
     }
   },
   "delete-user": {
     "confirmation-title": "Delete user",
     "confirmation-content" : "Are you sure you want to delete this user?"
+  },
+  "reset-password-dialog": {
+    "title": "The password has been reset",
+    "content": "New password"
   },
   "common": {
     "no-data": "No data",

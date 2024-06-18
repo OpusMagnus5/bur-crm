@@ -26,7 +26,7 @@ import {ServiceProviderDetailsComponent} from "./service-provider-details.compon
 import {ServiceProviderDataInterface} from "./model/service-provider-data.interface";
 import {UpdateServiceProviderComponent} from "./update-service-provider.component";
 import {SnackbarService} from "../shared/service/snackbar.service";
-import {DeleteRecordConfirmationComponent} from "../shared/component/delete-record-confirmation.component";
+import {ConfirmationDialogComponent} from "../shared/component/confirmation-dialog.component";
 import {SubscriptionManager} from "../shared/util/subscription-manager";
 
 @Component({
@@ -94,7 +94,7 @@ export class ServiceProviderListComponent implements OnDestroy {
 
   onRemove(element: ServiceProviderDataInterface) {
     const dialogRef = this.dialog.open(
-      DeleteRecordConfirmationComponent, {
+      ConfirmationDialogComponent, {
         data: {
           codeForTranslation: 'delete-service-provider'
         }

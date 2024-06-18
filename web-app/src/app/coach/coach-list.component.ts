@@ -36,7 +36,7 @@ import {MatInput} from "@angular/material/input";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {TranslateModule} from "@ngx-translate/core";
-import {DeleteRecordConfirmationComponent} from "../shared/component/delete-record-confirmation.component";
+import {ConfirmationDialogComponent} from "../shared/component/confirmation-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {SnackbarService} from "../shared/service/snackbar.service";
 import {CoachDetailsComponent} from "./coach-details.component";
@@ -135,7 +135,7 @@ export class CoachListComponent implements AfterViewInit, OnDestroy {
 
   protected onRemove(element: CoachData) {
     const dialogRef = this.dialog.open(
-      DeleteRecordConfirmationComponent, {
+      ConfirmationDialogComponent, {
         data: { codeForTranslation: 'delete-coach' }
       });
     this.subscriptions.add(dialogRef.componentInstance.deleteConfirmation.subscribe(value => {

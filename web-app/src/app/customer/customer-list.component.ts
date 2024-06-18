@@ -34,7 +34,7 @@ import {MatInput} from "@angular/material/input";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {TranslateModule} from "@ngx-translate/core";
-import {DeleteRecordConfirmationComponent} from "../shared/component/delete-record-confirmation.component";
+import {ConfirmationDialogComponent} from "../shared/component/confirmation-dialog.component";
 import {SnackbarService} from "../shared/service/snackbar.service";
 import {MatDialog} from "@angular/material/dialog";
 import {CustomerDetailsComponent} from "./customer-details.component";
@@ -135,7 +135,7 @@ export class CustomerListComponent implements OnDestroy, AfterViewInit {
 
   protected onRemove(element: CustomerData): void {
     const dialogRef = this.dialog.open(
-      DeleteRecordConfirmationComponent, {
+      ConfirmationDialogComponent, {
         data: { codeForTranslation: 'delete-customer' }
       });
     this.subscriptions.add(dialogRef.componentInstance.deleteConfirmation.subscribe(value => {

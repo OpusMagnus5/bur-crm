@@ -41,7 +41,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {OperatorDetailsComponent} from "./operator-details.component";
 import {UpdateOperatorComponent} from "./update-operator.component";
 import {SubscriptionManager} from "../shared/util/subscription-manager";
-import {DeleteRecordConfirmationComponent} from "../shared/component/delete-record-confirmation.component";
+import {ConfirmationDialogComponent} from "../shared/component/confirmation-dialog.component";
 
 @Component({
   selector: 'app-operator-list',
@@ -128,7 +128,7 @@ export class OperatorListComponent implements AfterViewInit, OnDestroy {
 
   onRemove(element: OperatorDataInterface) {
     const dialogRef = this.dialog.open(
-      DeleteRecordConfirmationComponent, {
+      ConfirmationDialogComponent, {
         data: {
           codeForTranslation: 'delete-operator'
         }

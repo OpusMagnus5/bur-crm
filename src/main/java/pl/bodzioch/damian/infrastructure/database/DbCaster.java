@@ -326,6 +326,7 @@ public class DbCaster {
     }
 
     private static String enumsToDb(List<? extends Enum<?>> enums) {
+        if (enums == null) return null;
         return enums.stream()
                 .map(Enum::name)
                 .collect(Collectors.joining(";"));

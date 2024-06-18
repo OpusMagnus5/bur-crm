@@ -22,10 +22,10 @@ import {DeleteConfirmationDataInterface} from "../model/delete-confirmation-data
     MatDialogTitle,
     TranslateModule
   ],
-  templateUrl: './delete-record-confirmation.component.html',
-  styleUrl: './delete-record-confirmation.component.css'
+  templateUrl: './confirmation-dialog.component.html',
+  styleUrl: './confirmation-dialog.component.css'
 })
-export class DeleteRecordConfirmationComponent {
+export class ConfirmationDialogComponent {
 
   deleteConfirmation: Subject<boolean> = new Subject();
 
