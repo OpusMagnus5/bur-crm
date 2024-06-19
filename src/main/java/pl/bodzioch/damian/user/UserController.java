@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.bodzioch.damian.dto.*;
@@ -37,8 +38,10 @@ class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/login")
-    void login() {
-
+    LoginResponse login(Authentication authentication) {
+        GenerateJwtTokenCommand command = new GenerateJwtTokenCommand(authentication);
+        GenerateJwtTokenCommandResult result = commandExecutor.execute(command);
+        return new LoginResponse(result.token());
     }
 
     @ResponseStatus(HttpStatus.OK)
