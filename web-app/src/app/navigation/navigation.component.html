@@ -38,7 +38,7 @@
       </mat-menu>
     </mat-nav-list>
   </mat-sidenav>
-  <mat-sidenav-content>
+  <mat-sidenav-content class="flex flex-col">
     <mat-toolbar color="primary">
       <button
         type="button"
@@ -60,6 +60,9 @@
         </div>
       </div>
     </mat-toolbar>
-    <router-outlet></router-outlet>
+    <div class="h-full">
+        <router-outlet></router-outlet>
+    </div>
+
   </mat-sidenav-content>
 </mat-sidenav-container>
