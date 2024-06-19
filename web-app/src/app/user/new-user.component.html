@@ -2,8 +2,7 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <mat-form-field>
       <mat-label>{{ 'new-user.email-input-label' | translate }}</mat-label>
-      <input matInput
-             [formControl]="emailControl">
+      <input matInput [formControl]="emailControl" type="email">
       @if (emailControl.invalid){
         <mat-error> {{ getValidationMessage('email', emailControl) }}</mat-error>
       }

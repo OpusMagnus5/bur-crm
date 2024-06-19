@@ -29,6 +29,7 @@ import {EditServiceComponent} from "./service/edit-service.component";
 import {ServiceDetailsComponent} from "./service/service-details.component";
 import {EditUserComponent} from "./user/edit-user.component";
 import {UserDetailsComponent} from "./user/user-details.component";
+import {LoginComponent} from "./auth/login.component";
 
 export const ADMINISTRATION_PATH: string = 'administration';
 export const BASE_PATH: string = '';
@@ -61,6 +62,7 @@ export const NEW_SERVICE_PATH: string = "new"
 export const SERVICES_LIST_PATH: string = 'list';
 export const EDIT_SERVICE_PATH: string = 'edit';
 export const SERVICE_DETAILS_PATH: string = 'details';
+export const LOGIN_PATH: string = 'login'
 const NOT_FOUND_PATH = 'not-found';
 
 export const routes: Routes = [
@@ -192,6 +194,10 @@ export const routes: Routes = [
         component: UserDetailsComponent
       }
     ]
+  },
+  {
+    path: LOGIN_PATH,
+    component: LoginComponent
   },
   {
     path: NOT_FOUND_PATH, component: NotFoundComponent

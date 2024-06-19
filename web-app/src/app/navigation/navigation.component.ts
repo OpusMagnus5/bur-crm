@@ -18,6 +18,7 @@ import {
   COACH_LIST_PATH,
   CUSTOMER_LIST_PATH,
   INTERMEDIARY_LIST_PATH,
+  LOGIN_PATH,
   OPERATOR_LIST_PATH,
   PROGRAM_LIST_PATH,
   REGISTRY_COACH_PATH,
@@ -76,9 +77,10 @@ export class NavigationComponent {
   protected readonly REGISTRY_COACH_PATH = REGISTRY_COACH_PATH + '/' + COACH_LIST_PATH;
   protected readonly REGISTRY_INTERMEDIARY_PATH = REGISTRY_INTERMEDIARY_PATH + '/' + INTERMEDIARY_LIST_PATH;
   protected readonly SERVICES_PATH = SERVICES_PATH + '/' + SERVICES_LIST_PATH;
+  protected readonly LOGIN_PATH = LOGIN_PATH;
+
 
   protected isHandset$: Observable<boolean>;
-
 
   constructor(private breakpointObserver: BreakpointObserver, protected routerService: RouterService) {
     this.isHandset$ = breakpointObserver.observe(Breakpoints.XSmall)

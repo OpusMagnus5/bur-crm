@@ -10,7 +10,8 @@
     "customer-path": "Customers",
     "coach-path": "Coaches",
     "intermediary-path": "Intermediaries",
-    "service-path": "Services"
+    "service-path": "Services",
+    "login-path": "Login"
   },
   "not-found": {
     "message": "Sorry, the requested page was not found."
@@ -544,5 +545,20 @@
   "delete-service": {
     "confirmation-title": "Delete service",
     "confirmation-content": "Are you sure you want to delete this service?"
+  },
+  "login": {
+    "title": "Sign in",
+    "email-input-label": "Email",
+    "password-input-label": "Hasło",
+    "validation": {
+      "email": {
+        "required": "The email field cannot be empty",
+        "email": "The provided email address is invalid"
+      },
+      "password": {
+        "required": "The password field cannot be empty",
+        "minLength": "The provided password is too short"
+      }
+    }
   }
 }

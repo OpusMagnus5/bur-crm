@@ -15,7 +15,6 @@ import {CookieService} from "ngx-cookie-service";
     MatMiniFabButton
   ],
   templateUrl: './change-language.component.html',
-  styleUrl: './change-language.component.css'
 })
 export class ChangeLanguageComponent {
 

@@ -10,7 +10,8 @@
     "customer-path": "Klienci",
     "coach-path": "Trenerzy",
     "intermediary-path": "Pośrednicy",
-    "service-path": "Usługi"
+    "service-path": "Usługi",
+    "login-path": "Zaloguj"
   },
   "not-found": {
     "message": "Przepraszamy, szukana strona nie została znaleziona."
@@ -548,5 +549,20 @@
   "delete-service": {
     "confirmation-title": "Usuń usługę",
     "confirmation-content": "Jesteś pewien, że chcesz usunąć tą usługę?"
+  },
+  "login": {
+    "title": "Zaloguj się",
+    "email-input-label": "Email",
+    "password-input-label": "Hasło",
+    "validation": {
+      "email": {
+        "required": "Pole e-mail nie może być puste",
+        "email": "Podany adres e-mail jest nieprawidłowy"
+      },
+      "password": {
+        "required": "Pole hasło nie może być puste",
+        "minLength": "Podany hasło jest za krótkie"
+      }
+    }
   }
 }

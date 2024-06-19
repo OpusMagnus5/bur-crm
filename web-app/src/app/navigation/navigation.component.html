@@ -1,8 +1,8 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport
-      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-      [mode]="(isHandset$ | async) ? 'over' : 'side'"
-      [opened]="(isHandset$ | async) === false">
+               [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+               [mode]="(isHandset$ | async) ? 'over' : 'side'"
+               [opened]="(isHandset$ | async) === false">
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
       <a mat-list-item
@@ -15,18 +15,26 @@
          [matMenuTriggerFor]="registryMenu"
          [activated]="routerService.isPartOfActivePath(REGISTRY_PATH)">{{ 'navigation.registry-path' | translate }}</a>
       <mat-menu #registryMenu>
-        <button mat-menu-item routerLink="{{REGISTRY_SERVICE_PROVIDER_PATH}}">{{ 'navigation.service-provider-path' | translate }}</button>
-        <button mat-menu-item routerLink="{{REGISTRY_OPERATOR_PATH}}">{{ 'navigation.operator-path' | translate }}</button>
-        <button mat-menu-item routerLink="{{REGISTRY_PROGRAM_PATH}}">{{ 'navigation.program-path' | translate }}</button>
-        <button mat-menu-item routerLink="{{ REGISTRY_CUSTOMER_PATH }}">{{ 'navigation.customer-path' | translate}}</button>
+        <button mat-menu-item
+                routerLink="{{REGISTRY_SERVICE_PROVIDER_PATH}}">{{ 'navigation.service-provider-path' | translate }}
+        </button>
+        <button mat-menu-item routerLink="{{REGISTRY_OPERATOR_PATH}}">{{ 'navigation.operator-path' | translate }}
+        </button>
+        <button mat-menu-item routerLink="{{REGISTRY_PROGRAM_PATH}}">{{ 'navigation.program-path' | translate }}
+        </button>
+        <button mat-menu-item routerLink="{{ REGISTRY_CUSTOMER_PATH }}">{{ 'navigation.customer-path' | translate }}
+        </button>
         <button mat-menu-item routerLink="{{ REGISTRY_COACH_PATH }}">{{ 'navigation.coach-path' | translate }}</button>
-        <button mat-menu-item routerLink="{{ REGISTRY_INTERMEDIARY_PATH }}">{{ 'navigation.intermediary-path' | translate }}</button>
+        <button mat-menu-item
+                routerLink="{{ REGISTRY_INTERMEDIARY_PATH }}">{{ 'navigation.intermediary-path' | translate }}
+        </button>
       </mat-menu>
       <a mat-list-item
          [matMenuTriggerFor]="administrationMenu"
          [activated]="routerService.isPartOfActivePath(ADMINISTRATION_PATH)">{{ 'navigation.administration-path' | translate }}</a>
       <mat-menu #administrationMenu="matMenu">
-        <button mat-menu-item routerLink="{{ADMINISTRATION_USERS_PATH}}">{{ 'navigation.users-path' | translate }}</button>
+        <button mat-menu-item routerLink="{{ADMINISTRATION_USERS_PATH}}">{{ 'navigation.users-path' | translate }}
+        </button>
       </mat-menu>
     </mat-nav-list>
   </mat-sidenav>
@@ -40,7 +48,17 @@
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
       <span>BUR-CRM</span>
-      <change-language></change-language>
+      <div class="flex justify-end items-center w-full">
+        <div class="mr-5">
+          <button mat-button routerLink="{{ LOGIN_PATH }}">
+            <mat-icon fontIcon="person"></mat-icon>
+            <span>{{ 'navigation.login-path' | translate }}</span>
+          </button>
+        </div>
+        <div>
+          <change-language></change-language>
+        </div>
+      </div>
     </mat-toolbar>
     <router-outlet></router-outlet>
   </mat-sidenav-content>

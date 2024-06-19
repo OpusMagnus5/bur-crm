@@ -1,4 +1,4 @@
-<div class="language-container">
+<div>
   <button mat-mini-fab [matMenuTriggerFor]="menu">{{ activeLanguage.toUpperCase() }}</button>
   <mat-menu #menu="matMenu">
     @for(lang of availableLanguages; track lang) {
