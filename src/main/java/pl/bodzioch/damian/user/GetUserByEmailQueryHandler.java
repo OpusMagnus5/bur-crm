@@ -31,6 +31,7 @@ class GetUserByEmailQueryHandler implements QueryHandler<GetUserByEmailQuery, Ge
 
     private AppException buildUserByEmailNotFound(GetUserByEmailQuery query) {
         return new AppException(
+                "User with email " + query.email() + " not found.",
                 HttpStatus.NOT_FOUND,
                 List.of(new ErrorData("error.client.userByEmailNotFound", List.of(query.email())))
         );

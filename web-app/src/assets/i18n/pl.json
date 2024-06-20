@@ -554,6 +554,7 @@
     "title": "Zaloguj się",
     "email-input-label": "Email",
     "password-input-label": "Hasło",
+    "login-button": "Zaloguj",
     "validation": {
       "email": {
         "required": "Pole e-mail nie może być puste",
@@ -561,7 +562,7 @@
       },
       "password": {
         "required": "Pole hasło nie może być puste",
-        "minLength": "Podany hasło jest za krótkie"
+        "minlength": "Podany hasło jest za krótkie"
       }
     }
   }

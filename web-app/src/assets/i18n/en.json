@@ -550,6 +550,7 @@
     "title": "Sign in",
     "email-input-label": "Email",
     "password-input-label": "Hasło",
+    "login-button": "Login",
     "validation": {
       "email": {
         "required": "The email field cannot be empty",
@@ -557,7 +558,7 @@
       },
       "password": {
         "required": "The password field cannot be empty",
-        "minLength": "The provided password is too short"
+        "minlength": "The provided password is too short"
       }
     }
   }

@@ -1,28 +1,36 @@
 <div class="w-full h-full flex justify-center items-center">
-  <div class="mat-elevation-z8 w-min">
+  <div class="mat-elevation-z8 w-min py-20 px-32">
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="flex flex-col items-center">
-        <p>{{ 'login.title' | translate }}</p>
-        <mat-form-field>
+        <p class="leading-7 text-gray-800 text-3xl font-semibold mb-10">{{ 'login.title' | translate }}</p>
+        <mat-form-field class="w-72">
           <mat-label>{{ 'login.email-input-label' | translate }}</mat-label>
           <input matInput [formControl]="emailControl" type="email"/>
           @if (emailControl.invalid) {
             <mat-error> {{ getValidationMessage('email', emailControl) }}</mat-error>
           }
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field class="w-72 mt-5">
           <mat-label>{{ 'login.password-input-label' | translate }}</mat-label>
           <input matInput [type]="passwordVisibility() ? 'text' : 'password'" [formControl]="passwordControl"/>
           <button
             mat-icon-button
             matSuffix
             (click)="passwordVisibility.set(!passwordVisibility())">
-            <mat-icon>{{ passwordVisibility() ? 'visibility' : 'visibility_off' }}</mat-icon>
+            <mat-icon [fontIcon]="passwordVisibility() ? 'visibility' : 'visibility_off'"></mat-icon>
           </button>
           @if (passwordControl.invalid) {
             <mat-error> {{ getValidationMessage('password', passwordControl) }}</mat-error>
           }
         </mat-form-field>
+      </div>
+      <div class="flex justify-end">
+        <button mat-flat-button
+                color="primary"
+                [disabled]="form.invalid"
+                class="p-4 mt-5">
+          {{ 'login.login-button' | translate }}
+        </button>
       </div>
     </form>
   </div>
