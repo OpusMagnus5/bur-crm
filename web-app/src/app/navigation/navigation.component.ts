@@ -38,6 +38,7 @@ import {TranslateModule} from "@ngx-translate/core";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {ChangeLanguageComponent} from "../change-langauage/change-language.component";
+import {AuthService} from "../auth/auth.service";
 
 @Component({
   selector: 'app-navigation',
@@ -82,8 +83,12 @@ export class NavigationComponent {
 
   protected isHandset$: Observable<boolean>;
 
-  constructor(private breakpointObserver: BreakpointObserver, protected routerService: RouterService) {
-    this.isHandset$ = breakpointObserver.observe(Breakpoints.XSmall)
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    protected routerService: RouterService,
+    protected auth: AuthService
+  ) {
+    this.isHandset$ = this.breakpointObserver.observe(Breakpoints.XSmall)
       .pipe(
         map(result => result.matches),
         shareReplay()

@@ -7,6 +7,7 @@ import {MatIcon} from "@angular/material/icon";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {ValidationMessageService} from "../shared/service/validation-message.service";
 import {UserHttpService} from "../user/service/user-http.service";
+import {AuthService} from "./auth.service";
 
 @Component({
   selector: 'app-login',
@@ -44,7 +45,8 @@ export class LoginComponent {
 
   constructor(
     private validationMessage: ValidationMessageService,
-    private userHttp: UserHttpService
+    private userHttp: UserHttpService,
+    private auth: AuthService
   ) {
   }
 
@@ -57,8 +59,9 @@ export class LoginComponent {
   }
 
   protected onSubmit() {
-    this.userHttp.login(this.emailControl.value!, this.passwordControl.value!).subscribe(respone => {
-      console.log(respone);
+    this.userHttp.login(this.emailControl.value!, this.passwordControl.value!)
+      .subscribe(response => {
+      this.auth.authData.set(response);
     });
   }
 }

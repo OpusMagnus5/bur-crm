@@ -8,5 +8,14 @@ export interface ResetUserPasswordRequest {
 }
 
 export interface LoginResponse {
-  token: string
+  email: string
+  expires: Date,
+  roles: UserRole[]
+}
+
+export enum UserRole {
+  BLOCKED_USER = 'BLOCKED_USER',
+  USER = 'USER',
+  MANAGER = 'MANAGER',
+  ADMIN = 'ADMIN'
 }

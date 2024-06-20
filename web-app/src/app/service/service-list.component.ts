@@ -39,6 +39,7 @@ import {ConfirmationDialogComponent} from "../shared/component/confirmation-dial
 import {MatDialog} from "@angular/material/dialog";
 import {ProgramDataInterface} from "../program/model/program-data-interface";
 import {SnackbarService} from "../shared/service/snackbar.service";
+import {LocalizedDatePipe} from "../shared/pipe/localized-date.pipe";
 
 @Component({
   selector: 'app-service-list',
@@ -122,7 +123,8 @@ export class ServiceListComponent implements OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private dialog: MatDialog,
-    private snackBarService: SnackbarService
+    private snackBarService: SnackbarService,
+    private datePipe: LocalizedDatePipe
   ) {
 
     const subscription = concat(this.initFiltersData(), this.initTableData())
@@ -209,10 +211,15 @@ export class ServiceListComponent implements OnDestroy {
 
   protected getColumnData(element: any, column: string): any {
     const fields: string[] = column.split(".");
+    let data: any;
     if (fields.length === 2) {
-      return element[fields[0]][fields[1]];
+      data = element[fields[0]][fields[1]];
     }
-    return element[fields[0]];
+    data = element[fields[0]];
+    if (data instanceof Date) {
+      return this.datePipe.transform(data)
+    }
+    return data;
   }
 
   protected onDetails(element: any) {

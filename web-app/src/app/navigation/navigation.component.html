@@ -50,10 +50,17 @@
       <span>BUR-CRM</span>
       <div class="flex justify-end items-center w-full">
         <div class="mr-5">
-          <button mat-button routerLink="{{ LOGIN_PATH }}">
-            <mat-icon fontIcon="person"></mat-icon>
-            <span>{{ 'navigation.login-path' | translate }}</span>
-          </button>
+          @if (this.auth.isValid()) {
+            <button mat-button>
+              <mat-icon fontIcon="logout"></mat-icon>
+              <span>{{ 'navigation.logout-path' | translate }}</span>
+            </button>
+          } @else {
+            <button mat-button routerLink="{{ LOGIN_PATH }}">
+              <mat-icon fontIcon="person"></mat-icon>
+              <span>{{ 'navigation.login-path' | translate }}</span>
+            </button>
+          }
         </div>
         <div>
           <change-language></change-language>

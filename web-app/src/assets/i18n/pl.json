@@ -11,7 +11,8 @@
     "coach-path": "Trenerzy",
     "intermediary-path": "Pośrednicy",
     "service-path": "Usługi",
-    "login-path": "Zaloguj"
+    "login-path": "Zaloguj",
+    "logout-path": "Wyloguj"
   },
   "not-found": {
     "message": "Przepraszamy, szukana strona nie została znaleziona."

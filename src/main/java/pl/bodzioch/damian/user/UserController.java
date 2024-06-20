@@ -1,5 +1,7 @@
 package pl.bodzioch.damian.user;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -16,6 +18,8 @@ import pl.bodzioch.damian.user.command_dto.*;
 import pl.bodzioch.damian.user.query_dto.*;
 import pl.bodzioch.damian.utils.CipherComponent;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @RestController
@@ -36,12 +40,18 @@ class UserController {
         return new CreateUserResponse(result.login(), result.password(), result.message());
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @PostMapping("/login")
-    LoginResponse login(Authentication authentication) {
+    @ResponseStatus(HttpStatus.OK)
+    LoginResponse login(Authentication authentication, HttpServletResponse response) {
         GenerateJwtTokenCommand command = new GenerateJwtTokenCommand(authentication);
         GenerateJwtTokenCommandResult result = commandExecutor.execute(command);
-        return new LoginResponse(result.token());
+        Cookie bearer = new Cookie("bearer", result.token());
+        bearer.setHttpOnly(true);
+        /*bearer.setSecure(true);*/ //TODO SSL
+        bearer.setMaxAge((int) Instant.now().until(result.expires(), ChronoUnit.SECONDS));
+        bearer.setPath("/");
+        response.addCookie(bearer);
+        return new LoginResponse(result);
     }
 
     @ResponseStatus(HttpStatus.OK)

@@ -11,7 +11,8 @@
     "coach-path": "Coaches",
     "intermediary-path": "Intermediaries",
     "service-path": "Services",
-    "login-path": "Login"
+    "login-path": "Login",
+    "logout-path": "Logout"
   },
   "not-found": {
     "message": "Sorry, the requested page was not found."

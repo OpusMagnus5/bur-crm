@@ -29,18 +29,22 @@ public class GenerateJwtTokenCommandHandler implements CommandHandler<GenerateJw
 	@Override
 	public GenerateJwtTokenCommandResult handle(GenerateJwtTokenCommand command) {
 		Authentication authentication = command.authentication();
-		Instant now = Instant.now();
 		String roles = authentication.getAuthorities().stream()
 				.map(GrantedAuthority::getAuthority)
 				.collect(Collectors.joining(";"));
+		Instant now = Instant.now();
+		Instant expiresAt = now.plus(30, ChronoUnit.MINUTES);
+
 		JwtClaimsSet claims = JwtClaimsSet.builder()
 				.subject(authentication.getName())
 				.issuer("self") //TODO zmienic na nazwe domeny
 				.issuedAt(now)
-				.expiresAt(now.plus(30, ChronoUnit.HOURS))
+				.expiresAt(expiresAt)
 				.claim("roles", roles)
 				.build();
+
 		String tokenValue = this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-		return new GenerateJwtTokenCommandResult(tokenValue);
+
+		return new GenerateJwtTokenCommandResult(tokenValue, authentication, expiresAt);
 	}
 }
