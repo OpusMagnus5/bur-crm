@@ -2,6 +2,8 @@ import {computed, Injectable, Signal, signal, WritableSignal} from "@angular/cor
 import {LoginResponse, UserRole} from "../user/model/user-dtos";
 import {CookieService} from "ngx-cookie-service";
 import {toObservable} from "@angular/core/rxjs-interop";
+import {UserHttpService} from "../user/service/user-http.service";
+import {Observable, tap} from "rxjs";
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
@@ -18,7 +20,8 @@ export class AuthService {
   });
 
   constructor(
-    private cookie: CookieService
+    private cookie: CookieService,
+    private userHttp: UserHttpService
   ) {
     const auth = this.cookie.get('auth');
     if (auth) {
@@ -34,9 +37,15 @@ export class AuthService {
         if (this.isAuthValid(value)) {
           const authJson = JSON.stringify(value);
           this.cookie.set('auth', authJson, { expires: value!.expires, secure: false, sameSite: 'Lax', path: '/'});
+        } else if (value === null) {
+          this.cookie.delete('auth');
         }
       }
     })
+  }
+
+  logout(): Observable<void> {
+    return this.userHttp.logout().pipe(tap(() => this.authData.set(null)));
   }
 
   private isAuthValid(authData: LoginResponse | null): boolean {

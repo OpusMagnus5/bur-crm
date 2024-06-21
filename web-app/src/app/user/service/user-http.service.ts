@@ -83,4 +83,10 @@ export class UserHttpService {
       map(response => <LoginResponse>{ ...response ,expires: new Date(response.expires) })
     );
   }
+
+  logout(): Observable<void> {
+    return this.http.post<void>(
+      SERVER_URL + 'api/user/logout', {}
+    );
+  }
 }

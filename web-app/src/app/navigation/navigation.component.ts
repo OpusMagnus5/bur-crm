@@ -10,7 +10,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {Observable} from 'rxjs';
 import {map, shareReplay} from 'rxjs/operators';
 import {UserDashboardComponent} from '../user/user-dashboard.component';
-import {RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
+import {Router, RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
 import {
   ADMINISTRATION_PATH,
   ADMINISTRATION_USERS_PATH,
@@ -86,6 +86,7 @@ export class NavigationComponent {
   constructor(
     private breakpointObserver: BreakpointObserver,
     protected routerService: RouterService,
+    private router: Router,
     protected auth: AuthService
   ) {
     this.isHandset$ = this.breakpointObserver.observe(Breakpoints.XSmall)
@@ -93,5 +94,9 @@ export class NavigationComponent {
         map(result => result.matches),
         shareReplay()
       );
+  }
+
+  protected onLogout(): void {
+    this.auth.logout().subscribe(() => this.router.navigate(['/', LOGIN_PATH]));
   }
 }

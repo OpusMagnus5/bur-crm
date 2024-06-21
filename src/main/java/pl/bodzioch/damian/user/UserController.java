@@ -22,6 +22,8 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import static pl.bodzioch.damian.user.GenerateJwtTokenCommandHandler.BEARER_COOKIE;
+
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
@@ -45,7 +47,7 @@ class UserController {
     LoginResponse login(Authentication authentication, HttpServletResponse response) {
         GenerateJwtTokenCommand command = new GenerateJwtTokenCommand(authentication);
         GenerateJwtTokenCommandResult result = commandExecutor.execute(command);
-        Cookie bearer = new Cookie("bearer", result.token());
+        Cookie bearer = new Cookie(BEARER_COOKIE, result.token());
         bearer.setHttpOnly(true);
         /*bearer.setSecure(true);*/ //TODO SSL
         bearer.setMaxAge((int) Instant.now().until(result.expires(), ChronoUnit.SECONDS));

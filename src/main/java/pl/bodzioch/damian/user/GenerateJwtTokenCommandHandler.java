@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GenerateJwtTokenCommandHandler implements CommandHandler<GenerateJwtTokenCommand, GenerateJwtTokenCommandResult> {
 
+	public static final String BEARER_COOKIE = "bearer";
+
 	private final JwtEncoder jwtEncoder;
 
 	@Override
