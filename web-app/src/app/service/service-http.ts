@@ -10,9 +10,11 @@ import {
   GetAllServiceTypesResponse,
   GetServiceDetailsResponse,
   GetServiceFromBurResponse,
+  ServiceData,
   ServicePageResponse
 } from "./service-dtos";
 import {HttpQueryFiltersInterface} from "../shared/model/http-query-filters.interface";
+import {map} from "rxjs/operators";
 
 @Injectable({providedIn: "root"})
 export class ServiceHttp {
@@ -47,8 +49,12 @@ export class ServiceHttp {
       {
         params: new HttpParams().appendAll(filters)
       }
-    );
+    ).pipe(map(response => <ServicePageResponse>{
+      totalServices: response.totalServices,
+      services: this.mapServices(response)
+    }));
   }
+
 
   getDetails(id: string): Observable<GetServiceDetailsResponse> {
     return this.http.get<GetServiceDetailsResponse>(SERVER_URL + 'api/service/' + id);
@@ -60,5 +66,13 @@ export class ServiceHttp {
 
   delete(id: string): Observable<DeleteServiceResponse> {
     return this.http.delete<DeleteServiceResponse>(SERVER_URL + 'api/service/' + id)
+  }
+
+  private mapServices(response: ServicePageResponse): ServiceData[] {
+    return response.services.map(service => <ServiceData>{
+      ...service,
+      startDate: new Date(service.startDate),
+      endDate: new Date(service.endDate)
+    });
   }
 }

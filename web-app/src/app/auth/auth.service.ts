@@ -14,7 +14,6 @@ export class AuthService {
   public readonly observable = toObservable(this.authData);
   public readonly isValid: Signal<boolean> = computed(() => {
     const authData = this.authData();
-    console.log(this.isAuthValid(authData));
     return this.isAuthValid(authData);
   });
 
@@ -22,9 +21,9 @@ export class AuthService {
     private cookie: CookieService
   ) {
     const auth = this.cookie.get('auth');
-    console.log('authcookie' + auth)
     if (auth) {
-      const authData: LoginResponse = JSON.parse(auth);
+      const parsedAuth: LoginResponse = <LoginResponse> JSON.parse(auth);
+      const authData: LoginResponse = <LoginResponse>{ ...parsedAuth, expires: new Date(parsedAuth.expires) };
       if (this.isAuthValid(authData)) {
         this.authData.set(authData);
       }
@@ -32,7 +31,6 @@ export class AuthService {
 
     this.observable.subscribe({
       next: value => {
-        console.log('observable'+ value);
         if (this.isAuthValid(value)) {
           const authJson = JSON.stringify(value);
           this.cookie.set('auth', authJson, { expires: value!.expires, secure: false, sameSite: 'Lax', path: '/'});

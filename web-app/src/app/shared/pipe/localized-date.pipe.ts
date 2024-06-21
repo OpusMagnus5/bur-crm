@@ -1,4 +1,4 @@
-import {Pipe, PipeTransform} from "@angular/core";
+import {Injectable, Pipe, PipeTransform} from "@angular/core";
 import {TranslateService} from "@ngx-translate/core";
 import {DatePipe} from "@angular/common";
 
@@ -7,6 +7,7 @@ import {DatePipe} from "@angular/common";
   pure: false,
   standalone: true
 })
+@Injectable({ providedIn: "root" })
 export class LocalizedDatePipe implements PipeTransform {
   constructor(private translateService: TranslateService) {}
 

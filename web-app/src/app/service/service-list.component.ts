@@ -211,13 +211,14 @@ export class ServiceListComponent implements OnDestroy {
 
   protected getColumnData(element: any, column: string): any {
     const fields: string[] = column.split(".");
-    let data: any;
+    let data;
     if (fields.length === 2) {
       data = element[fields[0]][fields[1]];
+    } else {
+      data = element[fields[0]];
     }
-    data = element[fields[0]];
     if (data instanceof Date) {
-      return this.datePipe.transform(data)
+      return this.datePipe.transform(new Date(), 'mediumDate');
     }
     return data;
   }

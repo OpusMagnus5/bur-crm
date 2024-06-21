@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {CreateNewUserRequestInterface} from "../model/create-new-user-request.interface";
 import {CreateNewUserResponseInterface} from "../model/create-new-user-response.interface";
-import {catchError, Observable, of, throwError} from "rxjs";
+import {Observable,} from "rxjs";
 import {GetAllRolesResponseInterface} from "../model/get-all-roles-response.interface";
 import {UserExistsResponseInterface} from "../model/user-exists-response.interface";
 import {UserListResponseInterface} from "../model/user-list-response.interface";
@@ -10,6 +10,7 @@ import {GetUseDetailsResponseInterface} from "../model/get-use-details-response.
 import {DeleteUserByIdResponseInterface} from "../model/delete-user-by-id-response.interface";
 import {SERVER_URL} from "../../shared/http-config";
 import {LoginResponse, ResetUserPasswordRequest, ResetUserPasswordResponse} from "../model/user-dtos";
+import {map} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -79,14 +80,7 @@ export class UserHttpService {
         })
       }
     ).pipe(
-      catchError(this.handleUnauthorizedResponse)
+      map(response => <LoginResponse>{ ...response ,expires: new Date(response.expires) })
     );
-  }
-
-  private handleUnauthorizedResponse(error: any): Observable<null> {
-    if (error instanceof HttpErrorResponse && error.status === 401) {
-      return of(null)
-    }
-    return throwError(() => error);
   }
 }
