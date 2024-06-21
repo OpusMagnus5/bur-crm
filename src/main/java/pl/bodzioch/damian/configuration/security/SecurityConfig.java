@@ -109,7 +109,7 @@ class SecurityConfig {
 
     private Customizer<HttpBasicConfigurer<HttpSecurity>> basicCustomizer() {
         return basic -> basic.authenticationEntryPoint((request, response, authException) -> {
-            String message = messageResolver.getMessage(ERROR_CLIENT_AUTHENTICATION_MESSAGE_CODE);
+            String message = messageResolver.getMessage(ERROR_CLIENT_AUTHENTICATION_MESSAGE_CODE, request);
             ErrorDto error = new ErrorDto(ERROR_CLIENT_AUTHENTICATION_MESSAGE_CODE, message);
             AppErrorResponse errorResponse = new AppErrorResponse(List.of(error));
             response.setStatus(HttpStatus.UNAUTHORIZED.value());

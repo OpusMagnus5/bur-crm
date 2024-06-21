@@ -10,14 +10,18 @@ import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 
+import static pl.bodzioch.damian.utils.MessageResolver.CLIENT_LANGUAGE_COOKIE;
+import static pl.bodzioch.damian.utils.MessageResolver.DEFAULT_LANGUAGE;
+
 @Configuration
 class I18nConfiguration {
 
+
     @Bean
     LocaleResolver localeResolver() {
-        CookieLocaleResolver localeResolver = new CookieLocaleResolver("client-language");
+        CookieLocaleResolver localeResolver = new CookieLocaleResolver(CLIENT_LANGUAGE_COOKIE);
         localeResolver.setCookieMaxAge(ChronoUnit.FOREVER.getDuration());
-        localeResolver.setDefaultLocale(Locale.of("pl"));
+        localeResolver.setDefaultLocale(Locale.of(DEFAULT_LANGUAGE));
         return localeResolver;
     }
 
