@@ -48,6 +48,14 @@ export class AuthService {
     return this.userHttp.logout().pipe(tap(() => this.authData.set(null)));
   }
 
+  isManager(): boolean {
+    return this.roles().includes(UserRole.MANAGER);
+  }
+
+  isUser(): boolean {
+    return this.roles().includes(UserRole.USER);
+  }
+
   private isAuthValid(authData: LoginResponse | null): boolean {
     return !!authData && authData.expires > new Date();
   }

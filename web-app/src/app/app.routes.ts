@@ -30,6 +30,7 @@ import {ServiceDetailsComponent} from "./service/service-details.component";
 import {EditUserComponent} from "./user/edit-user.component";
 import {UserDetailsComponent} from "./user/user-details.component";
 import {LoginComponent} from "./auth/login.component";
+import {canActivate} from "./auth/permissions.service";
 
 export const ADMINISTRATION_PATH: string = 'administration';
 export const BASE_PATH: string = '';
@@ -63,15 +64,19 @@ export const SERVICES_LIST_PATH: string = 'list';
 export const EDIT_SERVICE_PATH: string = 'edit';
 export const SERVICE_DETAILS_PATH: string = 'details';
 export const LOGIN_PATH: string = 'login'
-const NOT_FOUND_PATH = 'not-found';
+export const NOT_FOUND_PATH = 'not-found';
 
 export const routes: Routes = [
   {
-    path: BASE_PATH, component: HomeComponent, pathMatch: "full"
+    path: BASE_PATH,
+    component: HomeComponent,
+    pathMatch: "full",
+    canActivate: [canActivate],
   },
   {
     path: SERVICES_PATH,
     component: ServiceDashboardComponent,
+    canActivate: [canActivate],
     children: [
       {
         path: NEW_SERVICE_PATH,
@@ -94,6 +99,7 @@ export const routes: Routes = [
   {
     path: REGISTRY_INTERMEDIARY_PATH,
     component: IntermediaryDashboardComponent,
+    canActivate: [canActivate],
     children: [
       {
         path: NEW_INTERMEDIARY_PATH,
@@ -108,6 +114,7 @@ export const routes: Routes = [
   {
     path: REGISTRY_COACH_PATH,
     component: CoachDashboardComponent,
+    canActivate: [canActivate],
     children: [
       {
         path: NEW_COACH_PATH,
@@ -122,6 +129,7 @@ export const routes: Routes = [
   {
     path: REGISTRY_CUSTOMER_PATH,
     component: CustomerDashboardComponent,
+    canActivate: [canActivate],
     children: [
       {
         path: NEW_CUSTOMER_PATH,
@@ -136,6 +144,7 @@ export const routes: Routes = [
   {
     path: REGISTRY_OPERATOR_PATH,
     component: OperatorDashboardComponent,
+    canActivate: [canActivate],
     children: [
       {
         path: NEW_OPERATOR_PATH,
@@ -150,6 +159,7 @@ export const routes: Routes = [
   {
     path: REGISTRY_SERVICE_PROVIDER_PATH,
     component: ServiceProviderDashboardComponent,
+    canActivate: [canActivate],
     children: [
       {
         path: NEW_SERVICE_PROVIDER_PATH,
@@ -164,6 +174,7 @@ export const routes: Routes = [
   {
     path: REGISTRY_PROGRAM_PATH,
     component: ProgramDashboardComponent,
+    canActivate: [canActivate],
     children: [
       {
         path: NEW_PROGRAM_PATH,
@@ -177,6 +188,7 @@ export const routes: Routes = [
   },
   { path: ADMINISTRATION_USERS_PATH,
     component: UserDashboardComponent,
+    canActivate: [canActivate],
     children: [
       { path: NEW_USER_PATH,
         component: NewUserComponent
