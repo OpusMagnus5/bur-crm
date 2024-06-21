@@ -5,37 +5,54 @@
                [opened]="(isHandset$ | async) === false">
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item
-         [routerLink]="[BASE_PATH]"
-         [activated]="routerService.isActivePath(BASE_PATH)">{{ 'navigation.home-path' | translate }}</a>
-      <a mat-list-item
-         [routerLink]="[SERVICES_PATH]"
-         [activated]="routerService.isPartOfActivePath(SERVICES_PATH)">{{ 'navigation.service-path' | translate }}</a>
-      <a mat-list-item
-         [matMenuTriggerFor]="registryMenu"
-         [activated]="routerService.isPartOfActivePath(REGISTRY_PATH)">{{ 'navigation.registry-path' | translate }}</a>
-      <mat-menu #registryMenu>
-        <button mat-menu-item
-                routerLink="{{REGISTRY_SERVICE_PROVIDER_PATH}}">{{ 'navigation.service-provider-path' | translate }}
-        </button>
-        <button mat-menu-item routerLink="{{REGISTRY_OPERATOR_PATH}}">{{ 'navigation.operator-path' | translate }}
-        </button>
-        <button mat-menu-item routerLink="{{REGISTRY_PROGRAM_PATH}}">{{ 'navigation.program-path' | translate }}
-        </button>
-        <button mat-menu-item routerLink="{{ REGISTRY_CUSTOMER_PATH }}">{{ 'navigation.customer-path' | translate }}
-        </button>
-        <button mat-menu-item routerLink="{{ REGISTRY_COACH_PATH }}">{{ 'navigation.coach-path' | translate }}</button>
-        <button mat-menu-item
-                routerLink="{{ REGISTRY_INTERMEDIARY_PATH }}">{{ 'navigation.intermediary-path' | translate }}
-        </button>
-      </mat-menu>
-      <a mat-list-item
-         [matMenuTriggerFor]="administrationMenu"
-         [activated]="routerService.isPartOfActivePath(ADMINISTRATION_PATH)">{{ 'navigation.administration-path' | translate }}</a>
-      <mat-menu #administrationMenu="matMenu">
-        <button mat-menu-item routerLink="{{ADMINISTRATION_USERS_PATH}}">{{ 'navigation.users-path' | translate }}
-        </button>
-      </mat-menu>
+      @if (routerService.isVisiblePath(BASE_PATH)) {
+        <a mat-list-item
+           [routerLink]="[BASE_PATH]"
+           [activated]="routerService.isActivePath(BASE_PATH)">
+          {{ 'navigation.home-path' | translate }}
+        </a>
+      }
+      @if (routerService.isVisiblePath(SERVICES_PATH)) {
+        <a mat-list-item
+           [routerLink]="[SERVICES_PATH]"
+           [activated]="routerService.isPartOfActivePath(SERVICES_PATH)">
+          {{ 'navigation.service-path' | translate }}
+        </a>
+      }
+      @if (routerService.isVisiblePath(REGISTRY_PATH)) {
+        <a mat-list-item
+           [matMenuTriggerFor]="registryMenu"
+           [activated]="routerService.isPartOfActivePath(REGISTRY_PATH)">
+          {{ 'navigation.registry-path' | translate }}
+        </a>
+        <mat-menu #registryMenu>
+          <button mat-menu-item
+                  routerLink="{{REGISTRY_SERVICE_PROVIDER_PATH}}">{{ 'navigation.service-provider-path' | translate }}
+          </button>
+          <button mat-menu-item routerLink="{{REGISTRY_OPERATOR_PATH}}">{{ 'navigation.operator-path' | translate }}
+          </button>
+          <button mat-menu-item routerLink="{{REGISTRY_PROGRAM_PATH}}">{{ 'navigation.program-path' | translate }}
+          </button>
+          <button mat-menu-item routerLink="{{ REGISTRY_CUSTOMER_PATH }}">{{ 'navigation.customer-path' | translate }}
+          </button>
+          <button mat-menu-item routerLink="{{ REGISTRY_COACH_PATH }}">{{ 'navigation.coach-path' | translate }}
+          </button>
+          <button mat-menu-item
+                  routerLink="{{ REGISTRY_INTERMEDIARY_PATH }}">{{ 'navigation.intermediary-path' | translate }}
+          </button>
+        </mat-menu>
+      }
+      @if (routerService.isVisiblePath(ADMINISTRATION_PATH)) {
+        <a mat-list-item
+           [matMenuTriggerFor]="administrationMenu"
+           [activated]="routerService.isPartOfActivePath(ADMINISTRATION_PATH)">
+          {{ 'navigation.administration-path' | translate }}
+        </a>
+        <mat-menu #administrationMenu="matMenu">
+          <button mat-menu-item routerLink="{{ADMINISTRATION_USERS_PATH}}">{{ 'navigation.users-path' | translate }}
+          </button>
+        </mat-menu>
+      }
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content class="flex flex-col">

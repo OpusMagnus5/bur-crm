@@ -42,6 +42,25 @@ export class PermissionsService {
     return true;
   }
 
+  canSee(path: string): boolean {
+    const guestPath = this.GUEST_PATH.find(g => path.startsWith(g));
+    if (!this.auth.isValid() && !guestPath) {
+      return false;
+
+    }
+    const userPath = this.USER_PATH.find(u => path.startsWith(u));
+    const managerPath = this.MANAGER_PATHS.find(m => path.startsWith(m));
+    if (managerPath && !this.auth.isManager()) {
+      return false
+    } else if (userPath && !this.auth.isUser()) {
+      return false
+    } else if (guestPath) {
+      return true
+    }
+
+    return true;
+  }
+
   private getRedirectUrlTree() {
     return this.router.createUrlTree(['/login']);
   }
