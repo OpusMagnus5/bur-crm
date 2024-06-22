@@ -11,6 +11,7 @@ import pl.bodzioch.damian.infrastructure.command.CommandHandler;
 import pl.bodzioch.damian.user.command_dto.CreateNewOrUpdateUserCommand;
 import pl.bodzioch.damian.user.command_dto.CreateNewOrUpdateUserCommandResult;
 import pl.bodzioch.damian.utils.MessageResolver;
+import pl.bodzioch.damian.utils.PermissionService;
 import pl.bodzioch.damian.value_object.ErrorData;
 
 import java.util.List;
@@ -22,6 +23,7 @@ class CreateNewOrUpdateUserCommandHandler implements CommandHandler<CreateNewOrU
 
     private final IUserWriteRepository writeRepository;
     private final MessageResolver messageResolver;
+    private final PermissionService permissionService;
 
     @Override
     public Class<CreateNewOrUpdateUserCommand> commandClass() {
@@ -29,10 +31,11 @@ class CreateNewOrUpdateUserCommandHandler implements CommandHandler<CreateNewOrU
     }
 
     @Override
-    @Transactional //TODO dopisać walidacje roli zakładającego konto czy moze dac takie uprawnienia
+    @Transactional
     public CreateNewOrUpdateUserCommandResult handle(CreateNewOrUpdateUserCommand command) {
+        List<UserRole> creatorRoles = permissionService.getRoles();
         String firstPassword = User.generateNewPassword();
-        User user = new User(command, firstPassword);
+        User user = new User(command, firstPassword, creatorRoles);
         try {
             writeRepository.createNew(user);
         } catch (DuplicateKeyException e) {

@@ -2,6 +2,7 @@ package pl.bodzioch.damian.user.command_dto;
 
 import pl.bodzioch.damian.dto.CreateNewOrUpdateUserRequest;
 import pl.bodzioch.damian.infrastructure.command.Command;
+import pl.bodzioch.damian.user.UserRole;
 import pl.bodzioch.damian.utils.CipherComponent;
 
 import java.util.Optional;
@@ -13,7 +14,7 @@ public record CreateNewOrUpdateUserCommand(
         String firstName,
         String lastName,
         Long creatorId,
-        String role
+        UserRole role
 
 ) implements Command<CreateNewOrUpdateUserCommandResult>{
 
@@ -25,7 +26,7 @@ public record CreateNewOrUpdateUserCommand(
                 request.firstName(),
                 request.lastName(),
                 cipher.getPrincipalId(),
-                request.role()
+                UserRole.valueOf(request.role())
         );
     }
 }

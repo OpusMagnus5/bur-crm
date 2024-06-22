@@ -1,6 +1,8 @@
 package pl.bodzioch.damian.user;
 
 import com.fasterxml.uuid.Generators;
+import org.springframework.http.HttpStatus;
+import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.infrastructure.database.DbColumn;
 import pl.bodzioch.damian.infrastructure.database.DbConstructor;
 import pl.bodzioch.damian.infrastructure.database.DbId;
@@ -8,6 +10,7 @@ import pl.bodzioch.damian.infrastructure.database.DbManyToOne;
 import pl.bodzioch.damian.user.command_dto.CreateNewOrUpdateUserCommand;
 import pl.bodzioch.damian.user.command_dto.ResetUserPasswordCommand;
 import pl.bodzioch.damian.utils.Encoder;
+import pl.bodzioch.damian.value_object.ErrorData;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -52,7 +55,7 @@ record User (
     User {
     }
 
-    User(CreateNewOrUpdateUserCommand command, String firstPassword) {
+    User(CreateNewOrUpdateUserCommand command, String firstPassword, List<UserRole> creatorRoles) {
         this (
                 command.id(),
                 Generators.timeBasedEpochGenerator().generate(),
@@ -61,7 +64,7 @@ record User (
                 Encoder.encodePassword(firstPassword),
                 command.firstName(),
                 command.lastName(),
-                resolveRoles(command.role()),
+                resolveRoles(command.role(), creatorRoles),
                 null,
                 null,
                 null,
@@ -92,9 +95,9 @@ record User (
         return password.toString();
     }
 
-    private static List<UserRole> resolveRoles(String role) {
-        UserRole userRole = UserRole.valueOf(role);
-        switch (userRole) {
+    private static List<UserRole> resolveRoles(UserRole role, List<UserRole> creatorRoles) {
+        checkRole(role, creatorRoles);
+        switch (role) {
             case MANAGER -> {
                 return List.of(UserRole.USER, UserRole.MANAGER);
             }
@@ -102,9 +105,23 @@ record User (
                 return List.of(UserRole.USER, UserRole.MANAGER, UserRole.ADMIN);
             }
             default -> {
-                return List.of(userRole);
+                return List.of(role);
             }
         }
+    }
+
+    private static void checkRole(UserRole role, List<UserRole> creatorRoles) {
+        creatorRoles.stream()
+                .filter(creatorRole -> creatorRole.getHierarchy() >= role.getHierarchy())
+                .findFirst()
+                .orElseThrow(User::buildUserHasNoEnoughAuthorityException);
+    }
+
+    private static AppException buildUserHasNoEnoughAuthorityException() {
+        return new AppException(
+                HttpStatus.FORBIDDEN,
+                List.of(new ErrorData("error.client.userHasNoEnoughAuthority", List.of()))
+        );
     }
 }
 
