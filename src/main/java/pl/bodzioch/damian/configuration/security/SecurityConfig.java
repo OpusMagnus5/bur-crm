@@ -11,8 +11,9 @@ import org.springframework.context.annotation.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,20 +23,27 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import pl.bodzioch.damian.user.UserRole;
 
 import java.util.Collections;
 
-import static pl.bodzioch.damian.user.GenerateJwtTokenCommandHandler.BEARER_COOKIE;
+import static org.springframework.security.authorization.AuthorityAuthorizationManager.hasAuthority;
+import static pl.bodzioch.damian.user.GenerateJwtTokenCommandHandler.*;
 
 @Configuration
 @RequiredArgsConstructor
 @EnableConfigurationProperties(RsaKeyProperties.class)
+@EnableMethodSecurity
+@EnableWebSecurity
 class SecurityConfig {
 
+    public static final String AUTHORITY_PREFIX = "";
     private final RsaKeyProperties rsaKeys;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
@@ -43,8 +51,10 @@ class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, CorsConfigurationSource corsConfig) throws Exception {
         httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
-                .oauth2ResourceServer(oAuth2 -> oAuth2.jwt(Customizer.withDefaults()))
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/user/login").permitAll()
+                        .anyRequest().access(hasAuthority(UserRole.USER.name())))
+                .oauth2ResourceServer(oAuth2 -> oAuth2.bearerTokenResolver(new CookieBearerTokenResolver())
+                                .jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter())))
                 .cors(cors -> cors.configurationSource(corsConfig))
                 .httpBasic(basic -> basic.authenticationEntryPoint(customAuthenticationEntryPoint))
                 .logout(logout -> logout.logoutUrl("/api/user/logout")
@@ -101,5 +111,17 @@ class SecurityConfig {
         JWK jwk = new RSAKey.Builder(rsaKeys.publicKey()).privateKey(rsaKeys.privateKey()).build();
         ImmutableJWKSet<SecurityContext> jwkSet = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwkSet);
+    }
+
+    @Bean
+    JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        grantedAuthoritiesConverter.setAuthorityPrefix(AUTHORITY_PREFIX);
+        grantedAuthoritiesConverter.setAuthoritiesClaimName(ROLES_CLAIM);
+        grantedAuthoritiesConverter.setAuthoritiesClaimDelimiter(AUTHORITIES_CLAIM_DELIMITER);
+
+        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
+        converter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+        return converter;
     }
 }

@@ -36,9 +36,9 @@ export class AuthService {
       next: value => {
         if (this.isAuthValid(value)) {
           const authJson = JSON.stringify(value);
-          this.cookie.set('auth', authJson, { expires: value!.expires, secure: false, sameSite: 'Lax', path: '/'});
+          this.cookie.set('auth', authJson, { expires: value!.expires, secure: false, sameSite: 'Strict', path: '/'});
         } else if (value === null) {
-          this.cookie.delete('auth');
+          this.cookie.delete('auth', '/', undefined, false, 'Strict');
         }
       }
     })
