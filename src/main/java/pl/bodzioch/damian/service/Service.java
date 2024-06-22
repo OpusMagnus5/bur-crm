@@ -39,7 +39,7 @@ record Service(
         String name, //TODO usunąc indeks
 		@DbColumn(name = "srv_type")
         ServiceType type,
-		@DbColumn(name = "srv_start_date") //TODO walidować czy startDate nie jest po dacie endDate
+		@DbColumn(name = "srv_start_date")
 		LocalDate startDate,
 		@DbColumn(name = "srv_end_date")
 		LocalDate endDate,
