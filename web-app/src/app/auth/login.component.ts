@@ -8,6 +8,8 @@ import {MatButton, MatIconButton} from "@angular/material/button";
 import {ValidationMessageService} from "../shared/service/validation-message.service";
 import {UserHttpService} from "../user/service/user-http.service";
 import {AuthService} from "./auth.service";
+import {Router} from "@angular/router";
+import {SERVICES_LIST_PATH, SERVICES_PATH} from "../app.routes";
 
 @Component({
   selector: 'app-login',
@@ -46,7 +48,8 @@ export class LoginComponent {
   constructor(
     private validationMessage: ValidationMessageService,
     private userHttp: UserHttpService,
-    private auth: AuthService
+    private auth: AuthService,
+    private router: Router,
   ) {
   }
 
@@ -62,6 +65,7 @@ export class LoginComponent {
     this.userHttp.login(this.emailControl.value!, this.passwordControl.value!)
       .subscribe(response => {
       this.auth.authData.set(response);
+      this.router.navigate(['/', SERVICES_PATH, SERVICES_LIST_PATH]);
     });
   }
 }

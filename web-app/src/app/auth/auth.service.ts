@@ -4,6 +4,8 @@ import {CookieService} from "ngx-cookie-service";
 import {toObservable} from "@angular/core/rxjs-interop";
 import {UserHttpService} from "../user/service/user-http.service";
 import {Observable, tap} from "rxjs";
+import {Router} from "@angular/router";
+import {LOGIN_PATH} from "../app.routes";
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
@@ -21,7 +23,8 @@ export class AuthService {
 
   constructor(
     private cookie: CookieService,
-    private userHttp: UserHttpService
+    private userHttp: UserHttpService,
+    private router: Router,
   ) {
     const auth = this.cookie.get('auth');
     if (auth) {
@@ -57,6 +60,11 @@ export class AuthService {
   }
 
   private isAuthValid(authData: LoginResponse | null): boolean {
-    return !!authData && authData.expires > new Date();
+    if (!!authData && authData.expires > new Date()) {
+      return true;
+    } else {
+      this.logout().subscribe(() => this.router.navigate(['/', LOGIN_PATH]));
+      return false;
+    }
   }
 }
