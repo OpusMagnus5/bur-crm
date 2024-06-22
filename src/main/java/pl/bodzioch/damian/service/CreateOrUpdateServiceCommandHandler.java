@@ -109,8 +109,11 @@ class CreateOrUpdateServiceCommandHandler implements CommandHandler<CreateOrUpda
 	private Optional<ErrorData> validateStartDate(BurServiceDto burService, CreateOrUpdateServiceCommand command) {
 		LocalDate burStartDate = burService.startDate().toLocalDate();
 		LocalDate formStartDate = command.startDate();
+		LocalDate formEndDate = command.endDate();
 		if (!burStartDate.isEqual(formStartDate)) {
 			return Optional.of(buildIncorrectStartDateError(burStartDate, formStartDate));
+		} else if (formStartDate.isAfter(formEndDate)) {
+			return Optional.of(buildIncorrectDateError());
 		}
 		return Optional.empty();
 	}
@@ -153,6 +156,11 @@ class CreateOrUpdateServiceCommandHandler implements CommandHandler<CreateOrUpda
 		String formattedFormDate = formatter.format(formDate);
 		log.warn("Incorrect service start date. Bur date: " + burDate + ", form date: " + formDate);
 		return new ErrorData("error.client.service.burIncorrectStartDate", List.of(formattedFormDate, formattedBurDate));
+	}
+
+	private ErrorData buildIncorrectDateError() {
+		log.warn("Incorrect service dates");
+		return new ErrorData("error.client.service.incorrectDate", List.of());
 	}
 
 	private ErrorData buildIncorrectEndDateError(LocalDate burDate, LocalDate formDate) {
