@@ -9,7 +9,7 @@ public record UpdateCustomerCommand(
 		Integer version,
 		String name,
 		Long nip,
-		Long modifiedBy //TODO poprawic
+		Long modifiedBy
 ) implements Command<UpdateCustomerCommandResult> {
 
 	public UpdateCustomerCommand(UpdateCustomerRequest request, CipherComponent cipher) {
@@ -18,7 +18,7 @@ public record UpdateCustomerCommand(
 				request.version(),
 				request.name(),
 				Long.parseLong(request.nip()),
-				1L
+				cipher.getPrincipalId()
 		);
 	}
 }

@@ -10,11 +10,11 @@ public record ResetUserPasswordCommand(
         Long modifierId
 ) implements Command<ResetUserPasswordCommandResult> {
 
-    public ResetUserPasswordCommand(ResetUserPasswordRequest request, CipherComponent cipher, Long modifierId) {
+    public ResetUserPasswordCommand(ResetUserPasswordRequest request, CipherComponent cipher) {
         this(
                 Long.parseLong(cipher.decryptMessage(request.id())),
                 request.userVersion(),
-                modifierId
+                cipher.getPrincipalId()
         );
     }
 }

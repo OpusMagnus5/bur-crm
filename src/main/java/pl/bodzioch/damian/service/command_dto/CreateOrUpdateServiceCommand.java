@@ -50,7 +50,7 @@ public record CreateOrUpdateServiceCommand(
 						.map(Long::parseLong)
 						.toList(),
 				Long.parseLong(cipher.decryptMessage(request.intermediaryId())),
-				1L//TODO poprawić
+				cipher.getPrincipalId()
 		);
 	}
 }

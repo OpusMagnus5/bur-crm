@@ -31,7 +31,7 @@ class ServiceProviderController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     CreateNewServiceProviderResponse createNew(@Valid @RequestBody CreateNewServiceProviderRequest request) {
-        CreateNewServiceProviderCommand command = new CreateNewServiceProviderCommand(request.name(), Long.parseLong(request.nip()), 1L);
+        CreateNewServiceProviderCommand command = new CreateNewServiceProviderCommand(request, cipher);
         CreateNewServiceProviderCommandResult result = commandExecutor.execute(command);
         return new CreateNewServiceProviderResponse(result.message());
     }
@@ -95,13 +95,7 @@ class ServiceProviderController {
     @PatchMapping
     @ResponseStatus(HttpStatus.OK)
     UpdateServiceProviderResponse update(@Valid @RequestBody UpdateServiceProviderRequest request) {
-        long providerId = Long.parseLong(cipher.decryptMessage(request.id()));
-        UpdateServiceProviderCommand command = new UpdateServiceProviderCommand(
-                providerId,
-                request.version(),
-                request.name(),
-                Long.parseLong(request.nip()),
-                1L);
+        UpdateServiceProviderCommand command = new UpdateServiceProviderCommand(request, cipher);
         UpdateServiceProviderCommandResult result = commandExecutor.execute(command);
         return new UpdateServiceProviderResponse(result.message());
     }

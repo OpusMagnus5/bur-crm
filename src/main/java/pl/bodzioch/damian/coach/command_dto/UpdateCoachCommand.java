@@ -10,17 +10,17 @@ public record UpdateCoachCommand(
         String firstName,
         String lastName,
         String pesel,
-        Long modifiedBy //TODO poprawic
+        Long modifiedBy
 ) implements Command<UpdateCoachCommandResult> {
 
     public UpdateCoachCommand(UpdateCoachRequest request, CipherComponent cipher) {
         this(
-                Long.parseLong(cipher.decryptMessage(request.id())),
+                cipher.getDecryptedId(request.id()),
                 request.version(),
                 request.firstName(),
                 request.lastName(),
                 request.pesel(),
-                1L
+                cipher.getPrincipalId()
         );
     }
 }

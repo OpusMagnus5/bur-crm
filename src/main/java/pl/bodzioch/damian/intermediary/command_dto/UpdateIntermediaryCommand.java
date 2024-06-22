@@ -9,7 +9,7 @@ public record UpdateIntermediaryCommand(
 		Integer version,
 		String name,
 		Long nip,
-		Long modifiedBy //TODO poprawic
+		Long modifiedBy
 ) implements Command<UpdateIntermediaryCommandResult> {
 
 	public UpdateIntermediaryCommand(UpdateIntermediaryRequest request, CipherComponent cipher) {
@@ -18,7 +18,7 @@ public record UpdateIntermediaryCommand(
 				request.version(),
 				request.name(),
 				Long.parseLong(request.nip()),
-				1L
+				cipher.getPrincipalId()
 		);
 	}
 }

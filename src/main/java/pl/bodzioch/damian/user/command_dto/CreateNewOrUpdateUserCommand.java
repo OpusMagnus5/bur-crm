@@ -24,7 +24,7 @@ public record CreateNewOrUpdateUserCommand(
                 request.email(),
                 request.firstName(),
                 request.lastName(),
-                1L, //TODO poprawic
+                cipher.getPrincipalId(),
                 request.role()
         );
     }

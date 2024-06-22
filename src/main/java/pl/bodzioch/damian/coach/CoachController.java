@@ -32,7 +32,7 @@ class CoachController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     CreateNewCoachResponse createNew(@Valid @RequestBody CreateNewCoachRequest request) {
-        CreateNewCoachCommand command = new CreateNewCoachCommand(request);
+        CreateNewCoachCommand command = new CreateNewCoachCommand(request, cipher);
         CreateNewCoachCommandResult result = commandExecutor.execute(command);
         return new CreateNewCoachResponse(result.message());
     }

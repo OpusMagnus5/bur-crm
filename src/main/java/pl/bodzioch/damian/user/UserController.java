@@ -18,9 +18,7 @@ import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
 import pl.bodzioch.damian.user.command_dto.*;
 import pl.bodzioch.damian.user.query_dto.*;
 import pl.bodzioch.damian.utils.CipherComponent;
-import pl.bodzioch.damian.utils.PermissionService;
 
-import java.security.Principal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -36,7 +34,6 @@ class UserController {
     private final CommandExecutor commandExecutor;
     private final QueryExecutor queryExecutor;
     private final CipherComponent cipher;
-    private final PermissionService permissionService;
 
     @PreAuthorize("hasAuthority('MANAGER')")
     @PostMapping
@@ -103,10 +100,10 @@ class UserController {
         return new UserPageResponse(users, result.totalUsers());
     }
 
-    @PreAuthorize("hasAuthority('MANAGER') or (hasAuthority('USER') and @permissionService.isRequestingOwnUser(#id, #principal))")
+    @PreAuthorize("hasAuthority('MANAGER') or (hasAuthority('USER') and @permissionService.isRequestingOwnUser(#id))")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    GetUserByIdResponse getUserById(@PathVariable String id, Principal principal) {
+    GetUserByIdResponse getUserById(@PathVariable String id) {
         long userId = Long.parseLong(cipher.decryptMessage(id));
         GetUserByIdQuery query = new GetUserByIdQuery(userId);
         GetUserByIdQueryResult result = queryExecutor.execute(query);
@@ -127,7 +124,7 @@ class UserController {
     @PatchMapping("/reset-password")
     @ResponseStatus(HttpStatus.OK)
     ResetUserPasswordResponse resetPassword(@Valid @RequestBody ResetUserPasswordRequest request) {
-        ResetUserPasswordCommand command = new ResetUserPasswordCommand(request, cipher, 1L);// TODO poprawic
+        ResetUserPasswordCommand command = new ResetUserPasswordCommand(request, cipher);
         ResetUserPasswordCommandResult result = commandExecutor.execute(command);
         return new ResetUserPasswordResponse(result.newPassword());
     }

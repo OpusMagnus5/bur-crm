@@ -33,7 +33,7 @@ class ProgramController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     CreateNewProgramResponse createNew(@Valid @RequestBody CreateNewProgramRequest request) {
-        CreateNewProgramCommand command = new CreateNewProgramCommand(request, cipher);//TODO poprawić
+        CreateNewProgramCommand command = new CreateNewProgramCommand(request, cipher);
         CreateNewProgramCommandResult result = commandExecutor.execute(command);
         return new CreateNewProgramResponse(result.message());
     }

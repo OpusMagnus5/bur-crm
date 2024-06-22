@@ -15,10 +15,10 @@ public record AddNewDocumentsCommandData(
         Long serviceId,
         Long coachId,
         byte[] fileData,
-        Long creatorId //TODO poprawić
+        Long creatorId
 ) {
 
-    public AddNewDocumentsCommandData(MultipartFile file, String fileType, String serviceId, String coachId, Long creatorId,
+    public AddNewDocumentsCommandData(MultipartFile file, String fileType, String serviceId, String coachId,
                                       CipherComponent cipher) throws IOException {
         this(
                 DocumentType.valueOf(fileType),
@@ -27,7 +27,7 @@ public record AddNewDocumentsCommandData(
                 Long.parseLong(cipher.decryptMessage(serviceId)),
                 Optional.ofNullable(coachId).filter(StringUtils::isNotBlank).map(cipher::decryptMessage).map(Long::parseLong).orElse(null),
                 file.getBytes(),
-                creatorId //TODO poprawić
+                cipher.getPrincipalId()
         );
     }
 

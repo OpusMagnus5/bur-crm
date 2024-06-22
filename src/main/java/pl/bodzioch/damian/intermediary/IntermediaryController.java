@@ -35,7 +35,7 @@ class IntermediaryController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     CreateNewIntermediaryResponse createNew(@Valid @RequestBody CreateNewIntermediaryRequest request) {
-        CreateNewIntermediaryCommand command = new CreateNewIntermediaryCommand(request);
+        CreateNewIntermediaryCommand command = new CreateNewIntermediaryCommand(request, cipher);
         CreateNewIntermediaryCommandResult result = commandExecutor.execute(command);
         return new CreateNewIntermediaryResponse(result.message());
     }

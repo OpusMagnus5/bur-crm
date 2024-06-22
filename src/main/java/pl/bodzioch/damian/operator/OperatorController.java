@@ -33,7 +33,7 @@ class OperatorController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     CreateNewOperatorResponse createNew(@Valid @RequestBody CreateNewOperatorRequest request) {
-        CreateNewOperatorCommand command = new CreateNewOperatorCommand(request.name(), request.notes(), 1L);//TODO poprawić
+        CreateNewOperatorCommand command = new CreateNewOperatorCommand(request, cipher);
         CreateNewOperatorCommandResult result = commandExecutor.execute(command);
         return new CreateNewOperatorResponse(result.message());
     }
@@ -92,13 +92,7 @@ class OperatorController {
     @PatchMapping
     @ResponseStatus(HttpStatus.OK)
     UpdateOperatorResponse update(@Valid @RequestBody UpdateOperatorRequest request) {
-        long providerId = Long.parseLong(cipher.decryptMessage(request.id()));
-        UpdateOperatorCommand command = new UpdateOperatorCommand(
-                providerId,
-                request.version(),
-                request.name(),
-                request.notes(),
-                1L);
+        UpdateOperatorCommand command = new UpdateOperatorCommand(request, cipher);
         UpdateOperatorCommandResult result = commandExecutor.execute(command);
         return new UpdateOperatorResponse(result.message());
     }

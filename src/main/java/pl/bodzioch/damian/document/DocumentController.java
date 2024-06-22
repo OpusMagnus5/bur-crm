@@ -135,7 +135,7 @@ class DocumentController {
 
     private AddNewDocumentsCommandData buildCommandData(String fileType, String serviceId, String coachId, MultipartFile item) {
         try {
-            return new AddNewDocumentsCommandData(item, fileType, serviceId, coachId, 1L, cipher);
+            return new AddNewDocumentsCommandData(item, fileType, serviceId, coachId, cipher);
         } catch (IOException e) {
             throw AppException.getGeneralError(e);
         }

@@ -9,7 +9,7 @@ public record UpdateProgramCommand(
 		Integer version,
 		String name,
 		Long operatorId,
-		Long modifiedBy //TODO poprawic
+		Long modifiedBy
 ) implements Command<UpdateProgramCommandResult> {
 
 	public UpdateProgramCommand(UpdateProgramRequest request, CipherComponent cipher) {
@@ -18,7 +18,7 @@ public record UpdateProgramCommand(
 				request.version(),
 				request.name(),
 				Long.parseLong(cipher.decryptMessage(request.operatorId())),
-				1L
+				cipher.getPrincipalId()
 		);
 	}
 }

@@ -35,7 +35,7 @@ class CustomerController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     CreateNewCustomerResponse createNew(@Valid @RequestBody CreateNewCustomerRequest request) {
-        CreateNewCustomerCommand command = new CreateNewCustomerCommand(request);
+        CreateNewCustomerCommand command = new CreateNewCustomerCommand(request, cipher);
         CreateNewCustomerCommandResult result = commandExecutor.execute(command);
         return new CreateNewCustomerResponse(result.message());
     }

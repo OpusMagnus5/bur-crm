@@ -2,6 +2,8 @@ package pl.bodzioch.damian.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.exception.AppException;
 
@@ -15,6 +17,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Optional;
+
+import static pl.bodzioch.damian.user.GenerateJwtTokenCommandHandler.PRINCIPAL_ID;
 
 @Component
 @Slf4j
@@ -68,6 +72,12 @@ public class CipherComponent {
             log.error("Cipher exception during decrypt message: {}", encryptedText, ex);
             throw AppException.getGeneralError(ex);
         }
+    }
+
+    public Long getPrincipalId() {
+        Jwt token = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String principalId = token.getClaim(PRINCIPAL_ID);
+        return getDecryptedId(principalId);
     }
 
     public Long getDecryptedId(String id) {
