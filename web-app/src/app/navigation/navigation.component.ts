@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy, signal, WritableSignal} from '@angular/core';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {AsyncPipe} from '@angular/common';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -39,6 +39,9 @@ import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {ChangeLanguageComponent} from "../change-langauage/change-language.component";
 import {AuthService} from "../auth/auth.service";
+import {SubscriptionManager} from "../shared/util/subscription-manager";
+import {toObservable} from "@angular/core/rxjs-interop";
+import {LocalizedDatePipe} from "../shared/pipe/localized-date.pipe";
 
 @Component({
   selector: 'app-navigation',
@@ -62,10 +65,11 @@ import {AuthService} from "../auth/auth.service";
     MatSelect,
     MatOption,
     MatLabel,
-    ChangeLanguageComponent
+    ChangeLanguageComponent,
+    LocalizedDatePipe
   ]
 })
-export class NavigationComponent {
+export class NavigationComponent implements OnDestroy {
 
   protected readonly BASE_PATH = BASE_PATH;
   protected readonly ADMINISTRATION_PATH = ADMINISTRATION_PATH;
@@ -82,6 +86,9 @@ export class NavigationComponent {
 
 
   protected isHandset$: Observable<boolean>;
+  private readonly subscriptions: SubscriptionManager = new SubscriptionManager();
+  protected timeToLogout: WritableSignal<Date | null> = signal(null)
+  private countdown = this.setCountdown();
 
   constructor(
     private breakpointObserver: BreakpointObserver,
@@ -94,9 +101,31 @@ export class NavigationComponent {
         map(result => result.matches),
         shareReplay()
       );
+
+    this.subscriptions.add(toObservable(this.auth.isValid).subscribe(valid => {
+      if (!valid) {
+        this.timeToLogout.set(null);
+        clearInterval(this.countdown);
+      } else {
+        this.setCountdown();
+      }
+    }));
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribeAll();
   }
 
   protected onLogout(): void {
     this.auth.logout().subscribe(() => this.router.navigate(['/', LOGIN_PATH]));
+  }
+
+  private setCountdown() {
+    return setInterval(() => {
+      const now: number = new Date().getTime();
+      const expires: number = this.auth.authData()!.expires.getTime();
+      const diff: Date = new Date(expires - now);
+      this.timeToLogout.set(diff);
+    }, 1000);
   }
 }

@@ -1,4 +1,4 @@
-import {computed, Injectable, Signal, signal, WritableSignal} from "@angular/core";
+import {computed, Injectable, OnDestroy, Signal, signal, WritableSignal} from "@angular/core";
 import {LoginResponse, UserRole} from "../user/model/user-dtos";
 import {CookieService} from "ngx-cookie-service";
 import {toObservable} from "@angular/core/rxjs-interop";
@@ -6,9 +6,10 @@ import {UserHttpService} from "../user/service/user-http.service";
 import {Observable, tap} from "rxjs";
 import {Router} from "@angular/router";
 import {LOGIN_PATH} from "../app.routes";
+import {SubscriptionManager} from "../shared/util/subscription-manager";
 
 @Injectable({ providedIn: "root" })
-export class AuthService {
+export class AuthService implements OnDestroy {
 
   public readonly authData: WritableSignal<LoginResponse | null> = signal(null);
   public readonly roles: Signal<UserRole[]> = computed(() => {
@@ -20,6 +21,8 @@ export class AuthService {
     const authData = this.authData();
     return this.isAuthValid(authData);
   });
+
+  private readonly subscriptions: SubscriptionManager = new SubscriptionManager();
 
   constructor(
     private cookie: CookieService,
@@ -35,7 +38,7 @@ export class AuthService {
       }
     }
 
-    this.observable.subscribe({
+    this.subscriptions.add(this.observable.subscribe({
       next: value => {
         if (this.isAuthValid(value)) {
           const authJson = JSON.stringify(value);
@@ -44,7 +47,11 @@ export class AuthService {
           this.cookie.delete('auth', '/', undefined, false, 'Strict');
         }
       }
-    })
+    }));
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribeAll();
   }
 
   logout(): Observable<void> {
