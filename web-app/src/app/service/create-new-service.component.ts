@@ -1,5 +1,13 @@
 import {Component, ElementRef, OnDestroy, OnInit, signal, ViewChild, WritableSignal} from '@angular/core';
-import {FormControl, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators} from "@angular/forms";
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  FormGroupDirective,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators
+} from "@angular/forms";
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 import {MatError, MatFormField, MatHint, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {TranslateModule} from "@ngx-translate/core";
@@ -136,10 +144,10 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
       validators: [Validators.required]
     });
     this.startDateControl = new FormControl(null, {
-      validators: [Validators.required]
+      validators: [Validators.required, this.isNotLaterThanEndDate.bind(this)]
     });
     this.endDateControl = new FormControl(null, {
-      validators: [Validators.required]
+      validators: [Validators.required, this.isNotLaterThanEndDate.bind(this)]
     });
     this.numberOfParticipantsControl = new FormControl(null, {
       validators: [Validators.required, Validators.min(1), Validators.max(Number.MAX_SAFE_INTEGER)]
@@ -338,6 +346,40 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
   protected onStatusSelected(event: MatAutocompleteSelectedEvent) {
     const value = (<ServiceStatusData>event.option.value).value;
     this.filterStatusesByValue(value);
+  }
+
+  private isNotLaterThanEndDate(control: AbstractControl): ValidationErrors | null {
+    try {
+      if (!this.startDateControl?.value || !this.endDateControl?.value!) {
+        this.clearIncorrectDateValidation();
+        return null;
+      }
+      const startDate = new Date(this.startDateControl!.value!);
+      const endDate = new Date(this.endDateControl!.value!);
+      if (startDate > endDate) {
+        return { 'incorrect': true }
+      }
+    } catch (error) {
+      this.clearIncorrectDateValidation();
+      return null;
+    }
+    this.clearIncorrectDateValidation();
+    return null;
+  }
+
+  private clearIncorrectDateValidation(): void {
+    if (this.startDateControl?.hasError('incorrect')) {
+      delete this.startDateControl!.errors!['incorrect'];
+      if (Object.keys(this.startDateControl!.errors!).length === 0) {
+        this.startDateControl!.setErrors(null);
+      }
+    }
+    if (this.endDateControl?.hasError('incorrect')) {
+      delete this.endDateControl!.errors!['incorrect'];
+      if (Object.keys(this.endDateControl!.errors!).length === 0) {
+        this.endDateControl!.setErrors(null);
+      }
+    }
   }
 
   private filterProgramsByName(name: string) {

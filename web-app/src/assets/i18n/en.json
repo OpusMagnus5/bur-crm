@@ -451,10 +451,12 @@
         "pattern": "The provided service name is invalid"
       },
       "start-date": {
-        "required": "The start date field cannot be empty"
+        "required": "The start date field cannot be empty",
+        "incorrect": "The start date cannot be later than the end date"
       },
       "end-date": {
-        "required": "The end date field cannot be empty"
+        "required": "The end date field cannot be empty",
+        "incorrect": "The start date cannot be later than the end date"
       },
       "participants": {
         "required": "The number of participants field cannot be empty",

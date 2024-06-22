@@ -451,14 +451,16 @@
         "pattern": "Podany numer usługi jest nieprawidłowy"
       },
       "name": {
-        "required": "Pole nazwa usługi nie może być puste",
+        "required": "Pole nazwa usługi nie może być pusta",
         "pattern": "Podana nazwa usługi jest nieprawidłowy"
       },
       "start-date": {
-        "required": "Pole data rozpoczęcia nie może być puste"
+        "required": "Pole data rozpoczęcia nie może być pusta",
+        "incorrect": "Data rozpoczęcia nie może być późniejsza niż zakończenia"
       },
       "end-date": {
-        "required": "Pole data zakończenia nie może być puste"
+        "required": "Pole data zakończenia nie może być puste",
+        "incorrect": "Data rozpoczęcia nie może być późniejsza niż zakończenia"
       },
       "participants": {
         "required": "Pole liczba uczestników nie może być puste",
