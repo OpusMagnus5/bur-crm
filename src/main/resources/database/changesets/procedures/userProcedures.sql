@@ -110,6 +110,7 @@ END$$;
 DROP PROCEDURE IF EXISTS users_get_page_of_users;
 /*PROCEDURE users_get_page_of_users*/
 CREATE OR REPLACE PROCEDURE users_get_page_of_users(
+    IN _usr_id_excluded users.usr_id%TYPE,
     IN _offset NUMERIC,
     IN _max NUMERIC,
     OUT _cursor REFCURSOR,
@@ -123,6 +124,7 @@ BEGIN
         SELECT usr_id, usr_uuid, usr_version, usr_password, usr_email, usr_first_name, usr_last_name, usr_roles, usr_last_login,
                usr_created_at, usr_modified_at, usr_created_by, usr_modified_by
         FROM users
+        WHERE usr_id != _usr_id_excluded
         ORDER BY usr_last_name, usr_first_name
         OFFSET _offset
         LIMIT _max;

@@ -25,7 +25,7 @@ class GetUsersPageQueryHandler implements QueryHandler<GetUsersPageQuery, GetUse
 
     @Override
     public GetUsersPageQueryResult handle(GetUsersPageQuery query) {
-        PageQuery pageQuery = new PageQuery(query.pageNumber(), query.pageSize());
+        PageQuery pageQuery = new PageQuery(query.pageNumber(), query.pageSize(), query.filters());
         PageQueryResult<User> result = readRepository.getUsers(pageQuery);
         List<UserDto> users = result.elements().stream()
                 .map(element -> new UserDto(element, messageResolver))

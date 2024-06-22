@@ -21,6 +21,7 @@ import pl.bodzioch.damian.utils.CipherComponent;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.List;
 
 import static pl.bodzioch.damian.user.GenerateJwtTokenCommandHandler.BEARER_COOKIE;
@@ -92,7 +93,9 @@ class UserController {
             @Min(value = 10, message = "error.client.minPageSize")
             @Max(value = 50, message = "error.client.maxPageSize")
             @RequestParam int pageSize) {
-        GetUsersPageQuery query = new GetUsersPageQuery(pageNumber, pageSize); //TODO oprócz siebie
+        HashMap<UserFilterField, Object> filters = new HashMap<>();
+        filters.put(UserFilterField.EXCLUDED_USER_ID, cipher.getPrincipalId());
+        GetUsersPageQuery query = new GetUsersPageQuery(filters, pageNumber, pageSize);
         GetUsersPageQueryResult result = queryExecutor.execute(query);
         List<UserListData> users = result.users().stream()
                 .map(userDto -> new UserListData(userDto, cipher))
