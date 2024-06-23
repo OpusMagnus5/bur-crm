@@ -25,6 +25,12 @@ public class PermissionService {
         return parsedReqId == parsedPrincipalId;
     }
 
+    public boolean hasTheSameRoleOrHigher(List<UserRole> requestedUser) {
+        UserRole role = getRoles().getLast();
+        return requestedUser.stream()
+                .allMatch(r -> r.getHierarchy() <= role.getHierarchy());
+    }
+
     public List<UserRole> getRoles() {
         Jwt token = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return Arrays.stream(((String) token.getClaim(ROLES_CLAIM)).split(AUTHORITIES_CLAIM_DELIMITER))

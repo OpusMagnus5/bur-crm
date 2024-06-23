@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -68,6 +69,16 @@ class UserControllerAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
                 .body(body);
+    }
+
+    @ExceptionHandler({ AccessDeniedException.class })
+    ResponseEntity<AppErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
+        log.error("Access Denied!", e);
+        String accessDeniedCode = "client.error.accessDenied";
+        String message = messageResolver.getMessage(accessDeniedCode);
+        ErrorDto errorDto = new ErrorDto(accessDeniedCode, message);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new AppErrorResponse(List.of(errorDto)));
     }
 
     private String getMessage(FieldError fieldError) {
