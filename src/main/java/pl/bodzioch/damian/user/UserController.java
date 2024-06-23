@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pl.bodzioch.damian.configuration.security.SecurityConstants;
 import pl.bodzioch.damian.dto.*;
 import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.infrastructure.command.CommandExecutor;
@@ -23,8 +24,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
-
-import static pl.bodzioch.damian.user.GenerateJwtTokenCommandHandler.BEARER_COOKIE;
 
 @RestController
 @RequestMapping("/api/user")
@@ -50,7 +49,7 @@ class UserController {
     LoginResponse login(Authentication authentication, HttpServletResponse response) {
         GenerateJwtTokenCommand command = new GenerateJwtTokenCommand(authentication);
         GenerateJwtTokenCommandResult result = commandExecutor.execute(command);
-        Cookie bearer = new Cookie(BEARER_COOKIE, result.token());
+        Cookie bearer = new Cookie(SecurityConstants.BEARER_COOKIE, result.token());
         bearer.setHttpOnly(true);
         /*bearer.setSecure(true);*/ //TODO SSL
         /*bearer.setAttribute("SameSite", "Strict");*/ //TODO PROD

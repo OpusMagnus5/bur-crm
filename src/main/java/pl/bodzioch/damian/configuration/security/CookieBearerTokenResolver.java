@@ -6,14 +6,12 @@ import org.springframework.security.oauth2.server.resource.web.BearerTokenResolv
 
 import java.util.Arrays;
 
-import static pl.bodzioch.damian.user.GenerateJwtTokenCommandHandler.BEARER_COOKIE;
-
 class CookieBearerTokenResolver implements BearerTokenResolver {
 
     @Override
     public String resolve(HttpServletRequest request) {
         return Arrays.stream(request.getCookies())
-                .filter(cookie -> BEARER_COOKIE.equals(cookie.getName()))
+                .filter(cookie -> SecurityConstants.BEARER_COOKIE.equals(cookie.getName()))
                 .map(Cookie::getValue)
                 .findFirst()
                 .orElse(null);

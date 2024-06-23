@@ -1,5 +1,6 @@
 package pl.bodzioch.damian.user;
 
+import com.fasterxml.uuid.Generators;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,6 +8,7 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Component;
+import pl.bodzioch.damian.configuration.security.SecurityConstants;
 import pl.bodzioch.damian.configuration.security.UserDetailsDto;
 import pl.bodzioch.damian.infrastructure.command.CommandHandler;
 import pl.bodzioch.damian.user.command_dto.GenerateJwtTokenCommand;
@@ -19,12 +21,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class GenerateJwtTokenCommandHandler implements CommandHandler<GenerateJwtTokenCommand, GenerateJwtTokenCommandResult> {
-
-	public static final String BEARER_COOKIE = "bearer";
-	public static final String ROLES_CLAIM = "roles";
-	public static final String PRINCIPAL_ID = "principal_id";
-	public static final String AUTHORITIES_CLAIM_DELIMITER = ";";
+class GenerateJwtTokenCommandHandler implements CommandHandler<GenerateJwtTokenCommand, GenerateJwtTokenCommandResult> {
 
 	private final JwtEncoder jwtEncoder;
 	private final CipherComponent cipher;
@@ -39,7 +36,7 @@ public class GenerateJwtTokenCommandHandler implements CommandHandler<GenerateJw
 		Authentication authentication = command.authentication();
 		String roles = authentication.getAuthorities().stream()
 				.map(GrantedAuthority::getAuthority)
-				.collect(Collectors.joining(AUTHORITIES_CLAIM_DELIMITER));
+				.collect(Collectors.joining(SecurityConstants.AUTHORITIES_CLAIM_DELIMITER));
 		Instant now = Instant.now();
 		Instant expiresAt = now.plus(30, ChronoUnit.MINUTES);
 		String id = cipher.encryptMessage(((UserDetailsDto) authentication.getPrincipal()).getId().toString());
@@ -49,8 +46,9 @@ public class GenerateJwtTokenCommandHandler implements CommandHandler<GenerateJw
 				.issuer("self") //TODO zmienic na nazwe domeny
 				.issuedAt(now)
 				.expiresAt(expiresAt)
-				.claim(ROLES_CLAIM, roles)
-				.claim(PRINCIPAL_ID, id)
+				.claim(SecurityConstants.ROLES_CLAIM, roles)
+				.claim(SecurityConstants.PRINCIPAL_ID, id)
+				.claim(SecurityConstants.SESSION_ID, Generators.timeBasedEpochGenerator().generate())
 				.build();
 
 		String tokenValue = this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

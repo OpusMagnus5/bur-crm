@@ -34,7 +34,6 @@ import pl.bodzioch.damian.user.UserRole;
 import java.util.Collections;
 
 import static org.springframework.security.authorization.AuthorityAuthorizationManager.hasAuthority;
-import static pl.bodzioch.damian.user.GenerateJwtTokenCommandHandler.*;
 
 @Configuration
 @RequiredArgsConstructor
@@ -59,7 +58,7 @@ class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfig))
                 .httpBasic(basic -> basic.authenticationEntryPoint(customAuthenticationEntryPoint))
                 .logout(logout -> logout.logoutUrl("/api/user/logout")
-                                        .deleteCookies(BEARER_COOKIE)
+                                        .deleteCookies(SecurityConstants.BEARER_COOKIE)
                                         .logoutSuccessHandler(new CustomLogoutSuccessHandler())
                 );
 
@@ -118,8 +117,8 @@ class SecurityConfig {
     JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
         grantedAuthoritiesConverter.setAuthorityPrefix(AUTHORITY_PREFIX);
-        grantedAuthoritiesConverter.setAuthoritiesClaimName(ROLES_CLAIM);
-        grantedAuthoritiesConverter.setAuthoritiesClaimDelimiter(AUTHORITIES_CLAIM_DELIMITER);
+        grantedAuthoritiesConverter.setAuthoritiesClaimName(SecurityConstants.ROLES_CLAIM);
+        grantedAuthoritiesConverter.setAuthoritiesClaimDelimiter(SecurityConstants.AUTHORITIES_CLAIM_DELIMITER);
 
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);

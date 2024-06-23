@@ -4,14 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import pl.bodzioch.damian.configuration.security.SecurityConstants;
 import pl.bodzioch.damian.user.UserRole;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-
-import static pl.bodzioch.damian.user.GenerateJwtTokenCommandHandler.AUTHORITIES_CLAIM_DELIMITER;
-import static pl.bodzioch.damian.user.GenerateJwtTokenCommandHandler.ROLES_CLAIM;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -32,10 +28,23 @@ public class PermissionService {
     }
 
     public List<UserRole> getRoles() {
-        Jwt token = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return Arrays.stream(((String) token.getClaim(ROLES_CLAIM)).split(AUTHORITIES_CLAIM_DELIMITER))
+        Jwt token = getToken().get();
+        return Arrays.stream(((String) token.getClaim(SecurityConstants.ROLES_CLAIM)).split(SecurityConstants.AUTHORITIES_CLAIM_DELIMITER))
                 .map(UserRole::valueOf)
                 .sorted(Comparator.comparing(UserRole::getHierarchy))
                 .toList();
+    }
+
+    public Optional<UUID> getSessionId() {
+        return getToken().map(token -> token.getClaim(SecurityConstants.SESSION_ID))
+                .map(sessionId -> UUID.fromString((String) sessionId));
+    }
+
+    private Optional<Jwt> getToken() {
+        Object jwt = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (jwt instanceof Jwt) {
+            return Optional.of((Jwt) jwt);
+        }
+        return Optional.empty();
     }
 }

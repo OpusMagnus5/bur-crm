@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
+import pl.bodzioch.damian.configuration.security.SecurityConstants;
 import pl.bodzioch.damian.exception.AppException;
 
 import javax.crypto.Cipher;
@@ -17,8 +18,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Optional;
-
-import static pl.bodzioch.damian.user.GenerateJwtTokenCommandHandler.PRINCIPAL_ID;
 
 @Component
 @Slf4j
@@ -76,7 +75,7 @@ public class CipherComponent {
 
     public Long getPrincipalId() {
         Jwt token = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String principalId = token.getClaim(PRINCIPAL_ID);
+        String principalId = token.getClaim(SecurityConstants.PRINCIPAL_ID);
         return getDecryptedId(principalId);
     }
 
