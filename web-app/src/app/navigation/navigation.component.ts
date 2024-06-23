@@ -40,8 +40,8 @@ import {MatOption, MatSelect} from "@angular/material/select";
 import {ChangeLanguageComponent} from "../change-langauage/change-language.component";
 import {AuthService} from "../auth/auth.service";
 import {SubscriptionManager} from "../shared/util/subscription-manager";
-import {toObservable} from "@angular/core/rxjs-interop";
 import {LocalizedDatePipe} from "../shared/pipe/localized-date.pipe";
+import {toObservable} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-navigation',
@@ -88,7 +88,7 @@ export class NavigationComponent implements OnDestroy {
   protected isHandset$: Observable<boolean>;
   private readonly subscriptions: SubscriptionManager = new SubscriptionManager();
   protected timeToLogout: WritableSignal<Date | null> = signal(null)
-  private countdown = this.setCountdown();
+  private countdown: any;
 
   constructor(
     private breakpointObserver: BreakpointObserver,
@@ -102,12 +102,12 @@ export class NavigationComponent implements OnDestroy {
         shareReplay()
       );
 
-    this.subscriptions.add(toObservable(this.auth.isValid).subscribe(valid => {
+    this.subscriptions.add(toObservable(this.auth.valid).subscribe(valid => {
       if (!valid) {
         this.timeToLogout.set(null);
         clearInterval(this.countdown);
       } else {
-        this.setCountdown();
+        this.countdown = this.setCountdown();
       }
     }));
   }
@@ -123,9 +123,12 @@ export class NavigationComponent implements OnDestroy {
   private setCountdown() {
     return setInterval(() => {
       const now: number = new Date().getTime();
-      const expires: number = this.auth.authData()!.expires.getTime();
+      const expires: number = this.auth.getAuthData()!.expires.getTime();
       const diff: Date = new Date(expires - now);
       this.timeToLogout.set(diff);
+      if (now >= expires) {
+        this.onLogout();
+      }
     }, 1000);
   }
 }

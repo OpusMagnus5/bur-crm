@@ -64,7 +64,7 @@ export class LoginComponent {
   protected onSubmit() {
     this.userHttp.login(this.emailControl.value!, this.passwordControl.value!)
       .subscribe(response => {
-      this.auth.authData.set(response);
+      this.auth.login(response);
       this.router.navigate(['/', SERVICES_PATH, SERVICES_LIST_PATH]);
     });
   }

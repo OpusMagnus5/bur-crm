@@ -54,6 +54,7 @@ class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/api/user/login").permitAll()
                         .anyRequest().access(hasAuthority(UserRole.USER.name())))
                 .oauth2ResourceServer(oAuth2 -> oAuth2.bearerTokenResolver(new CookieBearerTokenResolver())
+                                .authenticationEntryPoint(customAuthenticationEntryPoint)
                                 .jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter())))
                 .cors(cors -> cors.configurationSource(corsConfig))
                 .httpBasic(basic -> basic.authenticationEntryPoint(customAuthenticationEntryPoint))

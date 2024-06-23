@@ -24,7 +24,7 @@ export class PermissionsService {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): MaybeAsync<GuardResult> {
-    if (!this.auth.isValid()) {
+    if (!this.auth.isAuthValid()) {
       return this.getRedirectUrlTree();
     }
 
@@ -44,9 +44,8 @@ export class PermissionsService {
 
   canSee(path: string): boolean {
     const guestPath = this.GUEST_PATH.find(g => path.startsWith(g));
-    if (!this.auth.isValid() && !guestPath) {
+    if (!this.auth.isAuthValid() && !guestPath) {
       return false;
-
     }
     const userPath = this.USER_PATH.find(u => path.startsWith(u));
     const managerPath = this.MANAGER_PATHS.find(m => path.startsWith(m));
