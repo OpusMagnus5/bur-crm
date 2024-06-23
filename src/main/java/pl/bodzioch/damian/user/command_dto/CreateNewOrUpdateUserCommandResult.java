@@ -8,4 +8,12 @@ public record CreateNewOrUpdateUserCommandResult(
         String message
 
 ) implements CommandResult {
+
+    @Override
+    public String toString() {
+        return "CreateNewOrUpdateUserCommandResult{" +
+                "login='" + login + '\'' +
+                ", message='" + message + '\'' +
+                '}';
+    }
 }
