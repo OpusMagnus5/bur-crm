@@ -1,11 +1,13 @@
 package pl.bodzioch.damian.service;
 
 import com.fasterxml.uuid.Generators;
+import org.springframework.http.HttpStatus;
 import pl.bodzioch.damian.client.bur.BurServiceDto;
 import pl.bodzioch.damian.coach.InnerCoach;
 import pl.bodzioch.damian.customer.InnerCustomer;
 import pl.bodzioch.damian.document.DocumentType;
 import pl.bodzioch.damian.document.InnerDocument;
+import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.infrastructure.database.*;
 import pl.bodzioch.damian.intermediary.InnerIntermediary;
 import pl.bodzioch.damian.operator.InnerOperator;
@@ -13,6 +15,7 @@ import pl.bodzioch.damian.program.InnerProgram;
 import pl.bodzioch.damian.service.command_dto.CreateOrUpdateServiceCommand;
 import pl.bodzioch.damian.service_provider.InnerServiceProvider;
 import pl.bodzioch.damian.user.InnerUser;
+import pl.bodzioch.damian.value_object.ErrorData;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -81,7 +84,7 @@ record Service(
 		@DbManyToOne(prefix = "intermediary")
 		InnerIntermediary intermediary,
 		@DbOneToMany(prefix = "coach")
-		List<InnerCoach> coaches, //TODO dodać walidacje min 2 trenerów na usługę
+		List<InnerCoach> coaches,
 		@DbOneToMany(prefix = "document")
 		List<InnerDocument> documents
 ) {
@@ -105,7 +108,7 @@ record Service(
 				command.serviceProviderId(),
 				command.programId(),
 				command.customerId(),
-				command.coachIds(),
+				validateCoaches(command.coachIds()),
 				command.intermediaryId(),
 				null, null,
 				command.createdBy(),
@@ -135,6 +138,16 @@ record Service(
 			messages.addAll(validateDocumentsQuantity());
 		}
 		return messages;
+	}
+
+	private static List<Long> validateCoaches(List<Long> ids) {
+		HashSet<Long> idsSet = new HashSet<>(ids);
+		if (idsSet.size() < 2) {
+			throw new AppException("Service should have at least two coaches", HttpStatus.BAD_REQUEST, List.of(
+					new ErrorData("error.client.service.notEnoughCoaches", List.of(String.valueOf(idsSet.size())))
+			));
+		}
+		return idsSet.stream().toList();
 	}
 
 	private boolean hasNotCompleteStatusInBurAfterEndDate() {

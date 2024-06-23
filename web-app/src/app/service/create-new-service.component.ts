@@ -166,7 +166,7 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
       validators: [Validators.required]
     });
     this.coachIdsControl = new FormControl([], {
-      validators: [Validators.required]
+      validators: [Validators.required, Validators.minLength(2)]
     })
     this.statusControl = new FormControl(null, {
       validators: [Validators.required]

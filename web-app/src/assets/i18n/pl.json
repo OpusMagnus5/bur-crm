@@ -480,7 +480,8 @@
         "required": "Pole pośrednik nie może być puste"
       },
       "coach": {
-        "required": "Pole trenerzy nie może być puste"
+        "required": "Pole trenerzy nie może być puste",
+        "minlength": "Usługa musi posiadać co najmniej dwóch trenerów."
       },
       "status": {
         "required": "Pole status nie może być puste"
