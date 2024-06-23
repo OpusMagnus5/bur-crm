@@ -19,6 +19,7 @@ export class AuthService {
     if (auth) {
       const parsedAuth: LoginResponse = <LoginResponse> JSON.parse(auth);
       const authData: LoginResponse = <LoginResponse>{ ...parsedAuth, expires: new Date(parsedAuth.expires) };
+      this.roles = authData?.roles ? authData.roles : [];
       if (this.isAuthValid(authData)) {
         this.authData = authData;
         this.valid.set(true);
