@@ -5,14 +5,16 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -33,27 +35,50 @@ class ContentLoggingFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-        ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper(httpServletRequest);
+        CustomCachingRequestWrapper requestWrapper = new CustomCachingRequestWrapper(httpServletRequest);
         ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(httpServletResponse);
-
-        String requestURI = httpServletRequest.getRequestURI();
-        log.info("REQUEST {} {}", requestWrapper.getMethod(), requestURI);
-
+        
+        logRequest(requestWrapper);
         chain.doFilter(requestWrapper, responseWrapper);
+        logResponse(requestWrapper, responseWrapper);
+    }
 
+    private void logRequest(CustomCachingRequestWrapper requestWrapper) {
+        String requestURI = requestWrapper.getRequestURI();
         boolean isNotExcludedRequest = excludedBodyRequestLogg.stream().noneMatch(path ->
                 requestURI.contains(path.path()) && requestWrapper.getMethod().equals(path.method().name()));
-        boolean isNotExcludedResponse = excludedBodyResponseLogg.stream().noneMatch(path ->
-                requestURI.contains(path.path()) && httpServletRequest.getMethod().equals(path.method().name()));
-
-        if (isNotExcludedRequest) {
-            log.info("REQUEST Body: {}", requestWrapper.getContentAsString());
+        
+        log.info("REQUEST {} {}", requestWrapper.getMethod(), requestURI);
+        
+        String requestParameters = getRequestParameters(requestWrapper);
+        if (StringUtils.isNotBlank(requestParameters)) {
+            log.info("REQUEST PARAMS {}", requestParameters);
         }
-        log.info("RESPONSE {} {}", httpServletRequest.getMethod(), httpServletRequest.getRequestURI());
-        if (isNotExcludedResponse) {
-            log.info("RESPONSE Status: {}", responseWrapper.getStatus());
-            log.info("RESPONSE Body: {}", new String(responseWrapper.getContentInputStream().readAllBytes(), Charset.defaultCharset()));
+        
+        String body = requestWrapper.getContentAsString();
+        if (isNotExcludedRequest && StringUtils.isNotBlank(body)) {
+            log.info("REQUEST Body: {}", body);
+        }
+    }
+    
+    private void logResponse(CustomCachingRequestWrapper requestWrapper, ContentCachingResponseWrapper responseWrapper) throws IOException {
+        String requestURI = requestWrapper.getRequestURI();
+        boolean isNotExcludedResponse = excludedBodyResponseLogg.stream().noneMatch(path ->
+                requestURI.contains(path.path()) && requestWrapper.getMethod().equals(path.method().name()));
+        
+        log.info("RESPONSE {} {}", requestWrapper.getMethod(), requestWrapper.getRequestURI());
+        log.info("RESPONSE Status: {}", responseWrapper.getStatus());
+
+        String body = new String(responseWrapper.getContentAsByteArray(), Charset.defaultCharset());
+        if (isNotExcludedResponse && StringUtils.isNotBlank(body)) {
+            log.info("RESPONSE Body: {}", body);
         }
         responseWrapper.copyBodyToResponse();
+    }
+
+    private String getRequestParameters(CustomCachingRequestWrapper requestWrapper) {
+        return requestWrapper.getParameterMap().entrySet().stream()
+                .map(entry -> entry.getKey() + ": " + Arrays.toString(entry.getValue()))
+                .collect(Collectors.joining(", "));
     }
 }
