@@ -565,5 +565,8 @@
         "minlength": "The provided password is too short"
       }
     }
+  },
+  "account": {
+    "details": "Account details"
   }
 }

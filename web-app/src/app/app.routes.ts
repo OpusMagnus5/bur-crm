@@ -31,6 +31,8 @@ import {EditUserComponent} from "./user/edit-user.component";
 import {UserDetailsComponent} from "./user/user-details.component";
 import {LoginComponent} from "./auth/login.component";
 import {canActivate} from "./auth/permissions.service";
+import {AccountDetailsComponent} from "./account/account-details.component";
+import {AccountDashboardComponent} from "./account/account-dashboard.component";
 
 export const ADMINISTRATION_PATH: string = 'administration';
 export const BASE_PATH: string = '';
@@ -63,7 +65,9 @@ export const NEW_SERVICE_PATH: string = "new"
 export const SERVICES_LIST_PATH: string = 'list';
 export const EDIT_SERVICE_PATH: string = 'edit';
 export const SERVICE_DETAILS_PATH: string = 'details';
-export const LOGIN_PATH: string = 'login'
+export const LOGIN_PATH: string = 'login';
+export const ACCOUNT_PATH: string = 'account';
+export const ACCOUNT_DETAILS_PATH: string = 'details'
 export const NOT_FOUND_PATH = 'not-found';
 
 export const routes: Routes = [
@@ -204,6 +208,17 @@ export const routes: Routes = [
       {
         path: USER_DETAILS_PATH + '/:id',
         component: UserDetailsComponent
+      }
+    ]
+  },
+  {
+    path: ACCOUNT_PATH,
+    component: AccountDashboardComponent,
+    canActivate: [canActivate],
+    children: [
+      {
+        path: ACCOUNT_DETAILS_PATH,
+        component: AccountDetailsComponent
       }
     ]
   },

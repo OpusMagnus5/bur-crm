@@ -12,6 +12,8 @@ import {map, shareReplay} from 'rxjs/operators';
 import {UserDashboardComponent} from '../user/user-dashboard.component';
 import {Router, RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
 import {
+  ACCOUNT_DETAILS_PATH,
+  ACCOUNT_PATH,
   ADMINISTRATION_PATH,
   ADMINISTRATION_USERS_PATH,
   BASE_PATH,
@@ -83,6 +85,7 @@ export class NavigationComponent implements OnDestroy {
   protected readonly REGISTRY_INTERMEDIARY_PATH = REGISTRY_INTERMEDIARY_PATH + '/' + INTERMEDIARY_LIST_PATH;
   protected readonly SERVICES_PATH = SERVICES_PATH + '/' + SERVICES_LIST_PATH;
   protected readonly LOGIN_PATH = LOGIN_PATH;
+  protected readonly ACCOUNT_DETAILS_PATH = ACCOUNT_PATH + '/' + ACCOUNT_DETAILS_PATH;
 
 
   protected isHandset$: Observable<boolean>;

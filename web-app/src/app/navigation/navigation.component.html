@@ -71,6 +71,10 @@
         }
         <div class="mr-5">
           @if (this.auth.valid()) {
+            <button mat-button routerLink="{{ ACCOUNT_DETAILS_PATH }}">
+              <mat-icon fontIcon="manage_accounts"></mat-icon>
+              <span>{{ this.auth.getAuthData()?.email }}</span>
+            </button>
             <button mat-button (click)="onLogout()">
               <mat-icon fontIcon="logout"></mat-icon>
               <span>{{ 'navigation.logout-path' | translate }}</span>

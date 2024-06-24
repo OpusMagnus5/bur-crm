@@ -8,13 +8,21 @@ import {
   Router,
   RouterStateSnapshot
 } from "@angular/router";
-import {ADMINISTRATION_PATH, BASE_PATH, LOGIN_PATH, NOT_FOUND_PATH, REGISTRY_PATH, SERVICES_PATH} from "../app.routes";
+import {
+  ACCOUNT_PATH,
+  ADMINISTRATION_PATH,
+  BASE_PATH,
+  LOGIN_PATH,
+  NOT_FOUND_PATH,
+  REGISTRY_PATH,
+  SERVICES_PATH
+} from "../app.routes";
 
 @Injectable({ providedIn: "root" })
 export class PermissionsService {
 
   private readonly MANAGER_PATHS: string[] = [ADMINISTRATION_PATH];
-  private readonly USER_PATH: string[] = [REGISTRY_PATH, SERVICES_PATH, BASE_PATH]
+  private readonly USER_PATH: string[] = [REGISTRY_PATH, SERVICES_PATH, BASE_PATH, ACCOUNT_PATH]
   private readonly GUEST_PATH: string[] = [LOGIN_PATH, NOT_FOUND_PATH]
 
   constructor(

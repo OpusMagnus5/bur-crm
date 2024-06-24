@@ -569,5 +569,8 @@
         "minlength": "Podany hasło jest za krótkie"
       }
     }
+  },
+  "account": {
+    "details": "Szczegóły konta"
   }
 }
