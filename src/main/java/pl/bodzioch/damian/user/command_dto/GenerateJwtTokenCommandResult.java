@@ -9,14 +9,16 @@ import java.time.Instant;
 import java.util.List;
 
 public record GenerateJwtTokenCommandResult(
+		String id,
 		String token,
 		String email,
 		Instant expires,
 		List<UserRole> roles
 ) implements CommandResult {
 
-	public GenerateJwtTokenCommandResult(String token, Authentication authentication, Instant expires) {
+	public GenerateJwtTokenCommandResult(String token, Authentication authentication, Instant expires, String id) {
 		this(
+				id,
 				token,
 				authentication.getName(),
 				expires,

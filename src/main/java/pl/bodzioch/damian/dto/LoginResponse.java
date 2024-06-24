@@ -8,6 +8,7 @@ import java.time.Instant;
 import java.util.List;
 
 public record LoginResponse(
+		String id,
 		String email,
 		Instant expires,
 		List<UserRole> roles
@@ -15,6 +16,7 @@ public record LoginResponse(
 
 	public LoginResponse(GenerateJwtTokenCommandResult commandResult) {
 		this(
+				commandResult.id(),
 				commandResult.email(),
 				commandResult.expires(),
 				commandResult.roles()

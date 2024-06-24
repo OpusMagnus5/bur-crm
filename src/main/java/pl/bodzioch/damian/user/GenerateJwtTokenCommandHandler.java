@@ -53,6 +53,6 @@ class GenerateJwtTokenCommandHandler implements CommandHandler<GenerateJwtTokenC
 
 		String tokenValue = this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 
-		return new GenerateJwtTokenCommandResult(tokenValue, authentication, expiresAt);
+		return new GenerateJwtTokenCommandResult(tokenValue, authentication, expiresAt, id);
 	}
 }

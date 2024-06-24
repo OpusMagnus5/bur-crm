@@ -8,7 +8,8 @@ export interface ResetUserPasswordRequest {
 }
 
 export interface LoginResponse {
-  email: string
+  id: string,
+  email: string,
   expires: Date,
   roles: UserRole[]
 }
