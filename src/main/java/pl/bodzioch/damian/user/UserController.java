@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -49,13 +50,8 @@ class UserController {
     LoginResponse login(Authentication authentication, HttpServletResponse response) {
         GenerateJwtTokenCommand command = new GenerateJwtTokenCommand(authentication);
         GenerateJwtTokenCommandResult result = commandExecutor.execute(command);
-        Cookie bearer = new Cookie(SecurityConstants.BEARER_COOKIE, result.token());
-        bearer.setHttpOnly(true);
-        /*bearer.setSecure(true);*/ //TODO SSL
-        /*bearer.setAttribute("SameSite", "Strict");*/ //TODO PROD
-        bearer.setMaxAge((int) Instant.now().until(result.expires(), ChronoUnit.SECONDS));
-        bearer.setPath("/");
-        response.addCookie(bearer);
+        setBearerCookie(response, result);
+        setLastLogin(result.id());
         return new LoginResponse(result);
     }
 
@@ -129,5 +125,22 @@ class UserController {
         ResetUserPasswordCommand command = new ResetUserPasswordCommand(request, cipher);
         ResetUserPasswordCommandResult result = commandExecutor.execute(command);
         return new ResetUserPasswordResponse(result.newPassword());
+    }
+
+    private void setBearerCookie(HttpServletResponse response, GenerateJwtTokenCommandResult result) {
+        Cookie bearer = new Cookie(SecurityConstants.BEARER_COOKIE, result.token());
+        bearer.setHttpOnly(true);
+        /*bearer.setSecure(true);*/ //TODO SSL
+        /*bearer.setAttribute("SameSite", "Strict");*/ //TODO PROD
+        bearer.setMaxAge((int) Instant.now().until(result.expires(), ChronoUnit.SECONDS));
+        bearer.setPath("/");
+        response.addCookie(bearer);
+    }
+
+    @Async //TODO fix async
+    protected void setLastLogin(String userId) {
+        Long decryptedId = this.cipher.getDecryptedId(userId);
+        SaveUserLastLoginCommand command = new SaveUserLastLoginCommand(decryptedId);
+        this.commandExecutor.execute(command);
     }
 }

@@ -169,3 +169,18 @@ BEGIN
     WHERE usr_id = _usr_id;
 
 END$$;
+
+DROP PROCEDURE IF EXISTS users_set_last_login;
+/*PROCEDURE users_set_last_login*/
+CREATE OR REPLACE PROCEDURE users_set_last_login(
+    IN _usr_id users.usr_id%TYPE
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    UPDATE users
+    SET usr_last_login = current_timestamp
+    WHERE usr_id = _usr_id;
+
+END$$;

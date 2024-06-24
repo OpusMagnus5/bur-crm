@@ -12,4 +12,7 @@ interface IUserWriteRepository {
 
     @Transactional(Transactional.TxType.REQUIRED)
     void changePassword(User user);
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    void setLastLogin(Long userId);
 }
