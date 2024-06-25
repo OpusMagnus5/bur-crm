@@ -97,7 +97,7 @@ class UserController {
         return new UserPageResponse(users, result.totalUsers());
     }
 
-    @PreAuthorize("hasAuthority('MANAGER') or (hasAuthority('USER') and @permissionService.isRequestingOwnUser(#id))")
+    @PreAuthorize("hasAuthority('MANAGER')")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     GetUserByIdResponse getUserById(@PathVariable String id) {
@@ -124,6 +124,15 @@ class UserController {
         ResetUserPasswordCommand command = new ResetUserPasswordCommand(request, cipher);
         ResetUserPasswordCommandResult result = commandExecutor.execute(command);
         return new ResetUserPasswordResponse(result.newPassword());
+    }
+
+    @PreAuthorize("hasAuthority('USER') and @permissionService.isRequestingOwnUser(#request.userId())")
+    @PatchMapping("/change-password")
+    @ResponseStatus(HttpStatus.OK)
+    ChangeUserPasswordResponse changePassword(@Valid @RequestBody ChangeUserPasswordRequest request) {
+        ChangeUserPasswordCommand command = new ChangeUserPasswordCommand(request, cipher);
+        ChangeUserPasswordCommandResult result = commandExecutor.execute(command);
+        return new ChangeUserPasswordResponse(result.message());
     }
 
     private void setBearerCookie(HttpServletResponse response, GenerateJwtTokenCommandResult result) {

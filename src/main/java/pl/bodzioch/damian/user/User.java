@@ -7,6 +7,7 @@ import pl.bodzioch.damian.infrastructure.database.DbColumn;
 import pl.bodzioch.damian.infrastructure.database.DbConstructor;
 import pl.bodzioch.damian.infrastructure.database.DbId;
 import pl.bodzioch.damian.infrastructure.database.DbManyToOne;
+import pl.bodzioch.damian.user.command_dto.ChangeUserPasswordCommand;
 import pl.bodzioch.damian.user.command_dto.CreateNewOrUpdateUserCommand;
 import pl.bodzioch.damian.user.command_dto.ResetUserPasswordCommand;
 import pl.bodzioch.damian.utils.Encoder;
@@ -16,6 +17,9 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+
+import static pl.bodzioch.damian.user.validator.PasswordValidator.ALLOWED_PASSWORD_CHARS;
+import static pl.bodzioch.damian.user.validator.PasswordValidator.MIN_PASSWORD_LENGTH;
 
 record User (
          @DbId
@@ -83,14 +87,20 @@ record User (
         );
     }
 
+    User(ChangeUserPasswordCommand command) {
+        this(
+                command.userId(), null, command.version(), null, Encoder.encodePassword(command.password()),
+                null, null, null, null, null, null, command.userId(),
+                null, null, null
+        );
+    }
+
     static String generateNewPassword() {
-        String passwordCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
-        int passwordLength = 12;
         SecureRandom secureRandom = new SecureRandom();
         StringBuilder password = new StringBuilder();
-        for (int i = 0; i < passwordLength; i++) {
-            int index = secureRandom.nextInt(passwordCharacters.length());
-            password.append(passwordCharacters.charAt(index));
+        for (int i = 0; i < MIN_PASSWORD_LENGTH; i++) {
+            int index = secureRandom.nextInt(ALLOWED_PASSWORD_CHARS.length());
+            password.append(ALLOWED_PASSWORD_CHARS.charAt(index));
         }
         return password.toString();
     }
