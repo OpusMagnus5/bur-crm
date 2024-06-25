@@ -3,7 +3,6 @@ package pl.bodzioch.damian.infrastructure.database;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
-import org.springframework.scheduling.annotation.Async;
 import pl.bodzioch.damian.value_object.PageQuery;
 
 import java.util.HashMap;
@@ -19,7 +18,6 @@ public interface IJdbcCaller {
 
     String getArrayCustomTypesParameter(CustomTypes customType, List<?> objects);
 
-    @Async
     @EventListener(ApplicationReadyEvent.class)
     void setCustomTypesDefinition();
 }

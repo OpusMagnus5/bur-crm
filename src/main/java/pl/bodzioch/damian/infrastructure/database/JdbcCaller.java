@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StopWatch;
 import pl.bodzioch.damian.exception.AppException;
@@ -84,7 +83,6 @@ class JdbcCaller implements IJdbcCaller {
         return DbCaster.toArrayOfCustomTypes(this.customTypes.get(customType), objects);
     }
 
-    @Async
     @EventListener(ApplicationReadyEvent.class)
     @Override
     public void setCustomTypesDefinition() {

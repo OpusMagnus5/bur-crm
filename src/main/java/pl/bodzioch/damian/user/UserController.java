@@ -7,7 +7,6 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -137,10 +136,9 @@ class UserController {
         response.addCookie(bearer);
     }
 
-    @Async //TODO fix async
-    protected void setLastLogin(String userId) {
+    private void setLastLogin(String userId) {
         Long decryptedId = this.cipher.getDecryptedId(userId);
         SaveUserLastLoginCommand command = new SaveUserLastLoginCommand(decryptedId);
-        this.commandExecutor.execute(command);
+        this.commandExecutor.executeAsync(command);
     }
 }

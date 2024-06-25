@@ -1,6 +1,7 @@
 package pl.bodzioch.damian.infrastructure.command;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StopWatch;
@@ -8,6 +9,7 @@ import org.springframework.util.StopWatch;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -28,9 +30,17 @@ public class CommandExecutor {
                 .collect(Collectors.toMap(CommandHandler::commandClass, Function.identity()));
     }
 
+    public <C extends Command<R>, R extends CommandResult> R execute(C command) {
+        return executeInternal(command);
+    }
+
+    @Async("asyncExecutor")
+    public <C extends Command<R>, R extends CommandResult> CompletableFuture<R> executeAsync(C command) {
+        return CompletableFuture.completedFuture(executeInternal(command));
+    }
 
     @SuppressWarnings("unchecked")
-    public <C extends Command<R>, R extends CommandResult> R execute(C command) {
+    private <C extends Command<R>, R extends CommandResult> R executeInternal(C command) {
         CommandHandler<C, R> handler = (CommandHandler<C, R>) handlerMap.get(command.getClass());
         log.info("Executing command: {}", command);
         StopWatch stopWatch = new StopWatch();
