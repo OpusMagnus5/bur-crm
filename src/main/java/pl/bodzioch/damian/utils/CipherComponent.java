@@ -79,6 +79,16 @@ public class CipherComponent {
         return getDecryptedId(principalId);
     }
 
+    public Optional<Long> getPrincipalIdIfExists() {
+        try {
+            Jwt token = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String principalId = token.getClaim(SecurityConstants.PRINCIPAL_ID);
+            return Optional.of(getDecryptedId(principalId));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
     public Long getDecryptedId(String id) {
         return Optional.ofNullable(id)
                 .filter(StringUtils::isNotBlank)

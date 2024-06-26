@@ -1,4 +1,5 @@
 CREATE TABLE error(
+    err_id BIGSERIAL PRIMARY KEY,
     err_uuid UUID,
     err_user_id BIGINT REFERENCES users(usr_id),
     err_date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,

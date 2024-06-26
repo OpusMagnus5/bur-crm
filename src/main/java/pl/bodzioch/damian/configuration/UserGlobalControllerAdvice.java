@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pl.bodzioch.damian.dto.AppErrorResponse;
 import pl.bodzioch.damian.dto.ErrorDto;
+import pl.bodzioch.damian.error.command_dto.SaveErrorCommand;
 import pl.bodzioch.damian.exception.AppException;
+import pl.bodzioch.damian.infrastructure.command.CommandExecutor;
+import pl.bodzioch.damian.utils.CipherComponent;
 import pl.bodzioch.damian.utils.MessageResolver;
 
 import java.util.ArrayList;
@@ -25,6 +28,8 @@ import java.util.List;
 class UserGlobalControllerAdvice {
 
     private final MessageResolver messageResolver;
+    private final CipherComponent cipher;
+    private final CommandExecutor commandExecutor;
 
     @ExceptionHandler({Exception.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -32,6 +37,7 @@ class UserGlobalControllerAdvice {
         log.error(e.getMessage(), e);
         AppException generalError = AppException.getGeneralError();
         log.error(generalError.toString());
+        saveError(e, generalError);
         return getResponseEntity(generalError, messageResolver);
     }
 
@@ -47,5 +53,12 @@ class UserGlobalControllerAdvice {
         return ResponseEntity.status(exception.getHttpStatus())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
                 .body(new AppErrorResponse(errorsDto));
+    }
+
+    private void saveError(Exception e, AppException appEx) {
+        pl.bodzioch.damian.error.ErrorDto errorDto =
+                new pl.bodzioch.damian.error.ErrorDto(e, appEx, cipher.getPrincipalIdIfExists().orElse(null));
+        SaveErrorCommand command = new SaveErrorCommand(errorDto);
+        commandExecutor.executeAsync(command);
     }
 }
