@@ -97,7 +97,7 @@ class UserController {
         return new UserPageResponse(users, result.totalUsers());
     }
 
-    @PreAuthorize("hasAuthority('MANAGER')")
+    @PreAuthorize("hasAuthority('MANAGER') or (hasAuthority('USER') and @permissionService.isRequestingOwnUser(#id))")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     GetUserByIdResponse getUserById(@PathVariable String id) {

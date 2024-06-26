@@ -583,15 +583,18 @@
     "old-password-input-label": "Aktualne hasło",
     "new-password-input-label": "Nowe hasło",
     "repeated-new-password-input-label": "Powtórz nowe hasło",
+    "password-tooltip": "Twoje hasło nie spełnia wymagań bezpieczeństwa.\nUpewnij się, że zawiera:\nCo najmniej jedną dużą literę\nCo najmniej jedną małą literę\nCo najmniej jedną cyfrę\nCo najmniej jeden znak specjalny !@#$%^&*()\nMinimum 12 znaków",
     "validation": {
       "oldPassword": {
         "required": "Pole nie może być puste"
       },
       "newPassword": {
-        "required": "Pole nie może być puste"
+        "required": "Pole nie może być puste",
+        "incorrect": "Hasło nie spełnia wymagań"
       },
       "repeatedNewPassword": {
-        "required": "Pole nie może być puste"
+        "required": "Pole nie może być puste",
+        "notTheSame": "Hasła się różnią"
       }
     }
   }

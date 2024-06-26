@@ -579,15 +579,18 @@
     "old-password-input-label": "Current password",
     "new-password-input-label": "New password",
     "repeated-new-password-input-label": "Repeat new password",
+    "password-tooltip": "Your password does not meet the security requirements.\nPlease ensure it includes:\nAt least one uppercase letter\nAt least one lowercase letter\nAt least one number\nAt least one special character !@#$%^&*()\nA minimum of 12 characters",
     "validation": {
       "oldPassword": {
         "required": "The field cannot be empty"
       },
       "newPassword": {
-        "required": "The field cannot be empty"
+        "required": "The field cannot be empty",
+        "incorrect": "The password does not meet the requirements"
       },
       "repeatedNewPassword": {
-        "required": "The field cannot be empty"
+        "required": "The field cannot be empty",
+        "notTheSame": "Passwords are different"
       }
     }
   }

@@ -22,7 +22,8 @@ import java.util.stream.Collectors;
 class ContentLoggingFilter implements Filter {
 
     private static final List<Path> excludedBodyRequestLogg = List.of(
-            new Path("/api/user/login", HttpMethod.POST)
+            new Path("/api/user/login", HttpMethod.POST),
+            new Path("/api/user/change-password", HttpMethod.PATCH)
     );
 
     private static final List<Path> excludedBodyResponseLogg = List.of(

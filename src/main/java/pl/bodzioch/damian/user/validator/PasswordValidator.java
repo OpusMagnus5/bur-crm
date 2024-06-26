@@ -19,7 +19,7 @@ public class PasswordValidator implements ConstraintValidator<Password, String> 
             return true;
         }
         return StringUtils.isNotBlank(value) &&
-                StringUtils.containsAny(value, ALLOWED_PASSWORD_CHARS) &&
+                StringUtils.containsAny(value, ALLOWED_CAPITAL_LETTERS) &&
                 StringUtils.containsAny(value, ALLOWED_LOWER_LETTERS) &&
                 StringUtils.containsAny(value, ALLOWED_DIGITS) &&
                 StringUtils.containsAny(value, ALLOWED_SPECIAL_CHARS) &&
