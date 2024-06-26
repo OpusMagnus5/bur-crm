@@ -20,3 +20,14 @@ export enum UserRole {
   MANAGER = 'MANAGER',
   ADMIN = 'ADMIN'
 }
+
+export interface ChangeUserPasswordRequest {
+  userId: string,
+  version: number,
+  newPassword: string,
+  oldPassword: string
+}
+
+export interface ChangeUserPasswordResponse {
+  message: string
+}

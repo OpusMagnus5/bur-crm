@@ -15,8 +15,10 @@ public record ChangeUserPasswordRequest(
         @Min(value = 0, message = "error.client.user.minVersion")
         @Max(value = Integer.MAX_VALUE, message = "error.client.user.maxVersion")
         Integer version,
-        @NotEmpty(message = "error.client.user.emptyPassword")
-        @Password(message = "error.client.user.incorrectPassword")
-        String password
+        @NotEmpty(message = "error.client.user.emptyNewPassword")
+        @Password(message = "error.client.user.incorrectNewPassword")
+        String newPassword,
+        @NotEmpty(message = "error.client.user.emptyOldPassword")
+        String oldPassword
 ) implements Serializable {
 }

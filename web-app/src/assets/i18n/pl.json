@@ -571,6 +571,28 @@
     }
   },
   "account": {
-    "details": "Szczegóły konta"
+    "details": "Szczegóły konta",
+    "change-password": "Zmień hasło"
+  },
+  "account-details": {
+    "options": {
+      "change-password": "Zmień hasło"
+    }
+  },
+  "change-account-password": {
+    "old-password-input-label": "Aktualne hasło",
+    "new-password-input-label": "Nowe hasło",
+    "repeated-new-password-input-label": "Powtórz nowe hasło",
+    "validation": {
+      "oldPassword": {
+        "required": "Pole nie może być puste"
+      },
+      "newPassword": {
+        "required": "Pole nie może być puste"
+      },
+      "repeatedNewPassword": {
+        "required": "Pole nie może być puste"
+      }
+    }
   }
 }

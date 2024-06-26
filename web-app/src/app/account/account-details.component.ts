@@ -1,5 +1,4 @@
 import {Component, signal, WritableSignal} from '@angular/core';
-import {SubscriptionManager} from "../shared/util/subscription-manager";
 import {GetUseDetailsResponseInterface} from "../user/model/get-use-details-response.interface";
 import {UserHttpService} from "../user/service/user-http.service";
 import {AuthService} from "../auth/auth.service";
@@ -10,6 +9,8 @@ import {MatIconButton} from "@angular/material/button";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {TranslateModule} from "@ngx-translate/core";
 import {ShowNoDataDirective} from "../shared/directive/show-no-data.directive";
+import {RouterLink} from "@angular/router";
+import {ACCOUNT_CHANGE_PASSWORD_PATH} from "../app.routes";
 
 @Component({
   selector: 'app-account-details',
@@ -24,17 +25,18 @@ import {ShowNoDataDirective} from "../shared/directive/show-no-data.directive";
     MatMenuItem,
     TranslateModule,
     MatMenuTrigger,
-    ShowNoDataDirective
+    ShowNoDataDirective,
+    RouterLink
   ],
   templateUrl: './account-details.component.html',
   styles: ['@tailwind base']
 })
 export class AccountDetailsComponent {
 
+  protected readonly ACCOUNT_CHANGE_PASSWORD_PATH = ACCOUNT_CHANGE_PASSWORD_PATH;
   private readonly id: string;
-  private subscriptions: SubscriptionManager = new SubscriptionManager();
-  protected readonly userData: WritableSignal<GetUseDetailsResponseInterface | null> = signal(null);
 
+  protected readonly userData: WritableSignal<GetUseDetailsResponseInterface | null> = signal(null);
   constructor(
     private http: UserHttpService,
     private auth: AuthService

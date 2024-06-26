@@ -567,6 +567,28 @@
     }
   },
   "account": {
-    "details": "Account details"
+    "details": "Account details",
+    "change-password": "Change password"
+  },
+  "account-details": {
+    "options": {
+      "change-password": "Change password"
+    }
+  },
+  "change-account-password": {
+    "old-password-input-label": "Current password",
+    "new-password-input-label": "New password",
+    "repeated-new-password-input-label": "Repeat new password",
+    "validation": {
+      "oldPassword": {
+        "required": "The field cannot be empty"
+      },
+      "newPassword": {
+        "required": "The field cannot be empty"
+      },
+      "repeatedNewPassword": {
+        "required": "The field cannot be empty"
+      }
+    }
   }
 }

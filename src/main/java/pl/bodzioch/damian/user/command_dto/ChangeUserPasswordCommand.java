@@ -7,10 +7,11 @@ import pl.bodzioch.damian.utils.CipherComponent;
 public record ChangeUserPasswordCommand(
         Long userId,
         Integer version,
-        String password
+        String newPassword,
+        String oldPassword
 ) implements Command<ChangeUserPasswordCommandResult> {
 
     public ChangeUserPasswordCommand(ChangeUserPasswordRequest request, CipherComponent cipher) {
-        this(cipher.getDecryptedId(request.userId()), request.version(), request.password());
+        this(cipher.getDecryptedId(request.userId()), request.version(), request.newPassword(), request.oldPassword());
     }
 }

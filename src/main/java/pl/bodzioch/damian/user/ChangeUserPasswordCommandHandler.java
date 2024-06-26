@@ -12,6 +12,7 @@ import pl.bodzioch.damian.utils.MessageResolver;
 class ChangeUserPasswordCommandHandler implements CommandHandler<ChangeUserPasswordCommand, ChangeUserPasswordCommandResult> {
 
     private final IUserWriteRepository writeRepository;
+    private final IUserReadRepository readRepository;
     private final MessageResolver messageResolver;
 
     @Override
@@ -21,7 +22,8 @@ class ChangeUserPasswordCommandHandler implements CommandHandler<ChangeUserPassw
 
     @Override
     public ChangeUserPasswordCommandResult handle(ChangeUserPasswordCommand command) {
-        User user = new User(command);
+        User user = readRepository.getById(command.userId()).orElseThrow(() -> User.buildUserByIdNotFound(command.userId()));
+        user = user.changePassword(command);
         writeRepository.changePassword(user);
         String message = messageResolver.getMessage("user.changePasswordSuccess");
         return new ChangeUserPasswordCommandResult(message);

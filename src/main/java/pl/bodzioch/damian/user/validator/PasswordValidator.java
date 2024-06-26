@@ -15,6 +15,9 @@ public class PasswordValidator implements ConstraintValidator<Password, String> 
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
+        if (StringUtils.isEmpty(value)) {
+            return true;
+        }
         return StringUtils.isNotBlank(value) &&
                 StringUtils.containsAny(value, ALLOWED_PASSWORD_CHARS) &&
                 StringUtils.containsAny(value, ALLOWED_LOWER_LETTERS) &&

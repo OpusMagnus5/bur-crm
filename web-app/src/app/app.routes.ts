@@ -33,6 +33,7 @@ import {LoginComponent} from "./auth/login.component";
 import {canActivate} from "./auth/permissions.service";
 import {AccountDetailsComponent} from "./account/account-details.component";
 import {AccountDashboardComponent} from "./account/account-dashboard.component";
+import {ChangeAccountPasswordComponent} from "./account/change-account-password.component";
 
 export const ADMINISTRATION_PATH: string = 'administration';
 export const BASE_PATH: string = '';
@@ -68,6 +69,7 @@ export const SERVICE_DETAILS_PATH: string = 'details';
 export const LOGIN_PATH: string = 'login';
 export const ACCOUNT_PATH: string = 'account';
 export const ACCOUNT_DETAILS_PATH: string = 'details'
+export const ACCOUNT_CHANGE_PASSWORD_PATH: string = 'change-password'
 export const NOT_FOUND_PATH = 'not-found';
 
 export const routes: Routes = [
@@ -219,6 +221,10 @@ export const routes: Routes = [
       {
         path: ACCOUNT_DETAILS_PATH,
         component: AccountDetailsComponent
+      },
+      {
+        path: ACCOUNT_CHANGE_PASSWORD_PATH,
+        component: ChangeAccountPasswordComponent
       }
     ]
   },

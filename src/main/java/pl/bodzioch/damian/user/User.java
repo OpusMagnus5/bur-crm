@@ -87,12 +87,23 @@ record User (
         );
     }
 
-    User(ChangeUserPasswordCommand command) {
+    private User(User user, ChangeUserPasswordCommand command) {
         this(
-                command.userId(), null, command.version(), null, Encoder.encodePassword(command.password()),
-                null, null, null, null, null, null, command.userId(),
-                null, null, null
+                user.id(), user.uuid(), command.version(), user.email(), Encoder.encodePassword(command.newPassword()),
+                user.firstName(), user.lastName(), user.roles(), user.lastLogin(), user.createdAt(), user.modifiedAt(),
+                command.userId(), user.createdBy(), user.creator(), user.modifier()
         );
+    }
+
+    User changePassword(ChangeUserPasswordCommand command) {
+        boolean samePassword = Encoder.matches(command.newPassword(), this.password);
+        boolean sameCurrentPassword = Encoder.matches(command.oldPassword(), this.password);
+        if (samePassword) {
+            throw buildTheSamePasswordAsOld();
+        } else if (!sameCurrentPassword) {
+            throw buildIncorrectOldPassword();
+        }
+        return new User(this, command);
     }
 
     static String generateNewPassword() {
@@ -131,6 +142,27 @@ record User (
         return new AppException(
                 HttpStatus.FORBIDDEN,
                 List.of(new ErrorData("error.client.userHasNoEnoughAuthority", List.of()))
+        );
+    }
+
+    static AppException buildUserByIdNotFound(Long id) {
+        return new AppException(
+                HttpStatus.NOT_FOUND,
+                List.of(new ErrorData("error.client.userByIdNotFound", List.of(id.toString())))
+        );
+    }
+
+    private static AppException buildTheSamePasswordAsOld() {
+        return new AppException(
+                HttpStatus.NOT_FOUND,
+                List.of(new ErrorData("error.client.user.samePasswordAsOld", List.of()))
+        );
+    }
+
+    private static AppException buildIncorrectOldPassword() {
+        return new AppException(
+                HttpStatus.NOT_FOUND,
+                List.of(new ErrorData("error.client.user.incorrectOldPassword", List.of()))
         );
     }
 }

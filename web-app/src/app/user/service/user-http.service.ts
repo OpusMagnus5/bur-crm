@@ -9,7 +9,13 @@ import {UserListResponseInterface} from "../model/user-list-response.interface";
 import {GetUseDetailsResponseInterface} from "../model/get-use-details-response.interface";
 import {DeleteUserByIdResponseInterface} from "../model/delete-user-by-id-response.interface";
 import {SERVER_URL} from "../../shared/http-config";
-import {LoginResponse, ResetUserPasswordRequest, ResetUserPasswordResponse} from "../model/user-dtos";
+import {
+  ChangeUserPasswordRequest,
+  ChangeUserPasswordResponse,
+  LoginResponse,
+  ResetUserPasswordRequest,
+  ResetUserPasswordResponse
+} from "../model/user-dtos";
 import {map} from "rxjs/operators";
 
 @Injectable({
@@ -88,5 +94,9 @@ export class UserHttpService {
     return this.http.post<void>(
       SERVER_URL + 'api/user/logout', {}
     );
+  }
+
+  changePassword(request: ChangeUserPasswordRequest): Observable<ChangeUserPasswordResponse> {
+    return this.http.patch<ChangeUserPasswordResponse>(SERVER_URL + 'api/user/change-password', request)
   }
 }

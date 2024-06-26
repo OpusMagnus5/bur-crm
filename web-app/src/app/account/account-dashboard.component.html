@@ -4,6 +4,13 @@
        mat-stretch-tabs="false"
        mat-align-tabs="end"
        animationDuration="0ms">
+    @for(link of hiddenLinks(); track link) {
+    <a mat-tab-link
+       [active]="routerService.isPartOfActivePath(getFullRoutePath(link.path))"
+       [hidden]="!routerService.isPartOfActivePath(getFullRoutePath(link.path))">
+    {{ link.name }}
+    </a>
+    }
     @for(link of links(); track link) {
       <a mat-tab-link
          [routerLink]="link.path"
