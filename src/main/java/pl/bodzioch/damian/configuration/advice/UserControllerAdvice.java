@@ -1,4 +1,4 @@
-package pl.bodzioch.damian.configuration;
+package pl.bodzioch.damian.configuration.advice;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;

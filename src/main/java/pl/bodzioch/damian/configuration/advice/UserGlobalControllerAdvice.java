@@ -1,4 +1,4 @@
-package pl.bodzioch.damian.configuration;
+package pl.bodzioch.damian.configuration.advice;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

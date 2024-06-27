@@ -184,3 +184,34 @@ BEGIN
     WHERE usr_id = _usr_id;
 
 END$$;
+
+DROP PROCEDURE IF EXISTS users_create_system_users;
+/*PROCEDURE users_create_system_users*/
+CREATE OR REPLACE PROCEDURE users_create_system_users(
+    IN _usr_id users.usr_id%TYPE,
+    IN _usr_uuid users.usr_uuid%TYPE,
+    IN _usr_password users.usr_password%TYPE,
+    IN _usr_email users.usr_email%TYPE,
+    IN _usr_first_name users.usr_first_name%TYPE,
+    IN _usr_last_name users.usr_last_name%TYPE,
+    IN _usr_roles users.usr_roles%TYPE,
+    IN _usr_created_by users.usr_created_by%TYPE
+)
+    LANGUAGE plpgsql
+AS $$
+DECLARE
+    _user_exists INTEGER;
+BEGIN
+
+    SELECT COUNT(*)
+    INTO _user_exists
+    FROM users
+    WHERE usr_id = _usr_id;
+
+    IF _user_exists = 0 THEN
+        INSERT INTO users (usr_id, usr_uuid, usr_password, usr_email, usr_first_name, usr_last_name, usr_roles, usr_created_by)
+        VALUES (_usr_id, _usr_uuid, _usr_password, _usr_email, _usr_first_name, _usr_last_name, _usr_roles, _usr_created_by);
+    END IF;
+
+
+END$$;

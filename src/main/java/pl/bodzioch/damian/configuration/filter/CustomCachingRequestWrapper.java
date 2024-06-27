@@ -1,4 +1,4 @@
-package pl.bodzioch.damian.configuration;
+package pl.bodzioch.damian.configuration.filter;
 
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;

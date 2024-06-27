@@ -1,4 +1,4 @@
-package pl.bodzioch.damian.configuration;
+package pl.bodzioch.damian.configuration.filter;
 
 import com.fasterxml.uuid.Generators;
 import jakarta.servlet.*;
