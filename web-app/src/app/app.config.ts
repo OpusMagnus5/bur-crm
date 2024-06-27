@@ -1,4 +1,4 @@
-import {ApplicationConfig, importProvidersFrom} from '@angular/core';
+import {ApplicationConfig, ErrorHandler, importProvidersFrom} from '@angular/core';
 import {provideRouter} from '@angular/router';
 
 import {routes} from './app.routes';
@@ -14,6 +14,7 @@ import {DateAdapter, MAT_DATE_FORMATS} from "@angular/material/core";
 import {CustomDateAdapterService, matDateFormats} from "./shared/service/custom-date-adapter.service";
 import {MatPaginatorIntl} from "@angular/material/paginator";
 import {PaginatorLocalizerService} from "./shared/service/paginator-localizer.service";
+import {GlobalErrorHandler} from "./error/global-error-handler";
 
 registerLocaleData(localePl, 'pl');
 registerLocaleData(localeEn, 'en');
@@ -40,6 +41,7 @@ export const appConfig: ApplicationConfig = {
     httpInterceptors,
     { provide: DateAdapter, useClass: CustomDateAdapterService },
     { provide: MAT_DATE_FORMATS, useValue: matDateFormats },
-    { provide: MatPaginatorIntl, useClass: PaginatorLocalizerService }
+    { provide: MatPaginatorIntl, useClass: PaginatorLocalizerService },
+    { provide: ErrorHandler, useClass: GlobalErrorHandler }
   ]
 };

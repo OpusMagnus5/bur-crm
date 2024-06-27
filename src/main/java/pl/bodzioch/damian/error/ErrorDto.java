@@ -1,5 +1,6 @@
 package pl.bodzioch.damian.error;
 
+import pl.bodzioch.damian.dto.SaveWebErrorRequest;
 import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.user.InnerUserDto;
 
@@ -37,6 +38,12 @@ public record ErrorDto(
                         .map(StackTraceElement::toString)
                         .collect(Collectors.joining("\n")),
                 false, null
+        );
+    }
+
+    public ErrorDto(SaveWebErrorRequest request, Long userId) {
+        this(
+                null, null, userId, LocalDateTime.now(), request.clazz(), request.message(), request.stacktrace(), true, null
         );
     }
 }
