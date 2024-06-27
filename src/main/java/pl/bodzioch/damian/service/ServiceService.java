@@ -2,11 +2,14 @@ package pl.bodzioch.damian.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.client.bur.BurServiceDto;
 import pl.bodzioch.damian.dto.GetServiceFromBurResponse;
+import pl.bodzioch.damian.error.ErrorDto;
+import pl.bodzioch.damian.error.command_dto.SaveErrorCommand;
 import pl.bodzioch.damian.exception.AppException;
 import pl.bodzioch.damian.exception.ServerException;
 import pl.bodzioch.damian.infrastructure.command.CommandExecutor;
@@ -22,6 +25,7 @@ import pl.bodzioch.damian.value_object.ErrorData;
 
 import java.util.List;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 class ServiceService implements IServiceService {
@@ -55,7 +59,14 @@ class ServiceService implements IServiceService {
     @Scheduled(cron = "0 0 23 * * *")
     @Transactional(Transactional.TxType.REQUIRED)
     public void synchronizeServicesStatus() {
-        SynchronizeServicesStatusCommand command = new SynchronizeServicesStatusCommand();
-        commandExecutor.execute(command);
+        try {
+            SynchronizeServicesStatusCommand command = new SynchronizeServicesStatusCommand();
+            commandExecutor.execute(command);
+        } catch (Exception e) {
+            log.error("Synchronize services status failed", e);
+            ErrorDto errorDto = new ErrorDto(e);
+            SaveErrorCommand command = new SaveErrorCommand(errorDto);
+            commandExecutor.execute(command);
+        }
     }
 }

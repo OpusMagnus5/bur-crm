@@ -29,4 +29,14 @@ public record ErrorDto(
                 false, null
         );
     }
+
+    public ErrorDto(Exception ex) {
+        this(
+                null, null, null, LocalDateTime.now(), ex.getClass().getCanonicalName(), ex.getMessage(),
+                Arrays.stream(ex.getStackTrace())
+                        .map(StackTraceElement::toString)
+                        .collect(Collectors.joining("\n")),
+                false, null
+        );
+    }
 }
