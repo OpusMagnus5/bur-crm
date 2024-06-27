@@ -43,7 +43,6 @@ public record CreateOrUpdateServiceRequest(
         @UniqueElements(message = "error.client.service.uniqueCoachesIds")
         @NotEmpty(message = "error.client.service.emptyCoachesIds")
         List<String> coachIds,
-        @NotEmpty(message = "error.client.service.emptyIntermediaryId")
         String intermediaryId
 ) implements Serializable {
 }

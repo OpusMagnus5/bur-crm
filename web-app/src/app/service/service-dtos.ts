@@ -49,7 +49,7 @@ export interface CreateOrUpdateServiceRequest {
   programId: string,
   customerId: string,
   coachIds: string[],
-  intermediaryId: string,
+  intermediaryId?: string | null,
   status: string
 }
 

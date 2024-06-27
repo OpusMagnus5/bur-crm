@@ -11,6 +11,7 @@ import pl.bodzioch.damian.dto.GetServiceFromBurResponse;
 import pl.bodzioch.damian.error.ErrorDto;
 import pl.bodzioch.damian.error.command_dto.SaveErrorCommand;
 import pl.bodzioch.damian.exception.AppException;
+import pl.bodzioch.damian.exception.HttpClientException;
 import pl.bodzioch.damian.exception.ServerException;
 import pl.bodzioch.damian.infrastructure.command.CommandExecutor;
 import pl.bodzioch.damian.infrastructure.query.QueryExecutor;
@@ -47,7 +48,7 @@ class ServiceService implements IServiceService {
             ServiceProviderDto serviceProviderDto = serviceProviderResult.serviceProviderDto();
 
             return new GetServiceFromBurResponse(burServiceDto, serviceProviderDto.name(), messageResolver);
-        } catch (ServerException e) {
+        } catch (ServerException | HttpClientException e) {
             throw new AppException(
                     "Service in BUR with given service number " + serviceNumber + " not found",
                     HttpStatus.NOT_FOUND,

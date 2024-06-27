@@ -1,5 +1,6 @@
 package pl.bodzioch.damian.service.command_dto;
 
+import org.apache.commons.lang3.StringUtils;
 import pl.bodzioch.damian.dto.CreateOrUpdateServiceRequest;
 import pl.bodzioch.damian.infrastructure.command.Command;
 import pl.bodzioch.damian.service.ServiceStatus;
@@ -49,7 +50,7 @@ public record CreateOrUpdateServiceCommand(
 						.map(cipher::decryptMessage)
 						.map(Long::parseLong)
 						.toList(),
-				Long.parseLong(cipher.decryptMessage(request.intermediaryId())),
+				Optional.ofNullable(request.intermediaryId()).filter(StringUtils::isNotBlank).map(cipher::getDecryptedId).orElse(null),
 				cipher.getPrincipalId()
 		);
 	}

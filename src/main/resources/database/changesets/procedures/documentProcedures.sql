@@ -31,7 +31,7 @@ BEGIN
 
     OPEN _cursor FOR
         WITH _services AS (
-            SELECT srv_id, srv_type, srv_number_of_participants, srv_uuid
+            SELECT srv_id, srv_type, srv_number_of_participants, srv_uuid, srv_intermediary_id
             FROM service
             WHERE srv_id = _doc_service_id
         ),
@@ -45,7 +45,7 @@ BEGIN
         SELECT COALESCE(docs.doc_id, row_number() over (ORDER BY _services.srv_id)) as doc_id,
                doc_type, doc_coach_id, _services.srv_id as service_srv_id, _services.srv_type as service_srv_type,
                _services.srv_number_of_participants as service_srv_number_of_participants,
-               _services.srv_uuid as service_srv_uuid
+               _services.srv_uuid as service_srv_uuid, _services.srv_intermediary_id as service_srv_intermediary_id
         FROM _services
         LEFT JOIN _filtered_documents docs ON _services.srv_id = docs.doc_service_id;
 

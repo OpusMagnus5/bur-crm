@@ -476,9 +476,6 @@
       "customer": {
         "required": "Pole klient nie może być puste"
       },
-      "intermediary": {
-        "required": "Pole pośrednik nie może być puste"
-      },
       "coach": {
         "required": "Pole trenerzy nie może być puste",
         "minlength": "Usługa musi posiadać co najmniej dwóch trenerów."

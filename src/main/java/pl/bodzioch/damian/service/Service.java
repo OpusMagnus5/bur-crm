@@ -24,8 +24,6 @@ import java.util.*;
 import static pl.bodzioch.damian.service.BadgeMessageType.*;
 import static pl.bodzioch.damian.service.ServiceStatus.COMPLETED;
 import static pl.bodzioch.damian.service.ServiceStatus.PUBLISHED;
-
-//TODO general error handling on front which logging on db
 record Service(
 		@DbId
 		@DbColumn(name = "srv_id")
@@ -39,7 +37,7 @@ record Service(
 		@DbColumn(name = "srv_number")
 		String number,
 		@DbColumn(name = "srv_name")
-        String name, //TODO usunąc indeks
+        String name,
 		@DbColumn(name = "srv_type")
         ServiceType type,
 		@DbColumn(name = "srv_start_date")
@@ -59,7 +57,7 @@ record Service(
 		@DbColumn(name = "srv_coach_ids")
         List<Long> coachIds,
 		@DbColumn(name = "srv_intermediary_id")
-        Long intermediaryId, //TODO poprawić pośrednik nie jest wymagany
+        Long intermediaryId,
 		@DbColumn(name = "srv_created_at")
 		LocalDateTime createdAt,
 		@DbColumn(name = "srv_modified_at")

@@ -265,7 +265,7 @@ export class ServiceDetailsComponent implements OnDestroy {
       return true;
     } else if (documents >= 1 && documentType.value === DocumentType.PROVIDER_INVOICE) {
       return true;
-    } else if (documents >= 1 && documentType.value === DocumentType.INTERMEDIARY_INVOICE) {
+    } else if (documents >= (this.serviceDetails()?.intermediary?.name ? 1 : 0) && documentType.value === DocumentType.INTERMEDIARY_INVOICE) {
       return true;
     } else if (documents >= numberOfParticipants && documentType.value === DocumentType.PARTICIPANT_BUR_QUESTIONNAIRE) {
       return true;
@@ -361,7 +361,7 @@ export class ServiceDetailsComponent implements OnDestroy {
       return true;
     } else if (documents > 1 && documentType.value === DocumentType.PROVIDER_INVOICE) {
       return true;
-    } else if (documents > 1 && documentType.value === DocumentType.INTERMEDIARY_INVOICE) {
+    } else if (documents > (this.serviceDetails()?.intermediary?.name ? 1 : 0) && documentType.value === DocumentType.INTERMEDIARY_INVOICE) {
       return true;
     } else if (documents > numberOfParticipants && documentType.value === DocumentType.PARTICIPANT_BUR_QUESTIONNAIRE) {
       return true;

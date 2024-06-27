@@ -16,6 +16,8 @@ public record InnerService(
         String number,
         @DbColumn(name = "srv_type")
         ServiceType type,
+        @DbColumn(name = "srv_intermediary_id")
+        Long intermediaryId,
         @DbColumn(name = "srv_number_of_participants")
         Integer numberOfParticipants
 ) {

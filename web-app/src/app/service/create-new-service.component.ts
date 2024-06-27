@@ -162,9 +162,7 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
     this.customerIdControl = new FormControl(null, {
       validators: [Validators.required]
     });
-    this.intermediaryIdControl = new FormControl(null, {
-      validators: [Validators.required]
-    });
+    this.intermediaryIdControl = new FormControl(null);
     this.coachIdsControl = new FormControl([], {
       validators: [Validators.required, Validators.minLength(2)]
     })
@@ -481,7 +479,7 @@ export class CreateNewServiceComponent implements OnInit, OnDestroy {
       serviceProviderId: (<ServiceProviderDataInterface>this.serviceProviderIdControl.value!).id,
       programId: (<ProgramDataInterface>this.programIdControl.value!).id,
       customerId: (<CustomerData>this.customerIdControl.value!).id,
-      intermediaryId: (<IntermediaryData>this.intermediaryIdControl.value!).id,
+      intermediaryId: (<IntermediaryData>this.intermediaryIdControl?.value)?.id,
       coachIds: (<CoachData[]>this.coachIdsControl.value!).map(coach => coach.id),
       status: (<ServiceStatusData>this.statusControl.value!).value
     }

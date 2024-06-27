@@ -472,9 +472,6 @@
       "customer": {
         "required": "The customer field cannot be empty"
       },
-      "intermediary": {
-        "required": "The intermediary field cannot be empty"
-      },
       "coach": {
         "required": "The coaches field cannot be empty",
         "minlength": "The service must have at least two trainers."

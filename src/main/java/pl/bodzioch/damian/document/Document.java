@@ -85,6 +85,8 @@ record Document(
                 DocumentType documentType = commandData.getFirst().type();
                 int numOfServiceDocument = getNumberOdServiceDocuments(serviceDocuments);
                 int documentSum = commandData.size() + numOfServiceDocument;
+                Long intermediaryId = serviceDocuments.getFirst().service().intermediaryId();
+                int intermediaries = intermediaryId != null ? 1 : 0;
                 int numberOfParticipants = serviceDocuments.getFirst().service().numberOfParticipants();
 
 
@@ -97,7 +99,7 @@ record Document(
                         throw buildValidationException("maxNumberOfCoachInvoice", List.of());
                 } else if (documentType == DocumentType.PROVIDER_INVOICE && documentSum > 1) {
                         throw buildValidationException("maxNumberOfProviderInvoice", List.of());
-                } else if (documentType == DocumentType.INTERMEDIARY_INVOICE && documentSum > 1) {
+                } else if (documentType == DocumentType.INTERMEDIARY_INVOICE && documentSum > intermediaries) {
                         throw buildValidationException("maxNumberOfIntermediaryInvoice", List.of());
                 } else if (documentType == DocumentType.PARTICIPANT_BUR_QUESTIONNAIRE && documentSum > numberOfParticipants) {
                         throw buildValidationException("maxNumberOfParticipantBurQuestionnaire",

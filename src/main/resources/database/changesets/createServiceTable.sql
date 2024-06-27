@@ -13,12 +13,11 @@ CREATE TABLE service(
     srv_service_provider_id BIGINT NOT NULL REFERENCES service_provider(spr_id),
     srv_program_id BIGINT NOT NULL REFERENCES program(prg_id),
     srv_customer_id BIGINT NOT NULL REFERENCES customer(cst_id),
-    srv_intermediary_id BIGINT NOT NULL REFERENCES intermediary(itr_id),
+    srv_intermediary_id BIGINT REFERENCES intermediary(itr_id),
     srv_created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
     srv_modified_at TIMESTAMP WITH TIME ZONE,
     srv_created_by BIGINT NOT NULL REFERENCES users(usr_id),
     srv_modified_by BIGINT REFERENCES users(usr_id)
 );
 
-CREATE INDEX service_name_idx ON service USING gin (to_tsvector('simple', srv_name));
 CREATE UNIQUE INDEX service_number_customer_idx ON service(srv_number, srv_customer_id);
