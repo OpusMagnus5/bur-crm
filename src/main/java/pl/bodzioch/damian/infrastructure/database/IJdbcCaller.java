@@ -1,7 +1,5 @@
 package pl.bodzioch.damian.infrastructure.database;
 
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import pl.bodzioch.damian.value_object.PageQuery;
 
@@ -17,7 +15,4 @@ public interface IJdbcCaller {
     HashMap<String, Object> buildPageParams(PageQuery pageQuery);
 
     String getArrayCustomTypesParameter(CustomTypes customType, List<?> objects);
-
-    @EventListener(ApplicationReadyEvent.class)
-    void setCustomTypesDefinition();
 }

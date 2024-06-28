@@ -7,7 +7,6 @@ import pl.bodzioch.damian.infrastructure.database.DbCaster;
 import pl.bodzioch.damian.infrastructure.database.IJdbcCaller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -18,7 +17,6 @@ class UserWriteRepository implements IUserWriteRepository {
     private final SimpleJdbcCall deleteProc;
     private final SimpleJdbcCall changePasswordProc;
     private final SimpleJdbcCall setLastLoginProc;
-    private final SimpleJdbcCall createSystemUsersProc;
 
     UserWriteRepository(IJdbcCaller jdbcCaller) {
         this.jdbcCaller = jdbcCaller;
@@ -26,7 +24,6 @@ class UserWriteRepository implements IUserWriteRepository {
         this.deleteProc = jdbcCaller.buildSimpleJdbcCall("users_delete");
         this.changePasswordProc = jdbcCaller.buildSimpleJdbcCall("users_change_password");
         this.setLastLoginProc = jdbcCaller.buildSimpleJdbcCall("users_set_last_login");
-        this.createSystemUsersProc = jdbcCaller.buildSimpleJdbcCall("users_create_system_users");
     }
 
     @Override
@@ -57,12 +54,5 @@ class UserWriteRepository implements IUserWriteRepository {
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("_usr_id", userId);
         this.jdbcCaller.call(this.setLastLoginProc, properties);
-    }
-
-    @Override
-    @Transactional(Transactional.TxType.REQUIRED)
-    public void createSystemUsers(List<User> user) {
-        Map<String, Object> properties = DbCaster.toProperties(user);
-        this.jdbcCaller.call(this.createNewProc, properties);
     }
 }

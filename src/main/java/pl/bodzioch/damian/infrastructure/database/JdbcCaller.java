@@ -1,9 +1,9 @@
 package pl.bodzioch.damian.infrastructure.database;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.postgresql.util.PSQLException;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.UncategorizedSQLException;
@@ -21,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Slf4j
+@DependsOn({ "liquibase", "dataSource" })
 @Repository
 class JdbcCaller implements IJdbcCaller {
 
@@ -34,6 +35,11 @@ class JdbcCaller implements IJdbcCaller {
     JdbcCaller(DataSource dataSource) {
         this.dataSource = dataSource;
         this.getCustomTypesAttributesProc = buildSimpleJdbcCall("util_get_custom_types_attributes");
+    }
+
+    @PostConstruct
+    public void init() {
+        setCustomTypesDefinition();
     }
 
     @Override
@@ -83,9 +89,7 @@ class JdbcCaller implements IJdbcCaller {
         return DbCaster.toArrayOfCustomTypes(this.customTypes.get(customType), objects);
     }
 
-    @EventListener(ApplicationReadyEvent.class)
-    @Override
-    public void setCustomTypesDefinition() {
+    private void setCustomTypesDefinition() {
         String[] customTypeNames = Arrays.stream(CustomTypes.values()).map(Enum::name).map(String::toLowerCase).toArray(String[]::new);
         Map<String, Object> parameters = Map.of("_custom_types", customTypeNames);
         Map<String, Object> result = call(this.getCustomTypesAttributesProc, parameters);

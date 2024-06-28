@@ -136,6 +136,12 @@ public class DbCaster {
             builder.append(fieldValue);
             builder.append("\\\"");
         } else if (fieldValue == null) {
+        } else if (fieldValue instanceof List<?> list && !list.isEmpty()) {
+            Object firstElement = list.getFirst();
+            if (firstElement instanceof Enum<?>) {
+                String enums = list.stream().map(e -> ((Enum<?>) e).name()).collect(Collectors.joining(";"));
+                writeValue(enums, builder);
+            }
         } else {
             builder.append(fieldValue);
         }

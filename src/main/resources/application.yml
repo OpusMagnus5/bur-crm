@@ -35,8 +35,3 @@ rsa:
 bur:
   username: ${BUR_USERNAME}
   key: ${BUR_KEY}
-
-system:
-  users:
-    -1: ${SYSTEM_USER_1_PASSWORD}
-    -2: ${SYSTEM_USER_2_PASSWORD}

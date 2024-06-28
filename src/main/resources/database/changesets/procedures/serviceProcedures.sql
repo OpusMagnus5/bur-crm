@@ -217,7 +217,8 @@ BEGIN
         UPDATE service
         SET srv_status = _status_data._srv_status,
             srv_version = srv_version + 1,
-            srv_modified_at = current_timestamp
+            srv_modified_at = current_timestamp,
+            srv_modified_by = -2
         WHERE srv_id = _status_data._srv_id;
     END LOOP;
 

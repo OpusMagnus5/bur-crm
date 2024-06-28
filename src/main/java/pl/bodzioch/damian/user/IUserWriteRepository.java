@@ -2,8 +2,6 @@ package pl.bodzioch.damian.user;
 
 import jakarta.transaction.Transactional;
 
-import java.util.List;
-
 interface IUserWriteRepository {
 
     @Transactional(Transactional.TxType.REQUIRED)
@@ -17,7 +15,4 @@ interface IUserWriteRepository {
 
     @Transactional(Transactional.TxType.REQUIRED)
     void setLastLogin(Long userId);
-
-    @Transactional(Transactional.TxType.REQUIRED)
-    void createSystemUsers(List<User> user);
 }
