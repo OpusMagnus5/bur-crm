@@ -7,6 +7,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.configuration.security.SecurityConstants;
 import pl.bodzioch.damian.exception.AppException;
@@ -17,6 +18,7 @@ import java.util.Optional;
 
 @Slf4j
 @Component
+@Order(1)
 @WebFilter("/api/*")
 class MdcFilter implements Filter {
 
@@ -31,10 +33,10 @@ class MdcFilter implements Filter {
         chain.doFilter(request, response);
     }
 
-    private String getSessionId(ServletRequest request) {
+    private String getSessionId(ServletRequest request) { //TODO poprawić nie z cookie tylko z jwt, dodac id usera, uzupelnic czerwone logowanie
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         return Arrays.stream(Optional.ofNullable(httpServletRequest.getCookies()).orElse(new Cookie[]{}))
-                .filter(cookie -> cookie.getName().equals(SecurityConstants.BEARER_COOKIE))
+                .filter(cookie -> cookie.getName().equals(SecurityConstants.SESSION_ID))
                 .map(Cookie::getValue)
                 .findFirst()
                 .orElse("");

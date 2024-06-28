@@ -48,7 +48,7 @@ class GenerateJwtTokenCommandHandler implements CommandHandler<GenerateJwtTokenC
 				.expiresAt(expiresAt)
 				.claim(SecurityConstants.ROLES_CLAIM, roles)
 				.claim(SecurityConstants.PRINCIPAL_ID, id)
-				.claim(SecurityConstants.SESSION_ID, Generators.timeBasedEpochGenerator().generate())
+				.claim(SecurityConstants.SESSION_ID, Generators.timeBasedEpochGenerator().generate().toString())
 				.build();
 
 		String tokenValue = this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

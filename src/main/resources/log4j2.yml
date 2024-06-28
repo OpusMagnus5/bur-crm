@@ -1,0 +1,15 @@
+Configuration:
+  Loggers:
+    Root:
+      level: info
+      AppenderRef:
+        ref: STDOUT
+  appenders:
+    Console:
+      target: SYSTEM_OUT
+      name: STDOUT
+      PatternLayout:
+        Pattern: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5p] [%-20t] [%X{requestId}] [%X{ip}] [%X{sessionId}] [%c{1}] - %msg%n"
+      Filters:
+        ThresholdFilter:
+          level: info
