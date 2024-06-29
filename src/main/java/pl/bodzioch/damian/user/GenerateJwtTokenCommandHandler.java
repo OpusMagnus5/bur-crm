@@ -43,7 +43,7 @@ class GenerateJwtTokenCommandHandler implements CommandHandler<GenerateJwtTokenC
 
 		JwtClaimsSet claims = JwtClaimsSet.builder()
 				.subject(authentication.getName())
-				.issuer("self") //TODO zmienic na nazwe domeny
+				.issuer("burdok.pl")
 				.issuedAt(now)
 				.expiresAt(expiresAt)
 				.claim(SecurityConstants.ROLES_CLAIM, roles)
