@@ -1,5 +1,6 @@
 /.idea/
 /target
+src/main/resources/static
 
 /web-app/node_modules
 /web-app/.angular
