@@ -3,13 +3,37 @@ Configuration:
     Root:
       level: info
       AppenderRef:
-        ref: STDOUT
+        - ref: STDOUT
+        - ref: RollingFile
+    Logger:
+      name: burdok.log4j2
+      additivity: false
+      level: info
+      AppenderRef:
+        - ref: STDOUT
+          level: info
+        - ref: RollingFile
+          level: info
   appenders:
     Console:
       target: SYSTEM_OUT
       name: STDOUT
       PatternLayout:
-        Pattern: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5p] [%-20t] [%X{requestId}] [%X{ip}] [%X{sessionId}] [%c{1}] - %msg%n"
+        Pattern: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5p] [%-20t] [%X{requestId}] [%X{ip}] [%X{sessionId}] [%X{userId}] [%c{1}] - %msg%n"
       Filters:
         ThresholdFilter:
           level: info
+    RollingFile:
+      name: RollingFile
+      fileName: "log/burdok.log"
+      filePattern: "log/burdok-%d{MM-dd-yy-HH-mm-ss}-%i.log.gz"
+      PatternLayout:
+        Pattern: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5p] [%-20t] [%X{requestId}] [%X{ip}] [%X{sessionId}] [%X{userId}] [%c{1}] - %msg%n"
+      Filters:
+        ThresholdFilter:
+          level: info
+      Policies:
+        SizeBasedTriggeringPolicy:
+          size: 100MB
+      DefaultRollOverStrategy:
+        max: 10

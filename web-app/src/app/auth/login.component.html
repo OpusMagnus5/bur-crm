@@ -1,6 +1,6 @@
 <div class="w-full h-full flex justify-center items-center">
   <div class="mat-elevation-z8 w-min py-20 px-32">
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <form [formGroup]="form">
       <div class="flex flex-col items-center">
         <p class="leading-7 text-gray-800 text-3xl font-semibold mb-10">{{ 'login.title' | translate }}</p>
         <mat-form-field class="w-72">
@@ -28,6 +28,7 @@
         <button mat-flat-button
                 color="primary"
                 [disabled]="form.invalid"
+                (click)="onSubmit()"
                 class="p-4 mt-5">
           {{ 'login.login-button' | translate }}
         </button>

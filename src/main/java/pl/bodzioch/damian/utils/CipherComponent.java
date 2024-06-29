@@ -81,7 +81,7 @@ public class CipherComponent {
 
     public Optional<Long> getPrincipalIdIfExists() {
         try {
-            Jwt token = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Jwt token = getToken();
             String principalId = token.getClaim(SecurityConstants.PRINCIPAL_ID);
             return Optional.of(getDecryptedId(principalId));
         } catch (Exception e) {
@@ -95,6 +95,20 @@ public class CipherComponent {
                 .map(this::decryptMessage)
                 .map(Long::parseLong)
                 .orElse(null);
+    }
+
+    public Optional<String> getSessionId() {
+        try {
+            Jwt token = getToken();
+            String sessionId = token.getClaim(SecurityConstants.SESSION_ID);
+            return Optional.of(sessionId);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    private Jwt getToken() {
+        return (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     private byte[] attachIvAndGetOutput(byte[] iv, byte[] encryptedBytes) {
