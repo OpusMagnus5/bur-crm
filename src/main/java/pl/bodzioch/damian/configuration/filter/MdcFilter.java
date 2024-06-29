@@ -15,7 +15,7 @@ import java.io.IOException;
 
 @Slf4j
 @Component
-@Order(1)
+@Order(2)
 @WebFilter("/api/*")
 @RequiredArgsConstructor
 class MdcFilter implements Filter {

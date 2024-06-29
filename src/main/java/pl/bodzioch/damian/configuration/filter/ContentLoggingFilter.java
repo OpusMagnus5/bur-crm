@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Order(2)
+@Order(3)
 @Component
 @WebFilter("/api/*")
 class ContentLoggingFilter implements Filter {
@@ -37,6 +37,11 @@ class ContentLoggingFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        String path = httpServletRequest.getServletPath();
+        if (!path.startsWith("/api")) {
+            chain.doFilter(request, response);
+            return;
+        }
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         CustomCachingRequestWrapper requestWrapper = new CustomCachingRequestWrapper(httpServletRequest);
         ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(httpServletResponse);

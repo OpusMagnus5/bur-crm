@@ -50,8 +50,8 @@ class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, CorsConfigurationSource corsConfig) throws Exception {
         httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/user/login").permitAll()
-                        .anyRequest().access(hasAuthority(UserRole.USER.name())))
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/user/login", "/**").permitAll()
+                        .requestMatchers("/api/**").access(hasAuthority(UserRole.USER.name())))
                 .oauth2ResourceServer(oAuth2 -> oAuth2.bearerTokenResolver(new CookieBearerTokenResolver())
                                 .authenticationEntryPoint(customAuthenticationEntryPoint)
                                 .jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter())))
