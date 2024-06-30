@@ -10,3 +10,5 @@ documents
 log
 docker/dev
 docker/prod
+docker/.env
+docker/env-db-write.env
