@@ -35,7 +35,7 @@ pipeline {
 
         stage("Remove old docker image") {
             steps {
-                sh "docker rmi ${IMAGE_NAME} || true"
+                sh "docker image prune || true"
             }
         }
 
