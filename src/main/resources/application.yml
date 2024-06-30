@@ -29,8 +29,8 @@ spring:
         enabled: false
 
 rsa:
-  private-key: file:${user.dir}${file.separator}certs${file.separator}private.pem
-  public-key: file:${user.dir}${file.separator}certs${file.separator}public.pem
+  private-key: classpath:/certs/private.pem
+  public-key: classpath:/certs/public.pem
 
 bur:
   username: ${BUR_USERNAME}
