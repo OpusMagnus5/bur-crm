@@ -22,11 +22,17 @@ services:
       crm-postgres-write:
         condition: service_healthy
     volumes:
-      - burdok:/app
+      - burdok-doc:/app/documents
+      - burdok-log:/app/log
+      - burdok-cert:/app/BOOT-INF/classes/certs
     network_mode: host
 
 volumes:
   crm-postgres-write:
     name: crm-postgres-write
-  burdok:
-    name: burdok
+  burdok-doc:
+    name: burdok-doc
+  burdok-log:
+    name: burdok-log
+  burdok-cert:
+    name: burdok-cert
