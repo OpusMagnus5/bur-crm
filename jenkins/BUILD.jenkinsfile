@@ -27,7 +27,7 @@ pipeline {
 
         stage("Build") {
             steps {
-                ws('/home/jenkins/workspace') {
+                ws('/home/bur-crm/jenkins/workspace') {
                     sh "mvn clean install -T 0.5C"
                 }
             }
@@ -41,7 +41,7 @@ pipeline {
 
         stage('Build docker image') {
             steps {
-                ws('/home/jenkins/workspace') {
+                ws('/home/bur-crm/jenkins/workspace') {
                     script {
                         def dockerfile = "${WORKSPACE}/docker/Dockerfile"
                         def projectDir = "${WORKSPACE}"
