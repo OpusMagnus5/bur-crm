@@ -10,6 +10,6 @@ COPY --from=builder /app/dependencies/ ./
 COPY --from=builder /app/snapshot-dependencies/ ./
 COPY --from=builder /app/spring-boot-loader/ ./
 COPY --from=builder /app/application/ ./
-COPY --from=builder /app/application/BOOT-INF/classes/static ./BOOT-INF/classes/static
 COPY src/main/resources/certs ./certs
+COPY src/main/resources/static ./BOOT-INF/classes/static
 ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "org.springframework.boot.loader.launch.JarLauncher"]
