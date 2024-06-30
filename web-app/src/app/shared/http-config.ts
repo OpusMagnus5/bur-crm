@@ -1,1 +1,3 @@
-export const SERVER_URL: string = 'http://localhost:8070/';
+import {environment} from "../../environments/environment";
+
+export const SERVER_URL: string = environment.serverUrl;
