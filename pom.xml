@@ -195,7 +195,7 @@
                             <outputDirectory>${project.basedir}/src/main/resources/static</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>/web-app/dist/web-app/browser</directory>
+                                    <directory>${project.basedir}/web-app/dist/web-app/browser</directory>
                                     <includes>
                                         <include>**/*</include>
                                     </includes>
