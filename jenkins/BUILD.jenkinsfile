@@ -1,0 +1,54 @@
+/*
+    PARAMETERS
+    - branch default: master
+*/
+pipeline {
+    agent {
+        label 'ubuntu-jenkins'
+    }
+
+    tools {
+        git "Git"
+        dockerTool "Docker"
+    }
+
+    environment {
+        IMAGE_NAME = 'burdok'
+    }
+
+    stages {
+        stage("Download repository") {
+            steps {
+                ws('/home/bur-crm/jenkins/workspace') {
+                    git branch: '${branch}', url: 'https://github.com/OpusMagnus5/bur-crm.git'
+                }
+            }
+        }
+
+        stage("Build") {
+            steps {
+                ws('/home/jenkins/workspace') {
+                    sh "mvn clean install -T 0.5C"
+                }
+            }
+        }
+
+        stage("Remove old docker image") {
+            steps {
+                sh "docker rmi ${IMAGE_NAME} || true"
+            }
+        }
+
+        stage('Build docker image') {
+            steps {
+                ws('/home/jenkins/workspace') {
+                    script {
+                        def dockerfile = "${WORKSPACE}/docker/Dockerfile"
+                        def projectDir = "${WORKSPACE}"
+                        sh "docker build -f ${dockerfile} -t ${IMAGE_NAME} ${projectDir}"
+                    }
+                }
+            }
+        }
+    }
+}
