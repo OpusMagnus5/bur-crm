@@ -1,4 +1,5 @@
 services:
+
   crm-postgres-write:
     container_name: 'crm-postgres-write'
     image: postgres:16
@@ -11,6 +12,19 @@ services:
       - crm-postgres-write:/var/lib/postgresql/data
     network_mode: host
 
+  burdok:
+    container_name: burdok
+    image: burdok:latest
+    restart: no
+    depends_on:
+      crm-postgres-write:
+        condition: service_healthy
+    volumes:
+      - burdok-doc:/documents
+    network_mode: host
+
 volumes:
   crm-postgres-write:
     name: crm-postgres-write
+  burdok-doc:
+    name: burdok-doc

@@ -8,3 +8,5 @@ web-app/dist
 
 documents
 log
+docker/dev
+docker/prod
