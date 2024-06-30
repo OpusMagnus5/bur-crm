@@ -16,6 +16,8 @@ services:
     container_name: burdok
     image: burdok:latest
     restart: no
+    env_file:
+      - 'env-burdok.env'
     depends_on:
       crm-postgres-write:
         condition: service_healthy
