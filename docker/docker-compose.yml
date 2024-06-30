@@ -21,8 +21,6 @@ services:
     depends_on:
       crm-postgres-write:
         condition: service_healthy
-    volumes:
-      - burdok:/app
     network_mode: host
 
 volumes:
