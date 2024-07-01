@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  serverUrl: 'http://localhost/'
+  serverUrl: 'http://145.239.82.201/' //TODO change
 };
